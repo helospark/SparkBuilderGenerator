@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+   <extension point="org.eclipse.ui.commands">
+      <category
+            name="Category"
+            id="com.helospark.spark.builder.commands.category">
+      </category>
+      <command
+            name="Generate Builder"
+            categoryId="com.helospark.spark.builder.commands.category"
+            id="com.helospark.spark.builder.commands.generateBuilderCommand">
+      </command>
+   </extension>
+   <extension point="org.eclipse.ui.handlers">
+      <handler
+            commandId="com.helospark.spark.builder.commands.generateBuilderCommand"
+            class="com.helospark.spark.builder.handlers.GenerateBuilderHandler">
+      </handler>
+   </extension>
+   <extension
+         point="org.eclipse.ui.bindings">
+      <key
+            commandId="com.helospark.spark.builder.commands.generateBuilderCommand"
+            contextId="org.eclipse.ui.contexts.window"
+            sequence="M1+M2+B"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
+      </key>
+   </extension>
+   <extension point="org.eclipse.ui.menus">
+      <menuContribution locationURI="toolbar:org.eclipse.ui.main.toolbar?after=additions">
+         <toolbar id="com.helospark.spark.builder.toolbars.generateBuilderToolbar">
+            <command
+                  commandId="com.helospark.spark.builder.commands.generateBuilderCommand"
+                  icon="icons/builder.gif"
+                  tooltip="Generate a builder (ctrl+shift+b)"
+                  id="com.helospark.spark.builder.toolbars.generateBuilderCommand">
+            </command>
+         </toolbar>
+      </menuContribution>
+   </extension>
+   <extension point="org.eclipse.core.runtime.preferences">
+      <initializer class="com.helospark.spark.builder.preferences.PluginPreferenceInitializer"/>
+   </extension>
+   <extension point = "org.eclipse.ui.preferencePages">
+      <page
+         category="org.eclipse.jdt.ui.preferences.JavaBasePreferencePage"
+         id="org.eclipse.jdt.ui.preferences.JavaBasePreferencePage"
+         class="com.helospark.spark.builder.preferences.BuilderGeneratorPreferences"
+         name="Spark Builder generator">
+      </page>
+   </extension>
+</plugin>
