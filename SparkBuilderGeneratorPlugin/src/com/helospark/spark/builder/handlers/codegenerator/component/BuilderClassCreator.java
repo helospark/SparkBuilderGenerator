@@ -5,6 +5,7 @@ import static com.helospark.spark.builder.preferences.PluginPreferenceList.BUILD
 import static com.helospark.spark.builder.preferences.PluginPreferenceList.BUILD_METHOD_NAME_PATTERN;
 import static com.helospark.spark.builder.preferences.PluginPreferenceList.GENERATE_JAVADOC_ON_BUILDER_CLASS;
 import static com.helospark.spark.builder.preferences.PluginPreferenceList.GENERATE_JAVADOC_ON_EACH_BUILDER_METHOD;
+import static com.helospark.spark.builder.preferences.StaticPreferences.RETURN_JAVADOC_TAG_NAME;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -24,20 +25,19 @@ import org.eclipse.jdt.core.dom.FieldDeclaration;
 import org.eclipse.jdt.core.dom.Javadoc;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.Modifier.ModifierKeyword;
-
-import com.helospark.spark.builder.handlers.codegenerator.component.helper.BuilderMethodNameBuilder;
-import com.helospark.spark.builder.handlers.codegenerator.component.helper.JavadocGenerator;
-import com.helospark.spark.builder.handlers.codegenerator.component.helper.TemplateResolver;
-import com.helospark.spark.builder.handlers.codegenerator.domain.NamedVariableDeclarationField;
-import com.helospark.spark.builder.preferences.PluginPreferenceList;
-import com.helospark.spark.builder.preferences.PreferencesManager;
-
-import org.eclipse.jdt.core.dom.NormalAnnotation;
 import org.eclipse.jdt.core.dom.ReturnStatement;
 import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
 import org.eclipse.jdt.core.dom.Type;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
+
+import com.helospark.spark.builder.handlers.codegenerator.component.helper.BuilderMethodNameBuilder;
+import com.helospark.spark.builder.handlers.codegenerator.component.helper.JavadocGenerator;
+import com.helospark.spark.builder.handlers.codegenerator.component.helper.NonNullAnnotationAttacher;
+import com.helospark.spark.builder.handlers.codegenerator.component.helper.TemplateResolver;
+import com.helospark.spark.builder.handlers.codegenerator.domain.NamedVariableDeclarationField;
+import com.helospark.spark.builder.preferences.PluginPreferenceList;
+import com.helospark.spark.builder.preferences.PreferencesManager;
 
 /**
  * Generates the builder class.
@@ -51,13 +51,15 @@ public class BuilderClassCreator {
     private TemplateResolver templateResolver;
     private PreferencesManager preferencesManager;
     private JavadocGenerator javadocGenerator;
+    private NonNullAnnotationAttacher nonNullAnnotationAttacher;
 
     public BuilderClassCreator(BuilderMethodNameBuilder builderClassMethodNameGeneratorService, TemplateResolver templateResolver,
-            PreferencesManager preferencesManager, JavadocGenerator javadocGenerator) {
+            PreferencesManager preferencesManager, JavadocGenerator javadocGenerator, NonNullAnnotationAttacher nonNullAnnotationAttacher) {
         this.builderClassMethodNameGeneratorService = builderClassMethodNameGeneratorService;
         this.templateResolver = templateResolver;
         this.preferencesManager = preferencesManager;
         this.javadocGenerator = javadocGenerator;
+        this.nonNullAnnotationAttacher = nonNullAnnotationAttacher;
     }
 
     public TypeDeclaration createBuilderClass(AST ast, TypeDeclaration originalName, List<NamedVariableDeclarationField> namedVariableDeclarations) {
@@ -99,13 +101,13 @@ public class BuilderClassCreator {
 
     private void addWithMethodToBuilder(AST ast, TypeDeclaration newType, NamedVariableDeclarationField namedVariableDeclarationField) {
         String fieldName = namedVariableDeclarationField.getFieldName();
-        Block newBlock = createBody(ast, fieldName);
+        Block newBlock = createWithMethodBody(ast, fieldName);
         SingleVariableDeclaration methodParameterDeclaration = createMethodParameter(ast, namedVariableDeclarationField.getFieldDeclaration(), fieldName);
-        MethodDeclaration newMethod = createNewMethod(ast, fieldName, newBlock, methodParameterDeclaration, newType);
+        MethodDeclaration newMethod = createNewWithMethod(ast, fieldName, newBlock, methodParameterDeclaration, newType);
         newType.bodyDeclarations().add(newMethod);
     }
 
-    private Block createBody(AST ast, String fieldName) {
+    private Block createWithMethodBody(AST ast, String fieldName) {
         Block newBlock = ast.newBlock();
         ReturnStatement builderReturnStatement = ast.newReturnStatement();
         builderReturnStatement.setExpression(ast.newThisExpression());
@@ -123,7 +125,7 @@ public class BuilderClassCreator {
         return newBlock;
     }
 
-    private MethodDeclaration createNewMethod(AST ast, String fieldName, Block newBlock, SingleVariableDeclaration methodParameterDeclaration, TypeDeclaration newType) {
+    private MethodDeclaration createNewWithMethod(AST ast, String fieldName, Block newBlock, SingleVariableDeclaration methodParameterDeclaration, TypeDeclaration newType) {
         MethodDeclaration builderMethod = ast.newMethodDeclaration();
         builderMethod.setName(ast.newSimpleName(builderClassMethodNameGeneratorService.build(fieldName)));
         builderMethod.setReturnType2(ast.newSimpleType(ast.newName(newType.getName().toString())));
@@ -132,11 +134,11 @@ public class BuilderClassCreator {
 
         if (preferencesManager.getPreferenceValue(GENERATE_JAVADOC_ON_EACH_BUILDER_METHOD)) {
             Javadoc javadoc = javadocGenerator.generateJavadoc(ast, String.format(Locale.ENGLISH, "Builder method for %s parameter.", fieldName),
-                    Collections.singletonMap("@return", "Builder"));
+                    Collections.singletonMap(RETURN_JAVADOC_TAG_NAME, "builder"));
             builderMethod.setJavadoc(javadoc);
         }
         if (preferencesManager.getPreferenceValue(ADD_NONNULL_ON_RETURN)) {
-            attachNonNull(ast, builderMethod);
+            nonNullAnnotationAttacher.attachNonNull(ast, builderMethod);
         }
         builderMethod.modifiers().add(ast.newModifier(ModifierKeyword.PUBLIC_KEYWORD));
 
@@ -148,7 +150,7 @@ public class BuilderClassCreator {
         methodParameterDeclaration.setType((Type) ASTNode.copySubtree(ast, field.getType()));
         methodParameterDeclaration.setName(ast.newSimpleName(fieldName));
         if (preferencesManager.getPreferenceValue(PluginPreferenceList.ADD_NONNULL_ON_PARAMETERS)) {
-            attachNonNull(ast, methodParameterDeclaration);
+            nonNullAnnotationAttacher.attachNonNull(ast, methodParameterDeclaration);
         }
         return methodParameterDeclaration;
     }
@@ -176,28 +178,16 @@ public class BuilderClassCreator {
 
         if (preferencesManager.getPreferenceValue(GENERATE_JAVADOC_ON_EACH_BUILDER_METHOD)) {
             Javadoc javadoc = javadocGenerator.generateJavadoc(ast, "Builder method of the builder.",
-                    Collections.singletonMap("@return", "Built class"));
+                    Collections.singletonMap(RETURN_JAVADOC_TAG_NAME, "built class"));
             method.setJavadoc(javadoc);
         }
         if (preferencesManager.getPreferenceValue(ADD_NONNULL_ON_RETURN)) {
-            attachNonNull(ast, method);
+            nonNullAnnotationAttacher.attachNonNull(ast, method);
         }
 
         method.modifiers().add(ast.newModifier(ModifierKeyword.PUBLIC_KEYWORD));
 
         return method;
-    }
-
-    private void attachNonNull(AST ast, MethodDeclaration method) {
-        NormalAnnotation nonNullAnnotation = ast.newNormalAnnotation();
-        nonNullAnnotation.setTypeName(ast.newSimpleName("NonNull"));
-        method.modifiers().add(nonNullAnnotation);
-    }
-
-    private void attachNonNull(AST ast, SingleVariableDeclaration methodParameterDeclaration) {
-        NormalAnnotation nonNullAnnotation = ast.newNormalAnnotation();
-        nonNullAnnotation.setTypeName(ast.newSimpleName("NonNull"));
-        methodParameterDeclaration.modifiers().add(nonNullAnnotation);
     }
 
     private String getBuildMethodName(TypeDeclaration originalType) {
@@ -207,18 +197,18 @@ public class BuilderClassCreator {
     }
 
     private TypeDeclaration createBuilderClass(AST ast, TypeDeclaration originalType) {
-        TypeDeclaration newType = ast.newTypeDeclaration();
-        newType.setName(ast.newSimpleName(getBuilderName(originalType)));
-        newType.modifiers().add(ast.newModifier(ModifierKeyword.PUBLIC_KEYWORD));
-        newType.modifiers().add(ast.newModifier(ModifierKeyword.STATIC_KEYWORD));
+        TypeDeclaration builderType = ast.newTypeDeclaration();
+        builderType.setName(ast.newSimpleName(getBuilderName(originalType)));
+        builderType.modifiers().add(ast.newModifier(ModifierKeyword.PUBLIC_KEYWORD));
+        builderType.modifiers().add(ast.newModifier(ModifierKeyword.STATIC_KEYWORD));
 
         if (preferencesManager.getPreferenceValue(GENERATE_JAVADOC_ON_BUILDER_CLASS)) {
             Javadoc javadoc = javadocGenerator.generateJavadoc(ast, String.format(Locale.ENGLISH, "Builder to build {@link %s}.", originalType.getName().toString()),
                     Collections.emptyMap());
-            newType.setJavadoc(javadoc);
+            builderType.setJavadoc(javadoc);
         }
 
-        return newType;
+        return builderType;
     }
 
     private String getBuilderName(TypeDeclaration originalType) {

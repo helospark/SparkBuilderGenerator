@@ -1,5 +1,7 @@
 package com.helospark.spark.builder.handlers.codegenerator.component;
 
+import static com.helospark.spark.builder.preferences.StaticPreferences.RETURN_JAVADOC_TAG_NAME;
+
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Locale;
@@ -53,7 +55,7 @@ public class BuilderMethodListRewritePopulator {
 
         if (preferenceManager.getPreferenceValue(PluginPreferenceList.GENERATE_JAVADOC_ON_BUILDER_METHOD)) {
             Javadoc javadoc = javadocGenerator.generateJavadoc(ast, String.format(Locale.ENGLISH, "Creates builder to build {@link %s}.", originalType.getName().toString()),
-                    Collections.singletonMap("@return", "created builder"));
+                    Collections.singletonMap(RETURN_JAVADOC_TAG_NAME, "created builder"));
             builderMethod.setJavadoc(javadoc);
         }
 

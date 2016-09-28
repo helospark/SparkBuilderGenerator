@@ -38,10 +38,10 @@ public final class PluginPreferenceList {
             "Generate Javadoc on each builder method", Boolean.FALSE);
 
     public static final PluginPreference<Boolean> ADD_NONNULL_ON_RETURN = new BooleanPluginPreference("add_nonnull_on_return",
-            "Generate @NonNull on return values", Boolean.TRUE);
+            "Generate @Nonnull on return values", Boolean.TRUE);
 
     public static final PluginPreference<Boolean> ADD_NONNULL_ON_PARAMETERS = new BooleanPluginPreference("add_nonnull_on_parameter",
-            "Generate @NonNull on parameters", Boolean.TRUE);
+            "Generate @Nonnull on parameters", Boolean.TRUE);
 
     public static final PluginPreference<Boolean> OVERRIDE_PREVIOUS_BUILDER = new BooleanPluginPreference("override_previous_builder",
             "Override previous builder", Boolean.TRUE);
@@ -62,7 +62,6 @@ public final class PluginPreferenceList {
         allPreferences.add(GENERATE_JAVADOC_ON_EACH_BUILDER_METHOD);
         allPreferences.add(ADD_NONNULL_ON_RETURN);
         allPreferences.add(ADD_NONNULL_ON_PARAMETERS);
-        allPreferences.add(OVERRIDE_PREVIOUS_BUILDER);
         return allPreferences;
     }
 }

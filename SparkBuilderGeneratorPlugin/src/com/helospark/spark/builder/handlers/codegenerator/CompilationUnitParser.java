@@ -11,11 +11,11 @@ import org.eclipse.jdt.core.dom.CompilationUnit;
  * @author helospark
  */
 public class CompilationUnitParser {
-	public CompilationUnit parse(ICompilationUnit unit) {
-		ASTParser parser = ASTParser.newParser(AST.JLS3);
-		parser.setKind(ASTParser.K_COMPILATION_UNIT);
-		parser.setSource(unit);
-		parser.setResolveBindings(true);
-		return (CompilationUnit) parser.createAST(null); // parse
-	}
+    public CompilationUnit parse(ICompilationUnit unit) {
+        ASTParser parser = ASTParser.newParser(AST.JLS8);
+        parser.setKind(ASTParser.K_COMPILATION_UNIT);
+        parser.setSource(unit);
+        parser.setResolveBindings(true);
+        return (CompilationUnit) parser.createAST(null);
+    }
 }

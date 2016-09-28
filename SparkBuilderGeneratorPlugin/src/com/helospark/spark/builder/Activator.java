@@ -17,6 +17,7 @@ import com.helospark.spark.builder.handlers.codegenerator.component.PrivateConst
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.BuilderMethodNameBuilder;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.ClassNameToVariableNameConverter;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.JavadocGenerator;
+import com.helospark.spark.builder.handlers.codegenerator.component.helper.NonNullAnnotationAttacher;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.TemplateResolver;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.VariableNameToUpperCamelCaseConverter;
 import com.helospark.spark.builder.preferences.PreferencesManager;
@@ -62,10 +63,11 @@ public class Activator extends AbstractUIPlugin {
         diContainer.add(new PreferencesManager());
         diContainer.add(new BuilderRemover());
         diContainer.add(new CompilationUnitParser());
+        diContainer.add(new NonNullAnnotationAttacher());
         diContainer.add(new BuilderMethodNameBuilder(getDependency(VariableNameToUpperCamelCaseConverter.class), getDependency(PreferencesManager.class),
                 getDependency(TemplateResolver.class)));
         diContainer.add(new BuilderClassCreator(getDependency(BuilderMethodNameBuilder.class), getDependency(TemplateResolver.class), getDependency(PreferencesManager.class),
-                getDependency(JavadocGenerator.class)));
+                getDependency(JavadocGenerator.class), getDependency(NonNullAnnotationAttacher.class)));
         diContainer.add(new BuilderMethodListRewritePopulator(getDependency(TemplateResolver.class), getDependency(PreferencesManager.class),
                 getDependency(JavadocGenerator.class)));
         diContainer.add(new PrivateConstructorListRewritePopulator(getDependency(ClassNameToVariableNameConverter.class)));
