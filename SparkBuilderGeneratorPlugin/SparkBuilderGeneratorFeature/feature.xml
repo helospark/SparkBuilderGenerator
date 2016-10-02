@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="SparkBuilderGeneratorFeature"
+      label="SparkBuilderGeneratorFeature"
+      version="1.0.0.qualifier"
+      os="linux,win32"
+      nl="en">
+
+   <description url="ftp://192.168.0.74:799/SparkBuilderGeneratorPlugin/">
+      Spark builder generator plugin
+Features:
+  - Generates a builder
+  - Capable of regenerating the builder
+  - Can generate Javadoc and add @NonNull
+  - Eclipse 3 compatible (does not use e4)
+   </description>
+
+   <copyright url="https://opensource.org/licenses/MIT">
+      MIT licence
+   </copyright>
+
+   <license url="https://opensource.org/licenses/MIT">
+      MIT licence
+   </license>
+
+   <url>
+      <update label="Spark plugin update site" url="ftp://192.168.0.74:799/SparkBuilderGeneratorPlugin/"/>
+   </url>
+
+   <plugin
+         id="SparkBuilderGenerator"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+</feature>

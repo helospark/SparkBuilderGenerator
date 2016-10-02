@@ -1,8 +1,8 @@
 package com.helospark.spark.builder.handlers.codegenerator.component.helper;
 
 import org.eclipse.jdt.core.dom.AST;
+import org.eclipse.jdt.core.dom.MarkerAnnotation;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
-import org.eclipse.jdt.core.dom.NormalAnnotation;
 import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
 
 /**
@@ -13,14 +13,18 @@ import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
 public class NonNullAnnotationAttacher {
 
     public void attachNonNull(AST ast, MethodDeclaration method) {
-        NormalAnnotation nonNullAnnotation = ast.newNormalAnnotation();
-        nonNullAnnotation.setTypeName(ast.newSimpleName("Nonnull"));
+        MarkerAnnotation nonNullAnnotation = createNonnullAnnotation(ast);
         method.modifiers().add(nonNullAnnotation);
     }
 
     public void attachNonNull(AST ast, SingleVariableDeclaration methodParameterDeclaration) {
-        NormalAnnotation nonNullAnnotation = ast.newNormalAnnotation();
-        nonNullAnnotation.setTypeName(ast.newSimpleName("NonNull"));
+        MarkerAnnotation nonNullAnnotation = createNonnullAnnotation(ast);
         methodParameterDeclaration.modifiers().add(nonNullAnnotation);
+    }
+
+    private MarkerAnnotation createNonnullAnnotation(AST ast) {
+        MarkerAnnotation nonNullAnnotation = ast.newMarkerAnnotation();
+        nonNullAnnotation.setTypeName(ast.newSimpleName("Nonnull"));
+        return nonNullAnnotation;
     }
 }

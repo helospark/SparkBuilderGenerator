@@ -1,5 +1,6 @@
 package com.helospark.spark.builder.handlers.codegenerator.component;
 
+import static com.helospark.spark.builder.preferences.PluginPreferenceList.ADD_GENERATED_ANNOTATION;
 import static com.helospark.spark.builder.preferences.PluginPreferenceList.ADD_NONNULL_ON_RETURN;
 import static com.helospark.spark.builder.preferences.PluginPreferenceList.BUILDER_CLASS_NAME_PATTERN;
 import static com.helospark.spark.builder.preferences.PluginPreferenceList.BUILD_METHOD_NAME_PATTERN;
@@ -32,6 +33,7 @@ import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
 
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.BuilderMethodNameBuilder;
+import com.helospark.spark.builder.handlers.codegenerator.component.helper.GeneratedAnnotationPopulator;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.JavadocGenerator;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.NonNullAnnotationAttacher;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.TemplateResolver;
@@ -52,14 +54,17 @@ public class BuilderClassCreator {
     private PreferencesManager preferencesManager;
     private JavadocGenerator javadocGenerator;
     private NonNullAnnotationAttacher nonNullAnnotationAttacher;
+    private GeneratedAnnotationPopulator generatedAnnotationPopulator;
 
     public BuilderClassCreator(BuilderMethodNameBuilder builderClassMethodNameGeneratorService, TemplateResolver templateResolver,
-            PreferencesManager preferencesManager, JavadocGenerator javadocGenerator, NonNullAnnotationAttacher nonNullAnnotationAttacher) {
+            PreferencesManager preferencesManager, JavadocGenerator javadocGenerator, NonNullAnnotationAttacher nonNullAnnotationAttacher,
+            GeneratedAnnotationPopulator generatedAnnotationPopulator) {
         this.builderClassMethodNameGeneratorService = builderClassMethodNameGeneratorService;
         this.templateResolver = templateResolver;
         this.preferencesManager = preferencesManager;
         this.javadocGenerator = javadocGenerator;
         this.nonNullAnnotationAttacher = nonNullAnnotationAttacher;
+        this.generatedAnnotationPopulator = generatedAnnotationPopulator;
     }
 
     public TypeDeclaration createBuilderClass(AST ast, TypeDeclaration originalName, List<NamedVariableDeclarationField> namedVariableDeclarations) {
@@ -199,6 +204,10 @@ public class BuilderClassCreator {
     private TypeDeclaration createBuilderClass(AST ast, TypeDeclaration originalType) {
         TypeDeclaration builderType = ast.newTypeDeclaration();
         builderType.setName(ast.newSimpleName(getBuilderName(originalType)));
+
+        if (preferencesManager.getPreferenceValue(ADD_GENERATED_ANNOTATION)) {
+            generatedAnnotationPopulator.addGeneratedAnnotation(ast, builderType);
+        }
         builderType.modifiers().add(ast.newModifier(ModifierKeyword.PUBLIC_KEYWORD));
         builderType.modifiers().add(ast.newModifier(ModifierKeyword.STATIC_KEYWORD));
 

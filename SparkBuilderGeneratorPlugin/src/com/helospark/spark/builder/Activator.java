@@ -13,9 +13,11 @@ import com.helospark.spark.builder.handlers.codegenerator.BuilderRemover;
 import com.helospark.spark.builder.handlers.codegenerator.CompilationUnitParser;
 import com.helospark.spark.builder.handlers.codegenerator.component.BuilderClassCreator;
 import com.helospark.spark.builder.handlers.codegenerator.component.BuilderMethodListRewritePopulator;
+import com.helospark.spark.builder.handlers.codegenerator.component.ImportPopulator;
 import com.helospark.spark.builder.handlers.codegenerator.component.PrivateConstructorListRewritePopulator;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.BuilderMethodNameBuilder;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.ClassNameToVariableNameConverter;
+import com.helospark.spark.builder.handlers.codegenerator.component.helper.GeneratedAnnotationPopulator;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.JavadocGenerator;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.NonNullAnnotationAttacher;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.TemplateResolver;
@@ -63,17 +65,19 @@ public class Activator extends AbstractUIPlugin {
         diContainer.add(new PreferencesManager());
         diContainer.add(new BuilderRemover());
         diContainer.add(new CompilationUnitParser());
+        diContainer.add(new GeneratedAnnotationPopulator());
         diContainer.add(new NonNullAnnotationAttacher());
+        diContainer.add(new ImportPopulator(getDependency(PreferencesManager.class)));
         diContainer.add(new BuilderMethodNameBuilder(getDependency(VariableNameToUpperCamelCaseConverter.class), getDependency(PreferencesManager.class),
                 getDependency(TemplateResolver.class)));
         diContainer.add(new BuilderClassCreator(getDependency(BuilderMethodNameBuilder.class), getDependency(TemplateResolver.class), getDependency(PreferencesManager.class),
-                getDependency(JavadocGenerator.class), getDependency(NonNullAnnotationAttacher.class)));
+                getDependency(JavadocGenerator.class), getDependency(NonNullAnnotationAttacher.class), getDependency(GeneratedAnnotationPopulator.class)));
         diContainer.add(new BuilderMethodListRewritePopulator(getDependency(TemplateResolver.class), getDependency(PreferencesManager.class),
-                getDependency(JavadocGenerator.class)));
-        diContainer.add(new PrivateConstructorListRewritePopulator(getDependency(ClassNameToVariableNameConverter.class)));
+                getDependency(JavadocGenerator.class), getDependency(GeneratedAnnotationPopulator.class)));
+        diContainer.add(new PrivateConstructorListRewritePopulator(getDependency(ClassNameToVariableNameConverter.class), getDependency(GeneratedAnnotationPopulator.class)));
         diContainer.add(new ApplicableFieldExtractor());
         diContainer.add(new BuilderPatternCodeGenerator(getDependency(ApplicableFieldExtractor.class), getDependency(BuilderClassCreator.class),
-                getDependency(PrivateConstructorListRewritePopulator.class), getDependency(BuilderMethodListRewritePopulator.class)));
+                getDependency(PrivateConstructorListRewritePopulator.class), getDependency(BuilderMethodListRewritePopulator.class), getDependency(ImportPopulator.class)));
 
     }
 

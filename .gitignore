@@ -4,3 +4,4 @@
 .metadata
 */build
 bin/
+*.jar

@@ -1,4 +1,4 @@
-package com.helospark.spark.builder.preferences;
+package com.helospark.spark.converter.preferences;
 
 public class StaticPreferences {
     public static final String RETURN_JAVADOC_TAG_NAME = "@return";

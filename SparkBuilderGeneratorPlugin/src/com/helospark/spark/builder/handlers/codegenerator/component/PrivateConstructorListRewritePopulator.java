@@ -14,13 +14,17 @@ import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.jdt.core.dom.rewrite.ListRewrite;
 
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.ClassNameToVariableNameConverter;
+import com.helospark.spark.builder.handlers.codegenerator.component.helper.GeneratedAnnotationPopulator;
 import com.helospark.spark.builder.handlers.codegenerator.domain.NamedVariableDeclarationField;
 
 public class PrivateConstructorListRewritePopulator {
     private ClassNameToVariableNameConverter classNameToVariableNameConverter;
+    private GeneratedAnnotationPopulator generatedAnnotationPopulator;
 
-    public PrivateConstructorListRewritePopulator(ClassNameToVariableNameConverter classNameToVariableNameConverter) {
+    public PrivateConstructorListRewritePopulator(ClassNameToVariableNameConverter classNameToVariableNameConverter,
+            GeneratedAnnotationPopulator generatedAnnotationPopulator) {
         this.classNameToVariableNameConverter = classNameToVariableNameConverter;
+        this.generatedAnnotationPopulator = generatedAnnotationPopulator;
     }
 
     public void addPrivateConstructorToCompilationUnit(AST ast, TypeDeclaration originalType, TypeDeclaration builderType, ListRewrite listRewrite,
@@ -55,6 +59,7 @@ public class PrivateConstructorListRewritePopulator {
         MethodDeclaration method = ast.newMethodDeclaration();
         method.setConstructor(true);
         method.setName(ast.newSimpleName(originalType.getName().toString()));
+        generatedAnnotationPopulator.addGeneratedAnnotation(ast, method);
         method.modifiers().add(ast.newModifier(ModifierKeyword.PRIVATE_KEYWORD));
         method.setBody(body);
 

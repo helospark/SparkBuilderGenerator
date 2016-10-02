@@ -17,6 +17,7 @@ import org.eclipse.jdt.core.dom.ReturnStatement;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.jdt.core.dom.rewrite.ListRewrite;
 
+import com.helospark.spark.builder.handlers.codegenerator.component.helper.GeneratedAnnotationPopulator;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.JavadocGenerator;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.TemplateResolver;
 import com.helospark.spark.builder.preferences.PluginPreferenceList;
@@ -26,11 +27,14 @@ public class BuilderMethodListRewritePopulator {
     private TemplateResolver templateResolver;
     private PreferencesManager preferenceManager;
     private JavadocGenerator javadocGenerator;
+    private GeneratedAnnotationPopulator generatedAnnotationPopulator;
 
-    public BuilderMethodListRewritePopulator(TemplateResolver templateResolver, PreferencesManager preferenceManager, JavadocGenerator javadocGenerator) {
+    public BuilderMethodListRewritePopulator(TemplateResolver templateResolver, PreferencesManager preferenceManager, JavadocGenerator javadocGenerator,
+            GeneratedAnnotationPopulator generatedAnnotationPopulator) {
         this.templateResolver = templateResolver;
         this.preferenceManager = preferenceManager;
         this.javadocGenerator = javadocGenerator;
+        this.generatedAnnotationPopulator = generatedAnnotationPopulator;
     }
 
     public void addBuilderMethodToCompilationUnit(AST ast, ListRewrite listRewrite, TypeDeclaration typeDeclaration, TypeDeclaration builderType) {
@@ -40,15 +44,11 @@ public class BuilderMethodListRewritePopulator {
 
     @SuppressWarnings("unchecked")
     private MethodDeclaration createBuilderMethod(AST ast, TypeDeclaration originalType, TypeDeclaration builderType) {
-        Block builderMethodBlock = ast.newBlock();
-        ReturnStatement returnStatement = ast.newReturnStatement();
-        ClassInstanceCreation newClassInstanceCreation = ast.newClassInstanceCreation();
-        newClassInstanceCreation.setType(ast.newSimpleType(ast.newName(builderType.getName().toString())));
-        returnStatement.setExpression(newClassInstanceCreation);
-        builderMethodBlock.statements().add(returnStatement);
+        Block builderMethodBlock = createReturnBlock(ast, builderType);
         MethodDeclaration builderMethod = ast.newMethodDeclaration();
         builderMethod.setName(ast.newSimpleName(getBuilderMethodName(originalType)));
         builderMethod.setBody(builderMethodBlock);
+        generatedAnnotationPopulator.addGeneratedAnnotation(ast, builderMethod);
         builderMethod.modifiers().add(ast.newModifier(ModifierKeyword.PUBLIC_KEYWORD));
         builderMethod.modifiers().add(ast.newModifier(ModifierKeyword.STATIC_KEYWORD));
         builderMethod.setReturnType2(ast.newSimpleType(ast.newName(builderType.getName().toString())));
@@ -60,6 +60,16 @@ public class BuilderMethodListRewritePopulator {
         }
 
         return builderMethod;
+    }
+
+    private Block createReturnBlock(AST ast, TypeDeclaration builderType) {
+        Block builderMethodBlock = ast.newBlock();
+        ReturnStatement returnStatement = ast.newReturnStatement();
+        ClassInstanceCreation newClassInstanceCreation = ast.newClassInstanceCreation();
+        newClassInstanceCreation.setType(ast.newSimpleType(ast.newName(builderType.getName().toString())));
+        returnStatement.setExpression(newClassInstanceCreation);
+        builderMethodBlock.statements().add(returnStatement);
+        return builderMethodBlock;
     }
 
     private String getBuilderMethodName(TypeDeclaration originalType) {

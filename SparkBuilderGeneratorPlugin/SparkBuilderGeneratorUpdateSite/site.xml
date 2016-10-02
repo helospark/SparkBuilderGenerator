@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <description name="Spark builder generator plugin" url="ftp://192.168.0.74:799/SparkBuilderGeneratorPlugin/">
+      Plugin to generate builder
+   </description>
+   <feature url="features/SparkBuilderGeneratorFeature_1.0.0.201610021422.jar" id="SparkBuilderGeneratorFeature" version="1.0.0.201610021422"/>
+</site>
