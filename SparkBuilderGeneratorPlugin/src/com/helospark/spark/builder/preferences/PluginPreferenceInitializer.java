@@ -14,8 +14,8 @@ public class PluginPreferenceInitializer extends AbstractPreferenceInitializer {
     }
 
     private void initializeDefaultValues(IEclipsePreferences iEclipsePreferences) {
-        for (PluginPreference<?> jeneratePreference : PluginPreferenceList.getAllPreferences()) {
-            jeneratePreference.putDefaultValue(iEclipsePreferences);
+        for (PluginPreference<?> pluginPreference : PluginPreferenceList.getAllPreferences()) {
+            pluginPreference.putDefaultValue(iEclipsePreferences);
         }
     }
 }

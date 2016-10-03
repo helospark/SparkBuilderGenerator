@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="SparkBuilderGeneratorFeature"
+      id="com.helospark.SparkBuilderGeneratorFeature"
       label="SparkBuilderGeneratorFeature"
       version="1.0.0.qualifier"
       os="linux,win32"
@@ -15,20 +15,21 @@ Features:
   - Eclipse 3 compatible (does not use e4)
    </description>
 
-   <copyright url="https://opensource.org/licenses/MIT">
-      MIT licence
-   </copyright>
-
-   <license url="https://opensource.org/licenses/MIT">
-      MIT licence
-   </license>
-
    <url>
       <update label="Spark plugin update site" url="ftp://192.168.0.74:799/SparkBuilderGeneratorPlugin/"/>
    </url>
 
+   <requires>
+      <import plugin="org.eclipse.ui"/>
+      <import plugin="org.eclipse.core.resources"/>
+      <import plugin="org.eclipse.core.runtime"/>
+      <import plugin="org.eclipse.jdt.ui"/>
+      <import plugin="org.eclipse.jdt.core"/>
+      <import plugin="org.eclipse.jface.text"/>
+   </requires>
+
    <plugin
-         id="SparkBuilderGenerator"
+         id="com.helospark.SparkBuilderGenerator"
          download-size="0"
          install-size="0"
          version="0.0.0"

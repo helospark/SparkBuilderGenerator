@@ -6,7 +6,7 @@ import com.helospark.spark.builder.preferences.impl.BooleanPluginPreference;
 import com.helospark.spark.builder.preferences.impl.StringPluginPreference;
 
 /**
- * Holds all the {@link PluginPreference}s for the Jenerate plugin
+ * Holds all the {@link PluginPreference}s for this plugin.
  * 
  * @author maudrain, helospark
  */
@@ -49,11 +49,6 @@ public final class PluginPreferenceList {
     public static final PluginPreference<Boolean> OVERRIDE_PREVIOUS_BUILDER = new BooleanPluginPreference("override_previous_builder",
             "Override previous builder", Boolean.TRUE);
 
-    /**
-     * @return all preferences of the Jenerate plugin. The ordering of the
-     *         preferences is important because for example the preference page
-     *         uses it to generate the preferences fields.
-     */
     public static LinkedHashSet<PluginPreference<?>> getAllPreferences() {
         LinkedHashSet<PluginPreference<?>> allPreferences = new LinkedHashSet<PluginPreference<?>>();
         allPreferences.add(CREATE_BUILDER_METHOD_PATTERN);

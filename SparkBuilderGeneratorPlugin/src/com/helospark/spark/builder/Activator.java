@@ -29,7 +29,7 @@ import com.helospark.spark.builder.preferences.PreferencesManager;
  */
 public class Activator extends AbstractUIPlugin {
     public static List<Object> diContainer = new ArrayList<>();
-    public static final String PLUGIN_ID = "com.helospark.SparkBuilderPlugin";
+    public static final String PLUGIN_ID = "com.helospark.SparkBuilderGenerator";
 
     private static Activator plugin;
 
@@ -73,8 +73,9 @@ public class Activator extends AbstractUIPlugin {
         diContainer.add(new BuilderClassCreator(getDependency(BuilderMethodNameBuilder.class), getDependency(TemplateResolver.class), getDependency(PreferencesManager.class),
                 getDependency(JavadocGenerator.class), getDependency(NonNullAnnotationAttacher.class), getDependency(GeneratedAnnotationPopulator.class)));
         diContainer.add(new BuilderMethodListRewritePopulator(getDependency(TemplateResolver.class), getDependency(PreferencesManager.class),
-                getDependency(JavadocGenerator.class), getDependency(GeneratedAnnotationPopulator.class)));
-        diContainer.add(new PrivateConstructorListRewritePopulator(getDependency(ClassNameToVariableNameConverter.class), getDependency(GeneratedAnnotationPopulator.class)));
+                getDependency(JavadocGenerator.class), getDependency(GeneratedAnnotationPopulator.class), getDependency(PreferencesManager.class)));
+        diContainer.add(new PrivateConstructorListRewritePopulator(getDependency(ClassNameToVariableNameConverter.class), getDependency(GeneratedAnnotationPopulator.class),
+                getDependency(PreferencesManager.class)));
         diContainer.add(new ApplicableFieldExtractor());
         diContainer.add(new BuilderPatternCodeGenerator(getDependency(ApplicableFieldExtractor.class), getDependency(BuilderClassCreator.class),
                 getDependency(PrivateConstructorListRewritePopulator.class), getDependency(BuilderMethodListRewritePopulator.class), getDependency(ImportPopulator.class)));

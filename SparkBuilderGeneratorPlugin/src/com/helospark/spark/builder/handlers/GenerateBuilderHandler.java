@@ -32,6 +32,7 @@ import com.helospark.spark.builder.Activator;
 import com.helospark.spark.builder.handlers.codegenerator.BuilderPatternCodeGenerator;
 import com.helospark.spark.builder.handlers.codegenerator.BuilderRemover;
 import com.helospark.spark.builder.handlers.codegenerator.CompilationUnitParser;
+import com.helospark.spark.builder.handlers.exception.PluginException;
 import com.helospark.spark.builder.preferences.PreferencesManager;
 
 /**
@@ -93,6 +94,8 @@ public class GenerateBuilderHandler extends AbstractHandler {
             builderGenerator.generateBuilder(ast, rewriter, compilationUnit);
 
             commitCodeChanges(iCompilationUnit, rewriter);
+        } catch (PluginException e) {
+            MessageDialog.openInformation(getShell(), "Error in generation", e.getMessage());
         } catch (Exception e) {
             createErrorDialog(e);
         }

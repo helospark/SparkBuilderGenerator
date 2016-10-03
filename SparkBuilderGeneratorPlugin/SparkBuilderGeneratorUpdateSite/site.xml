@@ -3,5 +3,5 @@
    <description name="Spark builder generator plugin" url="ftp://192.168.0.74:799/SparkBuilderGeneratorPlugin/">
       Plugin to generate builder
    </description>
-   <feature url="features/SparkBuilderGeneratorFeature_1.0.0.201610021422.jar" id="SparkBuilderGeneratorFeature" version="1.0.0.201610021422"/>
+   <feature url="features/com.helospark.SparkBuilderGeneratorFeature_1.0.0.201610032102.jar" id="com.helospark.SparkBuilderGeneratorFeature" version="1.0.0.201610032102" os="linux,win32" nl="en"/>
 </site>

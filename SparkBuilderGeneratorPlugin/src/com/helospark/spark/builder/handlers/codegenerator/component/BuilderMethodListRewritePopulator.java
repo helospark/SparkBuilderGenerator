@@ -1,5 +1,6 @@
 package com.helospark.spark.builder.handlers.codegenerator.component;
 
+import static com.helospark.spark.builder.preferences.PluginPreferenceList.ADD_GENERATED_ANNOTATION;
 import static com.helospark.spark.builder.preferences.StaticPreferences.RETURN_JAVADOC_TAG_NAME;
 
 import java.util.Collections;
@@ -28,13 +29,15 @@ public class BuilderMethodListRewritePopulator {
     private PreferencesManager preferenceManager;
     private JavadocGenerator javadocGenerator;
     private GeneratedAnnotationPopulator generatedAnnotationPopulator;
+    private PreferencesManager preferencesManager;
 
     public BuilderMethodListRewritePopulator(TemplateResolver templateResolver, PreferencesManager preferenceManager, JavadocGenerator javadocGenerator,
-            GeneratedAnnotationPopulator generatedAnnotationPopulator) {
+            GeneratedAnnotationPopulator generatedAnnotationPopulator, PreferencesManager preferencesManager) {
         this.templateResolver = templateResolver;
         this.preferenceManager = preferenceManager;
         this.javadocGenerator = javadocGenerator;
         this.generatedAnnotationPopulator = generatedAnnotationPopulator;
+        this.preferencesManager = preferencesManager;
     }
 
     public void addBuilderMethodToCompilationUnit(AST ast, ListRewrite listRewrite, TypeDeclaration typeDeclaration, TypeDeclaration builderType) {
@@ -48,7 +51,7 @@ public class BuilderMethodListRewritePopulator {
         MethodDeclaration builderMethod = ast.newMethodDeclaration();
         builderMethod.setName(ast.newSimpleName(getBuilderMethodName(originalType)));
         builderMethod.setBody(builderMethodBlock);
-        generatedAnnotationPopulator.addGeneratedAnnotation(ast, builderMethod);
+        addGenerateAnnotationIfNeeded(ast, builderMethod);
         builderMethod.modifiers().add(ast.newModifier(ModifierKeyword.PUBLIC_KEYWORD));
         builderMethod.modifiers().add(ast.newModifier(ModifierKeyword.STATIC_KEYWORD));
         builderMethod.setReturnType2(ast.newSimpleType(ast.newName(builderType.getName().toString())));
@@ -60,6 +63,12 @@ public class BuilderMethodListRewritePopulator {
         }
 
         return builderMethod;
+    }
+
+    private void addGenerateAnnotationIfNeeded(AST ast, MethodDeclaration builderMethod) {
+        if (preferencesManager.getPreferenceValue(ADD_GENERATED_ANNOTATION)) {
+            generatedAnnotationPopulator.addGeneratedAnnotation(ast, builderMethod);
+        }
     }
 
     private Block createReturnBlock(AST ast, TypeDeclaration builderType) {
