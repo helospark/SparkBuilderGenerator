@@ -210,6 +210,7 @@ public class BuilderClassCreator {
         }
         builderType.modifiers().add(ast.newModifier(ModifierKeyword.PUBLIC_KEYWORD));
         builderType.modifiers().add(ast.newModifier(ModifierKeyword.STATIC_KEYWORD));
+        builderType.modifiers().add(ast.newModifier(ModifierKeyword.FINAL_KEYWORD));
 
         if (preferencesManager.getPreferenceValue(GENERATE_JAVADOC_ON_BUILDER_CLASS)) {
             Javadoc javadoc = javadocGenerator.generateJavadoc(ast, String.format(Locale.ENGLISH, "Builder to build {@link %s}.", originalType.getName().toString()),

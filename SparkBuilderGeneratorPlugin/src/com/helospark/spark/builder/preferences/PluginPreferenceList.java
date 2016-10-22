@@ -46,6 +46,9 @@ public final class PluginPreferenceList {
     public static final PluginPreference<Boolean> ADD_GENERATED_ANNOTATION = new BooleanPluginPreference("add_generated_annotation",
             "Add @Generated annotation", Boolean.TRUE);
 
+    public static final PluginPreference<Boolean> INITIALIZE_OPTIONAL = new BooleanPluginPreference("initialize_optional",
+            "Initialize Optional in method", Boolean.FALSE);
+
     public static final PluginPreference<Boolean> OVERRIDE_PREVIOUS_BUILDER = new BooleanPluginPreference("override_previous_builder",
             "Override previous builder", Boolean.TRUE);
 
@@ -61,6 +64,7 @@ public final class PluginPreferenceList {
         allPreferences.add(ADD_NONNULL_ON_RETURN);
         allPreferences.add(ADD_NONNULL_ON_PARAMETERS);
         allPreferences.add(ADD_GENERATED_ANNOTATION);
+        allPreferences.add(OVERRIDE_PREVIOUS_BUILDER);
         return allPreferences;
     }
 }

@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.BodyDeclaration;
 import org.eclipse.jdt.core.dom.CompilationUnit;
+import org.eclipse.jdt.core.dom.IExtendedModifier;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.Modifier;
 import org.eclipse.jdt.core.dom.Modifier.ModifierKeyword;
@@ -25,19 +26,26 @@ public class BuilderRemover {
     @SuppressWarnings("unchecked")
     public void removeExistingBuilder(AST ast, ASTRewrite rewriter, CompilationUnit compilationUnit) {
         List<TypeDeclaration> typesList = compilationUnit.types();
+        if (typesList.size() > 0) {
+            List<BodyDeclaration> nestedTypes = getNestedTypes(typesList);
+            if (nestedTypes.size() == 1) {
+                TypeDeclaration builderTypeDeclaration = (TypeDeclaration) nestedTypes.get(0);
+                TypeDeclaration mainType = typesList.get(0);
+                MethodDeclaration constructorToRemove = findPrivateConstructor(builderTypeDeclaration, mainType);
+                MethodDeclaration builderMethodToRemove = findBuilderMethod(builderTypeDeclaration, mainType);
+                rewriter.remove(constructorToRemove, null);
+                rewriter.remove(builderMethodToRemove, null);
+                rewriter.remove(nestedTypes.get(0), null);
+            }
+        }
+    }
+
+    private List<BodyDeclaration> getNestedTypes(List<TypeDeclaration> typesList) {
         List<BodyDeclaration> otherTypes = ((List<BodyDeclaration>) typesList.get(0).bodyDeclarations())
                 .stream()
                 .filter(value -> value instanceof TypeDeclaration)
                 .collect(Collectors.toList());
-        if (otherTypes.size() == 1) {
-            TypeDeclaration builderTypeDeclaration = (TypeDeclaration) otherTypes.get(0);
-            TypeDeclaration mainType = typesList.get(0);
-            MethodDeclaration constructorToRemove = findPrivateConstructor(builderTypeDeclaration, mainType);
-            MethodDeclaration builderMethodToRemove = findBuilderMethod(builderTypeDeclaration, mainType);
-            rewriter.remove(constructorToRemove, null);
-            rewriter.remove(builderMethodToRemove, null);
-            rewriter.remove(otherTypes.get(0), null);
-        }
+        return otherTypes;
     }
 
     @SuppressWarnings("unchecked")
@@ -60,9 +68,10 @@ public class BuilderRemover {
                 .orElseThrow(() -> new RuntimeException("No constructor found for builder"));
     }
 
-    private boolean isStatic(List<Modifier> list) {
+    private boolean isStatic(List<IExtendedModifier> list) {
         return list.stream()
-                .filter(element -> element.getKeyword() == ModifierKeyword.STATIC_KEYWORD)
+                .filter(element -> element instanceof Modifier)
+                .filter(element -> ((Modifier) element).getKeyword() == ModifierKeyword.STATIC_KEYWORD)
                 .findFirst()
                 .map(element -> Boolean.TRUE)
                 .orElse(Boolean.FALSE);

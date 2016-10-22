@@ -5,3 +5,5 @@
 */build
 bin/
 *.jar
+*/test-output
+*/target

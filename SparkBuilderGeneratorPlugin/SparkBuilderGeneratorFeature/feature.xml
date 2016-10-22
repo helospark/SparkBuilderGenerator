@@ -2,21 +2,19 @@
 <feature
       id="com.helospark.SparkBuilderGeneratorFeature"
       label="SparkBuilderGeneratorFeature"
-      version="1.0.0.qualifier"
-      os="linux,win32"
-      nl="en">
+      version="1.0.0.qualifier">
 
-   <description url="ftp://192.168.0.74:799/SparkBuilderGeneratorPlugin/">
+   <description url="ftp://helospark.com:799/SparkBuilderGeneratorPlugin/">
       Spark builder generator plugin
 Features:
-  - Generates a builder
-  - Capable of regenerating the builder
-  - Can generate Javadoc and add @NonNull
-  - Eclipse 3 compatible (does not use e4)
+- Generates a builder
+- Capable of regenerating the builder
+- Can generate Javadoc and add @NonNull
+- Eclipse 3 compatible (does not use e4)
    </description>
 
    <url>
-      <update label="Spark plugin update site" url="ftp://192.168.0.74:799/SparkBuilderGeneratorPlugin/"/>
+      <update label="Spark plugin update site" url="ftp://helospark.com:799/SparkBuilderGeneratorPlugin/"/>
    </url>
 
    <requires>
