@@ -7,9 +7,9 @@ import static org.mockito.MockitoAnnotations.initMocks;
 
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
+import org.junit.Before;
+import org.junit.Test;
 import org.mockito.Mock;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
 
 import com.helospark.integrationtest.helper.CompilationUnitHelper;
 import com.helospark.spark.builder.DiContainer;
@@ -36,7 +36,7 @@ public class BaseTest {
     private DiContainer diContainer;
     private GenerateBuilderHandler generateBuilderHandler;
 
-    @BeforeMethod
+    @Before
     public void setUp() {
         initMocks(this);
         setDefaultTestValue(preferencesManager);

@@ -1,29 +1,32 @@
 package com.helospark.spark.converter.handlers.domain;
 
-import org.eclipse.jdt.core.ICompilationUnit;
+import javax.annotation.Generated;
+
 import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.IType;
 
 public class ConverterInputParameters {
-    private ICompilationUnit sourceCompilationUnit;
-    private ICompilationUnit destinationCompilationUnit;
+    private IType sourceType;
+    private IType destinationType;
     private String destinationPackageFragment;
     private Boolean recursiveGeneration;
     private IJavaProject javaProject;
 
+    @Generated("SparkTools")
     private ConverterInputParameters(Builder builder) {
-        this.sourceCompilationUnit = builder.sourceCompilationUnit;
-        this.destinationCompilationUnit = builder.destinationCompilationUnit;
+        this.sourceType = builder.sourceType;
+        this.destinationType = builder.destinationType;
         this.destinationPackageFragment = builder.destinationPackageFragment;
         this.recursiveGeneration = builder.recursiveGeneration;
         this.javaProject = builder.javaProject;
     }
 
-    public ICompilationUnit getSourceCompilationUnit() {
-        return sourceCompilationUnit;
+    public IType getSourceType() {
+        return sourceType;
     }
 
-    public ICompilationUnit getDestinationCompilationUnit() {
-        return destinationCompilationUnit;
+    public IType getDestinationType() {
+        return destinationType;
     }
 
     public String getDestinationPackageFragment() {
@@ -38,13 +41,15 @@ public class ConverterInputParameters {
         return javaProject;
     }
 
+    @Generated("SparkTools")
     public static Builder builder() {
         return new Builder();
     }
 
-    public static class Builder {
-        private ICompilationUnit sourceCompilationUnit;
-        private ICompilationUnit destinationCompilationUnit;
+    @Generated("SparkTools")
+    public static final class Builder {
+        private IType sourceType;
+        private IType destinationType;
         private String destinationPackageFragment;
         private Boolean recursiveGeneration;
         private IJavaProject javaProject;
@@ -52,13 +57,13 @@ public class ConverterInputParameters {
         private Builder() {
         }
 
-        public Builder withSourceCompilationUnit(ICompilationUnit sourceCompilationUnit) {
-            this.sourceCompilationUnit = sourceCompilationUnit;
+        public Builder withSourceType(IType sourceType) {
+            this.sourceType = sourceType;
             return this;
         }
 
-        public Builder withDestinationCompilationUnit(ICompilationUnit destinationCompilationUnit) {
-            this.destinationCompilationUnit = destinationCompilationUnit;
+        public Builder withDestinationType(IType destinationType) {
+            this.destinationType = destinationType;
             return this;
         }
 

@@ -8,6 +8,7 @@ import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.search.SearchEngine;
 import org.eclipse.jdt.internal.core.JavaElement;
+import org.eclipse.jdt.internal.core.SourceType;
 import org.eclipse.jdt.ui.IJavaElementSearchConstants;
 import org.eclipse.jdt.ui.JavaUI;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -88,7 +89,7 @@ public class ClassSelector {
             if (dialog.open() == IDialogConstants.OK_ID) {
                 Object[] result = dialog.getResult();
                 for (Object o : result) {
-                    if (o instanceof JavaElement) {
+                    if (o instanceof SourceType) {
                         JavaElement sourceType = (JavaElement) o;
                         javaProject = sourceType.getJavaProject();
                         resultCompilationUnit = sourceType.getCompilationUnit();

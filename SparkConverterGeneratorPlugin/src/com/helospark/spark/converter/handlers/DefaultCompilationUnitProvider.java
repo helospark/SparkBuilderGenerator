@@ -57,9 +57,11 @@ public class DefaultCompilationUnitProvider {
                 .getSelectionService();
         IStructuredSelection structured = (IStructuredSelection) service
                 .getSelection("org.eclipse.jdt.ui.PackageExplorer");
-        for (Object selection : structured.toList()) {
-            if (selection instanceof CompilationUnit) {
-                compilationUnitTypes.add((ICompilationUnit) selection);
+        if (structured != null) {
+            for (Object selection : structured.toList()) {
+                if (selection instanceof CompilationUnit) {
+                    compilationUnitTypes.add((ICompilationUnit) selection);
+                }
             }
         }
         return compilationUnitTypes;

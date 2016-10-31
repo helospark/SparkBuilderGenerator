@@ -2,14 +2,15 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: SparkBuilderGenerator
 Bundle-SymbolicName: com.helospark.SparkBuilderGenerator;singleton:=true
-Bundle-Version: 1.0.0.qualifier
+Bundle-Version: 0.0.1.qualifier
 Bundle-ClassPath: .
 Bundle-Activator: com.helospark.spark.builder.Activator
 Require-Bundle: org.eclipse.ui,
- org.eclipse.core.resources,
  org.eclipse.core.runtime,
+ org.eclipse.core.resources,
  org.eclipse.jdt.ui,
  org.eclipse.jdt.core,
  org.eclipse.jface.text
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
+Import-Package: org.osgi.framework

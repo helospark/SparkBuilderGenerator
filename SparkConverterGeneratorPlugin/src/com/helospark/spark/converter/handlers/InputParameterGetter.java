@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jdt.core.ICompilationUnit;
+import org.eclipse.jdt.core.IType;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
@@ -14,6 +15,7 @@ import org.eclipse.ui.handlers.HandlerUtil;
 
 import com.helospark.spark.converter.handlers.dialog.GenerateConverterDialog;
 import com.helospark.spark.converter.handlers.domain.ConverterInputParameters;
+import com.helospark.spark.exception.PluginException;
 
 /**
  * Gets input parameters from the user for the converter generation.
@@ -45,14 +47,29 @@ public class InputParameterGetter {
                 return Optional.empty();
             }
             return Optional.of(ConverterInputParameters.builder()
-                    .withDestinationCompilationUnit(generateConverterDialog.getDestinationCompilationUnit())
-                    .withSourceCompilationUnit(generateConverterDialog.getSourceCompilationUnit())
+                    .withDestinationType(extractRootType(generateConverterDialog.getDestinationCompilationUnit()))
+                    .withSourceType(extractRootType(generateConverterDialog.getSourceCompilationUnit()))
                     .withDestinationPackageFragment(generateConverterDialog.getDestinationPackageFragment())
                     .withRecursiveGeneration(generateConverterDialog.getRecursiveGeneration())
                     .withJavaProject(generateConverterDialog.getJavaProject())
                     .build());
         }
         return Optional.empty();
+    }
+
+    private IType extractRootType(ICompilationUnit iCompilationUnit) {
+        try {
+            IType[] types = iCompilationUnit.getTypes();
+            if (types.length == 0) {
+                throw new PluginException("No class is present in " + iCompilationUnit.getElementName());
+            }
+            if (types.length > 1) {
+                throw new PluginException("Multiple classes is present in " + iCompilationUnit.getElementName());
+            }
+            return types[0];
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private boolean isDataValid(GenerateConverterDialog generateConverterDialog) {

@@ -54,6 +54,7 @@ public class GenerateConverterHandler extends AbstractHandler {
                 converterGenerator.generate(inputParameters.get());
             }
         } catch (Exception e) {
+            e.printStackTrace();
             createErrorDialog(e);
         }
         return null;

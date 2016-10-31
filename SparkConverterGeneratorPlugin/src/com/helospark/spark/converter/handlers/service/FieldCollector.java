@@ -3,6 +3,7 @@ package com.helospark.spark.converter.handlers.service;
 import static com.helospark.spark.converter.handlers.domain.FieldCollectorResultKind.SOURCE_CONTAINS_DESTIONATION_DOES_NOT;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.jdt.core.IType;
@@ -48,6 +49,7 @@ public class FieldCollector {
                 result.add(fieldCollectorResult);
             }
         }
+        return Collections.emptyList();
     }
 
     private List<AccessFieldDeclaration> extractFields(IType source) {

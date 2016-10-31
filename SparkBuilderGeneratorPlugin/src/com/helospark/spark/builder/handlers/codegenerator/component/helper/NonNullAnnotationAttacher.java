@@ -24,7 +24,7 @@ public class NonNullAnnotationAttacher {
 
     private MarkerAnnotation createNonnullAnnotation(AST ast) {
         MarkerAnnotation nonNullAnnotation = ast.newMarkerAnnotation();
-        nonNullAnnotation.setTypeName(ast.newSimpleName("Nonnull"));
+        nonNullAnnotation.setTypeName(ast.newSimpleName("NonNull"));
         return nonNullAnnotation;
     }
 }
