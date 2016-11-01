@@ -15,6 +15,7 @@ import org.eclipse.ui.handlers.HandlerUtil;
 
 import com.helospark.spark.converter.handlers.dialog.GenerateConverterDialog;
 import com.helospark.spark.converter.handlers.domain.ConverterInputParameters;
+import com.helospark.spark.converter.handlers.domain.TemplatedIType;
 import com.helospark.spark.exception.PluginException;
 
 /**
@@ -47,8 +48,8 @@ public class InputParameterGetter {
                 return Optional.empty();
             }
             return Optional.of(ConverterInputParameters.builder()
-                    .withDestinationType(extractRootType(generateConverterDialog.getDestinationCompilationUnit()))
-                    .withSourceType(extractRootType(generateConverterDialog.getSourceCompilationUnit()))
+                    .withDestinationType(new TemplatedIType(extractRootType(generateConverterDialog.getDestinationCompilationUnit())))
+                    .withSourceType(new TemplatedIType(extractRootType(generateConverterDialog.getSourceCompilationUnit())))
                     .withDestinationPackageFragment(generateConverterDialog.getDestinationPackageFragment())
                     .withRecursiveGeneration(generateConverterDialog.getRecursiveGeneration())
                     .withJavaProject(generateConverterDialog.getJavaProject())

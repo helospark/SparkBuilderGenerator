@@ -30,10 +30,10 @@ public class ConverterConvertMethodGenerator {
 
     public MethodDeclaration generate(CompilationUnitModificationDomain compilationUnitModificationDomain, ConvertableDomain convertableDomain) {
         AST ast = compilationUnitModificationDomain.getAst();
-        String destinationTypeName = convertableDomain.getDestinationObject().getFullyQualifiedName();
+        String destinationTypeName = convertableDomain.getDestinationObject().getType().getFullyQualifiedName();
 
         SingleVariableDeclaration methodParameterDeclaration = ast.newSingleVariableDeclaration();
-        SimpleType sourceType = ast.newSimpleType(ast.newName(convertableDomain.getSourceObject().getFullyQualifiedName()));
+        SimpleType sourceType = ast.newSimpleType(ast.newName(convertableDomain.getSourceObject().getType().getFullyQualifiedName()));
         methodParameterDeclaration.setType(sourceType);
         methodParameterDeclaration.setName(ast.newSimpleName("asd"));
 

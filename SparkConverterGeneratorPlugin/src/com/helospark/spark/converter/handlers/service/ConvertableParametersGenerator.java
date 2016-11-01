@@ -11,6 +11,7 @@ import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
 
 import com.helospark.spark.converter.handlers.domain.ConverterInputParameters;
+import com.helospark.spark.converter.handlers.domain.TemplatedIType;
 import com.helospark.spark.converter.handlers.service.converttype.ConvertableDomainBuilderChainItem;
 import com.helospark.spark.converter.handlers.service.domain.ConvertType;
 import com.helospark.spark.converter.handlers.service.domain.ConvertableDomain;
@@ -30,17 +31,17 @@ public class ConvertableParametersGenerator {
         List<ConvertableDomainParameter> convertableDomainParameterList = new ArrayList<>();
 
         boolean useBuilder = false;
-        IMethod[] sourceMethods = getMethods(converterInputParameters.getSourceType());
+        IMethod[] sourceMethods = getMethods(converterInputParameters.getSourceType().getType());
         List<IMethod> filteredSourceMethods = extractMethodsStartingWith(sourceMethods, "get", 0);
 
         List<IMethod> filteredDestinationMethods;
-        if (hasBuilder(converterInputParameters.getDestinationType())) {
-            IType builderClass = extractBuilderClass(converterInputParameters.getDestinationType());
+        if (hasBuilder(converterInputParameters.getDestinationType().getType())) {
+            IType builderClass = extractBuilderClass(converterInputParameters.getDestinationType().getType());
             IMethod[] destinationMethods = getMethods(builderClass);
             filteredDestinationMethods = extractMethodsStartingWith(destinationMethods, "with", 1);
             useBuilder = true;
         } else {
-            IMethod[] destinationMethods = getMethods(converterInputParameters.getDestinationType());
+            IMethod[] destinationMethods = getMethods(converterInputParameters.getDestinationType().getType());
             filteredDestinationMethods = extractMethodsStartingWith(destinationMethods, "set", 1);
             useBuilder = false;
         }
@@ -110,15 +111,15 @@ public class ConvertableParametersGenerator {
     }
 
     private ConvertableDomainParameter createConvertableDomainParameter(Optional<IMethod> sourceMethod, Optional<IMethod> destinationMethod, ConvertType type,
-            IType referenceType) {
+            TemplatedIType referenceType) {
         try {
             return ConvertableDomainParameter.builder()
                     .withDestinationMethodName(destinationMethod.map(m -> m.getElementName()).orElse(""))
                     .withDestinationParameterName(destinationMethod.map(m -> methodNameToFieldName(m.getElementName())).orElse(""))
-                    .withDestinationType(destinationMethod.map(m -> getFirstParameterType(m, referenceType)).orElse(null))
+                    .withDestinationType(destinationMethod.map(m -> getFirstParameterType(m, referenceType.getType())).orElse(null))
                     .withSourceMethodName(sourceMethod.map(m -> m.getElementName()).orElse(""))
                     .withSourceParameterName(sourceMethod.map(m -> methodNameToFieldName(m.getElementName())).orElse(""))
-                    .withSourceType(sourceMethod.map(m -> getReturnType(m, referenceType)).orElse(null))
+                    .withSourceType(sourceMethod.map(m -> getReturnType(m, referenceType.getType())).orElse(null))
                     .withType(type)
                     .build();
         } catch (Exception e) {
@@ -126,7 +127,7 @@ public class ConvertableParametersGenerator {
         }
     }
 
-    private IType getFirstParameterType(IMethod m, IType referenceType) {
+    private TemplatedIType getFirstParameterType(IMethod m, IType referenceType) {
         try {
             ILocalVariable[] parameters = m.getParameters();
             if (parameters.length != 1) {
@@ -139,7 +140,7 @@ public class ConvertableParametersGenerator {
         }
     }
 
-    private IType getReturnType(IMethod method, IType reference) {
+    private TemplatedIType getReturnType(IMethod method, IType reference) {
         try {
             String returnTypeSignature = method.getReturnType();
             return signatureToTypeResolver.getJavaTypeFromSignatureClassName(returnTypeSignature, reference);

@@ -66,7 +66,7 @@ public class ConverterGenerator {
     }
 
     private String createConverterName(ConverterInputParameters converterInputParameters) {
-        return converterInputParameters.getDestinationType().getElementName() + "Converter";
+        return converterInputParameters.getDestinationType().getType().getElementName() + "Converter";
     }
 
     private void recursivelyCreateConverter(ConverterInputParameters converterInputParameters, ConvertableDomainParameter parameter) {

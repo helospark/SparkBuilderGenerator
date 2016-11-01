@@ -4,13 +4,13 @@ import java.util.List;
 
 import javax.annotation.Generated;
 
-import org.eclipse.jdt.core.IType;
+import com.helospark.spark.converter.handlers.domain.TemplatedIType;
 
 public class ConvertableDomain {
     private List<ConvertableDomainParameter> convertableDomainParameters;
     private boolean useBuilder;
-    private IType sourceObject;
-    private IType destinationObject;
+    private TemplatedIType sourceObject;
+    private TemplatedIType destinationObject;
 
     @Generated("SparkTools")
     private ConvertableDomain(Builder builder) {
@@ -28,11 +28,11 @@ public class ConvertableDomain {
         return useBuilder;
     }
 
-    public IType getSourceObject() {
+    public TemplatedIType getSourceObject() {
         return sourceObject;
     }
 
-    public IType getDestinationObject() {
+    public TemplatedIType getDestinationObject() {
         return destinationObject;
     }
 
@@ -45,8 +45,8 @@ public class ConvertableDomain {
     public static final class Builder {
         private List<ConvertableDomainParameter> convertableDomainParameters;
         private boolean useBuilder;
-        private IType sourceObject;
-        private IType destinationObject;
+        private TemplatedIType sourceObject;
+        private TemplatedIType destinationObject;
 
         private Builder() {
         }
@@ -61,12 +61,12 @@ public class ConvertableDomain {
             return this;
         }
 
-        public Builder withSourceObject(IType sourceObject) {
+        public Builder withSourceObject(TemplatedIType sourceObject) {
             this.sourceObject = sourceObject;
             return this;
         }
 
-        public Builder withDestinationObject(IType destinationObject) {
+        public Builder withDestinationObject(TemplatedIType destinationObject) {
             this.destinationObject = destinationObject;
             return this;
         }

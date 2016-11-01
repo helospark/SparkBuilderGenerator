@@ -10,16 +10,22 @@
  *******************************************************************************/
 package com.helospark.spark.thirdparty;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jdt.core.IImportDeclaration;
 import org.eclipse.jdt.core.IJavaProject;
-import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.Signature;
+
+import com.helospark.spark.converter.handlers.domain.TemplatedIType;
 
 /**
  * Extracts the return type for a method. Adapted from:
@@ -33,16 +39,30 @@ import org.eclipse.jdt.core.Signature;
  */
 public class SignatureToTypeResolver {
 
-    public IType getJavaTypeFromSignatureClassName(String className, IType contextType) {
+    public TemplatedIType getJavaTypeFromSignatureClassName(String className, IType contextType) {
         if (contextType == null || className == null) {
             return null;
         }
-        try {
-            return getJavaType(contextType.getJavaProject().getProject(), resolveClassNameBySignature(className, contextType));
-        } catch (IllegalArgumentException e) {
-            e.printStackTrace();
+        IProject project = contextType.getJavaProject().getProject();
+        IType type = getJavaType(project, className, contextType);
+        List<IType> genericTypes = extractGenericParameters(className).stream()
+                .map(genericParameter -> getJavaType(project, genericParameter, contextType))
+                .collect(Collectors.toList());
+
+        return new TemplatedIType(type, genericTypes);
+    }
+
+    private IType getJavaType(IProject project, String className, IType contextType) {
+        return getJavaType(project, resolveClassNameBySignature(className, contextType));
+    }
+
+    private List<String> extractGenericParameters(String className) {
+        int startIndex = className.indexOf(Signature.C_GENERIC_START);
+        int endIndex = className.lastIndexOf(Signature.C_GENERIC_END);
+        if (startIndex == -1 || endIndex == -1 || startIndex > endIndex) {
+            return Collections.emptyList();
         }
-        return null;
+        return Arrays.asList(className.substring(startIndex + 1, endIndex).split(","));
     }
 
     /**

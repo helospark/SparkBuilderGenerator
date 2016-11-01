@@ -2,11 +2,11 @@ package com.helospark.spark.converter.handlers.service.domain;
 
 import javax.annotation.Generated;
 
-import org.eclipse.jdt.core.IType;
+import com.helospark.spark.converter.handlers.domain.TemplatedIType;
 
 public class ConvertableDomainParameter {
-    private IType sourceType;
-    private IType destinationType;
+    private TemplatedIType sourceType;
+    private TemplatedIType destinationType;
     private ConvertType type;
     private String sourceParameterName;
     private String destinationParameterName;
@@ -24,11 +24,11 @@ public class ConvertableDomainParameter {
         this.destinationMethodName = builder.destinationMethodName;
     }
 
-    public IType getSourceType() {
+    public TemplatedIType getSourceType() {
         return sourceType;
     }
 
-    public IType getDestinationType() {
+    public TemplatedIType getDestinationType() {
         return destinationType;
     }
 
@@ -59,8 +59,8 @@ public class ConvertableDomainParameter {
 
     @Generated("SparkTools")
     public static final class Builder {
-        private IType sourceType;
-        private IType destinationType;
+        private TemplatedIType sourceType;
+        private TemplatedIType destinationType;
         private ConvertType type;
         private String sourceParameterName;
         private String destinationParameterName;
@@ -70,12 +70,12 @@ public class ConvertableDomainParameter {
         private Builder() {
         }
 
-        public Builder withSourceType(IType sourceType) {
+        public Builder withSourceType(TemplatedIType sourceType) {
             this.sourceType = sourceType;
             return this;
         }
 
-        public Builder withDestinationType(IType destinationType) {
+        public Builder withDestinationType(TemplatedIType destinationType) {
             this.destinationType = destinationType;
             return this;
         }
