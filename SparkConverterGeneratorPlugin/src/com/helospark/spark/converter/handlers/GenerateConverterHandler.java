@@ -18,7 +18,9 @@ import org.eclipse.ui.PlatformUI;
 
 import com.helospark.spark.converter.Activator;
 import com.helospark.spark.converter.handlers.domain.ConverterInputParameters;
-import com.helospark.spark.converter.handlers.service.ConverterGenerator;
+import com.helospark.spark.converter.handlers.domain.ConverterTypeCodeGenerationRequest;
+import com.helospark.spark.converter.handlers.service.collector.MethodCollector;
+import com.helospark.spark.converter.handlers.service.emitter.CodeEmitter;
 
 /**
  * Our sample handler extends AbstractHandler, an IHandler base class.
@@ -28,18 +30,20 @@ import com.helospark.spark.converter.handlers.service.ConverterGenerator;
  */
 public class GenerateConverterHandler extends AbstractHandler {
     private InputParameterGetter inputParameterGetter;
-    private ConverterGenerator converterGenerator;
+    private MethodCollector methodCollector;
+    private CodeEmitter codeEmitter;
 
     /**
      * The constructor.
      */
     public GenerateConverterHandler() {
-        this(getDependency(InputParameterGetter.class), getDependency(ConverterGenerator.class));
+        this(getDependency(InputParameterGetter.class), getDependency(MethodCollector.class), getDependency(CodeEmitter.class));
     }
 
-    public GenerateConverterHandler(InputParameterGetter inputParameterGetter, ConverterGenerator converterGenerator) {
+    public GenerateConverterHandler(InputParameterGetter inputParameterGetter, MethodCollector methodCollector, CodeEmitter codeEmitter) {
         this.inputParameterGetter = inputParameterGetter;
-        this.converterGenerator = converterGenerator;
+        this.methodCollector = methodCollector;
+        this.codeEmitter = codeEmitter;
     }
 
     /**
@@ -51,13 +55,19 @@ public class GenerateConverterHandler extends AbstractHandler {
         try {
             Optional<ConverterInputParameters> inputParameters = inputParameterGetter.getInputParameters(getShell(), event);
             if (inputParameters.isPresent()) {
-                converterGenerator.generate(inputParameters.get());
+                List<ConverterTypeCodeGenerationRequest> collectedConverters = methodCollector.collectConverters(inputParameters.get());
+                checkForConverterOverride(collectedConverters);
+                codeEmitter.emitCode(collectedConverters);
             }
         } catch (Exception e) {
             e.printStackTrace();
             createErrorDialog(e);
         }
         return null;
+    }
+
+    private void checkForConverterOverride(List<ConverterTypeCodeGenerationRequest> collectedConverters) {
+        // TODO: Check if the converter overrides an existing one
     }
 
     private void createErrorDialog(Exception e) {

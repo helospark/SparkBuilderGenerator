@@ -9,9 +9,9 @@ import org.eclipse.jdt.core.IType;
 
 public class TemplatedIType {
     private IType type;
-    private List<IType> templates = Collections.emptyList();
+    private List<TemplatedIType> templates = Collections.emptyList();
 
-    public TemplatedIType(IType type, List<IType> templates) {
+    public TemplatedIType(IType type, List<TemplatedIType> templates) {
         this.type = type;
         this.templates = Optional.ofNullable(templates).orElse(Collections.emptyList());
     }
@@ -24,7 +24,7 @@ public class TemplatedIType {
         return type;
     }
 
-    public List<IType> getTemplates() {
+    public List<TemplatedIType> getTemplates() {
         return templates;
     }
 

@@ -9,22 +9,22 @@ import org.osgi.framework.BundleContext;
 
 import com.helospark.spark.converter.handlers.DefaultCompilationUnitProvider;
 import com.helospark.spark.converter.handlers.InputParameterGetter;
-import com.helospark.spark.converter.handlers.service.ClassTypeAppender;
-import com.helospark.spark.converter.handlers.service.CompilationUnitCreator;
-import com.helospark.spark.converter.handlers.service.CompilationUnitParser;
 import com.helospark.spark.converter.handlers.service.ConvertableParametersGenerator;
-import com.helospark.spark.converter.handlers.service.ConverterClassGenerator;
-import com.helospark.spark.converter.handlers.service.ConverterConvertMethodGenerator;
-import com.helospark.spark.converter.handlers.service.ConverterGenerator;
-import com.helospark.spark.converter.handlers.service.ModifiableCompilationUnitCreator;
-import com.helospark.spark.converter.handlers.service.PackageRootFinder;
-import com.helospark.spark.converter.handlers.service.codegenerator.ConverterTypeCodeGenerator;
-import com.helospark.spark.converter.handlers.service.codegenerator.impl.ConvertCopyCodeGenerator;
-import com.helospark.spark.converter.handlers.service.codegenerator.impl.ReferenceCopyCodeGenerator;
-import com.helospark.spark.converter.handlers.service.converttype.ConvertableDomainBuilderChainItem;
-import com.helospark.spark.converter.handlers.service.converttype.impl.ConverterRequiredConvertTypeBuilder;
-import com.helospark.spark.converter.handlers.service.converttype.impl.NoDestinationConvertTypeBuilder;
-import com.helospark.spark.converter.handlers.service.converttype.impl.ReferenceCopyConvertTypeBuilder;
+import com.helospark.spark.converter.handlers.service.MethodCollector;
+import com.helospark.spark.converter.handlers.service.collector.converttype.ConvertableDomainBuilderChainItem;
+import com.helospark.spark.converter.handlers.service.collector.converttype.impl.ConverterRequiredConvertTypeBuilder;
+import com.helospark.spark.converter.handlers.service.collector.converttype.impl.NoDestinationConvertTypeBuilder;
+import com.helospark.spark.converter.handlers.service.collector.converttype.impl.ReferenceCopyConvertTypeBuilder;
+import com.helospark.spark.converter.handlers.service.emitter.ClassTypeAppender;
+import com.helospark.spark.converter.handlers.service.emitter.CompilationUnitCreator;
+import com.helospark.spark.converter.handlers.service.emitter.CompilationUnitParser;
+import com.helospark.spark.converter.handlers.service.emitter.ConverterClassGenerator;
+import com.helospark.spark.converter.handlers.service.emitter.ModifiableCompilationUnitCreator;
+import com.helospark.spark.converter.handlers.service.emitter.PackageRootFinder;
+import com.helospark.spark.converter.handlers.service.emitter.codegenerator.ConverterTypeCodeGenerator;
+import com.helospark.spark.converter.handlers.service.emitter.codegenerator.impl.ConvertCopyCodeGenerator;
+import com.helospark.spark.converter.handlers.service.emitter.codegenerator.impl.ReferenceCopyCodeGenerator;
+import com.helospark.spark.converter.handlers.service.emitter.methodemitter.impl.helper.ConverterConvertMethodGenerator;
 import com.helospark.spark.thirdparty.SignatureToTypeResolver;
 
 /**
@@ -111,7 +111,7 @@ public class Activator extends AbstractUIPlugin {
         diContainer.add(new CompilationUnitParser());
         diContainer.add(new ModifiableCompilationUnitCreator(getDependency(CompilationUnitParser.class), getDependency(CompilationUnitCreator.class)));
         diContainer.add(
-                new ConverterGenerator(getDependency(ClassTypeAppender.class), getDependency(ConverterClassGenerator.class), getDependency(ConverterConvertMethodGenerator.class),
+                new MethodCollector(getDependency(ClassTypeAppender.class), getDependency(ConverterClassGenerator.class), getDependency(ConverterConvertMethodGenerator.class),
                         getDependency(ConvertableParametersGenerator.class), getDependency(PackageRootFinder.class), getDependency(ModifiableCompilationUnitCreator.class)));
     }
 
