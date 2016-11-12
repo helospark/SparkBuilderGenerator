@@ -9,29 +9,38 @@ import com.helospark.spark.converter.handlers.domain.ConverterMethodCodeGenerati
 import com.helospark.spark.converter.handlers.domain.ConverterMethodType;
 import com.helospark.spark.converter.handlers.domain.ConverterTypeCodeGenerationRequest;
 import com.helospark.spark.converter.handlers.service.collector.collectors.helper.ConverterMethodLocator;
+import com.helospark.spark.converter.handlers.service.common.ClassNameToVariableNameConverter;
 import com.helospark.spark.converter.handlers.service.domain.ConvertType;
 import com.helospark.spark.converter.handlers.service.domain.SourceDestinationType;
 
 public class ConvertMethodCollector implements MethodCollectorChain {
     private ConverterMethodLocator converterMethodLocator;
+    private ClassNameToVariableNameConverter classNameToVariableNameConverter;
 
-    public ConvertMethodCollector(ConverterMethodLocator converterMethodLocator) {
+    public ConvertMethodCollector(ConverterMethodLocator converterMethodLocator, ClassNameToVariableNameConverter classNameToVariableNameConverter) {
         this.converterMethodLocator = converterMethodLocator;
+        this.classNameToVariableNameConverter = classNameToVariableNameConverter;
     }
 
     @Override
-    public void handle(ConverterInputParameters converterInputParameters, SourceDestinationType sourceDestination, List<ConverterTypeCodeGenerationRequest> result) {
-        Optional<ConverterTypeCodeGenerationRequest> converterMethod = converterMethodLocator.getConvertMethodApplicable(result, sourceDestination);
+    public ConverterTypeCodeGenerationRequest handle(ConverterInputParameters converterInputParameters, SourceDestinationType sourceDestination,
+            List<ConverterTypeCodeGenerationRequest> result) {
+        Optional<ConverterTypeCodeGenerationRequest> converterMethod = converterMethodLocator.getConverterClass(result, sourceDestination);
         if (!converterMethod.isPresent()) {
-            createConverterMethod(converterInputParameters, sourceDestination, result);
+            ConverterTypeCodeGenerationRequest createdConverter = createConverterMethod(converterInputParameters, sourceDestination, result);
+            result.add(createdConverter);
+            return createdConverter;
+        } else {
+            return converterMethod.get();
         }
     }
 
-    private void createConverterMethod(ConverterInputParameters converterInputParameters, SourceDestinationType sourceDestination,
+    private ConverterTypeCodeGenerationRequest createConverterMethod(ConverterInputParameters converterInputParameters, SourceDestinationType sourceDestination,
             List<ConverterTypeCodeGenerationRequest> converters) {
         ConverterTypeCodeGenerationRequest converterType = getOrCreateConverterType(converterInputParameters, sourceDestination, converters);
         ConverterMethodCodeGenerationRequest method = createConverterMethod(sourceDestination, converterType);
         converterType.addMethod(method);
+        return converterType;
     }
 
     private ConverterMethodCodeGenerationRequest createConverterMethod(SourceDestinationType sourceDestination, ConverterTypeCodeGenerationRequest converterType) {
@@ -54,6 +63,7 @@ public class ConvertMethodCollector implements MethodCollectorChain {
         } else {
             return ConverterTypeCodeGenerationRequest.builder()
                     .withClassName(className)
+                    .withFieldName(classNameToVariableNameConverter.convert(className))
                     .withDependencies(new ArrayList<>())
                     .withMethods(new ArrayList<>())
                     .withPackageName(converterInputParameters.getDestinationPackageFragment())

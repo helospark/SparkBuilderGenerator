@@ -42,4 +42,24 @@ public class TemplatedIType {
         return Objects.hash(type, templates);
     }
 
+    public String getAsString() {
+        String result = type.getElementName();
+        if (templates.size() > 0) {
+            result += "<";
+            for (int i = 0; i < templates.size(); ++i) {
+                result += templates.get(i).getAsString();
+                if (i != templates.size() - 1) {
+                    result += ",";
+                }
+            }
+            result += ">";
+        }
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return getAsString();
+    }
+
 }

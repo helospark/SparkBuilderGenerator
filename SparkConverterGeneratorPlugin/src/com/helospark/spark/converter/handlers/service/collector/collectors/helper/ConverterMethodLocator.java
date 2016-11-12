@@ -9,10 +9,26 @@ import com.helospark.spark.converter.handlers.service.domain.SourceDestinationTy
 
 public class ConverterMethodLocator {
 
-    public Optional<ConverterTypeCodeGenerationRequest> getConvertMethodApplicable(List<ConverterTypeCodeGenerationRequest> converters,
+    public Optional<ConverterTypeCodeGenerationRequest> getConverterClass(List<ConverterTypeCodeGenerationRequest> converters,
             SourceDestinationType sourceDestination) {
         return converters.stream()
                 .filter(converter -> containsApplicableConvertMethod(converter, sourceDestination))
+                .findFirst();
+    }
+
+    public Optional<ConverterMethodCodeGenerationRequest> getConverterMethod(List<ConverterTypeCodeGenerationRequest> converters,
+            SourceDestinationType sourceDestination) {
+        return converters.stream()
+                .map(converter -> findConvertMethod(converter.getMethods(), sourceDestination))
+                .filter(convertMethod -> convertMethod.isPresent())
+                .map(convertMethod -> convertMethod.get())
+                .findFirst();
+    }
+
+    public Optional<ConverterMethodCodeGenerationRequest> findConvertMethod(List<ConverterMethodCodeGenerationRequest> methods,
+            SourceDestinationType sourceDestination) {
+        return methods.stream()
+                .filter(method -> isMethodApplicable(method, sourceDestination))
                 .findFirst();
     }
 

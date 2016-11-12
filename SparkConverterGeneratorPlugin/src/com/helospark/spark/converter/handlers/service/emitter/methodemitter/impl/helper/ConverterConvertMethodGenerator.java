@@ -16,6 +16,9 @@ import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
 import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
 import org.eclipse.jdt.core.dom.VariableDeclarationStatement;
 
+import com.helospark.spark.converter.handlers.domain.ConverterMethodCodeGenerationRequest;
+import com.helospark.spark.converter.handlers.domain.ConverterTypeCodeGenerationRequest;
+import com.helospark.spark.converter.handlers.service.common.ImportPopulator;
 import com.helospark.spark.converter.handlers.service.domain.CompilationUnitModificationDomain;
 import com.helospark.spark.converter.handlers.service.domain.ConvertableDomain;
 import com.helospark.spark.converter.handlers.service.domain.ConvertableDomainParameter;
@@ -23,23 +26,28 @@ import com.helospark.spark.converter.handlers.service.emitter.codegenerator.Conv
 
 public class ConverterConvertMethodGenerator {
     private List<ConverterTypeCodeGenerator> codeGenerators;
+    private ImportPopulator importPopulator;
 
-    public ConverterConvertMethodGenerator(List<ConverterTypeCodeGenerator> codeGenerators) {
+    public ConverterConvertMethodGenerator(List<ConverterTypeCodeGenerator> codeGenerators, ImportPopulator importPopulator) {
         this.codeGenerators = codeGenerators;
+        this.importPopulator = importPopulator;
     }
 
-    public MethodDeclaration generate(CompilationUnitModificationDomain compilationUnitModificationDomain, ConvertableDomain convertableDomain) {
+    public MethodDeclaration generate(CompilationUnitModificationDomain compilationUnitModificationDomain, ConvertableDomain convertableDomain,
+            ConverterTypeCodeGenerationRequest generationRequest, ConverterMethodCodeGenerationRequest method) {
         AST ast = compilationUnitModificationDomain.getAst();
-        String destinationTypeName = convertableDomain.getDestinationObject().getType().getFullyQualifiedName();
+
+        String sourceTypeName = importPopulator.addImport(compilationUnitModificationDomain, method.getSourceType().getType().getFullyQualifiedName());
+        String destinationTypeName = importPopulator.addImport(compilationUnitModificationDomain, method.getDestinationType().getType().getFullyQualifiedName());
 
         SingleVariableDeclaration methodParameterDeclaration = ast.newSingleVariableDeclaration();
-        SimpleType sourceType = ast.newSimpleType(ast.newName(convertableDomain.getSourceObject().getType().getFullyQualifiedName()));
+        SimpleType sourceType = ast.newSimpleType(ast.newName(sourceTypeName));
         methodParameterDeclaration.setType(sourceType);
-        methodParameterDeclaration.setName(ast.newSimpleName("asd"));
+        methodParameterDeclaration.setName(ast.newSimpleName(method.getParameterName()));
 
         MethodDeclaration newMethod = ast.newMethodDeclaration();
         newMethod.modifiers().add(ast.newModifier(ModifierKeyword.PUBLIC_KEYWORD));
-        newMethod.setName(ast.newSimpleName("convert"));
+        newMethod.setName(ast.newSimpleName(method.getName()));
         newMethod.setReturnType2(ast.newSimpleType(ast.newName(destinationTypeName)));
         newMethod.parameters().add(methodParameterDeclaration);
         Block body = ast.newBlock();
@@ -69,7 +77,8 @@ public class ConverterConvertMethodGenerator {
             if (!convertableDomain.isUseBuilder()) {
                 lastDeclaration = ast.newName("destination");
             }
-            Expression generatedCopy = copyParameter(compilationUnitModificationDomain, body, lastDeclaration, ast.newName("asd"), parameter);
+            Expression generatedCopy = copyParameter(compilationUnitModificationDomain, body, lastDeclaration, ast.newName(method.getParameterName()), parameter,
+                    generationRequest, method);
             if (!convertableDomain.isUseBuilder()) {
                 body.statements().add(ast.newExpressionStatement(generatedCopy));
             } else {
@@ -91,9 +100,9 @@ public class ConverterConvertMethodGenerator {
     }
 
     private Expression copyParameter(CompilationUnitModificationDomain compilationUnitModificationDomain, Block body, Expression lastDeclaration, Expression source,
-            ConvertableDomainParameter parameter) {
+            ConvertableDomainParameter parameter, ConverterTypeCodeGenerationRequest generationRequest, ConverterMethodCodeGenerationRequest method) {
         ConverterTypeCodeGenerator codeGenerator = findCodeGenerator(parameter);
-        return codeGenerator.generate(compilationUnitModificationDomain, body, lastDeclaration, source, parameter);
+        return codeGenerator.generate(compilationUnitModificationDomain, body, lastDeclaration, source, parameter, generationRequest, method);
     }
 
     private ConverterTypeCodeGenerator findCodeGenerator(ConvertableDomainParameter parameter) {

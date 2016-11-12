@@ -9,7 +9,8 @@ import com.helospark.spark.converter.handlers.service.domain.SourceDestinationTy
 
 public interface MethodCollectorChain {
 
-    public void handle(ConverterInputParameters converterInputParameters, SourceDestinationType sourceDestination, List<ConverterTypeCodeGenerationRequest> result);
+    public ConverterTypeCodeGenerationRequest handle(ConverterInputParameters converterInputParameters, SourceDestinationType sourceDestination,
+            List<ConverterTypeCodeGenerationRequest> result);
 
     public boolean canHandle(ConvertType type);
 }

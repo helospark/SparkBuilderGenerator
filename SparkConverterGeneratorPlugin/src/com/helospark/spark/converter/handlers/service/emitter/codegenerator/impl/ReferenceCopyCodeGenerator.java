@@ -5,6 +5,8 @@ import org.eclipse.jdt.core.dom.Block;
 import org.eclipse.jdt.core.dom.Expression;
 import org.eclipse.jdt.core.dom.MethodInvocation;
 
+import com.helospark.spark.converter.handlers.domain.ConverterMethodCodeGenerationRequest;
+import com.helospark.spark.converter.handlers.domain.ConverterTypeCodeGenerationRequest;
 import com.helospark.spark.converter.handlers.service.domain.CompilationUnitModificationDomain;
 import com.helospark.spark.converter.handlers.service.domain.ConvertType;
 import com.helospark.spark.converter.handlers.service.domain.ConvertableDomainParameter;
@@ -14,7 +16,7 @@ public class ReferenceCopyCodeGenerator implements ConverterTypeCodeGenerator {
 
     @Override
     public Expression generate(CompilationUnitModificationDomain compilationUnitModificationDomain, Block body, Expression expression, Expression sourceObject,
-            ConvertableDomainParameter parameter) {
+            ConvertableDomainParameter parameter, ConverterTypeCodeGenerationRequest generationRequest, ConverterMethodCodeGenerationRequest method) {
         AST ast = compilationUnitModificationDomain.getAst();
         MethodInvocation newMethodInvocation = ast.newMethodInvocation();
         newMethodInvocation.setExpression(expression);

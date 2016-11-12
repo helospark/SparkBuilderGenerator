@@ -45,8 +45,9 @@ public class SignatureToTypeResolver {
         }
         IProject project = contextType.getJavaProject().getProject();
         IType type = getJavaType(project, className, contextType);
-        List<IType> genericTypes = extractGenericParameters(className).stream()
+        List<TemplatedIType> genericTypes = extractGenericParameters(className).stream()
                 .map(genericParameter -> getJavaType(project, genericParameter, contextType))
+                .map(genericParameter -> new TemplatedIType(genericParameter))
                 .collect(Collectors.toList());
 
         return new TemplatedIType(type, genericTypes);

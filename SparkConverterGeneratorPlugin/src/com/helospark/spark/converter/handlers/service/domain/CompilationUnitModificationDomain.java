@@ -1,15 +1,20 @@
 package com.helospark.spark.converter.handlers.service.domain;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.annotation.Generated;
 
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.CompilationUnit;
+import org.eclipse.jdt.core.dom.ImportDeclaration;
 
 public class CompilationUnitModificationDomain {
     private AST ast;
     private ICompilationUnit iCompilationUnit;
     private CompilationUnit compilationUnit;
+    private List<ImportDeclaration> imports = new ArrayList<>();
 
     @Generated("SparkTools")
     private CompilationUnitModificationDomain(Builder builder) {
@@ -28,6 +33,14 @@ public class CompilationUnitModificationDomain {
 
     public CompilationUnit getCompilationUnit() {
         return compilationUnit;
+    }
+
+    public void addImport(ImportDeclaration importDeclaration) {
+        this.imports.add(importDeclaration);
+    }
+
+    public List<ImportDeclaration> getImports() {
+        return imports;
     }
 
     @Generated("SparkTools")

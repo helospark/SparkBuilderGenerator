@@ -57,7 +57,7 @@ public class GenerateConverterHandler extends AbstractHandler {
             if (inputParameters.isPresent()) {
                 List<ConverterTypeCodeGenerationRequest> collectedConverters = methodCollector.collectConverters(inputParameters.get());
                 checkForConverterOverride(collectedConverters);
-                codeEmitter.emitCode(collectedConverters);
+                codeEmitter.emitCode(inputParameters.get(), collectedConverters);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -83,6 +83,7 @@ public class GenerateConverterHandler extends AbstractHandler {
         for (StackTraceElement stackTrace : exception.getStackTrace()) {
             childStatuses.add(new Status(IStatus.ERROR, Activator.PLUGIN_ID, stackTrace.toString()));
         }
+        // TODO! cause's stacktrace gets lost here
 
         return new MultiStatus(Activator.PLUGIN_ID,
                 IStatus.ERROR, childStatuses.toArray(new Status[] {}),

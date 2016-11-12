@@ -8,7 +8,7 @@ public class ReferenceCopyConvertTypeBuilder implements ConvertableDomainBuilder
 
     @Override
     public boolean isApplicable(TemplatedIType sourceType, TemplatedIType destinationType) {
-        return !sourceType.equals(destinationType);
+        return sourceType.equals(destinationType);
     }
 
     @Override
