@@ -2,7 +2,7 @@ package com.helospark.spark.converter.handlers.service.collector.converttype.imp
 
 import com.helospark.spark.converter.handlers.domain.TemplatedIType;
 import com.helospark.spark.converter.handlers.service.collector.converttype.ConvertableDomainBuilderChainItem;
-import com.helospark.spark.converter.handlers.service.domain.ConvertType;
+import com.helospark.spark.converter.handlers.service.common.domain.ConvertType;
 
 public class ConverterRequiredConvertTypeBuilder implements ConvertableDomainBuilderChainItem {
 

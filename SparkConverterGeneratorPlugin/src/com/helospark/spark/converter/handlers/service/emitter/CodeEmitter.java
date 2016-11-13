@@ -9,7 +9,15 @@ import org.eclipse.jface.text.BadLocationException;
 
 import com.helospark.spark.converter.handlers.domain.ConverterInputParameters;
 import com.helospark.spark.converter.handlers.domain.ConverterTypeCodeGenerationRequest;
-import com.helospark.spark.converter.handlers.service.domain.CompilationUnitModificationDomain;
+import com.helospark.spark.converter.handlers.service.common.domain.CompilationUnitModificationDomain;
+import com.helospark.spark.converter.handlers.service.emitter.helper.ClassTypeAppender;
+import com.helospark.spark.converter.handlers.service.emitter.helper.ConverterClassGenerator;
+import com.helospark.spark.converter.handlers.service.emitter.helper.ConverterConstructorEmitter;
+import com.helospark.spark.converter.handlers.service.emitter.helper.ConverterFieldEmitter;
+import com.helospark.spark.converter.handlers.service.emitter.helper.ImportAppender;
+import com.helospark.spark.converter.handlers.service.emitter.helper.MethodsEmitter;
+import com.helospark.spark.converter.handlers.service.emitter.helper.ModifiableCompilationUnitCreator;
+import com.helospark.spark.converter.handlers.service.emitter.helper.PackageRootFinder;
 
 public class CodeEmitter {
     private ConverterClassGenerator converterClassGenerator;

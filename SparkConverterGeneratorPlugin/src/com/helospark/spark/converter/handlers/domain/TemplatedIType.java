@@ -43,7 +43,7 @@ public class TemplatedIType {
     }
 
     public String getAsString() {
-        String result = type.getElementName();
+        String result = type.getFullyQualifiedName();
         if (templates.size() > 0) {
             result += "<";
             for (int i = 0; i < templates.size(); ++i) {

@@ -19,16 +19,16 @@ import org.eclipse.jdt.core.dom.VariableDeclarationStatement;
 import com.helospark.spark.converter.handlers.domain.ConverterMethodCodeGenerationRequest;
 import com.helospark.spark.converter.handlers.domain.ConverterTypeCodeGenerationRequest;
 import com.helospark.spark.converter.handlers.service.common.ImportPopulator;
-import com.helospark.spark.converter.handlers.service.domain.CompilationUnitModificationDomain;
-import com.helospark.spark.converter.handlers.service.domain.ConvertableDomain;
-import com.helospark.spark.converter.handlers.service.domain.ConvertableDomainParameter;
-import com.helospark.spark.converter.handlers.service.emitter.codegenerator.ConverterTypeCodeGenerator;
+import com.helospark.spark.converter.handlers.service.common.domain.CompilationUnitModificationDomain;
+import com.helospark.spark.converter.handlers.service.common.domain.ConvertableDomain;
+import com.helospark.spark.converter.handlers.service.common.domain.ConvertableDomainParameter;
+import com.helospark.spark.converter.handlers.service.emitter.parametercodegenerator.ParameterConvertCodeGenerator;
 
 public class ConverterConvertMethodGenerator {
-    private List<ConverterTypeCodeGenerator> codeGenerators;
+    private List<ParameterConvertCodeGenerator> codeGenerators;
     private ImportPopulator importPopulator;
 
-    public ConverterConvertMethodGenerator(List<ConverterTypeCodeGenerator> codeGenerators, ImportPopulator importPopulator) {
+    public ConverterConvertMethodGenerator(List<ParameterConvertCodeGenerator> codeGenerators, ImportPopulator importPopulator) {
         this.codeGenerators = codeGenerators;
         this.importPopulator = importPopulator;
     }
@@ -101,11 +101,11 @@ public class ConverterConvertMethodGenerator {
 
     private Expression copyParameter(CompilationUnitModificationDomain compilationUnitModificationDomain, Block body, Expression lastDeclaration, Expression source,
             ConvertableDomainParameter parameter, ConverterTypeCodeGenerationRequest generationRequest, ConverterMethodCodeGenerationRequest method) {
-        ConverterTypeCodeGenerator codeGenerator = findCodeGenerator(parameter);
+        ParameterConvertCodeGenerator codeGenerator = findCodeGenerator(parameter);
         return codeGenerator.generate(compilationUnitModificationDomain, body, lastDeclaration, source, parameter, generationRequest, method);
     }
 
-    private ConverterTypeCodeGenerator findCodeGenerator(ConvertableDomainParameter parameter) {
+    private ParameterConvertCodeGenerator findCodeGenerator(ConvertableDomainParameter parameter) {
         return codeGenerators.stream()
                 .filter(generator -> generator.canHandle(parameter.getType()))
                 .findFirst()

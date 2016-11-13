@@ -6,9 +6,9 @@ import com.helospark.spark.converter.handlers.domain.ConverterMethodCodeGenerati
 import com.helospark.spark.converter.handlers.domain.ConverterMethodType;
 import com.helospark.spark.converter.handlers.domain.ConverterTypeCodeGenerationRequest;
 import com.helospark.spark.converter.handlers.service.common.ConvertableParametersGenerator;
-import com.helospark.spark.converter.handlers.service.domain.CompilationUnitModificationDomain;
-import com.helospark.spark.converter.handlers.service.domain.ConvertableDomain;
-import com.helospark.spark.converter.handlers.service.domain.SourceDestinationType;
+import com.helospark.spark.converter.handlers.service.common.domain.CompilationUnitModificationDomain;
+import com.helospark.spark.converter.handlers.service.common.domain.ConvertableDomain;
+import com.helospark.spark.converter.handlers.service.common.domain.SourceDestinationType;
 import com.helospark.spark.converter.handlers.service.emitter.methodemitter.MethodEmitter;
 import com.helospark.spark.converter.handlers.service.emitter.methodemitter.impl.helper.ConverterConvertMethodGenerator;
 

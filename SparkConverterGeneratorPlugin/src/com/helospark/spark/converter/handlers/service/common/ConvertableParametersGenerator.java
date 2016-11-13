@@ -11,12 +11,12 @@ import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
 
 import com.helospark.spark.converter.handlers.domain.TemplatedIType;
-import com.helospark.spark.converter.handlers.service.collector.ConvertTypeFinder;
-import com.helospark.spark.converter.handlers.service.domain.ConvertType;
-import com.helospark.spark.converter.handlers.service.domain.ConvertableDomain;
-import com.helospark.spark.converter.handlers.service.domain.ConvertableDomainParameter;
-import com.helospark.spark.converter.handlers.service.domain.SourceDestinationType;
-import com.helospark.spark.thirdparty.SignatureToTypeResolver;
+import com.helospark.spark.converter.handlers.service.collector.converttype.ConvertTypeFinder;
+import com.helospark.spark.converter.handlers.service.common.domain.ConvertType;
+import com.helospark.spark.converter.handlers.service.common.domain.ConvertableDomain;
+import com.helospark.spark.converter.handlers.service.common.domain.ConvertableDomainParameter;
+import com.helospark.spark.converter.handlers.service.common.domain.SourceDestinationType;
+import com.helospark.spark.converter.handlers.service.emitter.helper.SignatureToTypeResolver;
 
 public class ConvertableParametersGenerator {
     private SignatureToTypeResolver signatureToTypeResolver;
@@ -155,7 +155,11 @@ public class ConvertableParametersGenerator {
                 break;
             }
         }
-        return Character.toLowerCase(elementName.charAt(i)) + elementName.substring(i + 1);
+        if (i >= elementName.length()) {
+            return "";
+        } else {
+            return Character.toLowerCase(elementName.charAt(i)) + elementName.substring(i + 1);
+        }
     }
 
     private Optional<IMethod> findMethodForField(List<IMethod> filteredDestinationMethods, String elementName) {

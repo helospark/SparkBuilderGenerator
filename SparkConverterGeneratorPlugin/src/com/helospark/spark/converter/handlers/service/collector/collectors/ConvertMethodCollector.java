@@ -10,8 +10,8 @@ import com.helospark.spark.converter.handlers.domain.ConverterMethodType;
 import com.helospark.spark.converter.handlers.domain.ConverterTypeCodeGenerationRequest;
 import com.helospark.spark.converter.handlers.service.collector.collectors.helper.ConverterMethodLocator;
 import com.helospark.spark.converter.handlers.service.common.ClassNameToVariableNameConverter;
-import com.helospark.spark.converter.handlers.service.domain.ConvertType;
-import com.helospark.spark.converter.handlers.service.domain.SourceDestinationType;
+import com.helospark.spark.converter.handlers.service.common.domain.ConvertType;
+import com.helospark.spark.converter.handlers.service.common.domain.SourceDestinationType;
 
 public class ConvertMethodCollector implements MethodCollectorChain {
     private ConverterMethodLocator converterMethodLocator;

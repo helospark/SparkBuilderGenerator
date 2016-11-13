@@ -11,8 +11,8 @@ import com.helospark.spark.converter.handlers.domain.ConverterTypeCodeGeneration
 import com.helospark.spark.converter.handlers.service.collector.MethodCollector;
 import com.helospark.spark.converter.handlers.service.collector.collectors.helper.ConverterMethodLocator;
 import com.helospark.spark.converter.handlers.service.common.ClassNameToVariableNameConverter;
-import com.helospark.spark.converter.handlers.service.domain.ConvertType;
-import com.helospark.spark.converter.handlers.service.domain.SourceDestinationType;
+import com.helospark.spark.converter.handlers.service.common.domain.ConvertType;
+import com.helospark.spark.converter.handlers.service.common.domain.SourceDestinationType;
 
 public class ListMethodCollector implements MethodCollectorChain {
     private ConverterMethodLocator converterMethodLocator;
@@ -31,9 +31,7 @@ public class ListMethodCollector implements MethodCollectorChain {
             List<ConverterTypeCodeGenerationRequest> converters) {
         Optional<ConverterTypeCodeGenerationRequest> converterMethod = converterMethodLocator.getConverterClass(converters, sourceDestination);
         if (!converterMethod.isPresent()) {
-            ConverterTypeCodeGenerationRequest createdConverter = createConverterMethod(converterInputParameters, sourceDestination, converters);
-            converters.add(createdConverter);
-            return createdConverter;
+            return createConverterMethod(converterInputParameters, sourceDestination, converters);
         } else {
             return converterMethod.get();
         }
@@ -44,9 +42,10 @@ public class ListMethodCollector implements MethodCollectorChain {
         ConverterTypeCodeGenerationRequest converterType = getOrCreateConverterType(converterInputParameters, sourceDestination, converters);
         ConverterMethodCodeGenerationRequest method = createConverterMethod(sourceDestination, converterType);
         converterType.addMethod(method);
+        converters.add(converterType);
 
         ConverterTypeCodeGenerationRequest templateConvertType = addRecursiveConverterForTemplateParameter(converterInputParameters, sourceDestination, converters);
-        converterType.addDependency(templateConvertType);
+        converterType.safeAddDependency(templateConvertType);
         return converterType;
     }
 
@@ -54,10 +53,8 @@ public class ListMethodCollector implements MethodCollectorChain {
             List<ConverterTypeCodeGenerationRequest> converters) {
         SourceDestinationType templateParameters = new SourceDestinationType(sourceDestination.getSourceType().getTemplates().get(0),
                 sourceDestination.getDestinationType().getTemplates().get(0));
-        methodCollector.recursivelyCollectConverters(converterInputParameters, templateParameters, converters);
-        ConverterTypeCodeGenerationRequest templateConvertType = converterMethodLocator.getConverterClass(converters, templateParameters)
-                .orElseThrow(() -> new RuntimeException("We generated a new converter, but cannot be located subsequently"));
-        return templateConvertType;
+        return methodCollector.recursivelyCollectConverters(converterInputParameters, templateParameters, converters)
+                .orElseThrow(() -> new IllegalStateException("Converter was not created recursively"));
     }
 
     private ConverterMethodCodeGenerationRequest createConverterMethod(SourceDestinationType sourceDestination, ConverterTypeCodeGenerationRequest converterType) {

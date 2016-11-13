@@ -5,7 +5,7 @@ import java.util.Optional;
 
 import com.helospark.spark.converter.handlers.domain.ConverterMethodCodeGenerationRequest;
 import com.helospark.spark.converter.handlers.domain.ConverterTypeCodeGenerationRequest;
-import com.helospark.spark.converter.handlers.service.domain.SourceDestinationType;
+import com.helospark.spark.converter.handlers.service.common.domain.SourceDestinationType;
 
 public class ConverterMethodLocator {
 

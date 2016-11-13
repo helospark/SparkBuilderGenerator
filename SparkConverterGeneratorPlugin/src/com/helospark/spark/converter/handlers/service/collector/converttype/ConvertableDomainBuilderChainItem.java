@@ -1,7 +1,7 @@
 package com.helospark.spark.converter.handlers.service.collector.converttype;
 
 import com.helospark.spark.converter.handlers.domain.TemplatedIType;
-import com.helospark.spark.converter.handlers.service.domain.ConvertType;
+import com.helospark.spark.converter.handlers.service.common.domain.ConvertType;
 
 public interface ConvertableDomainBuilderChainItem {
 

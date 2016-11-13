@@ -65,8 +65,10 @@ public class ConverterTypeCodeGenerationRequest {
         methods.add(method);
     }
 
-    public void addDependency(ConverterTypeCodeGenerationRequest dependency) {
-        this.dependencies.add(dependency);
+    public void safeAddDependency(ConverterTypeCodeGenerationRequest dependency) {
+        if (!dependencies.contains(dependency) && !dependency.getFullyQualifiedName().equals(getFullyQualifiedName())) {
+            this.dependencies.add(dependency);
+        }
     }
 
     @Generated("SparkTools")

@@ -4,8 +4,8 @@ import java.util.List;
 
 import com.helospark.spark.converter.handlers.domain.ConverterInputParameters;
 import com.helospark.spark.converter.handlers.domain.ConverterTypeCodeGenerationRequest;
-import com.helospark.spark.converter.handlers.service.domain.ConvertType;
-import com.helospark.spark.converter.handlers.service.domain.SourceDestinationType;
+import com.helospark.spark.converter.handlers.service.common.domain.ConvertType;
+import com.helospark.spark.converter.handlers.service.common.domain.SourceDestinationType;
 
 public interface MethodCollectorChain {
 

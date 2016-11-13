@@ -1,6 +1,6 @@
 package com.helospark.spark.converter.handlers.service.collector;
 
-import static java.util.Optional.of;
+import static java.util.Optional.ofNullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,11 +12,12 @@ import org.eclipse.jface.text.BadLocationException;
 import com.helospark.spark.converter.handlers.domain.ConverterInputParameters;
 import com.helospark.spark.converter.handlers.domain.ConverterTypeCodeGenerationRequest;
 import com.helospark.spark.converter.handlers.service.collector.collectors.MethodCollectorChain;
+import com.helospark.spark.converter.handlers.service.collector.converttype.ConvertTypeFinder;
 import com.helospark.spark.converter.handlers.service.common.ConvertableParametersGenerator;
-import com.helospark.spark.converter.handlers.service.domain.ConvertType;
-import com.helospark.spark.converter.handlers.service.domain.ConvertableDomain;
-import com.helospark.spark.converter.handlers.service.domain.ConvertableDomainParameter;
-import com.helospark.spark.converter.handlers.service.domain.SourceDestinationType;
+import com.helospark.spark.converter.handlers.service.common.domain.ConvertType;
+import com.helospark.spark.converter.handlers.service.common.domain.ConvertableDomain;
+import com.helospark.spark.converter.handlers.service.common.domain.ConvertableDomainParameter;
+import com.helospark.spark.converter.handlers.service.common.domain.SourceDestinationType;
 
 /**
  * Generates the converter.
@@ -42,7 +43,7 @@ public class MethodCollector {
 
     public Optional<ConverterTypeCodeGenerationRequest> recursivelyCollectConverters(ConverterInputParameters converterInputParameters, SourceDestinationType sourceDestionation,
             List<ConverterTypeCodeGenerationRequest> createdConverters) {
-        ConvertType convertType = convertTypeFinder.findConvertType(of(sourceDestionation.getSourceType()), of(sourceDestionation.getDestinationType()));
+        ConvertType convertType = convertTypeFinder.findConvertType(ofNullable(sourceDestionation.getSourceType()), ofNullable(sourceDestionation.getDestinationType()));
         Optional<MethodCollectorChain> methodCollectorResult = findMethodCollectorImplementation(convertType);
         if (methodCollectorResult.isPresent()) {
             ConverterTypeCodeGenerationRequest generatedConverter = methodCollectorResult.get().handle(converterInputParameters, sourceDestionation, createdConverters);
@@ -53,7 +54,7 @@ public class MethodCollector {
                     SourceDestinationType parameterSourceType = new SourceDestinationType(domainParameter.getSourceType(), domainParameter.getDestinationType());
                     Optional<ConverterTypeCodeGenerationRequest> recursiveConverter = recursivelyCollectConverters(converterInputParameters, parameterSourceType,
                             createdConverters);
-                    recursiveConverter.ifPresent(dependency -> generatedConverter.addDependency(dependency));
+                    recursiveConverter.ifPresent(dependency -> generatedConverter.safeAddDependency(dependency));
                 }
             }
             return Optional.of(generatedConverter);
