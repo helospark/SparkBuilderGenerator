@@ -28,11 +28,11 @@ import com.helospark.spark.converter.handlers.service.common.ClassNameToVariable
 import com.helospark.spark.converter.handlers.service.common.ConvertableParametersGenerator;
 import com.helospark.spark.converter.handlers.service.common.ImportPopulator;
 import com.helospark.spark.converter.handlers.service.emitter.CodeEmitter;
+import com.helospark.spark.converter.handlers.service.emitter.UnitTestCodeEmitter;
 import com.helospark.spark.converter.handlers.service.emitter.helper.AstHelper;
 import com.helospark.spark.converter.handlers.service.emitter.helper.ClassTypeAppender;
 import com.helospark.spark.converter.handlers.service.emitter.helper.CompilationUnitCreator;
 import com.helospark.spark.converter.handlers.service.emitter.helper.CompilationUnitParser;
-import com.helospark.spark.converter.handlers.service.emitter.helper.ConverterClassGenerator;
 import com.helospark.spark.converter.handlers.service.emitter.helper.ConverterConstructorEmitter;
 import com.helospark.spark.converter.handlers.service.emitter.helper.ConverterFieldEmitter;
 import com.helospark.spark.converter.handlers.service.emitter.helper.ImportAppender;
@@ -40,6 +40,7 @@ import com.helospark.spark.converter.handlers.service.emitter.helper.MethodsEmit
 import com.helospark.spark.converter.handlers.service.emitter.helper.ModifiableCompilationUnitCreator;
 import com.helospark.spark.converter.handlers.service.emitter.helper.PackageRootFinder;
 import com.helospark.spark.converter.handlers.service.emitter.helper.SignatureToTypeResolver;
+import com.helospark.spark.converter.handlers.service.emitter.helper.TypeDeclarationGenerator;
 import com.helospark.spark.converter.handlers.service.emitter.methodemitter.MethodEmitter;
 import com.helospark.spark.converter.handlers.service.emitter.methodemitter.impl.CollectionConvertMethodEmitter;
 import com.helospark.spark.converter.handlers.service.emitter.methodemitter.impl.OptionalConvertMethodEmitter;
@@ -125,7 +126,7 @@ public class Activator extends AbstractUIPlugin {
         diContainer.add(new ReferenceCopyCodeGenerator());
         diContainer.add(new OptionalWrapCodeGenerator(getDependency(ImportPopulator.class)));
         diContainer.add(new OptionalUnwrapCodeGenerator(getDependency(ImportPopulator.class)));
-        diContainer.add(new ConverterClassGenerator());
+        diContainer.add(new TypeDeclarationGenerator());
 
         List<ConvertableDomainBuilderChainItem> convertableDomainBuilderChain = Arrays.asList(
                 new ReferenceCopyConvertTypeBuilder(),
@@ -171,7 +172,7 @@ public class Activator extends AbstractUIPlugin {
         diContainer.add(new MethodsEmitter(getDependencyList(MethodEmitter.class)));
         diContainer.add(new ConverterFieldEmitter(getDependency(ImportPopulator.class)));
         diContainer.add(new ImportAppender());
-        diContainer.add(new CodeEmitter(getDependency(ConverterClassGenerator.class),
+        diContainer.add(new CodeEmitter(getDependency(TypeDeclarationGenerator.class),
                 getDependency(ClassTypeAppender.class),
                 getDependency(ModifiableCompilationUnitCreator.class),
                 getDependency(PackageRootFinder.class),
@@ -179,6 +180,10 @@ public class Activator extends AbstractUIPlugin {
                 getDependency(ConverterConstructorEmitter.class),
                 getDependency(ConverterFieldEmitter.class),
                 getDependency(ImportAppender.class)));
+        diContainer.add(new UnitTestCodeEmitter(getDependency(TypeDeclarationGenerator.class),
+                getDependency(ClassTypeAppender.class),
+                getDependency(ModifiableCompilationUnitCreator.class),
+                getDependency(PackageRootFinder.class)));
     }
 
     /**

@@ -7,7 +7,7 @@ import com.helospark.spark.converter.handlers.service.common.domain.CompilationU
 
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 
-public class ConverterClassGenerator {
+public class TypeDeclarationGenerator {
 
     public TypeDeclaration createConverter(CompilationUnitModificationDomain compilationUnitModificationDomain, String className) {
         AST ast = compilationUnitModificationDomain.getAst();

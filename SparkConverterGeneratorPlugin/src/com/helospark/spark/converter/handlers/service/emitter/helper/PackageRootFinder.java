@@ -11,7 +11,7 @@ public class PackageRootFinder {
     }
 
     public IPackageFragmentRoot findTestPackageFragmentRoot(IJavaProject project) {
-        return findPackage(project, "src");
+        return findPackage(project, "test");
     }
 
     private IPackageFragmentRoot findPackage(IJavaProject project, String rootName) {

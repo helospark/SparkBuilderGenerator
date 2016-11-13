@@ -21,6 +21,7 @@ import com.helospark.spark.converter.handlers.domain.ConverterInputParameters;
 import com.helospark.spark.converter.handlers.domain.ConverterTypeCodeGenerationRequest;
 import com.helospark.spark.converter.handlers.service.collector.MethodCollector;
 import com.helospark.spark.converter.handlers.service.emitter.CodeEmitter;
+import com.helospark.spark.converter.handlers.service.emitter.UnitTestCodeEmitter;
 
 /**
  * Our sample handler extends AbstractHandler, an IHandler base class.
@@ -32,18 +33,20 @@ public class GenerateConverterHandler extends AbstractHandler {
     private InputParameterGetter inputParameterGetter;
     private MethodCollector methodCollector;
     private CodeEmitter codeEmitter;
+    private UnitTestCodeEmitter unitTestCodeEmitter;
 
     /**
      * The constructor.
      */
     public GenerateConverterHandler() {
-        this(getDependency(InputParameterGetter.class), getDependency(MethodCollector.class), getDependency(CodeEmitter.class));
+        this(getDependency(InputParameterGetter.class), getDependency(MethodCollector.class), getDependency(CodeEmitter.class), getDependency(UnitTestCodeEmitter.class));
     }
 
-    public GenerateConverterHandler(InputParameterGetter inputParameterGetter, MethodCollector methodCollector, CodeEmitter codeEmitter) {
+    public GenerateConverterHandler(InputParameterGetter inputParameterGetter, MethodCollector methodCollector, CodeEmitter codeEmitter, UnitTestCodeEmitter unitTestCodeEmitter) {
         this.inputParameterGetter = inputParameterGetter;
         this.methodCollector = methodCollector;
         this.codeEmitter = codeEmitter;
+        this.unitTestCodeEmitter = unitTestCodeEmitter;
     }
 
     /**
@@ -58,6 +61,7 @@ public class GenerateConverterHandler extends AbstractHandler {
                 List<ConverterTypeCodeGenerationRequest> collectedConverters = methodCollector.collectConverters(inputParameters.get());
                 checkForConverterOverride(collectedConverters);
                 codeEmitter.emitCode(inputParameters.get(), collectedConverters);
+                unitTestCodeEmitter.emitUnitTest(inputParameters.get(), collectedConverters);
             }
         } catch (Exception e) {
             e.printStackTrace();

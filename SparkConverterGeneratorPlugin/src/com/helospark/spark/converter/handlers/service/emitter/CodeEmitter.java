@@ -11,7 +11,7 @@ import com.helospark.spark.converter.handlers.domain.ConverterInputParameters;
 import com.helospark.spark.converter.handlers.domain.ConverterTypeCodeGenerationRequest;
 import com.helospark.spark.converter.handlers.service.common.domain.CompilationUnitModificationDomain;
 import com.helospark.spark.converter.handlers.service.emitter.helper.ClassTypeAppender;
-import com.helospark.spark.converter.handlers.service.emitter.helper.ConverterClassGenerator;
+import com.helospark.spark.converter.handlers.service.emitter.helper.TypeDeclarationGenerator;
 import com.helospark.spark.converter.handlers.service.emitter.helper.ConverterConstructorEmitter;
 import com.helospark.spark.converter.handlers.service.emitter.helper.ConverterFieldEmitter;
 import com.helospark.spark.converter.handlers.service.emitter.helper.ImportAppender;
@@ -20,7 +20,7 @@ import com.helospark.spark.converter.handlers.service.emitter.helper.ModifiableC
 import com.helospark.spark.converter.handlers.service.emitter.helper.PackageRootFinder;
 
 public class CodeEmitter {
-    private ConverterClassGenerator converterClassGenerator;
+    private TypeDeclarationGenerator typeDeclarationGenerator;
     private ClassTypeAppender classTypeAppender;
     private ModifiableCompilationUnitCreator modifiableCompilationUnitCreator;
     private PackageRootFinder packageRootFinder;
@@ -29,10 +29,10 @@ public class CodeEmitter {
     private ConverterFieldEmitter converterFieldEmitter;
     private ImportAppender importAppender;
 
-    public CodeEmitter(ConverterClassGenerator converterClassGenerator, ClassTypeAppender classTypeAppender, ModifiableCompilationUnitCreator modifiableCompilationUnitCreator,
+    public CodeEmitter(TypeDeclarationGenerator typeDeclarationGenerator, ClassTypeAppender classTypeAppender, ModifiableCompilationUnitCreator modifiableCompilationUnitCreator,
             PackageRootFinder packageRootFinder, MethodsEmitter methodsEmitter, ConverterConstructorEmitter converterConstructorEmitter,
             ConverterFieldEmitter converterFieldEmitter, ImportAppender importAppender) {
-        this.converterClassGenerator = converterClassGenerator;
+        this.typeDeclarationGenerator = typeDeclarationGenerator;
         this.classTypeAppender = classTypeAppender;
         this.modifiableCompilationUnitCreator = modifiableCompilationUnitCreator;
         this.packageRootFinder = packageRootFinder;
@@ -98,6 +98,6 @@ public class CodeEmitter {
     }
 
     private TypeDeclaration createConverterClass(String className, CompilationUnitModificationDomain compilationUnitModificationDomain) {
-        return converterClassGenerator.createConverter(compilationUnitModificationDomain, className);
+        return typeDeclarationGenerator.createConverter(compilationUnitModificationDomain, className);
     }
 }
