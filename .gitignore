@@ -5,3 +5,4 @@ bin/
 *.jar
 */test-output
 */target
+*/test-classes
