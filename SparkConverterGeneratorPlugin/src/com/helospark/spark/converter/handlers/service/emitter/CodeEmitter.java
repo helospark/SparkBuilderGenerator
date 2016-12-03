@@ -11,15 +11,17 @@ import com.helospark.spark.converter.handlers.domain.ConverterInputParameters;
 import com.helospark.spark.converter.handlers.domain.ConverterTypeCodeGenerationRequest;
 import com.helospark.spark.converter.handlers.service.common.domain.CompilationUnitModificationDomain;
 import com.helospark.spark.converter.handlers.service.emitter.helper.ClassTypeAppender;
-import com.helospark.spark.converter.handlers.service.emitter.helper.TypeDeclarationGenerator;
+import com.helospark.spark.converter.handlers.service.emitter.helper.CommentAppender;
 import com.helospark.spark.converter.handlers.service.emitter.helper.ConverterConstructorEmitter;
 import com.helospark.spark.converter.handlers.service.emitter.helper.ConverterFieldEmitter;
 import com.helospark.spark.converter.handlers.service.emitter.helper.ImportAppender;
 import com.helospark.spark.converter.handlers.service.emitter.helper.MethodsEmitter;
 import com.helospark.spark.converter.handlers.service.emitter.helper.ModifiableCompilationUnitCreator;
 import com.helospark.spark.converter.handlers.service.emitter.helper.PackageRootFinder;
+import com.helospark.spark.converter.handlers.service.emitter.helper.TypeDeclarationGenerator;
 
 public class CodeEmitter {
+    private CommentAppender commentAppender = new CommentAppender();
     private TypeDeclarationGenerator typeDeclarationGenerator;
     private ClassTypeAppender classTypeAppender;
     private ModifiableCompilationUnitCreator modifiableCompilationUnitCreator;
@@ -56,6 +58,7 @@ public class CodeEmitter {
             addConstructor(converterClassType, converterCompilationUnit, generationRequest);
             addConvertMethods(converterClassType, converterCompilationUnit, generationRequest);
 
+            commentAppender.appendComments(converterCompilationUnit, converterClassType);
             addTypeToCompilationUnit(converterCompilationUnit, converterClassType);
             addImports(converterCompilationUnit);
         } catch (Exception e) {

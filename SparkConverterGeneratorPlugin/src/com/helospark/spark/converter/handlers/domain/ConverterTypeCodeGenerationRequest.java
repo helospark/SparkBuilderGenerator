@@ -9,6 +9,7 @@ public class ConverterTypeCodeGenerationRequest {
     private String className;
     private String fieldName;
     private String packageName;
+    private String unitTestMockName;
     private List<ConverterTypeCodeGenerationRequest> dependencies;
     private List<ConverterMethodCodeGenerationRequest> methods;
 
@@ -17,6 +18,7 @@ public class ConverterTypeCodeGenerationRequest {
         this.className = builder.className;
         this.fieldName = builder.fieldName;
         this.packageName = builder.packageName;
+        this.unitTestMockName = builder.unitTestMockName;
         this.dependencies = builder.dependencies;
         this.methods = builder.methods;
     }
@@ -65,6 +67,10 @@ public class ConverterTypeCodeGenerationRequest {
         methods.add(method);
     }
 
+    public String getUnitTestMockName() {
+        return unitTestMockName;
+    }
+
     public void safeAddDependency(ConverterTypeCodeGenerationRequest dependency) {
         if (!dependencies.contains(dependency) && !dependency.getFullyQualifiedName().equals(getFullyQualifiedName())) {
             this.dependencies.add(dependency);
@@ -78,13 +84,20 @@ public class ConverterTypeCodeGenerationRequest {
 
     @Generated("SparkTools")
     public static final class Builder {
+        private String PACKAGE_SEPARATOR_DOT;
         private String className;
         private String fieldName;
         private String packageName;
+        private String unitTestMockName;
         private List<ConverterTypeCodeGenerationRequest> dependencies;
         private List<ConverterMethodCodeGenerationRequest> methods;
 
         private Builder() {
+        }
+
+        public Builder withPACKAGE_SEPARATOR_DOT(String PACKAGE_SEPARATOR_DOT) {
+            this.PACKAGE_SEPARATOR_DOT = PACKAGE_SEPARATOR_DOT;
+            return this;
         }
 
         public Builder withClassName(String className) {
@@ -99,6 +112,11 @@ public class ConverterTypeCodeGenerationRequest {
 
         public Builder withPackageName(String packageName) {
             this.packageName = packageName;
+            return this;
+        }
+
+        public Builder withUnitTestMockName(String unitTestMockName) {
+            this.unitTestMockName = unitTestMockName;
             return this;
         }
 

@@ -3,21 +3,18 @@ package com.helospark.spark.converter.handlers.service.emitter.methodemitter.imp
 import java.util.List;
 
 import org.eclipse.jdt.core.dom.AST;
-import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.Block;
-import org.eclipse.jdt.core.dom.ClassInstanceCreation;
 import org.eclipse.jdt.core.dom.Expression;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
-import org.eclipse.jdt.core.dom.MethodInvocation;
 import org.eclipse.jdt.core.dom.Modifier.ModifierKeyword;
 import org.eclipse.jdt.core.dom.ReturnStatement;
 import org.eclipse.jdt.core.dom.SimpleType;
 import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
-import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
-import org.eclipse.jdt.core.dom.VariableDeclarationStatement;
 
 import com.helospark.spark.converter.handlers.domain.ConverterMethodCodeGenerationRequest;
 import com.helospark.spark.converter.handlers.domain.ConverterTypeCodeGenerationRequest;
+import com.helospark.spark.converter.handlers.service.common.BuilderInitializationValueProvider;
+import com.helospark.spark.converter.handlers.service.common.BuilderReturnStatementProvider;
 import com.helospark.spark.converter.handlers.service.common.ImportPopulator;
 import com.helospark.spark.converter.handlers.service.common.domain.CompilationUnitModificationDomain;
 import com.helospark.spark.converter.handlers.service.common.domain.ConvertableDomain;
@@ -27,10 +24,15 @@ import com.helospark.spark.converter.handlers.service.emitter.parametercodegener
 public class ConverterConvertMethodGenerator {
     private List<ParameterConvertCodeGenerator> codeGenerators;
     private ImportPopulator importPopulator;
+    private BuilderInitializationValueProvider builderInitializationValueProvider;
+    private BuilderReturnStatementProvider builderReturnStatementProvider;
 
-    public ConverterConvertMethodGenerator(List<ParameterConvertCodeGenerator> codeGenerators, ImportPopulator importPopulator) {
+    public ConverterConvertMethodGenerator(List<ParameterConvertCodeGenerator> codeGenerators, ImportPopulator importPopulator,
+            BuilderInitializationValueProvider builderInitializationValueProvider, BuilderReturnStatementProvider builderReturnStatementProvider) {
         this.codeGenerators = codeGenerators;
         this.importPopulator = importPopulator;
+        this.builderInitializationValueProvider = builderInitializationValueProvider;
+        this.builderReturnStatementProvider = builderReturnStatementProvider;
     }
 
     public MethodDeclaration generate(CompilationUnitModificationDomain compilationUnitModificationDomain, ConvertableDomain convertableDomain,
@@ -52,26 +54,9 @@ public class ConverterConvertMethodGenerator {
         newMethod.parameters().add(methodParameterDeclaration);
         Block body = ast.newBlock();
 
-        Expression lastDeclaration = null;
-        if (convertableDomain.isUseBuilder()) {
-            MethodInvocation methodInvocation = compilationUnitModificationDomain.getAst().newMethodInvocation();
-            methodInvocation.setName(ast.newSimpleName("builder"));
-            methodInvocation.setExpression(ast.newName(destinationTypeName));
-
-            lastDeclaration = methodInvocation;
-        } else {
-            ClassInstanceCreation newClassInstanceCreation = ast.newClassInstanceCreation();
-            SimpleType destinationType = ast.newSimpleType(ast.newName(destinationTypeName));
-            newClassInstanceCreation.setType((SimpleType) ASTNode.copySubtree(ast, destinationType));
-
-            VariableDeclarationFragment singleVariableDeclaration = ast.newVariableDeclarationFragment();
-            singleVariableDeclaration.setName(ast.newSimpleName("destination"));
-            singleVariableDeclaration.setInitializer(newClassInstanceCreation);
-
-            VariableDeclarationStatement vds = ast.newVariableDeclarationStatement(singleVariableDeclaration);
-            vds.setType((SimpleType) ASTNode.copySubtree(ast, destinationType));
-            body.statements().add(vds);
-        }
+        Expression lastDeclaration = builderInitializationValueProvider.addLastDeclarationInitialization(compilationUnitModificationDomain, convertableDomain, ast,
+                destinationTypeName,
+                body);
 
         for (ConvertableDomainParameter parameter : convertableDomain.getConvertableDomainParameters()) {
             if (!convertableDomain.isUseBuilder()) {
@@ -85,15 +70,7 @@ public class ConverterConvertMethodGenerator {
                 lastDeclaration = generatedCopy;
             }
         }
-        ReturnStatement returnStatement = ast.newReturnStatement();
-        if (convertableDomain.isUseBuilder()) {
-            MethodInvocation builderMethodInvocation = ast.newMethodInvocation();
-            builderMethodInvocation.setExpression(lastDeclaration);
-            builderMethodInvocation.setName(ast.newSimpleName("build"));
-            returnStatement.setExpression(builderMethodInvocation);
-        } else {
-            returnStatement.setExpression(ast.newName("destination"));
-        }
+        ReturnStatement returnStatement = builderReturnStatementProvider.initializeBuilderReturn(convertableDomain, ast, lastDeclaration);
         body.statements().add(returnStatement);
         newMethod.setBody(body);
         return newMethod;
