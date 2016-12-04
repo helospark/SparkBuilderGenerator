@@ -54,7 +54,7 @@ public class ConverterConvertMethodGenerator {
         newMethod.parameters().add(methodParameterDeclaration);
         Block body = ast.newBlock();
 
-        Expression lastDeclaration = builderInitializationValueProvider.addLastDeclarationInitialization(compilationUnitModificationDomain, convertableDomain, ast,
+        Expression lastDeclaration = builderInitializationValueProvider.addLastDeclarationInitialization(compilationUnitModificationDomain, convertableDomain,
                 destinationTypeName,
                 body);
 
