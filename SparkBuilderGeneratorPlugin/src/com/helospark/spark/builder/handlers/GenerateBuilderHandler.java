@@ -23,7 +23,7 @@ import com.helospark.spark.builder.preferences.PreferencesManager;
 
 /**
  * Handler for generating a builder.
- * 
+ *
  * @author helospark
  */
 public class GenerateBuilderHandler extends AbstractHandler {
@@ -96,17 +96,9 @@ public class GenerateBuilderHandler extends AbstractHandler {
             commitCodeChanges(iCompilationUnit, rewriter);
         } catch (PluginException e) {
             errorHandlerHook.onPluginException(e);
-        } catch (JavaModelException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (BadLocationException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+        } catch (Exception e) {
+            errorHandlerHook.onUnexpectedException(e);
         }
-
-        // catch (Exception e) {
-        // errorHandlerHook.onUnexpectedException(e);
-        // }
     }
 
     private void commitCodeChanges(ICompilationUnit iCompilationUnit, ASTRewrite rewriter)

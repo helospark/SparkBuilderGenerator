@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.eclipse.jdt.core.dom.FieldDeclaration;
+import org.eclipse.jdt.core.dom.IExtendedModifier;
 import org.eclipse.jdt.core.dom.Modifier;
 import org.eclipse.jdt.core.dom.Modifier.ModifierKeyword;
 import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
@@ -13,7 +14,7 @@ import com.helospark.spark.builder.handlers.codegenerator.domain.NamedVariableDe
 
 /**
  * Extracts fields which can be added to the builder.
- * 
+ *
  * @author helospark
  */
 public class ApplicableFieldExtractor {
@@ -42,9 +43,10 @@ public class ApplicableFieldExtractor {
     }
 
     private boolean isStatic(FieldDeclaration field) {
-        List<Modifier> fieldModifiers = field.modifiers();
+        List<IExtendedModifier> fieldModifiers = field.modifiers();
         return fieldModifiers.stream()
-                .filter(modifer -> modifer.getKeyword().equals(ModifierKeyword.STATIC_KEYWORD))
+                .filter(modifier -> modifier instanceof Modifier)
+                .filter(modifer -> ((Modifier) modifer).getKeyword().equals(ModifierKeyword.STATIC_KEYWORD))
                 .findFirst()
                 .isPresent();
     }
