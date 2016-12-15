@@ -21,7 +21,7 @@ import com.helospark.spark.builder.preferences.PreferencesManager;
  */
 public class ImportPopulator {
     private static final String GENERATED_FULLY_QUALIFIED_NAME = "javax.annotation.Generated";
-    private static final String NON_NULL_FULLY_QUALIFIED_NAME = "javax.annotation.NonNull";
+    private static final String NON_NULL_FULLY_QUALIFIED_NAME = "javax.annotation.Nonnull";
     private PreferencesManager preferencesManager;
 
     public ImportPopulator(PreferencesManager preferencesManager) {

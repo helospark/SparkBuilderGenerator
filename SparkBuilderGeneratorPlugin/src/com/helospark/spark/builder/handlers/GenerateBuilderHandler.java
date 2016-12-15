@@ -98,6 +98,7 @@ public class GenerateBuilderHandler extends AbstractHandler {
             errorHandlerHook.onPluginException(e);
         } catch (Exception e) {
             errorHandlerHook.onUnexpectedException(e);
+            throw new RuntimeException(e.getMessage(), e);
         }
     }
 
