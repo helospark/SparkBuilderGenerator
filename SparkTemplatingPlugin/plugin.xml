@@ -3,6 +3,18 @@
 <plugin>
 
    <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            name="Sample XML Editor"
+            extensions="stt"
+            icon="sample/icon.gif"
+            contributorClass="org.eclipse.ui.texteditor.BasicTextEditorActionContributor"
+            class="com.helospark.sparktemplatingplugin.editor.TemplatingToolEditor"
+            id="com.helospark.sparktemplatingplugin.editor.TemplatingToolEditor">
+      </editor>
+   </extension>
+
+   <extension
          point="org.eclipse.ui.commands">
       <category
             name="Sample Category"
@@ -53,10 +65,28 @@
                   commandId="com.helospark.SparkTemplatingPlugin.commands.sampleCommand"
                   icon="icons/sample.gif"
                   tooltip="Say hello world"
-                  id="com.helospark.SparkTemplatingPlugin.toolbars.sampleCommand">
+                  id="com.helospark.SparkTemplatingPlugin.toolbars.sampleCommand" style="pulldown">
             </command>
          </toolbar>
       </menuContribution>
+
+     <menuContribution locationURI="menu:com.helospark.SparkTemplatingPlugin.toolbars.sampleCommand">
+        <command commandId="com.helospark.SparkTemplatingPlugin.commands.sampleCommand" label="Execute template..." style="push">
+           <parameter name="z.ex.dropdown.msg" value="execute">
+           </parameter>
+        </command>
+        <separator name="additions" visible="false" />
+        <command commandId="com.helospark.SparkTemplatingPlugin.commands.sampleCommand" label="Create new template" style="push">
+           <parameter name="z.ex.dropdown.msg" value="Hello">
+           </parameter>
+        </command>
+        <separator name="additions" visible="false">
+        </separator>
+        <command commandId="com.helospark.SparkTemplatingPlugin.commands.sampleCommand" label="Edit template" style="push">
+           <parameter name="z.ex.dropdown.msg" value="Goodbye">
+           </parameter>
+        </command>
+     </menuContribution>
    </extension>
 
 </plugin>
