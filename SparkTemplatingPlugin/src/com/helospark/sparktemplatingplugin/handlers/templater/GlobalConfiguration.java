@@ -6,7 +6,7 @@ public class GlobalConfiguration implements ScriptExposed, StatefulBean {
     private boolean appendNewLine = DEFAULT_APPEND_NEW_LINE_VALUE;
 
     @Override
-    public String getScriptName() {
+    public String getExposedName() {
         return SCRIPT_NAME;
     }
 

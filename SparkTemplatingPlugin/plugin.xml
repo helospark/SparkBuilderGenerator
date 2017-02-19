@@ -25,6 +25,11 @@
             categoryId="com.helospark.SparkTemplatingPlugin.commands.category"
             id="com.helospark.SparkTemplatingPlugin.commands.sampleCommand">
       </command>
+      <command
+      		name="Open dialog command"
+            id="com.helospark.sparktemplatingplugin.handlers.openDialog"
+            categoryId="com.helospark.SparkTemplatingPlugin.commands.category">
+      </command>
    </extension>
    <extension
          point="org.eclipse.ui.handlers">
@@ -32,11 +37,21 @@
             commandId="com.helospark.SparkTemplatingPlugin.commands.sampleCommand"
             class="com.helospark.sparktemplatingplugin.handlers.SampleHandler">
       </handler>
+      <handler
+            commandId="com.helospark.sparktemplatingplugin.handlers.openDialog"
+            class="com.helospark.sparktemplatingplugin.handlers.DialogHandler">
+      </handler>
+      <handler
+            commandId="com.helospark.SparkTemplatingPlugin.commands.exportCommand"
+            class="com.helospark.sparktemplatingplugin.scriptexport.ExportTamplatesHandler" />
+      <handler
+            commandId="com.helospark.SparkTemplatingPlugin.commands.importCommand"
+            class="com.helospark.sparktemplatingplugin.scriptimport.ImportTemplatesHandler" />
    </extension>
    <extension
          point="org.eclipse.ui.bindings">
       <key
-            commandId="com.helospark.SparkTemplatingPlugin.commands.sampleCommand"
+            commandId="com.helospark.sparktemplatingplugin.handlers.openDialog"
             contextId="org.eclipse.ui.contexts.window"
             sequence="M1+6"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
@@ -77,14 +92,14 @@
         </command>
         <separator name="additions" visible="false" />
         <command commandId="com.helospark.SparkTemplatingPlugin.commands.sampleCommand" label="Create new template" style="push">
-           <parameter name="z.ex.dropdown.msg" value="Hello">
-           </parameter>
         </command>
         <separator name="additions" visible="false">
         </separator>
         <command commandId="com.helospark.SparkTemplatingPlugin.commands.sampleCommand" label="Edit template" style="push">
-           <parameter name="z.ex.dropdown.msg" value="Goodbye">
-           </parameter>
+        </command>
+        <command commandId="com.helospark.SparkTemplatingPlugin.commands.exportCommand" label="Export templates" style="push">
+        </command>
+        <command commandId="com.helospark.SparkTemplatingPlugin.commands.importCommand" label="Import templates" style="push">
         </command>
      </menuContribution>
    </extension>

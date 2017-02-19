@@ -20,4 +20,12 @@ public class TemplatingResultFactory {
     public TemplatingResult createTemplatingResult(ExecutionEvent event) {
         return new TemplatingResult(compilationUnitProvider, compilationUnitCreator, packageRootFinder, event);
     }
+
+    public String getExposedName() {
+        return "result";
+    }
+
+    public Class<?> getExposedObjectType() {
+        return TemplatingResult.class;
+    }
 }

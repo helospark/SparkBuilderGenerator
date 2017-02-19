@@ -8,9 +8,10 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.handlers.HandlerUtil;
 
 import com.helospark.sparktemplatingplugin.handlers.templater.ScriptExposedProvider;
-import com.helospark.sparktemplatingplugin.handlers.templater.domain.ScriptExposedPair;
 
 public class CompilationUnitProvider implements ScriptExposedProvider {
+
+    private static final String EXPOSED_NAME = "currentCompilationUnit";
 
     public ICompilationUnit provideCurrentICompiltionUnit(ExecutionEvent event) {
         IEditorPart editor = getActiveEditor(event);
@@ -23,8 +24,20 @@ public class CompilationUnitProvider implements ScriptExposedProvider {
     }
 
     @Override
-    public ScriptExposedPair provide(ExecutionEvent executionEvent) {
-        return new ScriptExposedPair("currentCompilationUnit", provideCurrentICompiltionUnit(executionEvent));
+    public Object provide(ExecutionEvent executionEvent) {
+        IEditorPart editor = getActiveEditor(executionEvent);
+        IWorkingCopyManager manager = JavaUI.getWorkingCopyManager();
+        return manager.getWorkingCopy(editor.getEditorInput());
+    }
+
+    @Override
+    public Class<?> getExposedObjectType() {
+        return ICompilationUnit.class;
+    }
+
+    @Override
+    public String getExposedName() {
+        return EXPOSED_NAME;
     }
 
 }

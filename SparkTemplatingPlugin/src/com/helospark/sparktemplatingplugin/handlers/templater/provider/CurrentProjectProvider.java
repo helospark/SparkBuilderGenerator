@@ -12,9 +12,10 @@ import org.eclipse.ui.ISelectionService;
 import org.eclipse.ui.internal.Workbench;
 
 import com.helospark.sparktemplatingplugin.handlers.templater.ScriptExposedProvider;
-import com.helospark.sparktemplatingplugin.handlers.templater.domain.ScriptExposedPair;
 
 public class CurrentProjectProvider implements ScriptExposedProvider {
+
+    private static final String EXPOSED_NAME = "currentProject";
 
     public IProject provideCurrentProject() {
         ISelectionService selectionService = Workbench.getInstance().getActiveWorkbenchWindow().getSelectionService();
@@ -39,7 +40,17 @@ public class CurrentProjectProvider implements ScriptExposedProvider {
     }
 
     @Override
-    public ScriptExposedPair provide(ExecutionEvent executionEvent) {
-        return new ScriptExposedPair("currentProject", provideCurrentProject());
+    public Object provide(ExecutionEvent executionEvent) {
+        return provideCurrentProject();
+    }
+
+    @Override
+    public Class<?> getExposedObjectType() {
+        return IProject.class;
+    }
+
+    @Override
+    public String getExposedName() {
+        return EXPOSED_NAME;
     }
 }

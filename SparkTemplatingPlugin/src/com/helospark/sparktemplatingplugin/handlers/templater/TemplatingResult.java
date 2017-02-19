@@ -29,12 +29,13 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 
+import com.helospark.sparktemplatingplugin.IDocumented;
 import com.helospark.sparktemplatingplugin.handlers.templater.helper.CompilationUnitCreator;
 import com.helospark.sparktemplatingplugin.handlers.templater.helper.PackageRootFinder;
 import com.helospark.sparktemplatingplugin.handlers.templater.provider.CompilationUnitProvider;
 import com.helospark.sparktemplatingplugin.handlers.templater.provider.CurrentProjectProvider;
 
-public class TemplatingResult implements ScriptExposed {
+public class TemplatingResult implements ScriptExposed, IDocumented {
     public static final String SCRIPT_NAME = "result";
     // Stateless
     private CompilationUnitProvider compilationUnitProvider = new CompilationUnitProvider();
@@ -131,8 +132,15 @@ public class TemplatingResult implements ScriptExposed {
     }
 
     @Override
-    public String getScriptName() {
+    public String getExposedName() {
         return SCRIPT_NAME;
+    }
+
+    @Override
+    public String getDocumentation() {
+        return "<h1>Result</h1><p>This contains the result, every templated text will automatically"
+                + " gets appended to it. You can flush it manually, or it will be automatically flushed"
+                + " at the current cursor position in the end of the script.";
     }
 
 }

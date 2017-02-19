@@ -15,13 +15,15 @@ public class Templater {
     }
 
     public void template(ExecutionEvent event) {
-        String program = "public class TestClass {\n"
+        String program = "#import com.helospark.sparktemplatingplugin.handlers.templater.*;\n"
+                + "public class TestClass {\n"
                 + " System.out.println(\"Hello world\");\n"
                 + " for (int i = 0; i < 10; ++i) {\n"
                 + "      i*= 2;\n"
                 + " }\n"
                 + "}\n"
-                + "# result.appendToNewFile(currentProject, \"src/NewClass.java\")";
+                + "# TemplatingResult tr = result;\n"
+                + "# tr.appendToNewFile(currentProject, \"src/NewClass.java\");";
         String preprocessedScript = scriptPreProcessor.preprocessScript(program);
         System.out.println("Preprocessed script: " + preprocessedScript);
         scriptInterpreter.interpret(event, preprocessedScript);

@@ -1,16 +1,15 @@
 package com.helospark.sparktemplatingplugin.editor;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentPartitioner;
 import org.eclipse.jface.text.rules.FastPartitioner;
-import org.eclipse.ui.editors.text.FileDocumentProvider;
+import org.eclipse.ui.editors.text.TextFileDocumentProvider;
 
-public class TemplatingToolDocumentProvider extends FileDocumentProvider {
+public class TemplatingToolDocumentProvider extends TextFileDocumentProvider {
 
     @Override
-    protected IDocument createDocument(Object element) throws CoreException {
-        IDocument document = super.createDocument(element);
+    public IDocument getDocument(Object element) {
+        IDocument document = super.getDocument(element);
         if (document != null) {
             IDocumentPartitioner partitioner = new FastPartitioner(
                     new TemplatingToolPartitionScanner(),

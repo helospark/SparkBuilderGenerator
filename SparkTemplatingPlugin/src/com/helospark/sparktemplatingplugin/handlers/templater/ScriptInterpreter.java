@@ -1,37 +1,30 @@
 package com.helospark.sparktemplatingplugin.handlers.templater;
 
-import java.util.List;
-
 import org.eclipse.core.commands.ExecutionEvent;
 
-import com.helospark.sparktemplatingplugin.handlers.templater.domain.ScriptExposedPair;
-
+import bsh.EvalError;
 import bsh.Interpreter;
 
 public class ScriptInterpreter {
-    private TemplatingResultFactory templatingResultFactory;
-    private List<ScriptExposed> scriptExposed;
-    private List<ScriptExposedProvider> scriptExposedProviders;
+    private ScriptExposedObjectProvider scriptExposedObjectProvider;
 
-    public ScriptInterpreter(TemplatingResultFactory templatingResultFactory, List<ScriptExposed> scriptExposed, List<ScriptExposedProvider> scriptExposedProviders) {
-        this.scriptExposed = scriptExposed;
-        this.templatingResultFactory = templatingResultFactory;
-        this.scriptExposedProviders = scriptExposedProviders;
+    public ScriptInterpreter(ScriptExposedObjectProvider scriptExposedObjectProvider) {
+        this.scriptExposedObjectProvider = scriptExposedObjectProvider;
     }
 
     public void interpret(ExecutionEvent event, String program) {
         try {
             Interpreter bsh = new Interpreter();
-            TemplatingResult templatingResult = templatingResultFactory.createTemplatingResult(event);
-            bsh.set(templatingResult.getScriptName(), templatingResult);
-
-            for (ScriptExposed scriptExposed : scriptExposed) {
-                bsh.set(scriptExposed.getScriptName(), scriptExposed);
-            }
-            for (ScriptExposedProvider provider : scriptExposedProviders) {
-                ScriptExposedPair scriptExposedPair = provider.provide(event);
-                bsh.set(scriptExposedPair.getName(), scriptExposedPair.getExposedObject());
-            }
+            scriptExposedObjectProvider.providerExposedObjects(event)
+                    .entrySet()
+                    .stream()
+                    .forEach(entry -> {
+                        try {
+                            bsh.set(entry.getKey(), entry.getValue());
+                        } catch (EvalError e) {
+                            throw new RuntimeException(e);
+                        }
+                    });
 
             bsh.eval(program);
 
