@@ -9,7 +9,7 @@
             extensions="stt"
             icon="sample/icon.gif"
             contributorClass="org.eclipse.ui.texteditor.BasicTextEditorActionContributor"
-            class="com.helospark.sparktemplatingplugin.editor.TemplatingToolEditor"
+            class="com.helospark.sparktemplatingplugin.ui.editor.TemplatingToolEditor"
             id="com.helospark.sparktemplatingplugin.editor.TemplatingToolEditor">
       </editor>
    </extension>
@@ -35,11 +35,11 @@
          point="org.eclipse.ui.handlers">
       <handler
             commandId="com.helospark.SparkTemplatingPlugin.commands.sampleCommand"
-            class="com.helospark.sparktemplatingplugin.handlers.SampleHandler">
+            class="com.helospark.sparktemplatingplugin.execute.SampleHandler">
       </handler>
       <handler
-            commandId="com.helospark.sparktemplatingplugin.handlers.openDialog"
-            class="com.helospark.sparktemplatingplugin.handlers.DialogHandler">
+            commandId="com.helospark.SparkTemplatingPlugin.commands.executionCommand"
+            class="com.helospark.sparktemplatingplugin.execute.ExecutionHandler">
       </handler>
       <handler
             commandId="com.helospark.SparkTemplatingPlugin.commands.exportCommand"
@@ -47,6 +47,15 @@
       <handler
             commandId="com.helospark.SparkTemplatingPlugin.commands.importCommand"
             class="com.helospark.sparktemplatingplugin.scriptimport.ImportTemplatesHandler" />
+      <handler
+            commandId="com.helospark.SparkTemplatingPlugin.commands.newTemplateCommand"
+            class="com.helospark.sparktemplatingplugin.create.TemplateCreateHandler" />
+      <handler
+            commandId="com.helospark.SparkTemplatingPlugin.commands.editTemplateCommand"
+            class="com.helospark.sparktemplatingplugin.edit.TemplateEditHandler" />
+      <handler
+            commandId="com.helospark.SparkTemplatingPlugin.commands.deleteTemplateCommand"
+            class="com.helospark.sparktemplatingplugin.delete.TemplateDeleteHandler" />
    </extension>
    <extension
          point="org.eclipse.ui.bindings">
@@ -86,21 +95,14 @@
       </menuContribution>
 
      <menuContribution locationURI="menu:com.helospark.SparkTemplatingPlugin.toolbars.sampleCommand">
-        <command commandId="com.helospark.SparkTemplatingPlugin.commands.sampleCommand" label="Execute template..." style="push">
-           <parameter name="z.ex.dropdown.msg" value="execute">
-           </parameter>
-        </command>
-        <separator name="additions" visible="false" />
-        <command commandId="com.helospark.SparkTemplatingPlugin.commands.sampleCommand" label="Create new template" style="push">
-        </command>
-        <separator name="additions" visible="false">
-        </separator>
-        <command commandId="com.helospark.SparkTemplatingPlugin.commands.sampleCommand" label="Edit template" style="push">
-        </command>
-        <command commandId="com.helospark.SparkTemplatingPlugin.commands.exportCommand" label="Export templates" style="push">
-        </command>
-        <command commandId="com.helospark.SparkTemplatingPlugin.commands.importCommand" label="Import templates" style="push">
-        </command>
+        <command commandId="com.helospark.SparkTemplatingPlugin.commands.executionCommand" label="Execute template..." style="push" />
+        <separator name="com.helospark.SparkTemplatingPlugin.separator1" visible="true" />
+        <command commandId="com.helospark.SparkTemplatingPlugin.commands.newTemplateCommand" label="Create new template" style="push" />
+        <command commandId="com.helospark.SparkTemplatingPlugin.commands.editTemplateCommand" label="Edit template" style="push" />
+        <command commandId="com.helospark.SparkTemplatingPlugin.commands.deleteTemplateCommand" label="Delete template" style="push" />
+        <separator name="com.helospark.SparkTemplatingPlugin.separator2" visible="true" />
+        <command commandId="com.helospark.SparkTemplatingPlugin.commands.exportCommand" label="Export templates" style="push" />
+        <command commandId="com.helospark.SparkTemplatingPlugin.commands.importCommand" label="Import templates" style="push" />
      </menuContribution>
    </extension>
 

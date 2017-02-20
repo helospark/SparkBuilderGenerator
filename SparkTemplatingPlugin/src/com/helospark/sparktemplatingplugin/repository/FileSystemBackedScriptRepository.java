@@ -12,26 +12,22 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.helospark.sparktemplatingplugin.repository.domain.ScriptEntity;
-import com.helospark.sparktemplatingplugin.repository.zip.ScriptZipper;
 
 public class FileSystemBackedScriptRepository implements ScriptRepository {
     private static final String SPARK_TEMPLATING_TOOL_FILE_ENCODING = "UTF-8";
     private EclipseRootFolderProvider eclipseRootFolderProvider;
     private CommandNameToFilenameMapper commandNameToFilenameMapper;
-    private ScriptZipper scriptZipper;
 
     public FileSystemBackedScriptRepository(EclipseRootFolderProvider eclipseRootFolderProvider,
-            CommandNameToFilenameMapper commandNameToFilenameMapper, ScriptZipper scriptZipper) {
+            CommandNameToFilenameMapper commandNameToFilenameMapper) {
         this.eclipseRootFolderProvider = eclipseRootFolderProvider;
         this.commandNameToFilenameMapper = commandNameToFilenameMapper;
-        this.scriptZipper = scriptZipper;
     }
 
     @Override
     public void saveNewScript(ScriptEntity entity) {
         try {
-            File rootDirectory = eclipseRootFolderProvider.provideRootDirectory();
-            File scriptFile = new File(rootDirectory, commandNameToFilenameMapper.mapToFilename(entity.getCommandName()));
+            File scriptFile = getFileForCommand(entity.getCommandName());
             if (!scriptFile.exists()) {
                 scriptFile.createNewFile();
             } else {
@@ -60,14 +56,30 @@ public class FileSystemBackedScriptRepository implements ScriptRepository {
 
     @Override
     public Optional<ScriptEntity> loadByCommandName(String commandName) {
-        File rootDirectory = eclipseRootFolderProvider.provideRootDirectory();
-        String fileName = commandNameToFilenameMapper.mapToFilename(commandName);
-        File scriptFile = new File(rootDirectory, fileName);
+        File scriptFile = getFileForCommand(commandName);
         Optional<ScriptEntity> result = Optional.empty();
         if (scriptFile.exists()) {
             result = Optional.of(createScriptEntityFromFile(scriptFile));
         }
         return result;
+    }
+
+    @Override
+    public URI getUriForCommand(String commandName) {
+        try {
+            File scriptFile = getFileForCommand(commandName);
+            return scriptFile.toURI();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void deleteByCommandName(String commandName) {
+        File fileForCommand = getFileForCommand(commandName);
+        if (fileForCommand.exists()) {
+            fileForCommand.delete();
+        }
     }
 
     private ScriptEntity createScriptEntityFromFile(File file) {
@@ -80,16 +92,10 @@ public class FileSystemBackedScriptRepository implements ScriptRepository {
         }
     }
 
-    @Override
-    public URI getUriForCommand(String commandName) {
-        try {
-            File rootDirectory = eclipseRootFolderProvider.provideRootDirectory();
-            String fileName = commandNameToFilenameMapper.mapToFilename(commandName);
-            File scriptFile = new File(rootDirectory, fileName);
-            return scriptFile.toURI();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+    private File getFileForCommand(String commandName) {
+        File rootDirectory = eclipseRootFolderProvider.provideRootDirectory();
+        String fileName = commandNameToFilenameMapper.mapToFilename(commandName);
+        return new File(rootDirectory, fileName);
     }
 
 }

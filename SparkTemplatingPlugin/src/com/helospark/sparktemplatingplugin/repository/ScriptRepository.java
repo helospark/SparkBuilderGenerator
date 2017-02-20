@@ -16,4 +16,6 @@ public interface ScriptRepository {
 
     URI getUriForCommand(String commandName);
 
+    void deleteByCommandName(String commandName);
+
 }
