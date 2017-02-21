@@ -1,12 +1,9 @@
 package com.helospark.sparktemplatingplugin.ui.editor.completition;
 
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -19,17 +16,15 @@ import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.jface.text.contentassist.IContextInformation;
 import org.eclipse.jface.text.contentassist.IContextInformationValidator;
 
-import com.helospark.sparktemplatingplugin.execute.templater.ScriptExposedObjectProvider;
-import com.helospark.sparktemplatingplugin.ui.editor.completition.domain.CompletitionProposalDomain;
+import com.helospark.sparktemplatingplugin.ui.editor.completition.chain.domain.CompletitionProposalRequest;
+import com.helospark.sparktemplatingplugin.ui.editor.completition.chain.domain.CompletitionProposalResponse;
 
 public class TemplatingToolCompletionProcessor implements IContentAssistProcessor {
-    private ScriptExposedObjectProvider scriptExposedObjectProvider;
-    private ProposalToDocumentationConverter proposalToDocumentationConverter;
-    private Set<Character> allowedExpressionCharacters = Arrays.asList('.', '(', ')', '\"', '\'').stream().collect(Collectors.toSet());
+    private final Set<Character> allowedExpressionCharacters = Arrays.asList('.', '(', ')', '\"', '\'').stream().collect(Collectors.toSet());
+    private List<CompletitionChain> chain;
 
-    public TemplatingToolCompletionProcessor(ScriptExposedObjectProvider scriptExposedObjectProvider, ProposalToDocumentationConverter proposalToDocumentationConverter) {
-        this.scriptExposedObjectProvider = scriptExposedObjectProvider;
-        this.proposalToDocumentationConverter = proposalToDocumentationConverter;
+    public TemplatingToolCompletionProcessor(List<CompletitionChain> chain) {
+        this.chain = chain;
     }
 
     @Override
@@ -38,7 +33,7 @@ public class TemplatingToolCompletionProcessor implements IContentAssistProcesso
             IDocument document = viewer.getDocument();
             String typedWord = getTypedWord(document, offset);
             String fullExpression = getFullExpression(document, offset);
-            List<CompletitionProposalDomain> possibleCompletitions = calculateProposals(fullExpression);
+            List<CompletitionProposalResponse> possibleCompletitions = calculateProposals(document, offset, fullExpression);
             return possibleCompletitions.stream()
                     .filter(word -> word.getDisplayName().startsWith(typedWord))
                     .map(word -> new CompletionProposal(word.getAutocompleString(), offset - typedWord.length(), typedWord.length(), word.getAutocompleString().length(),
@@ -66,55 +61,48 @@ public class TemplatingToolCompletionProcessor implements IContentAssistProcesso
         return result;
     }
 
-    private List<CompletitionProposalDomain> calculateProposals(String fullExpression) {
-        if (!fullExpression.contains(".")) {
-            return staticSuggestions(fullExpression);
-        } else {
-            return reflectionSuggestions(fullExpression);
-        }
-    }
-
-    private List<CompletitionProposalDomain> reflectionSuggestions(String fullExpression) {
-        Map<String, Class<?>> map = scriptExposedObjectProvider.getExposedObjects();
+    private List<CompletitionProposalResponse> calculateProposals(IDocument document, int offset, String fullExpression) {
+        Class<?> clazz = null;
         String[] splitted = fullExpression.split("\\.", -1);
-        Class<?> clazz = map.get(trimMethodCall(splitted[0]));
-        int index = 1;
-        while (index < splitted.length - 1 && clazz != null) {
-            Map<String, Method> methodSuggestions = getMethods(clazz);
-            clazz = methodSuggestions.get(trimMethodCall(splitted[index])).getReturnType();
-            ++index;
+        for (int i = 0; i < splitted.length; ++i) {
+            String currentElement = splitted[i].trim();
+            CompletitionProposalRequest request = CompletitionProposalRequest.builder()
+                    .withClazz(Optional.ofNullable(clazz))
+                    .withDocument(document)
+                    .withExpression(currentElement.trim())
+                    .withCompletitionOffset(offset)
+                    .build();
+            List<CompletitionProposalResponse> response = chain.stream()
+                    .flatMap(chain -> chain.compute(request).stream())
+                    .collect(Collectors.toList());
+
+            if (i == splitted.length - 1) {
+                return response;
+            } else {
+                Optional<CompletitionProposalResponse> computedResponse = getChainItemResponse(currentElement, response);
+                if (!computedResponse.isPresent()) {
+                    return Collections.emptyList();
+                }
+                clazz = computedResponse.get().getType();
+                if (clazz == null) {
+                    return Collections.emptyList();
+                }
+            }
         }
-        if (clazz == null) {
-            return Collections.emptyList();
-        }
-        return getMethods(clazz)
-                .entrySet()
-                .stream()
-                .map(entry -> new CompletitionProposalDomain(entry.getKey(), proposalToDocumentationConverter.convertToDisplayName(entry.getValue()), ""))
-                .collect(Collectors.toList());
+        return Collections.emptyList();
     }
 
-    public String trimMethodCall(String methodCall) {
-        return methodCall.trim().replaceAll("\\(.*\\)", "");
-    }
-
-    private Map<String, Method> getMethods(Class<?> clazz) {
-        Map<String, Method> result = new HashMap<>();
-        List<Method> methods = Arrays.stream(clazz.getMethods())
-                .filter(method -> Modifier.isPublic(method.getModifiers()))
+    private Optional<CompletitionProposalResponse> getChainItemResponse(String currentElement, List<CompletitionProposalResponse> response) {
+        List<CompletitionProposalResponse> filteredList = response.stream()
+                .filter(res -> currentElement.replaceAll("\\(.*\\)", "").equals(res.getAutocompleString()))
                 .collect(Collectors.toList());
-        for (Method method : methods) {
-            result.put(method.getName(), method);
+        if (filteredList.isEmpty()) {
+            return Optional.empty();
+        } else if (filteredList.size() > 1) {
+            System.out.println("Multiple responses");
         }
-        return result;
-    }
-
-    private List<CompletitionProposalDomain> staticSuggestions(String fullExpression) {
-        return scriptExposedObjectProvider.getExposedObjects()
-                .entrySet()
-                .stream()
-                .map(o -> new CompletitionProposalDomain(o.getKey(), o.getKey(), ""))
-                .collect(Collectors.toList());
+        CompletitionProposalResponse computedResponse = filteredList.get(0);
+        return Optional.ofNullable(computedResponse);
     }
 
     private String getTypedWord(IDocument document, int offset) throws BadLocationException {

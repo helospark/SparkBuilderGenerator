@@ -23,8 +23,11 @@ import com.helospark.sparktemplatingplugin.repository.ScriptRepository;
 import com.helospark.sparktemplatingplugin.repository.zip.ScriptUnzipper;
 import com.helospark.sparktemplatingplugin.repository.zip.ScriptZipper;
 import com.helospark.sparktemplatingplugin.ui.editor.DocumentationProvider;
+import com.helospark.sparktemplatingplugin.ui.editor.completition.CompletitionChain;
 import com.helospark.sparktemplatingplugin.ui.editor.completition.ProposalToDocumentationConverter;
 import com.helospark.sparktemplatingplugin.ui.editor.completition.TemplatingToolCompletionProcessor;
+import com.helospark.sparktemplatingplugin.ui.editor.completition.chain.MethodCallCompletitionChainItem;
+import com.helospark.sparktemplatingplugin.ui.editor.completition.chain.ScriptExposedObjectCompletitionChainItem;
 
 public class DiContainer {
     private static List<Object> diContainer = new ArrayList<>();
@@ -45,7 +48,9 @@ public class DiContainer {
         diContainer.add(new ScriptInterpreter(getDependency(ScriptExposedObjectProvider.class)));
         diContainer.add(new DocumentationProvider(getDependencyList(IDocumented.class)));
         diContainer.add(new ProposalToDocumentationConverter());
-        diContainer.add(new TemplatingToolCompletionProcessor(getDependency(ScriptExposedObjectProvider.class), getDependency(ProposalToDocumentationConverter.class)));
+        diContainer.add(new MethodCallCompletitionChainItem(getDependency(ProposalToDocumentationConverter.class)));
+        diContainer.add(new ScriptExposedObjectCompletitionChainItem(getDependency(ScriptExposedObjectProvider.class)));
+        diContainer.add(new TemplatingToolCompletionProcessor(getDependencyList(CompletitionChain.class)));
         diContainer.add(new Templater(getDependency(ScriptPreProcessor.class), getDependency(ScriptInterpreter.class)));
 
         diContainer.add(new EclipseRootFolderProvider());
