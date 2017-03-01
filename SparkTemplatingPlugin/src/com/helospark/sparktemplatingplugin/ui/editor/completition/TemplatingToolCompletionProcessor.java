@@ -20,7 +20,9 @@ import com.helospark.sparktemplatingplugin.ui.editor.completition.chain.domain.C
 import com.helospark.sparktemplatingplugin.ui.editor.completition.chain.domain.CompletitionProposalResponse;
 
 public class TemplatingToolCompletionProcessor implements IContentAssistProcessor {
-    private final Set<Character> allowedExpressionCharacters = Arrays.asList('.', '(', ')', '\"', '\'').stream().collect(Collectors.toSet());
+    private final Set<Character> allowedExpressionCharacters = Arrays.asList('.', '(', ')', '\"', '\'')
+            .stream()
+            .collect(Collectors.toSet());
     private List<CompletitionChain> chain;
 
     public TemplatingToolCompletionProcessor(List<CompletitionChain> chain) {
@@ -33,10 +35,12 @@ public class TemplatingToolCompletionProcessor implements IContentAssistProcesso
             IDocument document = viewer.getDocument();
             String typedWord = getTypedWord(document, offset);
             String fullExpression = getFullExpression(document, offset);
-            List<CompletitionProposalResponse> possibleCompletitions = calculateProposals(document, offset, fullExpression);
+            List<CompletitionProposalResponse> possibleCompletitions = calculateProposals(document, offset,
+                    fullExpression);
             return possibleCompletitions.stream()
-                    .filter(word -> word.getDisplayName().startsWith(typedWord))
-                    .map(word -> new CompletionProposal(word.getAutocompleString(), offset - typedWord.length(), typedWord.length(), word.getAutocompleString().length(),
+                    .filter(word -> word.getAutocompleString().startsWith(typedWord))
+                    .map(word -> new CompletionProposal(word.getAutocompleString(), offset - typedWord.length(),
+                            typedWord.length(), word.getAutocompleString().length(),
                             null, word.getDisplayName(), null,
                             word.getDescription()))
                     .collect(Collectors.toList())
@@ -52,7 +56,8 @@ public class TemplatingToolCompletionProcessor implements IContentAssistProcesso
         String result = "";
         while (i >= 0) {
             Character currentChar = document.getChar(i);
-            if (!(Character.isJavaIdentifierPart(currentChar) || Character.isWhitespace(currentChar) || allowedExpressionCharacters.contains(currentChar))) {
+            if (!(Character.isJavaIdentifierPart(currentChar) || Character.isWhitespace(currentChar)
+                    || allowedExpressionCharacters.contains(currentChar))) {
                 return result;
             }
             result = currentChar + result;
@@ -61,7 +66,8 @@ public class TemplatingToolCompletionProcessor implements IContentAssistProcesso
         return result;
     }
 
-    private List<CompletitionProposalResponse> calculateProposals(IDocument document, int offset, String fullExpression) {
+    private List<CompletitionProposalResponse> calculateProposals(IDocument document, int offset,
+            String fullExpression) {
         Class<?> clazz = null;
         String[] splitted = fullExpression.split("\\.", -1);
         for (int i = 0; i < splitted.length; ++i) {
@@ -79,7 +85,8 @@ public class TemplatingToolCompletionProcessor implements IContentAssistProcesso
             if (i == splitted.length - 1) {
                 return response;
             } else {
-                Optional<CompletitionProposalResponse> computedResponse = getChainItemResponse(currentElement, response);
+                Optional<CompletitionProposalResponse> computedResponse = getChainItemResponse(currentElement,
+                        response);
                 if (!computedResponse.isPresent()) {
                     return Collections.emptyList();
                 }
@@ -92,7 +99,8 @@ public class TemplatingToolCompletionProcessor implements IContentAssistProcesso
         return Collections.emptyList();
     }
 
-    private Optional<CompletitionProposalResponse> getChainItemResponse(String currentElement, List<CompletitionProposalResponse> response) {
+    private Optional<CompletitionProposalResponse> getChainItemResponse(String currentElement,
+            List<CompletitionProposalResponse> response) {
         List<CompletitionProposalResponse> filteredList = response.stream()
                 .filter(res -> currentElement.replaceAll("\\(.*\\)", "").equals(res.getAutocompleString()))
                 .collect(Collectors.toList());
