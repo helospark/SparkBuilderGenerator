@@ -23,7 +23,7 @@ public class CurrentClassProvider implements ScriptExposedProvider {
     public Object provide(ExecutionEvent event) {
         try {
             IType result = null;
-            ICompilationUnit compilationUnit = compilationUnitProvider.provideCurrentICompiltionUnit(event);
+            ICompilationUnit compilationUnit = compilationUnitProvider.provideCurrentICompiltionUnit(event).getRawCompilationUnit();
             ISelection currentSelection = HandlerUtil.getCurrentSelection(event);
             ITextSelection selection = (ITextSelection) currentSelection;
             IJavaElement element = compilationUnit.getElementAt(selection.getOffset());

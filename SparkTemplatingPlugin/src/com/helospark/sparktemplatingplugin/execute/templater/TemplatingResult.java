@@ -61,7 +61,7 @@ public class TemplatingResult implements ScriptExposed, IDocumented {
 
     public void appendToCurrentPosition() {
         try {
-            ICompilationUnit iCompilationUnit = compilationUnitProvider.provideCurrentICompiltionUnit(event);
+            ICompilationUnit iCompilationUnit = compilationUnitProvider.provideCurrentICompiltionUnit(event).getRawCompilationUnit();
             IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
             IEditorPart activeEditor = page.getActiveEditor();
             if (activeEditor instanceof JavaEditor) {
