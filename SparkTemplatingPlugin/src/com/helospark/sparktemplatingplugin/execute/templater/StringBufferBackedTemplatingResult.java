@@ -35,7 +35,7 @@ import com.helospark.sparktemplatingplugin.execute.templater.helper.PackageRootF
 import com.helospark.sparktemplatingplugin.execute.templater.provider.CompilationUnitProvider;
 import com.helospark.sparktemplatingplugin.execute.templater.provider.CurrentProjectProvider;
 
-public class TemplatingResult implements ScriptExposed, IDocumented {
+public class StringBufferBackedTemplatingResult implements ScriptExposed, IDocumented, ITemplatingResult {
     public static final String SCRIPT_NAME = "result";
     // Stateless
     private CompilationUnitProvider compilationUnitProvider = new CompilationUnitProvider();
@@ -47,7 +47,7 @@ public class TemplatingResult implements ScriptExposed, IDocumented {
     private StringBuilder buffer = new StringBuilder();
     private ExecutionEvent event;
 
-    public TemplatingResult(CompilationUnitProvider compilationUnitProvider, CompilationUnitCreator compilationUnitCreator, PackageRootFinder packageRootFinder,
+    public StringBufferBackedTemplatingResult(CompilationUnitProvider compilationUnitProvider, CompilationUnitCreator compilationUnitCreator, PackageRootFinder packageRootFinder,
             ExecutionEvent event) {
         this.compilationUnitProvider = compilationUnitProvider;
         this.compilationUnitCreator = compilationUnitCreator;
@@ -55,13 +55,21 @@ public class TemplatingResult implements ScriptExposed, IDocumented {
         this.event = event;
     }
 
+    /* (non-Javadoc)
+     * @see com.helospark.sparktemplatingplugin.execute.templater.ITemplatingResult#append(java.lang.String)
+     */
+    @Override
     public void append(String data) {
         buffer.append(data);
     }
 
+    /* (non-Javadoc)
+     * @see com.helospark.sparktemplatingplugin.execute.templater.ITemplatingResult#appendToCurrentPosition()
+     */
+    @Override
     public void appendToCurrentPosition() {
         try {
-            ICompilationUnit iCompilationUnit = compilationUnitProvider.provideCurrentICompiltionUnit(event).getRawCompilationUnit();
+            ICompilationUnit iCompilationUnit = compilationUnitProvider.provideCurrentICompiltionUnit(event).getRaw();
             IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
             IEditorPart activeEditor = page.getActiveEditor();
             if (activeEditor instanceof JavaEditor) {
@@ -78,6 +86,10 @@ public class TemplatingResult implements ScriptExposed, IDocumented {
         }
     }
 
+    /* (non-Javadoc)
+     * @see com.helospark.sparktemplatingplugin.execute.templater.ITemplatingResult#appendToNewFile(org.eclipse.core.resources.IProject, java.lang.String)
+     */
+    @Override
     public void appendToNewFile(IProject iProject, String folder) {
         // IPackageFragmentRoot rootPackage =
         // packageRootFinder.findSrcPackageFragmentRoot(iJavaProject);
@@ -104,6 +116,10 @@ public class TemplatingResult implements ScriptExposed, IDocumented {
         }
     }
 
+    /* (non-Javadoc)
+     * @see com.helospark.sparktemplatingplugin.execute.templater.ITemplatingResult#appendToMethod(org.eclipse.jdt.core.ICompilationUnit, java.lang.String, org.eclipse.jdt.core.dom.CompilationUnit)
+     */
+    @Override
     public void appendToMethod(ICompilationUnit iCompilationUnit, String program, CompilationUnit astRoot) throws JavaModelException, BadLocationException {
         AST ast = astRoot.getAST();
         ASTRewrite rewriter = ASTRewrite.create(ast);
@@ -127,15 +143,33 @@ public class TemplatingResult implements ScriptExposed, IDocumented {
         iCompilationUnit.getBuffer().setContents(document.get());
     }
 
+    /* (non-Javadoc)
+     * @see com.helospark.sparktemplatingplugin.execute.templater.ITemplatingResult#clearBuffer()
+     */
+    @Override
     public void clearBuffer() {
         buffer.setLength(0);
     }
 
+    /* (non-Javadoc)
+     * @see com.helospark.sparktemplatingplugin.execute.templater.ITemplatingResult#getBufferContent()
+     */
+    @Override
+    public String getBufferContent() {
+        return buffer.toString();
+    }
+
+    /* (non-Javadoc)
+     * @see com.helospark.sparktemplatingplugin.execute.templater.ITemplatingResult#getExposedName()
+     */
     @Override
     public String getExposedName() {
         return SCRIPT_NAME;
     }
 
+    /* (non-Javadoc)
+     * @see com.helospark.sparktemplatingplugin.execute.templater.ITemplatingResult#getDocumentation()
+     */
     @Override
     public String getDocumentation() {
         return "<h1>Result</h1><p>This contains the result, every templated text will automatically"

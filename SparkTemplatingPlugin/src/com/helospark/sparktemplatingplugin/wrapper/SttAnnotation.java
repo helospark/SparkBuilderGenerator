@@ -1,38 +1,39 @@
 package com.helospark.sparktemplatingplugin.wrapper;
 
-import org.eclipse.core.runtime.IProgressMonitor;
+import java.util.Arrays;
+import java.util.List;
+
 import org.eclipse.jdt.core.IAnnotation;
-import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IMemberValuePair;
 import org.eclipse.jdt.core.JavaModelException;
 
-public class SttAnnotation {
-    private IAnnotation annotation;
-
-    private IProgressMonitor progressMonitor;
+public class SttAnnotation extends SttJavaElement<IAnnotation> {
 
     public SttAnnotation(IAnnotation annotation) {
-        this.annotation = annotation;
+        super(annotation);
     }
 
+    @Override
     public String getAttachedJavadoc() throws JavaModelException {
-        return annotation.getAttachedJavadoc(progressMonitor);
+        return wrappedElement.getAttachedJavadoc(progressMonitor);
     }
 
+    @Override
     public String getElementName() {
-        return annotation.getElementName();
+        return wrappedElement.getElementName();
     }
 
-    public IJavaProject getJavaProject() {
-        return annotation.getJavaProject();
+    @Override
+    public SttJavaProject getJavaProject() {
+        return new SttJavaProject(wrappedElement.getJavaProject());
     }
 
-    public IMemberValuePair[] getMemberValuePairs() throws JavaModelException {
-        return annotation.getMemberValuePairs();
+    public List<IMemberValuePair> getMemberValuePairs() throws JavaModelException {
+        return Arrays.asList(wrappedElement.getMemberValuePairs());
     }
 
     public String getSource() throws JavaModelException {
-        return annotation.getSource();
+        return wrappedElement.getSource();
     }
 
 }

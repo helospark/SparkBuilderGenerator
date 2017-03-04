@@ -7,6 +7,7 @@ import com.helospark.sparktemplatingplugin.execute.templater.helper.PackageRootF
 import com.helospark.sparktemplatingplugin.execute.templater.provider.CompilationUnitProvider;
 
 public class TemplatingResultFactory {
+    public static final String SCRIPT_EXPOSED_NAME = "result";
     private CompilationUnitProvider compilationUnitProvider;
     private CompilationUnitCreator compilationUnitCreator;
     private PackageRootFinder packageRootFinder;
@@ -17,15 +18,15 @@ public class TemplatingResultFactory {
         this.packageRootFinder = packageRootFinder;
     }
 
-    public TemplatingResult createTemplatingResult(ExecutionEvent event) {
-        return new TemplatingResult(compilationUnitProvider, compilationUnitCreator, packageRootFinder, event);
+    public ITemplatingResult createTemplatingResult(ExecutionEvent event) {
+        return new StringBufferBackedTemplatingResult(compilationUnitProvider, compilationUnitCreator, packageRootFinder, event);
     }
 
     public String getExposedName() {
-        return "result";
+        return SCRIPT_EXPOSED_NAME;
     }
 
     public Class<?> getExposedObjectType() {
-        return TemplatingResult.class;
+        return ITemplatingResult.class;
     }
 }

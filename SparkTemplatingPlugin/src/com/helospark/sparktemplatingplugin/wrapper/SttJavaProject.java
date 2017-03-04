@@ -7,55 +7,42 @@ import java.util.stream.Collectors;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaModelException;
 
-public class SttJavaProject {
-    private IJavaProject javaProject;
-
-    //    public IClasspathEntry decodeClasspathEntry(String paramString) {
-    //        return javaProject.decodeClasspathEntry(paramString);
-    //    }
-
-    //    public String encodeClasspathEntry(IClasspathEntry paramIClasspathEntry) {
-    //        return javaProject.encodeClasspathEntry(paramIClasspathEntry);
-    //    }
+public class SttJavaProject extends SttJavaElement<IJavaProject> {
 
     public SttJavaProject(IJavaProject javaProject) {
-        this.javaProject = javaProject;
-    }
-
-    public String getElementName() {
-        return javaProject.getElementName();
+        super(javaProject);
     }
 
     public SttType findType(String fullyQualifiedName) throws JavaModelException {
-        return new SttType(javaProject.findType(fullyQualifiedName));
+        return new SttType(wrappedElement.findType(fullyQualifiedName));
     }
 
     public SttType findType(String packageName, String typeName) throws JavaModelException {
-        return new SttType(javaProject.findType(packageName, typeName));
+        return new SttType(wrappedElement.findType(packageName, typeName));
     }
 
     public List<SttPackageFragmentRoot> getAllPackageFragmentRoots() throws JavaModelException {
-        return Arrays.stream(javaProject.getAllPackageFragmentRoots())
+        return Arrays.stream(wrappedElement.getAllPackageFragmentRoots())
                 .map(SttPackageFragmentRoot::new)
                 .collect(Collectors.toList());
     }
 
     public Object[] getNonJavaResources() throws JavaModelException {
-        return javaProject.getNonJavaResources();
+        return wrappedElement.getNonJavaResources();
     }
 
     public SttPackageFragmentRoot getPackageFragmentRoot(String paramString) {
-        return new SttPackageFragmentRoot(javaProject.getPackageFragmentRoot(paramString));
+        return new SttPackageFragmentRoot(wrappedElement.getPackageFragmentRoot(paramString));
     }
 
     public List<SttPackageFragmentRoot> getPackageFragmentRoots() throws JavaModelException {
-        return Arrays.stream(javaProject.getPackageFragmentRoots())
+        return Arrays.stream(wrappedElement.getPackageFragmentRoots())
                 .map(SttPackageFragmentRoot::new)
                 .collect(Collectors.toList());
     }
 
     public List<SttPackageFragment> getPackageFragments() throws JavaModelException {
-        return Arrays.stream(javaProject.getPackageFragments())
+        return Arrays.stream(wrappedElement.getPackageFragments())
                 .map(SttPackageFragment::new)
                 .collect(Collectors.toList());
     }

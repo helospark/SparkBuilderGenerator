@@ -9,10 +9,11 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.handlers.HandlerUtil;
 
 import com.helospark.sparktemplatingplugin.execute.templater.ScriptExposedProvider;
+import com.helospark.sparktemplatingplugin.wrapper.SttType;
 
 public class CurrentClassProvider implements ScriptExposedProvider {
 
-    private static final String EXPOSED_NAME = "currentClass";
+    public static final String EXPOSED_NAME = "currentClass";
     private CompilationUnitProvider compilationUnitProvider;
 
     public CurrentClassProvider(CompilationUnitProvider compilationUnitProvider) {
@@ -23,7 +24,7 @@ public class CurrentClassProvider implements ScriptExposedProvider {
     public Object provide(ExecutionEvent event) {
         try {
             IType result = null;
-            ICompilationUnit compilationUnit = compilationUnitProvider.provideCurrentICompiltionUnit(event).getRawCompilationUnit();
+            ICompilationUnit compilationUnit = compilationUnitProvider.provideCurrentICompiltionUnit(event).getRaw();
             ISelection currentSelection = HandlerUtil.getCurrentSelection(event);
             ITextSelection selection = (ITextSelection) currentSelection;
             IJavaElement element = compilationUnit.getElementAt(selection.getOffset());
@@ -33,7 +34,7 @@ public class CurrentClassProvider implements ScriptExposedProvider {
                 result = compilationUnit.findPrimaryType();
             }
 
-            return result;
+            return new SttType(result);
         } catch (Exception e) {
             throw new RuntimeException("Unable to extract current class", e);
         }
@@ -41,7 +42,7 @@ public class CurrentClassProvider implements ScriptExposedProvider {
 
     @Override
     public Class<?> getExposedObjectType() {
-        return IType.class;
+        return SttType.class;
     }
 
     @Override

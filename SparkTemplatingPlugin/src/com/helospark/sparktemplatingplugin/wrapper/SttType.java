@@ -4,230 +4,188 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.jdt.core.IAnnotation;
-import org.eclipse.jdt.core.IField;
 import org.eclipse.jdt.core.IInitializer;
-import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.ITypeHierarchy;
-import org.eclipse.jdt.core.ITypeRoot;
 import org.eclipse.jdt.core.JavaModelException;
 
-public class SttType {
-    private IType type;
-
-    private IProgressMonitor progressMonitor = new NullProgressMonitor();
+public class SttType extends SttJavaElement<IType> {
 
     public SttType(IType type) {
-        this.type = type;
+        super(type);
     }
 
-    public IField createField(String typeName, String name) throws JavaModelException {
-        return type.createField(typeName + " " + name + ";", null, false, progressMonitor);
+    public SttField createField(String typeName, String name) throws JavaModelException {
+        return new SttField(wrappedElement.createField(typeName + " " + name + ";", null, false, progressMonitor));
     }
 
-    public IMethod createMethod(String content) throws JavaModelException {
-        return type.createMethod(content, null, false, progressMonitor);
+    public SttMethod createMethod(String content) throws JavaModelException {
+        return new SttMethod(wrappedElement.createMethod(content, null, false, progressMonitor));
     }
 
-    public IType createType(String content) throws JavaModelException {
-        return type.createType(content, null, false, progressMonitor);
+    public SttType createType(String content) throws JavaModelException {
+        return new SttType(wrappedElement.createType(content, null, false, progressMonitor));
     }
 
     public void delete() throws JavaModelException {
-        type.delete(false, progressMonitor);
+        wrappedElement.delete(false, progressMonitor);
     }
 
     public List<SttMethod> findMethods(IMethod method) {
-        return Arrays.stream(type.findMethods(method))
+        return Arrays.stream(wrappedElement.findMethods(method))
                 .map(SttMethod::new)
                 .collect(Collectors.toList());
     }
 
-    public IAnnotation getAnnotation(String annotationName) {
-        return type.getAnnotation(annotationName);
+    public SttAnnotation getAnnotation(String annotationName) {
+        return new SttAnnotation(wrappedElement.getAnnotation(annotationName));
     }
 
     public List<SttAnnotation> getAnnotations() throws JavaModelException {
-        return Arrays.stream(type.getAnnotations())
+        return Arrays.stream(wrappedElement.getAnnotations())
                 .map(SttAnnotation::new)
                 .collect(Collectors.toList());
     }
 
-    public String getAttachedJavadoc() throws JavaModelException {
-        return type.getAttachedJavadoc(progressMonitor);
-    }
-
     public SttCompilationUnit getCompilationUnit() {
-        return new SttCompilationUnit(type.getCompilationUnit());
+        return new SttCompilationUnit(wrappedElement.getCompilationUnit());
     }
 
     public SttType getDeclaringType() {
-        return new SttType(type.getDeclaringType());
-    }
-
-    public String getElementName() {
-        return type.getElementName();
+        return new SttType(wrappedElement.getDeclaringType());
     }
 
     public SttField getField(String fieldName) {
-        return new SttField(type.getField(fieldName));
+        return new SttField(wrappedElement.getField(fieldName));
     }
 
-    public List<SttField> getFields() throws JavaModelException {
-        return Arrays.stream(type.getFields())
-                .map(SttField::new)
-                .collect(Collectors.toList());
+    public List<SttField> getFields() {
+        try {
+            return Arrays.stream(wrappedElement.getFields())
+                    .map(SttField::new)
+                    .collect(Collectors.toList());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public String getFullyQualifiedName() {
-        return type.getFullyQualifiedName();
+        return wrappedElement.getFullyQualifiedName();
     }
 
     public String getFullyQualifiedParameterizedName() throws JavaModelException {
-        return type.getFullyQualifiedParameterizedName();
+        return wrappedElement.getFullyQualifiedParameterizedName();
     }
 
     public IInitializer getInitializer(int index) {
-        return type.getInitializer(index);
+        return wrappedElement.getInitializer(index);
     }
 
     public IInitializer[] getInitializers() throws JavaModelException {
-        return type.getInitializers();
-    }
-
-    public IJavaProject getJavaProject() {
-        return type.getJavaProject();
+        return wrappedElement.getInitializers();
     }
 
     public SttMethod getMethod(String name, String[] signature) {
-        return new SttMethod(type.getMethod(name, signature));
+        return new SttMethod(wrappedElement.getMethod(name, signature));
     }
 
     public List<SttMethod> getMethods() throws JavaModelException {
-        return Arrays.stream(type.getMethods())
+        return Arrays.stream(wrappedElement.getMethods())
                 .map(SttMethod::new)
                 .collect(Collectors.toList());
     }
 
     public SttPackageFragment getPackageFragment() {
-        return new SttPackageFragment(type.getPackageFragment());
+        return new SttPackageFragment(wrappedElement.getPackageFragment());
     }
 
-    //    public IJavaElement getParent() {
-    //        return type.getParent();
-    //    }
-
     public String getSource() throws JavaModelException {
-        return type.getSource();
+        return wrappedElement.getSource();
     }
 
     public List<String> getSuperInterfaceNames() throws JavaModelException {
-        return Arrays.asList(type.getSuperInterfaceNames());
+        return Arrays.asList(wrappedElement.getSuperInterfaceNames());
     }
 
     public List<String> getSuperInterfaceTypeSignatures() throws JavaModelException {
-        return Arrays.asList(type.getSuperInterfaceTypeSignatures());
+        return Arrays.asList(wrappedElement.getSuperInterfaceTypeSignatures());
     }
 
     public String getSuperclassName() throws JavaModelException {
-        return type.getSuperclassName();
+        return wrappedElement.getSuperclassName();
     }
 
     public String getSuperclassTypeSignature() throws JavaModelException {
-        return type.getSuperclassTypeSignature();
+        return wrappedElement.getSuperclassTypeSignature();
     }
 
     public SttType getType(String name) {
-        return new SttType(type.getType(name));
+        return new SttType(wrappedElement.getType(name));
     }
 
-    //    public ITypeParameter getTypeParameter(String arg0) {
-    //        return type.getTypeParameter(arg0);
-    //    }
+    public SttTypeParameter getTypeParameter(String name) {
+        return new SttTypeParameter(wrappedElement.getTypeParameter(name));
+    }
 
     public List<String> getTypeParameterSignatures() throws JavaModelException {
-        return Arrays.asList(type.getTypeParameterSignatures());
+        return Arrays.asList(wrappedElement.getTypeParameterSignatures());
     }
 
-    //    public ITypeParameter[] getTypeParameters() throws JavaModelException {
-    //        return type.getTypeParameters();
-    //    }
+    public List<SttTypeParameter> getTypeParameters() throws JavaModelException {
+        return Arrays.stream(wrappedElement.getTypeParameters())
+                .map(SttTypeParameter::new)
+                .collect(Collectors.toList());
+    }
 
     public String getTypeQualifiedName() {
-        return type.getTypeQualifiedName();
-    }
-
-    public ITypeRoot getTypeRoot() {
-        return type.getTypeRoot();
+        return wrappedElement.getTypeQualifiedName();
     }
 
     public List<SttType> getTypes() throws JavaModelException {
-        return Arrays.stream(type.getTypes())
+        return Arrays.stream(wrappedElement.getTypes())
                 .map(SttType::new)
                 .collect(Collectors.toList());
     }
 
     public boolean isAnnotation() throws JavaModelException {
-        return type.isAnnotation();
+        return wrappedElement.isAnnotation();
     }
 
     public boolean isAnonymous() throws JavaModelException {
-        return type.isAnonymous();
-    }
-
-    public boolean isBinary() {
-        return type.isBinary();
+        return wrappedElement.isAnonymous();
     }
 
     public boolean isClass() throws JavaModelException {
-        return type.isClass();
+        return wrappedElement.isClass();
     }
 
     public boolean isEnum() throws JavaModelException {
-        return type.isEnum();
+        return wrappedElement.isEnum();
     }
 
     public boolean isInterface() throws JavaModelException {
-        return type.isInterface();
+        return wrappedElement.isInterface();
     }
 
     public boolean isLambda() {
-        return type.isLambda();
+        return wrappedElement.isLambda();
     }
 
     public boolean isLocal() throws JavaModelException {
-        return type.isLocal();
+        return wrappedElement.isLocal();
     }
 
     public boolean isMember() throws JavaModelException {
-        return type.isMember();
+        return wrappedElement.isMember();
     }
-
-    public boolean isReadOnly() {
-        return type.isReadOnly();
-    }
-
-    public boolean isResolved() {
-        return type.isResolved();
-    }
-
-    //    public void move(IJavaElement arg0, IJavaElement arg1, String arg2, boolean arg3, IProgressMonitor arg4) throws JavaModelException {
-    //        type.move(arg0, arg1, arg2, arg3, arg4);
-    //    }
 
     public ITypeHierarchy newSupertypeHierarchy() throws JavaModelException {
-        return type.newSupertypeHierarchy(progressMonitor);
+        return wrappedElement.newSupertypeHierarchy(progressMonitor);
     }
 
     public void rename(String newName) throws JavaModelException {
-        type.rename(newName, false, null);
+        wrappedElement.rename(newName, false, null);
     }
 
-    public IType getRawIType() {
-        return type;
-    }
 }

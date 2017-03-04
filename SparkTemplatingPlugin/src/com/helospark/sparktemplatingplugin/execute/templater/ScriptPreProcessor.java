@@ -5,12 +5,20 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.helospark.sparktemplatingplugin.support.ImplicitImportList;
+
 public class ScriptPreProcessor {
     private static final String SCRIPT_INDICATOR = "#";
 
     public String preprocessScript(String script) {
         StringBuilder result = new StringBuilder();
         List<String> lines = Arrays.asList(script.split("\n"));
+        for (int i = 0; i < lines.size() - 1; ++i) {
+            lines.set(i, lines.get(i) + "\n");
+        }
+        for (String implicitImport : ImplicitImportList.IMPLICIT_IMPORT_LIST) {
+            result.append("import " + implicitImport + ";\n");
+        }
         for (String line : lines) {
             if (isLineScript(line)) {
                 result.append(processScriptLine(line));
@@ -26,17 +34,18 @@ public class ScriptPreProcessor {
     }
 
     private String processScriptLine(String line) {
-        String removeScriptIndicator = line.replaceFirst(SCRIPT_INDICATOR, "");
-        return removeScriptIndicator + "\n";
+        return line.replaceFirst(SCRIPT_INDICATOR, "") + "\n";
     }
 
     private String createTemplatedStatement(String line) {
-        String result = TemplatingResult.SCRIPT_NAME + ".append(\"" + escapeSpecialCharacters(line) + "\\n" + "\");\n";
+        line = line.replaceAll("\n", "\\\\n");
+        String result = StringBufferBackedTemplatingResult.SCRIPT_NAME + ".append(\"" + escapeSpecialCharacters(line) + "\");\n";
         Pattern p = Pattern.compile("\\$\\{(.+?)\\}");
         Matcher matcher = p.matcher(result);
-        if (matcher.find()) {
+        while (matcher.find()) {
             String matched = matcher.group(1);
-            result = matcher.replaceAll("\" + String.valueOf(" + matched + ") + \"");
+            result = matcher.replaceFirst("\" + String.valueOf(" + matched + ") + \"");
+            matcher = p.matcher(result);
         }
         // result = result.replaceAll("\\$\\{", "\" + String.valueOf(");
         // result = result.replaceAll("\\}", ") + \"");

@@ -33,64 +33,93 @@ import com.helospark.sparktemplatingplugin.ui.editor.completition.chain.MethodCa
 import com.helospark.sparktemplatingplugin.ui.editor.completition.chain.ScriptExposedObjectCompletitionChainItem;
 
 public class DiContainer {
-	private static List<Object> diContainer = new ArrayList<>();
+    private static List<Object> diContainer = new ArrayList<>();
 
-	public static void initializeDiContainer() {
-		diContainer.add(new ScriptPreProcessor());
-		diContainer.add(new GlobalConfiguration());
-		diContainer.add(new CompilationUnitCreator());
-		diContainer.add(new PackageRootFinder());
-		diContainer.add(new CompilationUnitProvider());
-		diContainer.add(new ClassInClasspathLocator());
-		diContainer.add(
-				new TemplatingResultFactory(getDependency(CompilationUnitProvider.class),
-						getDependency(CompilationUnitCreator.class), getDependency(PackageRootFinder.class)));
-		diContainer.add(new CurrentProjectProvider());
-		diContainer.add(new CurrentClassProvider(getDependency(CompilationUnitProvider.class)));
-		diContainer.add(new ScriptExposedObjectProvider(getDependency(TemplatingResultFactory.class),
-				getDependencyList(ScriptExposed.class),
-				getDependencyList(ScriptExposedProvider.class)));
-		diContainer.add(new ScriptInterpreter(getDependency(ScriptExposedObjectProvider.class)));
-		diContainer.add(new DocumentationProvider(getDependencyList(IDocumented.class)));
-		diContainer.add(new ProposalToDocumentationConverter());
-		diContainer.add(new MethodCallCompletitionChainItem(getDependency(ProposalToDocumentationConverter.class)));
-		diContainer.add(new ScriptExposedObjectCompletitionChainItem(getDependency(ScriptExposedObjectProvider.class)));
-		diContainer.add(new ImportedPackageClassCompletitionChainItem(getDependency(ClassInClasspathLocator.class)));
-		diContainer.add(new TemplatingToolCompletionProcessor(getDependencyList(CompletitionChain.class)));
-		diContainer.add(new Templater(getDependency(ScriptPreProcessor.class), getDependency(ScriptInterpreter.class)));
+    public static void clearDiContainer() {
+        diContainer.clear();
+    }
 
-		diContainer.add(new EclipseRootFolderProvider());
-		diContainer.add(new CommandNameToFilenameMapper());
-		diContainer.add(new ScriptZipper(getDependency(CommandNameToFilenameMapper.class)));
-		diContainer.add(new ScriptUnzipper());
-		diContainer.add(new FileSystemBackedScriptRepository(getDependency(EclipseRootFolderProvider.class),
-				getDependency(CommandNameToFilenameMapper.class)));
-		diContainer.add(new TemplatingEditorOpener(getDependency(ScriptRepository.class)));
-		diContainer.add(new EditorCacheInitializer(getDependency(ClassInClasspathLocator.class)));
-	}
+    public static void initializeDiContainer() {
+        addDependency(new ScriptPreProcessor());
+        addDependency(new GlobalConfiguration());
+        addDependency(new CompilationUnitCreator());
+        addDependency(new PackageRootFinder());
+        addDependency(new CompilationUnitProvider());
+        addDependency(new ClassInClasspathLocator());
+        addDependency(
+                new TemplatingResultFactory(getDependency(CompilationUnitProvider.class),
+                        getDependency(CompilationUnitCreator.class), getDependency(PackageRootFinder.class)));
+        addDependency(new CurrentProjectProvider());
+        addDependency(new CurrentClassProvider(getDependency(CompilationUnitProvider.class)));
+        addDependency(new ScriptExposedObjectProvider(getDependency(TemplatingResultFactory.class),
+                getDependencyList(ScriptExposed.class),
+                getDependencyList(ScriptExposedProvider.class)));
+        addDependency(new ScriptInterpreter(getDependency(ScriptExposedObjectProvider.class)));
+        addDependency(new DocumentationProvider(getDependencyList(IDocumented.class)));
+        addDependency(new ProposalToDocumentationConverter());
+        addDependency(new MethodCallCompletitionChainItem(getDependency(ProposalToDocumentationConverter.class)));
+        addDependency(new ScriptExposedObjectCompletitionChainItem(getDependency(ScriptExposedObjectProvider.class)));
+        addDependency(new ImportedPackageClassCompletitionChainItem(getDependency(ClassInClasspathLocator.class)));
+        addDependency(new TemplatingToolCompletionProcessor(getDependencyList(CompletitionChain.class)));
+        addDependency(new Templater(getDependency(ScriptPreProcessor.class), getDependency(ScriptInterpreter.class)));
 
-	/**
-	 * Probably will be deprecated after I will be able to create e4 plugin.
-	 * 
-	 * @param clazz
-	 *            type to get
-	 * @return dependency of that class
-	 */
-	@SuppressWarnings("unchecked")
-	public static <T> T getDependency(Class<T> clazz) {
-		return (T) diContainer.stream()
-				.filter(value -> clazz.isAssignableFrom(value.getClass()))
-				.findFirst()
-				.orElseThrow(() -> new RuntimeException("Unable to initialize " + clazz.getName() + " not found"));
-	}
+        addDependency(new EclipseRootFolderProvider());
+        addDependency(new CommandNameToFilenameMapper());
+        addDependency(new ScriptZipper(getDependency(CommandNameToFilenameMapper.class)));
+        addDependency(new ScriptUnzipper());
+        addDependency(new FileSystemBackedScriptRepository(getDependency(EclipseRootFolderProvider.class),
+                getDependency(CommandNameToFilenameMapper.class)));
+        addDependency(new TemplatingEditorOpener(getDependency(ScriptRepository.class)));
+        addDependency(new EditorCacheInitializer(getDependency(ClassInClasspathLocator.class)));
+    }
 
-	public static <T> List<T> getDependencyList(Class<T> classToFind) {
-		List<Object> result = new ArrayList<>();
-		for (Object o : diContainer) {
-			if (classToFind.isAssignableFrom(o.getClass())) {
-				result.add(o);
-			}
-		}
-		return (List<T>) result;
-	}
+    // Visible for testing
+    public static void addDependency(Object dependency) {
+        boolean alreadyHasDependency = diContainer.stream()
+                .filter(value -> isSameMockitoMockDependency(dependency.getClass().toString(), value.getClass().toString()))
+                .findFirst()
+                .isPresent();
+
+        if (!alreadyHasDependency) {
+            diContainer.add(dependency);
+        } else {
+            System.out.println("[INFO] Skipping " + dependency + " because diContainer already contains it");
+        }
+    }
+
+    private static boolean isSameMockitoMockDependency(String newDependency, String oldDependency) {
+        int mockitoClassNameStartIndex = oldDependency.indexOf("$$EnhancerByMockitoWithCGLIB");
+        if (mockitoClassNameStartIndex != -1) {
+            String mockitolessClassName = oldDependency.substring(0, mockitoClassNameStartIndex);
+            return newDependency.equals(mockitolessClassName);
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Probably will be deprecated after I will be able to create e4 plugin.
+     * 
+     * @param clazz
+     *            type to get
+     * @return dependency of that class
+     */
+    @SuppressWarnings("unchecked")
+    public static <T> T getDependency(Class<T> clazz) {
+        return (T) diContainer.stream()
+                .filter(value -> clazz.isAssignableFrom(value.getClass()))
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("Unable to initialize " + clazz.getName() + " not found"));
+    }
+
+    public static <T> List<T> getDependencyList(Class<T> classToFind) {
+        List<Object> result = new ArrayList<>();
+        for (Object o : diContainer) {
+            if (classToFind.isAssignableFrom(o.getClass())) {
+                result.add(o);
+            }
+        }
+        return (List<T>) result;
+    }
+
 }

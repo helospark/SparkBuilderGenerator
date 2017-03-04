@@ -11,7 +11,7 @@ import com.helospark.sparktemplatingplugin.wrapper.SttCompilationUnit;
 
 public class CompilationUnitProvider implements ScriptExposedProvider {
 
-    private static final String EXPOSED_NAME = "currentCompilationUnit";
+    public static final String EXPOSED_NAME = "currentCompilationUnit";
 
     public SttCompilationUnit provideCurrentICompiltionUnit(ExecutionEvent event) {
         IEditorPart editor = getActiveEditor(event);

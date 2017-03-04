@@ -4,9 +4,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jdt.core.Flags;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IImportDeclaration;
@@ -14,30 +11,21 @@ import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IPackageDeclaration;
 import org.eclipse.jdt.core.JavaModelException;
 
-public class SttCompilationUnit {
-    private ICompilationUnit iCompilationUnit;
-
-    private IProgressMonitor progressMonitor = new NullProgressMonitor();
-
+public class SttCompilationUnit extends SttJavaElement<ICompilationUnit> {
     public SttCompilationUnit(ICompilationUnit iCompilationUnit) {
-        this.iCompilationUnit = iCompilationUnit;
-    }
-
-    public void copy(IJavaElement destination)
-            throws JavaModelException {
-        iCompilationUnit.copy(destination, null, null, false, progressMonitor);
+        super(iCompilationUnit);
     }
 
     public IImportDeclaration addImport(String importToAdd) throws JavaModelException {
-        return iCompilationUnit.createImport(importToAdd, null, progressMonitor);
+        return wrappedElement.createImport(importToAdd, null, progressMonitor);
     }
 
     public IImportDeclaration addStaticImport(String importToAdd) throws JavaModelException {
-        return iCompilationUnit.createImport(importToAdd, null, Flags.AccStatic, progressMonitor);
+        return wrappedElement.createImport(importToAdd, null, Flags.AccStatic, progressMonitor);
     }
 
-    public IPackageDeclaration addPackageDeclaration(String packageDeclaration) throws JavaModelException {
-        return iCompilationUnit.createPackageDeclaration(packageDeclaration, progressMonitor);
+    public void addPackageDeclaration(String packageDeclaration) throws JavaModelException {
+        wrappedElement.createPackageDeclaration(packageDeclaration, progressMonitor);
     }
 
     public SttType createEmptyClass(String className) throws JavaModelException {
@@ -50,27 +38,23 @@ public class SttCompilationUnit {
 
     public SttType createTypeWithContent(String content) throws JavaModelException {
         try {
-            return new SttType(iCompilationUnit.createType(content, null, false, progressMonitor));
+            return new SttType(wrappedElement.createType(content, null, false, progressMonitor));
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
     public void delete(boolean force) throws JavaModelException {
-        iCompilationUnit.delete(force, progressMonitor);
+        wrappedElement.delete(force, progressMonitor);
     }
 
-    //    public IJavaElement[] findElements(IJavaElement paramIJavaElement) {
-    //        return iCompilationUnit.findElements(paramIJavaElement);
-    //    }
-
     public SttType findPrimaryType() {
-        return new SttType(iCompilationUnit.findPrimaryType());
+        return new SttType(wrappedElement.findPrimaryType());
     }
 
     public List<SttType> getAllTypes() throws JavaModelException {
         try {
-            return Arrays.stream(iCompilationUnit.getAllTypes())
+            return Arrays.stream(wrappedElement.getAllTypes())
                     .map(SttType::new)
                     .collect(Collectors.toList());
         } catch (Exception e) {
@@ -78,13 +62,9 @@ public class SttCompilationUnit {
         }
     }
 
-    //    public IJavaElement getElementAt(int paramInt) throws JavaModelException {
-    //        return iCompilationUnit.getElementAt(paramInt);
-    //    }
-
     public List<IImportDeclaration> getImports() {
         try {
-            return Arrays.asList(iCompilationUnit.getImports());
+            return Arrays.asList(wrappedElement.getImports());
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -133,53 +113,33 @@ public class SttCompilationUnit {
     }
 
     public String getPackageDeclarations() throws JavaModelException {
-        return Arrays.stream(iCompilationUnit.getPackageDeclarations())
+        return Arrays.stream(wrappedElement.getPackageDeclarations())
                 .map(IPackageDeclaration::getElementName)
                 .findFirst()
                 .orElse("");
     }
 
-    public IPath getPath() {
-        return iCompilationUnit.getPath();
-    }
-
     public String getSource() throws JavaModelException {
-        return iCompilationUnit.getSource();
+        return wrappedElement.getSource();
     }
 
     public SttType getType(String typeName) {
-        return new SttType(iCompilationUnit.getType(typeName));
+        return new SttType(wrappedElement.getType(typeName));
     }
 
     public List<SttType> getTypes() throws JavaModelException {
-        return Arrays.stream(iCompilationUnit.getTypes())
+        return Arrays.stream(wrappedElement.getTypes())
                 .map(SttType::new)
                 .collect(Collectors.toList());
     }
 
-    public boolean isConsistent() throws JavaModelException {
-        return iCompilationUnit.isConsistent();
-    }
-
-    public boolean isReadOnly() {
-        return iCompilationUnit.isReadOnly();
-    }
-
-    public void makeConsistent() throws JavaModelException {
-        iCompilationUnit.makeConsistent(progressMonitor);
-    }
-
     public void move(IJavaElement destination)
             throws JavaModelException {
-        iCompilationUnit.move(destination, null, null, false, progressMonitor);
+        wrappedElement.move(destination, null, null, false, progressMonitor);
     }
 
     public void rename(String newName) throws JavaModelException {
-        iCompilationUnit.rename(newName, false, progressMonitor);
-    }
-
-    public ICompilationUnit getRawCompilationUnit() {
-        return iCompilationUnit;
+        wrappedElement.rename(newName, false, progressMonitor);
     }
 
 }

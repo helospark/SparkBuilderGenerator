@@ -1,90 +1,75 @@
 package com.helospark.sparktemplatingplugin.wrapper;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.jdt.core.IAnnotation;
 import org.eclipse.jdt.core.IField;
-import org.eclipse.jdt.core.IJavaElement;
-import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaModelException;
 
-public class SttField {
-    private IField field;
-
-    private IProgressMonitor progressMonitor = new NullProgressMonitor();
-
+public class SttField extends SttJavaElement<IField> {
     public SttField(IField field) {
-        this.field = field;
+        super(field);
     }
 
-    public IAnnotation getAnnotation(String paramString) {
-        return field.getAnnotation(paramString);
+    public SttAnnotation getAnnotation(String paramString) {
+        return new SttAnnotation(wrappedElement.getAnnotation(paramString));
     }
 
-    public void copy(IJavaElement paramIJavaElement1, IJavaElement paramIJavaElement2, String paramString, boolean paramBoolean, IProgressMonitor paramIProgressMonitor)
-            throws JavaModelException {
-        field.copy(paramIJavaElement1, paramIJavaElement2, paramString, paramBoolean, paramIProgressMonitor);
-    }
-
-    public IAnnotation[] getAnnotations() throws JavaModelException {
-        return field.getAnnotations();
+    public List<SttAnnotation> getAnnotations() throws JavaModelException {
+        return Arrays.stream(wrappedElement.getAnnotations())
+                .map(SttAnnotation::new)
+                .collect(Collectors.toList());
     }
 
     public SttCompilationUnit getCompilationUnit() {
-        return new SttCompilationUnit(field.getCompilationUnit());
+        return new SttCompilationUnit(wrappedElement.getCompilationUnit());
     }
 
     public SttType getDeclaringType() {
-        return new SttType(field.getDeclaringType());
+        return new SttType(wrappedElement.getDeclaringType());
     }
 
     public void delete() throws JavaModelException {
-        field.delete(false, progressMonitor);
-    }
-
-    public IJavaElement getAncestor(int paramInt) {
-        return field.getAncestor(paramInt);
+        wrappedElement.delete(false, progressMonitor);
     }
 
     public String getAttachedJavadoc(IProgressMonitor paramIProgressMonitor) throws JavaModelException {
-        return field.getAttachedJavadoc(paramIProgressMonitor);
+        return wrappedElement.getAttachedJavadoc(paramIProgressMonitor);
     }
 
     public Object getConstant() throws JavaModelException {
-        return field.getConstant();
+        return wrappedElement.getConstant();
     }
 
+    @Override
     public String getElementName() {
-        return field.getElementName();
-    }
-
-    public IJavaProject getJavaProject() {
-        return field.getJavaProject();
+        return wrappedElement.getElementName();
     }
 
     public String getSource() throws JavaModelException {
-        return field.getSource();
+        return wrappedElement.getSource();
     }
 
     public SttType getType(String paramString, int paramInt) {
-        return new SttType(field.getType(paramString, paramInt));
+        return new SttType(wrappedElement.getType(paramString, paramInt));
     }
 
-    public String getTypeSignature() throws JavaModelException {
-        return field.getTypeSignature();
+    public String getTypeSignature() {
+        try {
+            return wrappedElement.getTypeSignature();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public boolean isEnumConstant() throws JavaModelException {
-        return field.isEnumConstant();
+        return wrappedElement.isEnumConstant();
     }
 
-    //    public void move(IJavaElement paramIJavaElement1, IJavaElement paramIJavaElement2, String paramString, boolean paramBoolean, IProgressMonitor paramIProgressMonitor)
-    //            throws JavaModelException {
-    //        field.move(paramIJavaElement1, paramIJavaElement2, paramString, paramBoolean, paramIProgressMonitor);
-    //    }
-
     public void rename(String newName) throws JavaModelException {
-        field.rename(newName, false, progressMonitor);
+        wrappedElement.rename(newName, false, progressMonitor);
     }
 
 }

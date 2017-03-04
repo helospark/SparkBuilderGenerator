@@ -15,7 +15,7 @@ import com.helospark.sparktemplatingplugin.execute.templater.ScriptExposedProvid
 
 public class CurrentProjectProvider implements ScriptExposedProvider {
 
-    private static final String EXPOSED_NAME = "currentProject";
+    public static final String EXPOSED_NAME = "currentProject";
 
     public IProject provideCurrentProject() {
         ISelectionService selectionService = Workbench.getInstance().getActiveWorkbenchWindow().getSelectionService();

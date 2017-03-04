@@ -4,165 +4,104 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.jdt.core.IJavaElement;
-import org.eclipse.jdt.core.IJavaProject;
-import org.eclipse.jdt.core.ILocalVariable;
 import org.eclipse.jdt.core.IMemberValuePair;
 import org.eclipse.jdt.core.IMethod;
-import org.eclipse.jdt.core.ISourceRange;
-import org.eclipse.jdt.core.ITypeParameter;
-import org.eclipse.jdt.core.ITypeRoot;
 import org.eclipse.jdt.core.JavaModelException;
 
-public class SttMethod {
-    private IMethod method;
-
-    private IProgressMonitor progressMonitor = new NullProgressMonitor();
+public class SttMethod extends SttJavaElement<IMethod> {
 
     public SttMethod(IMethod method) {
-        this.method = method;
-    }
-
-    public void copy(IJavaElement paramIJavaElement1, IJavaElement paramIJavaElement2, String paramString, boolean paramBoolean, IProgressMonitor paramIProgressMonitor)
-            throws JavaModelException {
-        method.copy(paramIJavaElement1, paramIJavaElement2, paramString, paramBoolean, paramIProgressMonitor);
+        super(method);
     }
 
     public void delete() throws JavaModelException {
-        method.delete(false, progressMonitor);
-    }
-
-    public IJavaElement getAncestor(int paramInt) {
-        return method.getAncestor(paramInt);
+        wrappedElement.delete(false, progressMonitor);
     }
 
     public SttAnnotation getAnnotation(String annotationName) {
-        return new SttAnnotation(method.getAnnotation(annotationName));
+        return new SttAnnotation(wrappedElement.getAnnotation(annotationName));
     }
 
     public List<SttAnnotation> getAnnotations() throws JavaModelException {
-        return Arrays.stream(method.getAnnotations())
+        return Arrays.stream(wrappedElement.getAnnotations())
                 .map(SttAnnotation::new)
                 .collect(Collectors.toList());
     }
 
-    public String getAttachedJavadoc() throws JavaModelException {
-        return method.getAttachedJavadoc(progressMonitor);
-    }
-
     public SttCompilationUnit getCompilationUnit() {
-        return new SttCompilationUnit(method.getCompilationUnit());
+        return new SttCompilationUnit(wrappedElement.getCompilationUnit());
     }
 
     public SttType getDeclaringType() {
-        return new SttType(method.getDeclaringType());
+        return new SttType(wrappedElement.getDeclaringType());
     }
 
     public IMemberValuePair getDefaultValue() throws JavaModelException {
-        return method.getDefaultValue();
+        return wrappedElement.getDefaultValue();
     }
 
-    public String getElementName() {
-        return method.getElementName();
-    }
-
-    public String[] getExceptionTypes() throws JavaModelException {
-        return method.getExceptionTypes();
-    }
-
-    public IJavaProject getJavaProject() {
-        return method.getJavaProject();
+    public List<String> getExceptionTypes() throws JavaModelException {
+        return Arrays.asList(wrappedElement.getExceptionTypes());
     }
 
     public int getNumberOfParameters() {
-        return method.getNumberOfParameters();
+        return wrappedElement.getNumberOfParameters();
     }
 
-    public String[] getParameterNames() throws JavaModelException {
-        return method.getParameterNames();
+    public List<String> getParameterNames() throws JavaModelException {
+        return Arrays.asList(wrappedElement.getParameterNames());
     }
 
-    public String[] getParameterTypes() {
-        return method.getParameterTypes();
+    public List<String> getParameterTypes() {
+        return Arrays.asList(wrappedElement.getParameterTypes());
     }
 
-    public ILocalVariable[] getParameters() throws JavaModelException {
-        return method.getParameters();
+    public List<SttLocalVariable> getParameters() throws JavaModelException {
+        return Arrays.stream(wrappedElement.getParameters())
+                .map(SttLocalVariable::new)
+                .collect(Collectors.toList());
     }
 
-    public String[] getRawParameterNames() throws JavaModelException {
-        return method.getRawParameterNames();
+    public List<String> getRawParameterNames() throws JavaModelException {
+        return Arrays.asList(wrappedElement.getRawParameterNames());
     }
 
     public String getReturnType() throws JavaModelException {
-        return method.getReturnType();
+        return wrappedElement.getReturnType();
     }
 
     public String getSignature() throws JavaModelException {
-        return method.getSignature();
+        return wrappedElement.getSignature();
     }
 
     public String getSource() throws JavaModelException {
-        return method.getSource();
+        return wrappedElement.getSource();
     }
 
-    public ISourceRange getSourceRange() throws JavaModelException {
-        return method.getSourceRange();
+    public SttTypeParameter getTypeParameter(String paramString) {
+        return new SttTypeParameter(wrappedElement.getTypeParameter(paramString));
     }
 
-    public SttType getType(String paramString, int paramInt) {
-        return new SttType(method.getType(paramString, paramInt));
-    }
-
-    public ITypeParameter getTypeParameter(String paramString) {
-        return method.getTypeParameter(paramString);
-    }
-
-    public ITypeParameter[] getTypeParameters() throws JavaModelException {
-        return method.getTypeParameters();
-    }
-
-    public ITypeRoot getTypeRoot() {
-        return method.getTypeRoot();
-    }
-
-    public boolean isBinary() {
-        return method.isBinary();
+    public List<SttTypeParameter> getTypeParameters() throws JavaModelException {
+        return Arrays.stream(wrappedElement.getTypeParameters())
+                .map(SttTypeParameter::new)
+                .collect(Collectors.toList());
     }
 
     public boolean isConstructor() throws JavaModelException {
-        return method.isConstructor();
+        return wrappedElement.isConstructor();
     }
 
     public boolean isLambdaMethod() {
-        return method.isLambdaMethod();
+        return wrappedElement.isLambdaMethod();
     }
 
     public boolean isMainMethod() throws JavaModelException {
-        return method.isMainMethod();
+        return wrappedElement.isMainMethod();
     }
-
-    public boolean isReadOnly() {
-        return method.isReadOnly();
-    }
-
-    public boolean isResolved() {
-        return method.isResolved();
-    }
-
-    public boolean isSimilar(IMethod paramIMethod) {
-        return method.isSimilar(paramIMethod);
-    }
-
-    //    public void move(IJavaElement paramIJavaElement1, IJavaElement paramIJavaElement2, String paramString, boolean paramBoolean, IProgressMonitor paramIProgressMonitor)
-    //            throws JavaModelException {
-    //        method.move(paramIJavaElement1, paramIJavaElement2, paramString, paramBoolean, paramIProgressMonitor);
-    //    }
 
     public void rename(String newName) throws JavaModelException {
-        method.rename(newName, false, progressMonitor);
+        wrappedElement.rename(newName, false, progressMonitor);
     }
 
 }
