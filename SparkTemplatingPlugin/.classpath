@@ -5,6 +5,7 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="dependency"/>
 	<classpathentry kind="src" path="test"/>
+	<classpathentry kind="src" path="resources"/>
 	<classpathentry kind="lib" path="dependency/bsh-2.0b4.jar"/>
 	<classpathentry kind="lib" path="dependency/fast-classpath-scanner-2.0.17.jar"/>
 	<classpathentry kind="lib" path="dependency/mockito-all-1.10.19.jar"/>

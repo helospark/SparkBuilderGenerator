@@ -16,12 +16,22 @@ import com.helospark.sparktemplatingplugin.execute.templater.helper.PackageRootF
 import com.helospark.sparktemplatingplugin.execute.templater.provider.CompilationUnitProvider;
 import com.helospark.sparktemplatingplugin.execute.templater.provider.CurrentClassProvider;
 import com.helospark.sparktemplatingplugin.execute.templater.provider.CurrentProjectProvider;
+import com.helospark.sparktemplatingplugin.initializer.examplescript.BundleClasspathFileLoader;
+import com.helospark.sparktemplatingplugin.initializer.examplescript.ExampleScriptInitializer;
+import com.helospark.sparktemplatingplugin.initializer.examplescript.ExampleScriptInitializerVersionFilteringDecorator;
+import com.helospark.sparktemplatingplugin.initializer.examplescript.UniqueCommandNameFinder;
+import com.helospark.sparktemplatingplugin.initializer.examplescript.xml.ExampleScriptXmlLoader;
+import com.helospark.sparktemplatingplugin.initializer.examplescript.xml.ExampleScriptXmlParser;
+import com.helospark.sparktemplatingplugin.initializer.examplescript.xml.XmlDocumentParser;
+import com.helospark.sparktemplatingplugin.preferences.PreferenceStore;
 import com.helospark.sparktemplatingplugin.repository.CommandNameToFilenameMapper;
 import com.helospark.sparktemplatingplugin.repository.EclipseRootFolderProvider;
 import com.helospark.sparktemplatingplugin.repository.FileSystemBackedScriptRepository;
 import com.helospark.sparktemplatingplugin.repository.ScriptRepository;
 import com.helospark.sparktemplatingplugin.repository.zip.ScriptUnzipper;
 import com.helospark.sparktemplatingplugin.repository.zip.ScriptZipper;
+import com.helospark.sparktemplatingplugin.support.BundleVersionProvider;
+import com.helospark.sparktemplatingplugin.support.FileContentLoader;
 import com.helospark.sparktemplatingplugin.support.classpath.ClassInClasspathLocator;
 import com.helospark.sparktemplatingplugin.ui.editor.DocumentationProvider;
 import com.helospark.sparktemplatingplugin.ui.editor.cache.EditorCacheInitializer;
@@ -71,6 +81,20 @@ public class DiContainer {
                 getDependency(CommandNameToFilenameMapper.class)));
         addDependency(new TemplatingEditorOpener(getDependency(ScriptRepository.class)));
         addDependency(new EditorCacheInitializer(getDependency(ClassInClasspathLocator.class)));
+        addDependency(new BundleClasspathFileLoader());
+        addDependency(new UniqueCommandNameFinder(getDependency(ScriptRepository.class)));
+        addDependency(new FileContentLoader());
+        addDependency(new XmlDocumentParser());
+        addDependency(new ExampleScriptXmlParser(getDependency(XmlDocumentParser.class), getDependency(BundleClasspathFileLoader.class)));
+        addDependency(
+                new ExampleScriptXmlLoader(getDependency(ExampleScriptXmlParser.class), getDependency(FileContentLoader.class), getDependency(BundleClasspathFileLoader.class)));
+        addDependency(new PreferenceStore());
+        addDependency(
+                new ExampleScriptInitializer(getDependency(ExampleScriptXmlLoader.class), getDependency(ScriptRepository.class), getDependency(UniqueCommandNameFinder.class),
+                        getDependency(PreferenceStore.class)));
+        addDependency(new BundleVersionProvider());
+        addDependency(new ExampleScriptInitializerVersionFilteringDecorator(getDependency(ExampleScriptInitializer.class), getDependency(PreferenceStore.class),
+                getDependency(BundleVersionProvider.class)));
     }
 
     // Visible for testing
