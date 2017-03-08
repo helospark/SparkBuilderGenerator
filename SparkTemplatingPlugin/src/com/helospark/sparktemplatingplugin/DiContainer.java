@@ -30,8 +30,11 @@ import com.helospark.sparktemplatingplugin.repository.FileSystemBackedScriptRepo
 import com.helospark.sparktemplatingplugin.repository.ScriptRepository;
 import com.helospark.sparktemplatingplugin.repository.zip.ScriptUnzipper;
 import com.helospark.sparktemplatingplugin.repository.zip.ScriptZipper;
+import com.helospark.sparktemplatingplugin.scriptexport.job.ExportJobWorker;
+import com.helospark.sparktemplatingplugin.scriptimport.job.ImportJobWorker;
 import com.helospark.sparktemplatingplugin.support.BundleVersionProvider;
 import com.helospark.sparktemplatingplugin.support.FileContentLoader;
+import com.helospark.sparktemplatingplugin.support.FileOutputWriter;
 import com.helospark.sparktemplatingplugin.support.classpath.ClassInClasspathLocator;
 import com.helospark.sparktemplatingplugin.ui.editor.DocumentationProvider;
 import com.helospark.sparktemplatingplugin.ui.editor.cache.EditorCacheInitializer;
@@ -95,6 +98,9 @@ public class DiContainer {
         addDependency(new BundleVersionProvider());
         addDependency(new ExampleScriptInitializerVersionFilteringDecorator(getDependency(ExampleScriptInitializer.class), getDependency(PreferenceStore.class),
                 getDependency(BundleVersionProvider.class)));
+        addDependency(new FileOutputWriter());
+        addDependency(new ImportJobWorker(getDependency(ScriptRepository.class), getDependency(ScriptUnzipper.class), getDependency(FileContentLoader.class)));
+        addDependency(new ExportJobWorker(getDependency(ScriptRepository.class), getDependency(ScriptZipper.class), getDependency(FileOutputWriter.class)));
     }
 
     // Visible for testing

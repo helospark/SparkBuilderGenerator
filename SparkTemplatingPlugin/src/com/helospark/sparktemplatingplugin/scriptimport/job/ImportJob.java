@@ -1,6 +1,5 @@
 package com.helospark.sparktemplatingplugin.scriptimport.job;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -8,19 +7,13 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 
-import com.helospark.sparktemplatingplugin.repository.ScriptRepository;
-import com.helospark.sparktemplatingplugin.repository.domain.ScriptEntity;
-import com.helospark.sparktemplatingplugin.repository.zip.ScriptUnzipper;
-
 public class ImportJob extends Job {
-    private ScriptRepository scriptRepository;
-    private ScriptUnzipper scriptUnzipper;
+    private ImportJobWorker importJobWorker;
     private String zipFileName;
 
-    public ImportJob(ScriptUnzipper scriptUnzipper, ScriptRepository scriptRepository, String zipFileName) {
+    public ImportJob(ImportJobWorker importJobWorker, String zipFileName) {
         super("Importing templates");
-        this.scriptRepository = scriptRepository;
-        this.scriptUnzipper = scriptUnzipper;
+        this.importJobWorker = importJobWorker;
         this.zipFileName = zipFileName;
     }
 
@@ -28,18 +21,10 @@ public class ImportJob extends Job {
     protected IStatus run(IProgressMonitor monitor) {
         try {
             monitor.beginTask("Importing templates", 2);
-            List<String> skippedCommands = new ArrayList<>();
-            List<ScriptEntity> scriptEntities = scriptUnzipper.extract(zipFileName);
-            monitor.worked(1);
-            for (ScriptEntity scriptEntity : scriptEntities) {
-                if (scriptRepository.loadByCommandName(scriptEntity.getCommandName()).isPresent()) {
-                    skippedCommands.add(scriptEntity.getCommandName());
-                } else {
-                    scriptRepository.saveNewScript(scriptEntity);
-                }
-            }
+            ImportJobResult result = importJobWorker.importToScriptRepository(zipFileName);
             monitor.worked(1);
 
+            List<String> skippedCommands = result.getSkippedCommands();
             if (!skippedCommands.isEmpty()) {
                 reportSkippedCommandsOnUiThread(skippedCommands);
             }

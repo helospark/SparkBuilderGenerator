@@ -4,19 +4,14 @@ import static org.mockito.BDDMockito.given;
 
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.BeforeTest;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 public class SimpleInlineProgramExecutionIT extends ExecutionITSetup {
 
-    @BeforeTest
-    public void initalize() {
-        super.initialize();
-    }
-
     @BeforeMethod
     public void beforeMethod() {
+        super.initialize();
         templatingResult.clearBuffer();
         given(type.getElementName()).willReturn("mockName");
     }

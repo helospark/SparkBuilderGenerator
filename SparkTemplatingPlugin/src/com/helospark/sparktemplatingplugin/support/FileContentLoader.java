@@ -15,6 +15,10 @@ public class FileContentLoader {
         }
     }
 
+    public byte[] loadContent(String fileName) {
+        return loadContent(new File(fileName));
+    }
+
     private void assertFileExists(File file) {
         if (!file.exists()) {
             throw new IllegalArgumentException("File " + file.getAbsolutePath() + " does not exists");

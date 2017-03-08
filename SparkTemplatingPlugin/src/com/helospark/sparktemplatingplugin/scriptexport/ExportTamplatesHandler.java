@@ -12,17 +12,18 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 
 import com.helospark.sparktemplatingplugin.DiContainer;
-import com.helospark.sparktemplatingplugin.repository.ScriptRepository;
 import com.helospark.sparktemplatingplugin.repository.zip.ScriptZipper;
 import com.helospark.sparktemplatingplugin.scriptexport.job.ExportJob;
+import com.helospark.sparktemplatingplugin.scriptexport.job.ExportJobWorker;
+import com.helospark.sparktemplatingplugin.support.FileOutputWriter;
 
 public class ExportTamplatesHandler extends AbstractHandler {
-    private ScriptRepository scriptRepository;
+    private ExportJobWorker exportJobWorker;
     private ScriptZipper scriptZipper;
+    private FileOutputWriter fileOutputWriter;
 
     public ExportTamplatesHandler() {
-        this.scriptRepository = DiContainer.getDependency(ScriptRepository.class);
-        this.scriptZipper = DiContainer.getDependency(ScriptZipper.class);
+        this.exportJobWorker = DiContainer.getDependency(ExportJobWorker.class);
     }
 
     @Override
@@ -36,7 +37,7 @@ public class ExportTamplatesHandler extends AbstractHandler {
                 throw new RuntimeException("File already exists " + file.getAbsolutePath());
             }
 
-            ExportJob exportJob = new ExportJob(scriptRepository, scriptZipper, fileName);
+            ExportJob exportJob = new ExportJob(exportJobWorker, fileName);
             exportJob.schedule();
         }
         return null;
@@ -48,10 +49,6 @@ public class ExportTamplatesHandler extends AbstractHandler {
         dialog.setFilterExtensions(new String[] { "*.zip" });
         String resultFileName = dialog.open();
         return Optional.ofNullable(resultFileName);
-    }
-
-    public ScriptRepository getScriptRepository() {
-        return scriptRepository;
     }
 
 }

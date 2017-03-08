@@ -1,7 +1,7 @@
 package com.helospark.sparktemplatingplugin.repository.zip;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,9 +12,9 @@ import com.helospark.sparktemplatingplugin.repository.domain.ScriptEntity;
 
 public class ScriptUnzipper {
 
-    public List<ScriptEntity> extract(String zipFile) {
+    public List<ScriptEntity> extract(byte[] loadedData) {
         List<ScriptEntity> result = new ArrayList<>();
-        try (ZipInputStream zin = new ZipInputStream(new FileInputStream(zipFile))) {
+        try (ZipInputStream zin = new ZipInputStream(new ByteArrayInputStream(loadedData))) {
             ZipEntry entry;
             while ((entry = zin.getNextEntry()) != null) {
                 result.add(createScriptEntity(zin, entry));

@@ -7,7 +7,6 @@ import static org.mockito.MockitoAnnotations.initMocks;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.resources.IProject;
 import org.mockito.Mock;
-import org.testng.annotations.BeforeTest;
 
 import com.helospark.SparkTemplatingPlugin.integration.execution.support.BufferBackedTestTemplatingResult;
 import com.helospark.sparktemplatingplugin.DiContainer;
@@ -39,12 +38,21 @@ public class ExecutionITSetup {
     protected ExecutionEvent dummyExecutionEvent = new ExecutionEvent();
     protected BufferBackedTestTemplatingResult templatingResult = new BufferBackedTestTemplatingResult();
 
-    @BeforeTest
     public void initialize() {
         initMocks(this);
         DiContainer.clearDiContainer();
 
-        // Overriding dependencies
+        // Override real dependencies with mocks
+        DiContainer.addDependency(mockCompilationUnitProvider);
+        DiContainer.addDependency(templatingResultFactory);
+        DiContainer.addDependency(currentProjectProvider);
+        DiContainer.addDependency(currentClassProvider);
+        // end of overrides
+
+        DiContainer.initializeDiContainer();
+
+        underTest = DiContainer.getDependency(Templater.class);
+
         given(mockCompilationUnitProvider.provide(any(ExecutionEvent.class))).willReturn(compilationUnit);
         given(mockCompilationUnitProvider.getExposedName()).willReturn(CompilationUnitProvider.EXPOSED_NAME);
 
@@ -56,13 +64,5 @@ public class ExecutionITSetup {
 
         given(currentClassProvider.provide(any(ExecutionEvent.class))).willReturn(type);
         given(currentClassProvider.getExposedName()).willReturn(CurrentClassProvider.EXPOSED_NAME);
-
-        DiContainer.addDependency(mockCompilationUnitProvider);
-        DiContainer.addDependency(templatingResultFactory);
-        DiContainer.addDependency(currentProjectProvider);
-        DiContainer.addDependency(currentClassProvider);
-
-        DiContainer.initializeDiContainer();
-        underTest = DiContainer.getDependency(Templater.class);
     }
 }

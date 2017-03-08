@@ -7,7 +7,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.testng.Assert;
-import org.testng.annotations.BeforeTest;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import com.helospark.sparktemplatingplugin.wrapper.SttField;
@@ -32,7 +32,7 @@ public class GetterGeneratorExecutionIT extends ExecutionITSetup {
             + "  \n";
 
     @Override
-    @BeforeTest
+    @BeforeMethod
     public void initialize() {
         super.initialize();
         SttField firstField = mock(SttField.class);

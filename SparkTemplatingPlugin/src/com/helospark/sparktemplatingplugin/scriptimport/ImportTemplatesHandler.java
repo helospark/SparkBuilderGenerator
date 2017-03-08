@@ -11,24 +11,21 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 
 import com.helospark.sparktemplatingplugin.DiContainer;
-import com.helospark.sparktemplatingplugin.repository.ScriptRepository;
-import com.helospark.sparktemplatingplugin.repository.zip.ScriptUnzipper;
 import com.helospark.sparktemplatingplugin.scriptimport.job.ImportJob;
+import com.helospark.sparktemplatingplugin.scriptimport.job.ImportJobWorker;
 
 public class ImportTemplatesHandler extends AbstractHandler {
-    private ScriptRepository scriptRepository;
-    private ScriptUnzipper scriptUnzipper;
+    private ImportJobWorker importJobWorker;
 
     public ImportTemplatesHandler() {
-        this.scriptRepository = DiContainer.getDependency(ScriptRepository.class);
-        this.scriptUnzipper = DiContainer.getDependency(ScriptUnzipper.class);
+        this.importJobWorker = DiContainer.getDependency(ImportJobWorker.class);
     }
 
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
         Optional<String> result = createOpenDialog();
         if (result.isPresent()) {
-            ImportJob importJob = new ImportJob(scriptUnzipper, scriptRepository, result.get());
+            ImportJob importJob = new ImportJob(importJobWorker, result.get());
             importJob.schedule();
         }
         return null;
