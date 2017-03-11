@@ -1,39 +1,20 @@
 package com.helospark.sparktemplatingplugin.wrapper;
 
-import java.util.Arrays;
 import java.util.List;
 
-import org.eclipse.jdt.core.IAnnotation;
 import org.eclipse.jdt.core.IMemberValuePair;
 import org.eclipse.jdt.core.JavaModelException;
 
-public class SttAnnotation extends SttJavaElement<IAnnotation> {
+public interface SttAnnotation {
+    String getAttachedJavadoc() throws JavaModelException;
 
-    public SttAnnotation(IAnnotation annotation) {
-        super(annotation);
-    }
+    String getElementName();
 
-    @Override
-    public String getAttachedJavadoc() throws JavaModelException {
-        return wrappedElement.getAttachedJavadoc(progressMonitor);
-    }
+    SttJavaProject getJavaProject();
 
-    @Override
-    public String getElementName() {
-        return wrappedElement.getElementName();
-    }
+    List<IMemberValuePair> getMemberValuePairs() throws JavaModelException;
 
-    @Override
-    public SttJavaProject getJavaProject() {
-        return new SttJavaProject(wrappedElement.getJavaProject());
-    }
+    String getSource() throws JavaModelException;
 
-    public List<IMemberValuePair> getMemberValuePairs() throws JavaModelException {
-        return Arrays.asList(wrappedElement.getMemberValuePairs());
-    }
-
-    public String getSource() throws JavaModelException {
-        return wrappedElement.getSource();
-    }
-
+    boolean isPresent();
 }

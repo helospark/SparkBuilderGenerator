@@ -1,191 +1,92 @@
 package com.helospark.sparktemplatingplugin.wrapper;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.eclipse.jdt.core.IInitializer;
 import org.eclipse.jdt.core.IMethod;
-import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.ITypeHierarchy;
 import org.eclipse.jdt.core.JavaModelException;
 
-public class SttType extends SttJavaElement<IType> {
+public interface SttType {
+    SttField createField(String typeName, String name) throws JavaModelException;
 
-    public SttType(IType type) {
-        super(type);
-    }
+    SttMethod createMethod(String content) throws JavaModelException;
 
-    public SttField createField(String typeName, String name) throws JavaModelException {
-        return new SttField(wrappedElement.createField(typeName + " " + name + ";", null, false, progressMonitor));
-    }
+    SttType createType(String content) throws JavaModelException;
 
-    public SttMethod createMethod(String content) throws JavaModelException {
-        return new SttMethod(wrappedElement.createMethod(content, null, false, progressMonitor));
-    }
+    void delete() throws JavaModelException;
 
-    public SttType createType(String content) throws JavaModelException {
-        return new SttType(wrappedElement.createType(content, null, false, progressMonitor));
-    }
+    List<SttMethod> findMethods(IMethod method);
 
-    public void delete() throws JavaModelException {
-        wrappedElement.delete(false, progressMonitor);
-    }
+    SttAnnotation getAnnotation(String annotationName);
 
-    public List<SttMethod> findMethods(IMethod method) {
-        return Arrays.stream(wrappedElement.findMethods(method))
-                .map(SttMethod::new)
-                .collect(Collectors.toList());
-    }
+    List<SttAnnotation> getAnnotations() throws JavaModelException;
 
-    public SttAnnotation getAnnotation(String annotationName) {
-        return new SttAnnotation(wrappedElement.getAnnotation(annotationName));
-    }
+    SttCompilationUnit getCompilationUnit();
 
-    public List<SttAnnotation> getAnnotations() throws JavaModelException {
-        return Arrays.stream(wrappedElement.getAnnotations())
-                .map(SttAnnotation::new)
-                .collect(Collectors.toList());
-    }
+    SttType getDeclaringType();
 
-    public SttCompilationUnit getCompilationUnit() {
-        return new SttCompilationUnit(wrappedElement.getCompilationUnit());
-    }
+    SttField getField(String fieldName);
 
-    public SttType getDeclaringType() {
-        return new SttType(wrappedElement.getDeclaringType());
-    }
+    List<SttField> getFields();
 
-    public SttField getField(String fieldName) {
-        return new SttField(wrappedElement.getField(fieldName));
-    }
+    String getFullyQualifiedName();
 
-    public List<SttField> getFields() {
-        try {
-            return Arrays.stream(wrappedElement.getFields())
-                    .map(SttField::new)
-                    .collect(Collectors.toList());
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
+    String getFullyQualifiedParameterizedName() throws JavaModelException;
 
-    public String getFullyQualifiedName() {
-        return wrappedElement.getFullyQualifiedName();
-    }
+    IInitializer getInitializer(int index);
 
-    public String getFullyQualifiedParameterizedName() throws JavaModelException {
-        return wrappedElement.getFullyQualifiedParameterizedName();
-    }
+    IInitializer[] getInitializers() throws JavaModelException;
 
-    public IInitializer getInitializer(int index) {
-        return wrappedElement.getInitializer(index);
-    }
+    SttMethod getMethod(String name, String[] signature);
 
-    public IInitializer[] getInitializers() throws JavaModelException {
-        return wrappedElement.getInitializers();
-    }
+    List<SttMethod> getMethods() throws JavaModelException;
 
-    public SttMethod getMethod(String name, String[] signature) {
-        return new SttMethod(wrappedElement.getMethod(name, signature));
-    }
+    SttPackageFragment getPackageFragment();
 
-    public List<SttMethod> getMethods() throws JavaModelException {
-        return Arrays.stream(wrappedElement.getMethods())
-                .map(SttMethod::new)
-                .collect(Collectors.toList());
-    }
+    String getSource() throws JavaModelException;
 
-    public SttPackageFragment getPackageFragment() {
-        return new SttPackageFragment(wrappedElement.getPackageFragment());
-    }
+    List<String> getSuperInterfaceNames() throws JavaModelException;
 
-    public String getSource() throws JavaModelException {
-        return wrappedElement.getSource();
-    }
+    List<String> getSuperInterfaceTypeSignatures() throws JavaModelException;
 
-    public List<String> getSuperInterfaceNames() throws JavaModelException {
-        return Arrays.asList(wrappedElement.getSuperInterfaceNames());
-    }
+    String getSuperclassName() throws JavaModelException;
 
-    public List<String> getSuperInterfaceTypeSignatures() throws JavaModelException {
-        return Arrays.asList(wrappedElement.getSuperInterfaceTypeSignatures());
-    }
+    String getSuperclassTypeSignature() throws JavaModelException;
 
-    public String getSuperclassName() throws JavaModelException {
-        return wrappedElement.getSuperclassName();
-    }
+    SttType getType(String name);
 
-    public String getSuperclassTypeSignature() throws JavaModelException {
-        return wrappedElement.getSuperclassTypeSignature();
-    }
+    SttTypeParameter getTypeParameter(String name);
 
-    public SttType getType(String name) {
-        return new SttType(wrappedElement.getType(name));
-    }
+    List<String> getTypeParameterSignatures() throws JavaModelException;
 
-    public SttTypeParameter getTypeParameter(String name) {
-        return new SttTypeParameter(wrappedElement.getTypeParameter(name));
-    }
+    List<SttTypeParameter> getTypeParameters() throws JavaModelException;
 
-    public List<String> getTypeParameterSignatures() throws JavaModelException {
-        return Arrays.asList(wrappedElement.getTypeParameterSignatures());
-    }
+    String getTypeQualifiedName();
 
-    public List<SttTypeParameter> getTypeParameters() throws JavaModelException {
-        return Arrays.stream(wrappedElement.getTypeParameters())
-                .map(SttTypeParameter::new)
-                .collect(Collectors.toList());
-    }
+    List<SttType> getTypes() throws JavaModelException;
 
-    public String getTypeQualifiedName() {
-        return wrappedElement.getTypeQualifiedName();
-    }
+    boolean isAnnotation() throws JavaModelException;
 
-    public List<SttType> getTypes() throws JavaModelException {
-        return Arrays.stream(wrappedElement.getTypes())
-                .map(SttType::new)
-                .collect(Collectors.toList());
-    }
+    boolean isAnonymous() throws JavaModelException;
 
-    public boolean isAnnotation() throws JavaModelException {
-        return wrappedElement.isAnnotation();
-    }
+    boolean isClass() throws JavaModelException;
 
-    public boolean isAnonymous() throws JavaModelException {
-        return wrappedElement.isAnonymous();
-    }
+    boolean isEnum() throws JavaModelException;
 
-    public boolean isClass() throws JavaModelException {
-        return wrappedElement.isClass();
-    }
+    boolean isInterface() throws JavaModelException;
 
-    public boolean isEnum() throws JavaModelException {
-        return wrappedElement.isEnum();
-    }
+    boolean isLambda();
 
-    public boolean isInterface() throws JavaModelException {
-        return wrappedElement.isInterface();
-    }
+    boolean isLocal() throws JavaModelException;
 
-    public boolean isLambda() {
-        return wrappedElement.isLambda();
-    }
+    boolean isMember() throws JavaModelException;
 
-    public boolean isLocal() throws JavaModelException {
-        return wrappedElement.isLocal();
-    }
+    ITypeHierarchy newSupertypeHierarchy() throws JavaModelException;
 
-    public boolean isMember() throws JavaModelException {
-        return wrappedElement.isMember();
-    }
+    void rename(String newName) throws JavaModelException;
 
-    public ITypeHierarchy newSupertypeHierarchy() throws JavaModelException {
-        return wrappedElement.newSupertypeHierarchy(progressMonitor);
-    }
+    Object getElementName();
 
-    public void rename(String newName) throws JavaModelException {
-        wrappedElement.rename(newName, false, null);
-    }
-
+    boolean isPresent();
 }

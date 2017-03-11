@@ -1,60 +1,31 @@
 package com.helospark.sparktemplatingplugin.wrapper;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.JavaModelException;
 
-public class SttPackageFragment extends SttJavaElement<IPackageFragment> {
+public interface SttPackageFragment {
+    boolean containsJavaResources() throws JavaModelException;
 
-    public SttPackageFragment(IPackageFragment javaElement) {
-        super(javaElement);
-    }
+    SttCompilationUnit createCompilationUnit(String name, String content)
+            throws JavaModelException;
 
-    public boolean containsJavaResources() throws JavaModelException {
-        return wrappedElement.containsJavaResources();
-    }
+    void delete() throws JavaModelException;
 
-    public SttCompilationUnit createCompilationUnit(String name, String content)
-            throws JavaModelException {
-        return new SttCompilationUnit(wrappedElement.createCompilationUnit(name, content, false, progressMonitor));
-    }
+    SttCompilationUnit getCompilationUnit(String name);
 
-    public void delete() throws JavaModelException {
-        wrappedElement.delete(false, progressMonitor);
-    }
+    List<SttCompilationUnit> getCompilationUnits() throws JavaModelException;
 
-    public SttCompilationUnit getCompilationUnit(String name) {
-        return new SttCompilationUnit(wrappedElement.getCompilationUnit(name));
-    }
+    Object[] getNonJavaResources() throws JavaModelException;
 
-    public List<SttCompilationUnit> getCompilationUnits() throws JavaModelException {
-        return Arrays.stream(wrappedElement.getCompilationUnits())
-                .map(SttCompilationUnit::new)
-                .collect(Collectors.toList());
-    }
+    IPath getPath();
 
-    public Object[] getNonJavaResources() throws JavaModelException {
-        return wrappedElement.getNonJavaResources();
-    }
+    boolean hasSubpackages() throws JavaModelException;
 
-    public IPath getPath() {
-        return wrappedElement.getPath();
-    }
+    boolean isDefaultPackage();
 
-    public boolean hasSubpackages() throws JavaModelException {
-        return wrappedElement.hasSubpackages();
-    }
+    void rename(String newName) throws JavaModelException;
 
-    public boolean isDefaultPackage() {
-        return wrappedElement.isDefaultPackage();
-    }
-
-    public void rename(String newName) throws JavaModelException {
-        wrappedElement.rename(newName, false, progressMonitor);
-    }
-
+    boolean isPresent();
 }

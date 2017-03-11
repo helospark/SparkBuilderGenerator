@@ -41,7 +41,7 @@ public class StringBufferBackedTemplatingResult implements ScriptExposed, IDocum
     private CompilationUnitProvider compilationUnitProvider = new CompilationUnitProvider();
     private CompilationUnitCreator compilationUnitCreator = new CompilationUnitCreator();
     private PackageRootFinder packageRootFinder = new PackageRootFinder();
-    private CurrentProjectProvider currentProjectProvider = new CurrentProjectProvider();
+    private CurrentProjectProvider currentProjectProvider = new CurrentProjectProvider(compilationUnitProvider);
 
     // Stateful
     private StringBuilder buffer = new StringBuilder();
@@ -82,16 +82,12 @@ public class StringBufferBackedTemplatingResult implements ScriptExposed, IDocum
 
     @Override
     public void appendToNewFile(IProject iProject, String folder) {
-        // IPackageFragmentRoot rootPackage =
-        // packageRootFinder.findSrcPackageFragmentRoot(iJavaProject);
-        // compilationUnitCreator.createCompilationUnit(rootPackage,
-        // "com.helospark.test", "TestClass.java", program);
         try {
-            IProject project = currentProjectProvider.provideCurrentProject();
+            IProject project = currentProjectProvider.provideCurrentProject(event);
 
             String[] parts = folder.split("/");
 
-            IFolder src = null;
+            IFolder src = null; // TODO: When only filename is defined, default action required
             for (int i = 0; i < parts.length - 1; ++i) {
                 src = project.getFolder(parts[i]);
                 if (!src.exists()) {

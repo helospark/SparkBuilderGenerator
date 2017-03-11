@@ -1,145 +1,53 @@
 package com.helospark.sparktemplatingplugin.wrapper;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
-import org.eclipse.jdt.core.Flags;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IImportDeclaration;
 import org.eclipse.jdt.core.IJavaElement;
-import org.eclipse.jdt.core.IPackageDeclaration;
 import org.eclipse.jdt.core.JavaModelException;
 
-public class SttCompilationUnit extends SttJavaElement<ICompilationUnit> {
-    public SttCompilationUnit(ICompilationUnit iCompilationUnit) {
-        super(iCompilationUnit);
-    }
+public interface SttCompilationUnit {
+    IImportDeclaration addImport(String importToAdd) throws JavaModelException;
 
-    public IImportDeclaration addImport(String importToAdd) throws JavaModelException {
-        return wrappedElement.createImport(importToAdd, null, progressMonitor);
-    }
+    IImportDeclaration addStaticImport(String importToAdd) throws JavaModelException;
 
-    public IImportDeclaration addStaticImport(String importToAdd) throws JavaModelException {
-        return wrappedElement.createImport(importToAdd, null, Flags.AccStatic, progressMonitor);
-    }
+    void addPackageDeclaration(String packageDeclaration) throws JavaModelException;
 
-    public void addPackageDeclaration(String packageDeclaration) throws JavaModelException {
-        wrappedElement.createPackageDeclaration(packageDeclaration, progressMonitor);
-    }
+    SttType createEmptyClass(String className) throws JavaModelException;
 
-    public SttType createEmptyClass(String className) throws JavaModelException {
-        return createTypeWithContent("class " + className + "{}");
-    }
+    SttType createEmptyInterface(String interfaceName) throws JavaModelException;
 
-    public SttType createEmptyInterface(String interfaceName) throws JavaModelException {
-        return createTypeWithContent("interface " + interfaceName + "{}");
-    }
+    SttType createTypeWithContent(String content) throws JavaModelException;
 
-    public SttType createTypeWithContent(String content) throws JavaModelException {
-        try {
-            return new SttType(wrappedElement.createType(content, null, false, progressMonitor));
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
+    void delete(boolean force) throws JavaModelException;
 
-    public void delete(boolean force) throws JavaModelException {
-        wrappedElement.delete(force, progressMonitor);
-    }
+    SttType findPrimaryType();
 
-    public SttType findPrimaryType() {
-        return new SttType(wrappedElement.findPrimaryType());
-    }
+    List<SttType> getAllTypes() throws JavaModelException;
 
-    public List<SttType> getAllTypes() throws JavaModelException {
-        try {
-            return Arrays.stream(wrappedElement.getAllTypes())
-                    .map(SttType::new)
-                    .collect(Collectors.toList());
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
+    List<IImportDeclaration> getImports();
 
-    public List<IImportDeclaration> getImports() {
-        try {
-            return Arrays.asList(wrappedElement.getImports());
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
+    List<String> getStaticImports();
 
-    public List<String> getStaticImports() {
-        try {
-            return getImports().stream()
-                    .filter(importElement -> {
-                        try {
-                            return (importElement.getFlags() & Flags.AccStatic) != 0;
-                        } catch (JavaModelException e) {
-                            throw new RuntimeException(e);
-                        }
-                    })
-                    .map(importElement -> importElement.getElementName())
-                    .collect(Collectors.toList());
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
+    List<String> getNonStaticImports();
 
-    public List<String> getNonStaticImports() {
-        try {
-            return getImports().stream()
-                    .filter(importElement -> {
-                        try {
-                            return (importElement.getFlags() & Flags.AccStatic) == 0;
-                        } catch (JavaModelException e) {
-                            throw new RuntimeException(e);
-                        }
-                    })
-                    .map(importElement -> importElement.getElementName())
-                    .collect(Collectors.toList());
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
+    boolean hasImport(String importName);
 
-    public boolean hasImport(String importName) {
-        return getImports()
-                .stream()
-                .filter(importElement -> importElement.equals(importName))
-                .findFirst()
-                .isPresent();
-    }
+    String getPackageDeclarations() throws JavaModelException;
 
-    public String getPackageDeclarations() throws JavaModelException {
-        return Arrays.stream(wrappedElement.getPackageDeclarations())
-                .map(IPackageDeclaration::getElementName)
-                .findFirst()
-                .orElse("");
-    }
+    String getSource() throws JavaModelException;
 
-    public String getSource() throws JavaModelException {
-        return wrappedElement.getSource();
-    }
+    SttType getType(String typeName);
 
-    public SttType getType(String typeName) {
-        return new SttType(wrappedElement.getType(typeName));
-    }
+    List<SttType> getTypes() throws JavaModelException;
 
-    public List<SttType> getTypes() throws JavaModelException {
-        return Arrays.stream(wrappedElement.getTypes())
-                .map(SttType::new)
-                .collect(Collectors.toList());
-    }
+    void move(IJavaElement destination)
+            throws JavaModelException;
 
-    public void move(IJavaElement destination)
-            throws JavaModelException {
-        wrappedElement.move(destination, null, null, false, progressMonitor);
-    }
+    void rename(String newName) throws JavaModelException;
 
-    public void rename(String newName) throws JavaModelException {
-        wrappedElement.rename(newName, false, progressMonitor);
-    }
+    ICompilationUnit getRaw();
 
+    boolean isPresent();
 }

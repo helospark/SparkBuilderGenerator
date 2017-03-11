@@ -1,35 +1,20 @@
 package com.helospark.sparktemplatingplugin.wrapper;
 
-import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.jdt.core.ITypeParameter;
 import org.eclipse.jdt.core.JavaModelException;
 
-public class SttTypeParameter extends SttJavaElement<ITypeParameter> {
+public interface SttTypeParameter {
+    List<String> getBounds() throws JavaModelException;
 
-    public SttTypeParameter(ITypeParameter typeParameter) {
-        super(typeParameter);
-    }
+    List<String> getBoundsSignatures() throws JavaModelException;
 
-    public List<String> getBounds() throws JavaModelException {
-        return Arrays.asList(wrappedElement.getBounds());
-    }
+    SttMember getDeclaringMember();
 
-    public List<String> getBoundsSignatures() throws JavaModelException {
-        return Arrays.asList(wrappedElement.getBoundsSignatures());
-    }
+    String getAttachedJavadoc(IProgressMonitor paramIProgressMonitor) throws JavaModelException;
 
-    public SttMember getDeclaringMember() {
-        return new SttMember(wrappedElement.getDeclaringMember());
-    }
+    String getSource() throws JavaModelException;
 
-    public String getAttachedJavadoc(IProgressMonitor paramIProgressMonitor) throws JavaModelException {
-        return wrappedElement.getAttachedJavadoc(paramIProgressMonitor);
-    }
-
-    public String getSource() throws JavaModelException {
-        return wrappedElement.getSource();
-    }
+    boolean isPresent();
 }

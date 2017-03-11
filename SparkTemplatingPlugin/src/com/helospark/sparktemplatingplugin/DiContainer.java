@@ -37,6 +37,7 @@ import com.helospark.sparktemplatingplugin.support.BundleVersionProvider;
 import com.helospark.sparktemplatingplugin.support.classpath.ClassInClasspathLocator;
 import com.helospark.sparktemplatingplugin.support.fileoperation.FileContentReader;
 import com.helospark.sparktemplatingplugin.support.fileoperation.FileOutputWriter;
+import com.helospark.sparktemplatingplugin.ui.dialog.DialogUiHandler;
 import com.helospark.sparktemplatingplugin.ui.editor.DocumentationProvider;
 import com.helospark.sparktemplatingplugin.ui.editor.cache.EditorCacheInitializer;
 import com.helospark.sparktemplatingplugin.ui.editor.completition.CompletitionChain;
@@ -63,7 +64,7 @@ public class DiContainer {
         addDependency(
                 new TemplatingResultFactory(getDependency(CompilationUnitProvider.class),
                         getDependency(CompilationUnitCreator.class), getDependency(PackageRootFinder.class)));
-        addDependency(new CurrentProjectProvider());
+        addDependency(new CurrentProjectProvider(getDependency(CompilationUnitProvider.class)));
         addDependency(new CurrentClassProvider(getDependency(CompilationUnitProvider.class)));
         addDependency(new ScriptExposedObjectProvider(getDependency(TemplatingResultFactory.class),
                 getDependencyList(ScriptExposed.class),
@@ -75,7 +76,8 @@ public class DiContainer {
         addDependency(new ScriptExposedObjectCompletitionChainItem(getDependency(ScriptExposedObjectProvider.class)));
         addDependency(new ImportedPackageClassCompletitionChainItem(getDependency(ClassInClasspathLocator.class)));
         addDependency(new TemplatingToolCompletionProcessor(getDependencyList(CompletitionChain.class)));
-        addDependency(new Templater(getDependency(ScriptPreProcessor.class), getDependency(ScriptInterpreter.class)));
+        addDependency(new DialogUiHandler());
+        addDependency(new Templater(getDependency(ScriptPreProcessor.class), getDependency(ScriptInterpreter.class), getDependency(DialogUiHandler.class)));
 
         addDependency(new EclipseRootFolderProvider());
         addDependency(new CommandNameToFilenameMapper());

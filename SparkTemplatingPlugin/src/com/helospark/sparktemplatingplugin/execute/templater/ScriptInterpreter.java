@@ -12,24 +12,20 @@ public class ScriptInterpreter {
         this.scriptExposedObjectProvider = scriptExposedObjectProvider;
     }
 
-    public void interpret(ExecutionEvent event, String program) {
-        try {
-            Interpreter bsh = new Interpreter();
-            scriptExposedObjectProvider.providerExposedObjects(event)
-                    .entrySet()
-                    .stream()
-                    .forEach(entry -> {
-                        try {
-                            bsh.set(entry.getKey(), entry.getValue());
-                        } catch (EvalError e) {
-                            throw new RuntimeException(e);
-                        }
-                    });
+    public void interpret(ExecutionEvent event, String program) throws EvalError {
+        Interpreter bsh = new Interpreter();
+        scriptExposedObjectProvider.providerExposedObjects(event)
+                .entrySet()
+                .stream()
+                .forEach(entry -> {
+                    try {
+                        bsh.set(entry.getKey(), entry.getValue());
+                    } catch (EvalError e) {
+                        throw new RuntimeException(e);
+                    }
+                });
 
-            bsh.eval(program);
+        bsh.eval(program);
 
-        } catch (Exception e) {
-            throw new RuntimeException(e.getMessage(), e);
-        }
     }
 }

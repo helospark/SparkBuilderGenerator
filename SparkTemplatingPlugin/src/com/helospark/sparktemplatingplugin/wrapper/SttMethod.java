@@ -1,107 +1,52 @@
 package com.helospark.sparktemplatingplugin.wrapper;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.eclipse.jdt.core.IMemberValuePair;
-import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.JavaModelException;
 
-public class SttMethod extends SttJavaElement<IMethod> {
+public interface SttMethod {
+    void delete() throws JavaModelException;
 
-    public SttMethod(IMethod method) {
-        super(method);
-    }
+    SttAnnotation getAnnotation(String annotationName);
 
-    public void delete() throws JavaModelException {
-        wrappedElement.delete(false, progressMonitor);
-    }
+    List<SttAnnotation> getAnnotations() throws JavaModelException;
 
-    public SttAnnotation getAnnotation(String annotationName) {
-        return new SttAnnotation(wrappedElement.getAnnotation(annotationName));
-    }
+    SttCompilationUnit getCompilationUnit();
 
-    public List<SttAnnotation> getAnnotations() throws JavaModelException {
-        return Arrays.stream(wrappedElement.getAnnotations())
-                .map(SttAnnotation::new)
-                .collect(Collectors.toList());
-    }
+    SttType getDeclaringType();
 
-    public SttCompilationUnit getCompilationUnit() {
-        return new SttCompilationUnit(wrappedElement.getCompilationUnit());
-    }
+    IMemberValuePair getDefaultValue() throws JavaModelException;
 
-    public SttType getDeclaringType() {
-        return new SttType(wrappedElement.getDeclaringType());
-    }
+    List<String> getExceptionTypes() throws JavaModelException;
 
-    public IMemberValuePair getDefaultValue() throws JavaModelException {
-        return wrappedElement.getDefaultValue();
-    }
+    int getNumberOfParameters();
 
-    public List<String> getExceptionTypes() throws JavaModelException {
-        return Arrays.asList(wrappedElement.getExceptionTypes());
-    }
+    List<String> getParameterNames() throws JavaModelException;
 
-    public int getNumberOfParameters() {
-        return wrappedElement.getNumberOfParameters();
-    }
+    List<String> getParameterTypes();
 
-    public List<String> getParameterNames() throws JavaModelException {
-        return Arrays.asList(wrappedElement.getParameterNames());
-    }
+    List<SttLocalVariable> getParameters() throws JavaModelException;
 
-    public List<String> getParameterTypes() {
-        return Arrays.asList(wrappedElement.getParameterTypes());
-    }
+    List<String> getRawParameterNames() throws JavaModelException;
 
-    public List<SttLocalVariable> getParameters() throws JavaModelException {
-        return Arrays.stream(wrappedElement.getParameters())
-                .map(SttLocalVariable::new)
-                .collect(Collectors.toList());
-    }
+    String getSignature() throws JavaModelException;
 
-    public List<String> getRawParameterNames() throws JavaModelException {
-        return Arrays.asList(wrappedElement.getRawParameterNames());
-    }
+    String getSource() throws JavaModelException;
 
-    public String getReturnType() throws JavaModelException {
-        return wrappedElement.getReturnType();
-    }
+    SttTypeParameter getTypeParameter(String paramString);
 
-    public String getSignature() throws JavaModelException {
-        return wrappedElement.getSignature();
-    }
+    List<SttTypeParameter> getTypeParameters() throws JavaModelException;
 
-    public String getSource() throws JavaModelException {
-        return wrappedElement.getSource();
-    }
+    boolean isConstructor() throws JavaModelException;
 
-    public SttTypeParameter getTypeParameter(String paramString) {
-        return new SttTypeParameter(wrappedElement.getTypeParameter(paramString));
-    }
+    boolean isLambdaMethod();
 
-    public List<SttTypeParameter> getTypeParameters() throws JavaModelException {
-        return Arrays.stream(wrappedElement.getTypeParameters())
-                .map(SttTypeParameter::new)
-                .collect(Collectors.toList());
-    }
+    boolean isMainMethod() throws JavaModelException;
 
-    public boolean isConstructor() throws JavaModelException {
-        return wrappedElement.isConstructor();
-    }
+    void rename(String newName) throws JavaModelException;
 
-    public boolean isLambdaMethod() {
-        return wrappedElement.isLambdaMethod();
-    }
+    String getReturnType() throws JavaModelException;
 
-    public boolean isMainMethod() throws JavaModelException {
-        return wrappedElement.isMainMethod();
-    }
-
-    public void rename(String newName) throws JavaModelException {
-        wrappedElement.rename(newName, false, progressMonitor);
-    }
-
+    boolean isPresent();
 }

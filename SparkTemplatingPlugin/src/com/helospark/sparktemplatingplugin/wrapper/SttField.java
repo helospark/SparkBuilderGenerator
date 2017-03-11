@@ -1,75 +1,36 @@
 package com.helospark.sparktemplatingplugin.wrapper;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.jdt.core.IField;
 import org.eclipse.jdt.core.JavaModelException;
 
-public class SttField extends SttJavaElement<IField> {
-    public SttField(IField field) {
-        super(field);
-    }
+public interface SttField {
+    SttAnnotation getAnnotation(String paramString);
 
-    public SttAnnotation getAnnotation(String paramString) {
-        return new SttAnnotation(wrappedElement.getAnnotation(paramString));
-    }
+    List<SttAnnotation> getAnnotations() throws JavaModelException;
 
-    public List<SttAnnotation> getAnnotations() throws JavaModelException {
-        return Arrays.stream(wrappedElement.getAnnotations())
-                .map(SttAnnotation::new)
-                .collect(Collectors.toList());
-    }
+    SttCompilationUnit getCompilationUnit();
 
-    public SttCompilationUnit getCompilationUnit() {
-        return new SttCompilationUnit(wrappedElement.getCompilationUnit());
-    }
+    SttType getDeclaringType();
 
-    public SttType getDeclaringType() {
-        return new SttType(wrappedElement.getDeclaringType());
-    }
+    void delete() throws JavaModelException;
 
-    public void delete() throws JavaModelException {
-        wrappedElement.delete(false, progressMonitor);
-    }
+    String getAttachedJavadoc(IProgressMonitor paramIProgressMonitor) throws JavaModelException;
 
-    public String getAttachedJavadoc(IProgressMonitor paramIProgressMonitor) throws JavaModelException {
-        return wrappedElement.getAttachedJavadoc(paramIProgressMonitor);
-    }
+    Object getConstant() throws JavaModelException;
 
-    public Object getConstant() throws JavaModelException {
-        return wrappedElement.getConstant();
-    }
+    String getElementName();
 
-    @Override
-    public String getElementName() {
-        return wrappedElement.getElementName();
-    }
+    String getSource() throws JavaModelException;
 
-    public String getSource() throws JavaModelException {
-        return wrappedElement.getSource();
-    }
+    SttType getType(String paramString, int paramInt);
 
-    public SttType getType(String paramString, int paramInt) {
-        return new SttType(wrappedElement.getType(paramString, paramInt));
-    }
+    String getTypeSignature();
 
-    public String getTypeSignature() {
-        try {
-            return wrappedElement.getTypeSignature();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
+    boolean isEnumConstant() throws JavaModelException;
 
-    public boolean isEnumConstant() throws JavaModelException {
-        return wrappedElement.isEnumConstant();
-    }
+    void rename(String newName) throws JavaModelException;
 
-    public void rename(String newName) throws JavaModelException {
-        wrappedElement.rename(newName, false, progressMonitor);
-    }
-
+    boolean isPresent();
 }

@@ -1,15 +1,17 @@
-package com.helospark.sparktemplatingplugin.wrapper;
+package com.helospark.sparktemplatingplugin.wrapper.impl;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.JavaModelException;
 
-public abstract class SttJavaElement<T extends IJavaElement> {
+import com.helospark.sparktemplatingplugin.wrapper.SttJavaProject;
+
+public abstract class SttJavaElementImpl<T extends IJavaElement> {
     protected T wrappedElement;
     protected IProgressMonitor progressMonitor = new NullProgressMonitor();
 
-    public SttJavaElement(T javaElement) {
+    public SttJavaElementImpl(T javaElement) {
         this.wrappedElement = javaElement;
     }
 
@@ -22,11 +24,14 @@ public abstract class SttJavaElement<T extends IJavaElement> {
     }
 
     public SttJavaProject getJavaProject() {
-        return new SttJavaProject(wrappedElement.getJavaProject());
+        return new SttJavaProjectImpl(wrappedElement.getJavaProject());
     }
 
     public T getRaw() {
         return wrappedElement;
     }
 
+    public boolean isPresent() {
+        return true;
+    }
 }

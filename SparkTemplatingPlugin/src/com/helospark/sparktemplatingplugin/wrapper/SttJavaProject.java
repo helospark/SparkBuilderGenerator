@@ -1,50 +1,23 @@
 package com.helospark.sparktemplatingplugin.wrapper;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
-import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaModelException;
 
-public class SttJavaProject extends SttJavaElement<IJavaProject> {
+public interface SttJavaProject {
+    SttType findType(String fullyQualifiedName) throws JavaModelException;
 
-    public SttJavaProject(IJavaProject javaProject) {
-        super(javaProject);
-    }
+    SttType findType(String packageName, String typeName) throws JavaModelException;
 
-    public SttType findType(String fullyQualifiedName) throws JavaModelException {
-        return new SttType(wrappedElement.findType(fullyQualifiedName));
-    }
+    List<SttPackageFragmentRoot> getAllPackageFragmentRoots() throws JavaModelException;
 
-    public SttType findType(String packageName, String typeName) throws JavaModelException {
-        return new SttType(wrappedElement.findType(packageName, typeName));
-    }
+    Object[] getNonJavaResources() throws JavaModelException;
 
-    public List<SttPackageFragmentRoot> getAllPackageFragmentRoots() throws JavaModelException {
-        return Arrays.stream(wrappedElement.getAllPackageFragmentRoots())
-                .map(SttPackageFragmentRoot::new)
-                .collect(Collectors.toList());
-    }
+    SttPackageFragmentRoot getPackageFragmentRoot(String paramString);
 
-    public Object[] getNonJavaResources() throws JavaModelException {
-        return wrappedElement.getNonJavaResources();
-    }
+    List<SttPackageFragmentRoot> getPackageFragmentRoots() throws JavaModelException;
 
-    public SttPackageFragmentRoot getPackageFragmentRoot(String paramString) {
-        return new SttPackageFragmentRoot(wrappedElement.getPackageFragmentRoot(paramString));
-    }
+    List<SttPackageFragment> getPackageFragments() throws JavaModelException;
 
-    public List<SttPackageFragmentRoot> getPackageFragmentRoots() throws JavaModelException {
-        return Arrays.stream(wrappedElement.getPackageFragmentRoots())
-                .map(SttPackageFragmentRoot::new)
-                .collect(Collectors.toList());
-    }
-
-    public List<SttPackageFragment> getPackageFragments() throws JavaModelException {
-        return Arrays.stream(wrappedElement.getPackageFragments())
-                .map(SttPackageFragment::new)
-                .collect(Collectors.toList());
-    }
-
+    boolean isPresent();
 }
