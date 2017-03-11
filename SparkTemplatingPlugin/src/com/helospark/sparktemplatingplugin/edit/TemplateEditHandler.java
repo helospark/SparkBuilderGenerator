@@ -7,9 +7,9 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 
 import com.helospark.sparktemplatingplugin.DiContainer;
-import com.helospark.sparktemplatingplugin.TemplatingEditorOpener;
 import com.helospark.sparktemplatingplugin.repository.ScriptRepository;
 import com.helospark.sparktemplatingplugin.repository.domain.ScriptEntity;
+import com.helospark.sparktemplatingplugin.support.TemplatingEditorOpener;
 import com.helospark.sparktemplatingplugin.support.logging.PluginLogger;
 import com.helospark.sparktemplatingplugin.ui.dialog.TemplateBrowseDialog;
 

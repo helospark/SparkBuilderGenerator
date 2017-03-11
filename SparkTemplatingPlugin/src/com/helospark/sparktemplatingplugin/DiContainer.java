@@ -34,6 +34,7 @@ import com.helospark.sparktemplatingplugin.repository.zip.ScriptZipper;
 import com.helospark.sparktemplatingplugin.scriptexport.job.ExportJobWorker;
 import com.helospark.sparktemplatingplugin.scriptimport.job.ImportJobWorker;
 import com.helospark.sparktemplatingplugin.support.BundleVersionProvider;
+import com.helospark.sparktemplatingplugin.support.TemplatingEditorOpener;
 import com.helospark.sparktemplatingplugin.support.classpath.ClassInClasspathLocator;
 import com.helospark.sparktemplatingplugin.support.fileoperation.FileContentReader;
 import com.helospark.sparktemplatingplugin.support.fileoperation.FileOutputWriter;
@@ -43,6 +44,7 @@ import com.helospark.sparktemplatingplugin.ui.editor.cache.EditorCacheInitialize
 import com.helospark.sparktemplatingplugin.ui.editor.completition.CompletitionChain;
 import com.helospark.sparktemplatingplugin.ui.editor.completition.ProposalToDocumentationConverter;
 import com.helospark.sparktemplatingplugin.ui.editor.completition.TemplatingToolCompletionProcessor;
+import com.helospark.sparktemplatingplugin.ui.editor.completition.chain.FieldCompletitionChainItem;
 import com.helospark.sparktemplatingplugin.ui.editor.completition.chain.ImportedPackageClassCompletitionChainItem;
 import com.helospark.sparktemplatingplugin.ui.editor.completition.chain.MethodCallCompletitionChainItem;
 import com.helospark.sparktemplatingplugin.ui.editor.completition.chain.ScriptExposedObjectCompletitionChainItem;
@@ -73,6 +75,7 @@ public class DiContainer {
         addDependency(new DocumentationProvider(getDependencyList(IDocumented.class)));
         addDependency(new ProposalToDocumentationConverter());
         addDependency(new MethodCallCompletitionChainItem(getDependency(ProposalToDocumentationConverter.class)));
+        addDependency(new FieldCompletitionChainItem());
         addDependency(new ScriptExposedObjectCompletitionChainItem(getDependency(ScriptExposedObjectProvider.class)));
         addDependency(new ImportedPackageClassCompletitionChainItem(getDependency(ClassInClasspathLocator.class)));
         addDependency(new TemplatingToolCompletionProcessor(getDependencyList(CompletitionChain.class)));

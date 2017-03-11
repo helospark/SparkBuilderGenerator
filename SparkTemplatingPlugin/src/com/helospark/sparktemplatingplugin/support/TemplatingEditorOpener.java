@@ -1,4 +1,4 @@
-package com.helospark.sparktemplatingplugin;
+package com.helospark.sparktemplatingplugin.support;
 
 import java.net.URI;
 
@@ -7,6 +7,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
 
+import com.helospark.sparktemplatingplugin.Activator;
 import com.helospark.sparktemplatingplugin.repository.ScriptRepository;
 
 public class TemplatingEditorOpener {

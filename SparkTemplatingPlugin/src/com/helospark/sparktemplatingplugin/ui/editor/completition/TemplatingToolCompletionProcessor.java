@@ -40,7 +40,7 @@ public class TemplatingToolCompletionProcessor implements IContentAssistProcesso
             List<CompletitionProposalResponse> possibleCompletitions = calculateProposals(document, offset,
                     fullExpression);
             return possibleCompletitions.stream()
-                    .filter(word -> word.getAutocompleString().startsWith(typedWord))
+                    .filter(word -> word.getAutocompleString().toUpperCase().startsWith(typedWord.toUpperCase()))
                     .map(word -> new CompletionProposal(word.getAutocompleString(), offset - typedWord.length(),
                             typedWord.length(), word.getAutocompleString().length(),
                             null, word.getDisplayName(), null,

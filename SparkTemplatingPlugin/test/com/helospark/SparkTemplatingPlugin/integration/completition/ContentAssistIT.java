@@ -56,6 +56,8 @@ public class ContentAssistIT {
                 { "result.", "getExposedName()" },
                 { "result.", "append(String)" },
                 { "result.getExposedName().", "toString()" },
+                { "globalConfig.S", "SCRIPT_NAME" },
+                { "globalConfig.s", "SCRIPT_NAME" },
                 //  { "SttJavaProject.findType(\"package\", \"clazz\")", "getClass()" } // will be done as part of a bug
         };
     }
