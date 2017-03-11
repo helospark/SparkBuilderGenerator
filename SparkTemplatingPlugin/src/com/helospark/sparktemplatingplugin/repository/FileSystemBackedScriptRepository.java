@@ -12,8 +12,10 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.helospark.sparktemplatingplugin.repository.domain.ScriptEntity;
+import com.helospark.sparktemplatingplugin.support.logging.PluginLogger;
 
 public class FileSystemBackedScriptRepository implements ScriptRepository {
+    private static final PluginLogger LOGGER = new PluginLogger(FileSystemBackedScriptRepository.class);
     private static final String SPARK_TEMPLATING_TOOL_FILE_ENCODING = "UTF-8";
     private EclipseRootFolderProvider eclipseRootFolderProvider;
     private CommandNameToFilenameMapper commandNameToFilenameMapper;
@@ -31,7 +33,7 @@ public class FileSystemBackedScriptRepository implements ScriptRepository {
             if (!scriptFile.exists()) {
                 scriptFile.createNewFile();
             } else {
-                System.out.println("File already exists, updating content " + scriptFile);
+                LOGGER.info("File already exists, updating content " + scriptFile);
             }
             try (BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(scriptFile), SPARK_TEMPLATING_TOOL_FILE_ENCODING))) {
                 bufferedWriter.write(entity.getScript());

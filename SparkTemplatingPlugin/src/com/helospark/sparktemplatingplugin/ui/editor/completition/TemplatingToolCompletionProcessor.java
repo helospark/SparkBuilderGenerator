@@ -16,10 +16,12 @@ import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.jface.text.contentassist.IContextInformation;
 import org.eclipse.jface.text.contentassist.IContextInformationValidator;
 
+import com.helospark.sparktemplatingplugin.support.logging.PluginLogger;
 import com.helospark.sparktemplatingplugin.ui.editor.completition.chain.domain.CompletitionProposalRequest;
 import com.helospark.sparktemplatingplugin.ui.editor.completition.chain.domain.CompletitionProposalResponse;
 
 public class TemplatingToolCompletionProcessor implements IContentAssistProcessor {
+    private static final PluginLogger LOGGER = new PluginLogger(TemplatingToolCompletionProcessor.class);
     private final Set<Character> allowedExpressionCharacters = Arrays.asList('.', '(', ')', '\"', '\'')
             .stream()
             .collect(Collectors.toSet());
@@ -46,7 +48,7 @@ public class TemplatingToolCompletionProcessor implements IContentAssistProcesso
                     .collect(Collectors.toList())
                     .toArray(new ICompletionProposal[0]);
         } catch (Exception e) {
-            System.out.println(e);
+            LOGGER.error("Cannot create completition proposals", e);
             return new ICompletionProposal[0];
         }
     }
@@ -107,7 +109,7 @@ public class TemplatingToolCompletionProcessor implements IContentAssistProcesso
         if (filteredList.isEmpty()) {
             return Optional.empty();
         } else if (filteredList.size() > 1) {
-            System.out.println("Multiple responses");
+            LOGGER.warn("Multiple possible completitions, choosing first");
         }
         CompletitionProposalResponse computedResponse = filteredList.get(0);
         return Optional.ofNullable(computedResponse);

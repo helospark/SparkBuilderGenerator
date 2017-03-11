@@ -12,15 +12,13 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 
 import com.helospark.sparktemplatingplugin.DiContainer;
-import com.helospark.sparktemplatingplugin.repository.zip.ScriptZipper;
 import com.helospark.sparktemplatingplugin.scriptexport.job.ExportJob;
 import com.helospark.sparktemplatingplugin.scriptexport.job.ExportJobWorker;
-import com.helospark.sparktemplatingplugin.support.FileOutputWriter;
+import com.helospark.sparktemplatingplugin.support.logging.PluginLogger;
 
 public class ExportTamplatesHandler extends AbstractHandler {
+    private static final PluginLogger LOGGER = new PluginLogger(ExportTamplatesHandler.class);
     private ExportJobWorker exportJobWorker;
-    private ScriptZipper scriptZipper;
-    private FileOutputWriter fileOutputWriter;
 
     public ExportTamplatesHandler() {
         this.exportJobWorker = DiContainer.getDependency(ExportJobWorker.class);
@@ -28,17 +26,21 @@ public class ExportTamplatesHandler extends AbstractHandler {
 
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
-        Optional<String> result = createSaveDialog();
+        try {
+            Optional<String> result = createSaveDialog();
 
-        if (result.isPresent()) {
-            String fileName = result.get();
-            File file = new File(fileName);
-            if (file.exists()) {
-                throw new RuntimeException("File already exists " + file.getAbsolutePath());
+            if (result.isPresent()) {
+                String fileName = result.get();
+                File file = new File(fileName);
+                if (file.exists()) {
+                    throw new RuntimeException("File already exists " + file.getAbsolutePath());
+                }
+
+                ExportJob exportJob = new ExportJob(exportJobWorker, fileName);
+                exportJob.schedule();
             }
-
-            ExportJob exportJob = new ExportJob(exportJobWorker, fileName);
-            exportJob.schedule();
+        } catch (Exception e) {
+            LOGGER.error("Unable to export templates", e);
         }
         return null;
     }

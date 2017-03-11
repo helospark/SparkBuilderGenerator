@@ -31,6 +31,7 @@ import org.eclipse.ui.texteditor.ChainedPreferenceStore;
 import com.helospark.sparktemplatingplugin.DiContainer;
 import com.helospark.sparktemplatingplugin.ui.editor.completition.TemplatingToolCompletionProcessor;
 
+@SuppressWarnings("restriction")
 public class TemplatingToolEditorConfiguration extends SourceViewerConfiguration {
     private TemplatingToolTemplateScanner scanner;
     private IColorManager colorManager;
@@ -76,14 +77,14 @@ public class TemplatingToolEditorConfiguration extends SourceViewerConfiguration
     }
 
     private IPreferenceStore createCombinedPreferenceStore() {
-        List stores = new ArrayList(3);
+        List<IPreferenceStore> stores = new ArrayList<>();
 
         stores.add(JavaPlugin.getDefault().getPreferenceStore());
         stores.add(new PreferencesAdapter(JavaPlugin.getJavaCorePluginPreferences()));
         stores.add(EditorsUI.getPreferenceStore());
         stores.add(PlatformUI.getPreferenceStore());
 
-        return new ChainedPreferenceStore((IPreferenceStore[]) stores.toArray(new IPreferenceStore[stores.size()]));
+        return new ChainedPreferenceStore(stores.toArray(new IPreferenceStore[stores.size()]));
     }
 
     @Override

@@ -5,7 +5,7 @@ import java.util.List;
 import com.helospark.sparktemplatingplugin.repository.ScriptRepository;
 import com.helospark.sparktemplatingplugin.repository.domain.ScriptEntity;
 import com.helospark.sparktemplatingplugin.repository.zip.ScriptZipper;
-import com.helospark.sparktemplatingplugin.support.FileOutputWriter;
+import com.helospark.sparktemplatingplugin.support.fileoperation.FileOutputWriter;
 
 public class ExportJobWorker {
     private ScriptRepository scriptRepository;

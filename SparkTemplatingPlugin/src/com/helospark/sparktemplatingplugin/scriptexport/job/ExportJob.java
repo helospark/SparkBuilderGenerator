@@ -5,7 +5,11 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 
+import com.helospark.sparktemplatingplugin.Activator;
+import com.helospark.sparktemplatingplugin.support.logging.PluginLogger;
+
 public class ExportJob extends Job {
+    private static final PluginLogger LOGGER = new PluginLogger(ExportJob.class);
     private ExportJobWorker exportJobWorker;
     private String fileName;
 
@@ -22,8 +26,8 @@ public class ExportJob extends Job {
             exportJobWorker.export(fileName);
             monitor.done();
         } catch (Exception e) {
-            e.printStackTrace();
-            return new Status(Status.ERROR, "unknown", 1, "ERROR", e);
+            LOGGER.error("Unable to export templates", e);
+            return new Status(Status.ERROR, Activator.PLUGIN_ID, 1, "Unable to export templates", e);
         }
         return Status.OK_STATUS;
     }

@@ -9,8 +9,10 @@ import com.helospark.sparktemplatingplugin.initializer.examplescript.xml.Example
 import com.helospark.sparktemplatingplugin.preferences.PreferenceStore;
 import com.helospark.sparktemplatingplugin.repository.ScriptRepository;
 import com.helospark.sparktemplatingplugin.repository.domain.ScriptEntity;
+import com.helospark.sparktemplatingplugin.support.logging.PluginLogger;
 
 public class ExampleScriptInitializer {
+    private static final PluginLogger LOGGER = new PluginLogger(ExampleScriptInitializer.class);
     public static final String EXAMPLE_SCRIPT_PREFERENCE_BASE_PATH = Activator.EDITOR_ID + ".InitializedExampleScripts";
     private ExampleScriptXmlLoader exampleScriptXmlLoader;
     private ScriptRepository scriptRepository;
@@ -31,8 +33,7 @@ public class ExampleScriptInitializer {
             loadedScripts.stream()
                     .forEach(script -> addToScriptRepository(script));
         } catch (Exception e) {
-            System.out.println("[ERROR] Cannot initialize script library " + e.getMessage());
-            e.printStackTrace();
+            LOGGER.error("Cannot initialize script library", e);
         }
     }
 

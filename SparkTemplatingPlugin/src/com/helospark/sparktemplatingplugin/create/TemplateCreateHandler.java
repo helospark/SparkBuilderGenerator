@@ -13,8 +13,10 @@ import com.helospark.sparktemplatingplugin.DiContainer;
 import com.helospark.sparktemplatingplugin.TemplatingEditorOpener;
 import com.helospark.sparktemplatingplugin.repository.ScriptRepository;
 import com.helospark.sparktemplatingplugin.repository.domain.ScriptEntity;
+import com.helospark.sparktemplatingplugin.support.logging.PluginLogger;
 
 public class TemplateCreateHandler extends AbstractHandler {
+    private static final PluginLogger LOGGER = new PluginLogger(TemplateCreateHandler.class);
     private ScriptRepository scriptRepository;
     private TemplatingEditorOpener templatingEditorOpener;
 
@@ -25,13 +27,16 @@ public class TemplateCreateHandler extends AbstractHandler {
 
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
-        Optional<String> optionalCommandName = getCommandNameFromUser();
-        if (optionalCommandName.isPresent()) {
-            String commandName = optionalCommandName.get();
-            scriptRepository.saveNewScript(new ScriptEntity(commandName, ""));
-            templatingEditorOpener.openEditorForCommand(commandName);
+        try {
+            Optional<String> optionalCommandName = getCommandNameFromUser();
+            if (optionalCommandName.isPresent()) {
+                String commandName = optionalCommandName.get();
+                scriptRepository.saveNewScript(new ScriptEntity(commandName, ""));
+                templatingEditorOpener.openEditorForCommand(commandName);
+            }
+        } catch (Exception e) {
+            LOGGER.error("Unable to create template", e);
         }
-
         return null;
     }
 

@@ -33,10 +33,10 @@ import org.eclipse.jface.util.PropertyChangeEvent;
  * 
  * @author helospark
  */
+@SuppressWarnings("restriction")
 public final class TemplatingToolBeanShellCodeScanner extends AbstractJavaScanner {
 
-    private static final String SOURCE_VERSION = "org.eclipse.jdt.core.compiler.source";
-    static String[] fgKeywords = {
+    private static String[] fgKeywords = {
             "abstract",
             "break",
             "case", "catch", "class", "const", "continue",
@@ -51,16 +51,12 @@ public final class TemplatingToolBeanShellCodeScanner extends AbstractJavaScanne
             "this", "throw", "throws", "transient", "try",
             "volatile",
             "while" };
-    private static final String INTERFACE = "interface";
-    private static final String RETURN = "return";
     private static String[] fgJava14Keywords = { "assert" };
     private static String[] fgJava15Keywords = { "enum" };
 
     private static String[] fgTypes = { "void", "boolean", "char", "byte", "short", "strictfp", "int", "long", "float", "double" };
 
     private static String[] fgConstants = { "false", "null", "true" };
-    private static final String ANNOTATION_BASE_KEY = "semanticHighlighting.annotation";
-    private static final String ANNOTATION_COLOR_KEY = "semanticHighlighting.annotation.color";
     private static String[] fgTokenProperties = {
             "java_keyword",
             "java_string",
@@ -72,7 +68,7 @@ public final class TemplatingToolBeanShellCodeScanner extends AbstractJavaScanne
             "java_single_line_comment",
             "java_multi_line_comment" };
 
-    private List<ISourceVersionDependent> fVersionDependentRules = new ArrayList(3);
+    private List<ISourceVersionDependent> fVersionDependentRules = new ArrayList<>();
 
     public TemplatingToolBeanShellCodeScanner(IColorManager manager, IPreferenceStore store) {
         super(manager, store);
@@ -86,7 +82,7 @@ public final class TemplatingToolBeanShellCodeScanner extends AbstractJavaScanne
 
     @Override
     protected List<IRule> createRules() {
-        List rules = new ArrayList();
+        List<IRule> rules = new ArrayList<>();
 
         Token token = getToken("java_string");
         rules.add(new SingleLineRule("'", "'", token, '\\'));
@@ -197,8 +193,8 @@ public final class TemplatingToolBeanShellCodeScanner extends AbstractJavaScanne
             if (value instanceof String) {
                 String s = (String) value;
 
-                for (Iterator it = this.fVersionDependentRules.iterator(); it.hasNext();) {
-                    ISourceVersionDependent dependent = (ISourceVersionDependent) it.next();
+                for (Iterator<ISourceVersionDependent> it = this.fVersionDependentRules.iterator(); it.hasNext();) {
+                    ISourceVersionDependent dependent = it.next();
                     dependent.setSourceVersion(s);
                 }
             }

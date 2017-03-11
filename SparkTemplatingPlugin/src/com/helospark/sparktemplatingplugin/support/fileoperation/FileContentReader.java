@@ -1,10 +1,10 @@
-package com.helospark.sparktemplatingplugin.support;
+package com.helospark.sparktemplatingplugin.support.fileoperation;
 
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-public class FileContentLoader {
+public class FileContentReader {
 
     public byte[] loadContent(File file) {
         assertFileExists(file);

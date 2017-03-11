@@ -19,8 +19,8 @@ import com.helospark.sparktemplatingplugin.repository.ScriptRepository;
 import com.helospark.sparktemplatingplugin.repository.domain.ScriptEntity;
 import com.helospark.sparktemplatingplugin.scriptexport.job.ExportJobWorker;
 import com.helospark.sparktemplatingplugin.scriptimport.job.ImportJobWorker;
-import com.helospark.sparktemplatingplugin.support.FileContentLoader;
-import com.helospark.sparktemplatingplugin.support.FileOutputWriter;
+import com.helospark.sparktemplatingplugin.support.fileoperation.FileContentReader;
+import com.helospark.sparktemplatingplugin.support.fileoperation.FileOutputWriter;
 
 public class ExportImportIT {
     private ImportJobWorker importJobWorker;
@@ -32,7 +32,7 @@ public class ExportImportIT {
     @Mock
     private IProgressMonitor progressMonitor;
     @Mock
-    private FileContentLoader fileContentLoader;
+    private FileContentReader fileContentReader;
     @Mock
     private FileOutputWriter fileOutputWriter;
     @Mock
@@ -44,9 +44,9 @@ public class ExportImportIT {
         DiContainer.clearDiContainer();
 
         // Override real dependencies with mocks
-        DiContainer.addDependency(fileContentLoader);
+        DiContainer.addDependency(fileContentReader);
         DiContainer.addDependency(fileOutputWriter);
-        DiContainer.addDependency(fileContentLoader);
+        DiContainer.addDependency(fileContentReader);
         DiContainer.addDependency(scriptRepository);
         // end of overrides
 
@@ -67,7 +67,7 @@ public class ExportImportIT {
         byte[] exportedByteData = extractSavedZipBytes();
 
         // AND then importing the exported bytes when no commands exists
-        given(fileContentLoader.loadContent("fileName")).willReturn(exportedByteData);
+        given(fileContentReader.loadContent("fileName")).willReturn(exportedByteData);
         given(scriptRepository.loadByCommandName(anyString())).willReturn(Optional.empty());
         importJobWorker.importToScriptRepository("fileName");
 

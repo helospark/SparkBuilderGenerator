@@ -8,8 +8,12 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 
+import com.helospark.sparktemplatingplugin.Activator;
+import com.helospark.sparktemplatingplugin.support.logging.PluginLogger;
+
 public class ClasspathScanCacheInitializationJob extends Job {
     private static final String JOB_NAME = "Preinitializing cache for content assist";
+    private static final PluginLogger LOGGER = new PluginLogger(ClasspathScanCacheInitializationJob.class);
     private ClassInClasspathLocator classInClasspathLocator;
     private List<String> packagesToInit;
 
@@ -21,17 +25,19 @@ public class ClasspathScanCacheInitializationJob extends Job {
 
     @Override
     protected IStatus run(IProgressMonitor monitor) {
-        monitor.beginTask(JOB_NAME, packagesToInit.size());
-        packagesToInit.stream()
-                .map(Collections::singletonList)
-                .forEach(basePackageSingletonList -> {
-                    classInClasspathLocator.preInitializeCache(packagesToInit);
-                    monitor.worked(1);
-                });
-        monitor.done();
-        List<Class<?>> result = classInClasspathLocator.findClassesByName(packagesToInit, "SttMethod");
-        System.out.println("##############################################");
-        System.out.println(result);
+        try {
+            monitor.beginTask(JOB_NAME, packagesToInit.size());
+            packagesToInit.stream()
+                    .map(Collections::singletonList)
+                    .forEach(basePackageSingletonList -> {
+                        classInClasspathLocator.preInitializeCache(packagesToInit);
+                        monitor.worked(1);
+                    });
+            monitor.done();
+        } catch (Exception e) {
+            LOGGER.error("Unable to inialize caches", e);
+            return new Status(Status.ERROR, Activator.PLUGIN_ID, "Unable to inialize caches");
+        }
         return Status.OK_STATUS;
     }
 

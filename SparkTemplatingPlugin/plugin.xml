@@ -21,9 +21,9 @@
             id="com.helospark.SparkTemplatingPlugin.commands.category">
       </category>
       <command
-            name="Sample Command"
+            name="Execution Command"
             categoryId="com.helospark.SparkTemplatingPlugin.commands.category"
-            id="com.helospark.SparkTemplatingPlugin.commands.sampleCommand">
+            id="com.helospark.SparkTemplatingPlugin.commands.executionCommand">
       </command>
       <command
       		name="Open dialog command"
@@ -33,10 +33,6 @@
    </extension>
    <extension
          point="org.eclipse.ui.handlers">
-      <handler
-            commandId="com.helospark.SparkTemplatingPlugin.commands.sampleCommand"
-            class="com.helospark.sparktemplatingplugin.execute.SampleHandler">
-      </handler>
       <handler
             commandId="com.helospark.SparkTemplatingPlugin.commands.executionCommand"
             class="com.helospark.sparktemplatingplugin.execute.ExecutionHandler">
@@ -75,7 +71,7 @@
                mnemonic="M"
                id="com.helospark.SparkTemplatingPlugin.menus.sampleMenu">
             <command
-                  commandId="com.helospark.SparkTemplatingPlugin.commands.sampleCommand"
+                  commandId="com.helospark.SparkTemplatingPlugin.commands.executionCommand"
                   mnemonic="S"
                   id="com.helospark.SparkTemplatingPlugin.menus.sampleCommand">
             </command>
@@ -86,7 +82,7 @@
          <toolbar
                id="com.helospark.SparkTemplatingPlugin.toolbars.sampleToolbar">
             <command
-                  commandId="com.helospark.SparkTemplatingPlugin.commands.sampleCommand"
+                  commandId="com.helospark.SparkTemplatingPlugin.commands.executionCommand"
                   icon="icons/sample.gif"
                   tooltip="Say hello world"
                   id="com.helospark.SparkTemplatingPlugin.toolbars.sampleCommand" style="pulldown">
@@ -104,6 +100,27 @@
         <command commandId="com.helospark.SparkTemplatingPlugin.commands.exportCommand" label="Export templates" style="push" />
         <command commandId="com.helospark.SparkTemplatingPlugin.commands.importCommand" label="Import templates" style="push" />
      </menuContribution>
+   </extension>
+   <extension
+         point="org.eclipse.epp.logging.aeri.ide.servers">
+      <server
+            class="org.eclipse.epp.internal.logging.aeri.ide.server.mars.ServerConnection"
+            description="Help improve templating plugin by sending error reports to us."
+            icon16="icons/sample.gif"
+            icon32="icons/sample.gif"
+            id="com.helospark.SparkTemplatingPlugin.server1"
+            name="SparkTemplatingTool">
+         <link
+               href="https://helospark.com"
+               rel="provider"
+               title="helospark">
+         </link>
+         <link
+               href="https://aer.ctrlflow.com/helospark/community/discovery"
+               rel="discovery"
+               title="Discovery URL">
+         </link>
+      </server>
    </extension>
 
 </plugin>

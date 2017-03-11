@@ -7,7 +7,11 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 
+import com.helospark.sparktemplatingplugin.Activator;
+import com.helospark.sparktemplatingplugin.support.logging.PluginLogger;
+
 public class ImportJob extends Job {
+    private static final PluginLogger LOGGER = new PluginLogger(ImportJob.class);
     private ImportJobWorker importJobWorker;
     private String zipFileName;
 
@@ -30,7 +34,8 @@ public class ImportJob extends Job {
             }
             monitor.done();
         } catch (Exception e) {
-            throw new RuntimeException("Template importing failed", e);
+            LOGGER.error("Unable to import templates", e);
+            return new Status(Status.ERROR, Activator.PLUGIN_ID, 1, "Unable to import templates", e);
         }
 
         return Status.OK_STATUS;

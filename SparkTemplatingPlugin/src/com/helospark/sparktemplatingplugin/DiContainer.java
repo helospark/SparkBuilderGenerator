@@ -16,6 +16,7 @@ import com.helospark.sparktemplatingplugin.execute.templater.helper.PackageRootF
 import com.helospark.sparktemplatingplugin.execute.templater.provider.CompilationUnitProvider;
 import com.helospark.sparktemplatingplugin.execute.templater.provider.CurrentClassProvider;
 import com.helospark.sparktemplatingplugin.execute.templater.provider.CurrentProjectProvider;
+import com.helospark.sparktemplatingplugin.initializer.BundleInitializedHook;
 import com.helospark.sparktemplatingplugin.initializer.examplescript.BundleClasspathFileLoader;
 import com.helospark.sparktemplatingplugin.initializer.examplescript.ExampleScriptInitializer;
 import com.helospark.sparktemplatingplugin.initializer.examplescript.ExampleScriptInitializerVersionFilteringDecorator;
@@ -33,9 +34,9 @@ import com.helospark.sparktemplatingplugin.repository.zip.ScriptZipper;
 import com.helospark.sparktemplatingplugin.scriptexport.job.ExportJobWorker;
 import com.helospark.sparktemplatingplugin.scriptimport.job.ImportJobWorker;
 import com.helospark.sparktemplatingplugin.support.BundleVersionProvider;
-import com.helospark.sparktemplatingplugin.support.FileContentLoader;
-import com.helospark.sparktemplatingplugin.support.FileOutputWriter;
 import com.helospark.sparktemplatingplugin.support.classpath.ClassInClasspathLocator;
+import com.helospark.sparktemplatingplugin.support.fileoperation.FileContentReader;
+import com.helospark.sparktemplatingplugin.support.fileoperation.FileOutputWriter;
 import com.helospark.sparktemplatingplugin.ui.editor.DocumentationProvider;
 import com.helospark.sparktemplatingplugin.ui.editor.cache.EditorCacheInitializer;
 import com.helospark.sparktemplatingplugin.ui.editor.completition.CompletitionChain;
@@ -86,11 +87,11 @@ public class DiContainer {
         addDependency(new EditorCacheInitializer(getDependency(ClassInClasspathLocator.class)));
         addDependency(new BundleClasspathFileLoader());
         addDependency(new UniqueCommandNameFinder(getDependency(ScriptRepository.class)));
-        addDependency(new FileContentLoader());
+        addDependency(new FileContentReader());
         addDependency(new XmlDocumentParser());
         addDependency(new ExampleScriptXmlParser(getDependency(XmlDocumentParser.class), getDependency(BundleClasspathFileLoader.class)));
         addDependency(
-                new ExampleScriptXmlLoader(getDependency(ExampleScriptXmlParser.class), getDependency(FileContentLoader.class), getDependency(BundleClasspathFileLoader.class)));
+                new ExampleScriptXmlLoader(getDependency(ExampleScriptXmlParser.class), getDependency(FileContentReader.class), getDependency(BundleClasspathFileLoader.class)));
         addDependency(new PreferenceStore());
         addDependency(
                 new ExampleScriptInitializer(getDependency(ExampleScriptXmlLoader.class), getDependency(ScriptRepository.class), getDependency(UniqueCommandNameFinder.class),
@@ -99,8 +100,9 @@ public class DiContainer {
         addDependency(new ExampleScriptInitializerVersionFilteringDecorator(getDependency(ExampleScriptInitializer.class), getDependency(PreferenceStore.class),
                 getDependency(BundleVersionProvider.class)));
         addDependency(new FileOutputWriter());
-        addDependency(new ImportJobWorker(getDependency(ScriptRepository.class), getDependency(ScriptUnzipper.class), getDependency(FileContentLoader.class)));
+        addDependency(new ImportJobWorker(getDependency(ScriptRepository.class), getDependency(ScriptUnzipper.class), getDependency(FileContentReader.class)));
         addDependency(new ExportJobWorker(getDependency(ScriptRepository.class), getDependency(ScriptZipper.class), getDependency(FileOutputWriter.class)));
+        addDependency(new BundleInitializedHook(getDependency(ExampleScriptInitializerVersionFilteringDecorator.class)));
     }
 
     // Visible for testing
@@ -142,6 +144,7 @@ public class DiContainer {
                 .orElseThrow(() -> new RuntimeException("Unable to initialize " + clazz.getName() + " not found"));
     }
 
+    @SuppressWarnings("unchecked")
     public static <T> List<T> getDependencyList(Class<T> classToFind) {
         List<Object> result = new ArrayList<>();
         for (Object o : diContainer) {

@@ -2,7 +2,10 @@ package com.helospark.sparktemplatingplugin.execute.templater;
 
 import org.eclipse.core.commands.ExecutionEvent;
 
+import com.helospark.sparktemplatingplugin.support.logging.PluginLogger;
+
 public class Templater {
+    private static final PluginLogger LOGGER = new PluginLogger(Templater.class);
     private ScriptPreProcessor scriptPreProcessor;
     private ScriptInterpreter scriptInterpreter;
 
@@ -13,7 +16,7 @@ public class Templater {
 
     public void template(ExecutionEvent event, String program) {
         String preprocessedScript = scriptPreProcessor.preprocessScript(program);
-        System.out.println("Preprocessed script: \n" + preprocessedScript);
+        LOGGER.info("Preprocessed script: \n" + preprocessedScript);
         scriptInterpreter.interpret(event, preprocessedScript);
     }
 }

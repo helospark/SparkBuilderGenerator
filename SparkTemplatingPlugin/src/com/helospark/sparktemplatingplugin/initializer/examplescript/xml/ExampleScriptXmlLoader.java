@@ -8,19 +8,19 @@ import com.helospark.sparktemplatingplugin.initializer.examplescript.BundleClass
 import com.helospark.sparktemplatingplugin.initializer.examplescript.domain.ExampleScriptDescriptorDomain;
 import com.helospark.sparktemplatingplugin.initializer.examplescript.xml.domain.ExampleScriptXmlDomain;
 import com.helospark.sparktemplatingplugin.repository.domain.ScriptEntity;
-import com.helospark.sparktemplatingplugin.support.FileContentLoader;
+import com.helospark.sparktemplatingplugin.support.fileoperation.FileContentReader;
 
 public class ExampleScriptXmlLoader {
     public static final String EXAMPLE_SCRIPT_CLASSPATH_FOLDER_PATH = "/resources/example-scripts";
     public static final String EXAMPLE_SCRIPT_DESCRIPTOR_XML_PATH = EXAMPLE_SCRIPT_CLASSPATH_FOLDER_PATH + "/example-scripts.xml";
 
     private ExampleScriptXmlParser exampleScriptXmlParser;
-    private FileContentLoader fileContentLoader;
+    private FileContentReader fileContentReader;
     private BundleClasspathFileLoader bundleClasspathFileLoader;
 
-    public ExampleScriptXmlLoader(ExampleScriptXmlParser exampleScriptXmlParser, FileContentLoader fileContentLoader, BundleClasspathFileLoader bundleClasspathFileLoader) {
+    public ExampleScriptXmlLoader(ExampleScriptXmlParser exampleScriptXmlParser, FileContentReader fileContentReader, BundleClasspathFileLoader bundleClasspathFileLoader) {
         this.exampleScriptXmlParser = exampleScriptXmlParser;
-        this.fileContentLoader = fileContentLoader;
+        this.fileContentReader = fileContentReader;
         this.bundleClasspathFileLoader = bundleClasspathFileLoader;
     }
 
@@ -47,7 +47,7 @@ public class ExampleScriptXmlLoader {
 
     private byte[] loadRevisionFileContents(String revisionFileName) {
         File revisionFile = bundleClasspathFileLoader.loadFileFromClasspath(EXAMPLE_SCRIPT_CLASSPATH_FOLDER_PATH + "/" + revisionFileName);
-        return fileContentLoader.loadContent(revisionFile);
+        return fileContentReader.loadContent(revisionFile);
     }
 
 }

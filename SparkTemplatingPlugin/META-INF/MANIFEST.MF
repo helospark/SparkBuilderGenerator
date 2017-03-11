@@ -7,7 +7,8 @@ Bundle-Activator: com.helospark.sparktemplatingplugin.Activator
 Bundle-Vendor: HELOSPARK
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
- org.eclipse.core.expressions;bundle-version="3.5.100"
+ org.eclipse.core.expressions;bundle-version="3.5.100",
+ org.eclipse.epp.logging.aeri.ide
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: dependency/bsh-2.0b4.jar, dependency/fast-classpath-scanner-2.0.17.jar,

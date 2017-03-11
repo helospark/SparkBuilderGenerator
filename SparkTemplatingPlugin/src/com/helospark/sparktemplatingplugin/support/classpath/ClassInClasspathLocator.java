@@ -7,9 +7,12 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import com.helospark.sparktemplatingplugin.support.logging.PluginLogger;
+
 import io.github.lukehutch.fastclasspathscanner.FastClasspathScanner;
 
 public class ClassInClasspathLocator {
+    private static final PluginLogger LOGGER = new PluginLogger(ClassInClasspathLocator.class);
     private Map<String, List<Class<?>>> classCache = new ConcurrentHashMap<>();
 
     public void preInitializeCache(List<String> basePackages) {
@@ -61,7 +64,7 @@ public class ClassInClasspathLocator {
                     })
                     .scan();
         } catch (Exception e) {
-            System.out.println("[WARNING] " + e.getMessage());
+            LOGGER.warn("Cannot scan classes", e);
         }
         return result;
     }

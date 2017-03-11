@@ -14,60 +14,61 @@ import com.helospark.sparktemplatingplugin.repository.CommandNameToFilenameMappe
 import com.helospark.sparktemplatingplugin.ui.editor.cache.EditorCacheInitializer;
 
 public class TemplatingToolEditor extends TextEditor {
-	private EditorCacheInitializer editorCacheInitializer;
-	private IColorManager colorManager;
-	boolean commandNameModified = false;
-	private CommandNameToFilenameMapper commandNameToFilenameMapper;
-	private String commandName = "Unknown";
+    private EditorCacheInitializer editorCacheInitializer;
+    private IColorManager colorManager;
+    boolean commandNameModified = false;
+    private CommandNameToFilenameMapper commandNameToFilenameMapper;
+    private String commandName = "Unknown";
 
-	public TemplatingToolEditor() {
-		colorManager = new JavaColorManager();
-		editorCacheInitializer = DiContainer.getDependency(EditorCacheInitializer.class);
-		commandNameToFilenameMapper = DiContainer.getDependency(CommandNameToFilenameMapper.class);
-		setSourceViewerConfiguration(new TemplatingToolEditorConfiguration(colorManager));
-		setDocumentProvider(new TemplatingToolDocumentProvider());
-	}
+    @SuppressWarnings("restriction")
+    public TemplatingToolEditor() {
+        colorManager = new JavaColorManager();
+        editorCacheInitializer = DiContainer.getDependency(EditorCacheInitializer.class);
+        commandNameToFilenameMapper = DiContainer.getDependency(CommandNameToFilenameMapper.class);
+        setSourceViewerConfiguration(new TemplatingToolEditorConfiguration(colorManager));
+        setDocumentProvider(new TemplatingToolDocumentProvider());
+    }
 
-	@Override
-	public void dispose() {
-		colorManager.dispose();
-		super.dispose();
-	}
+    @Override
+    public void dispose() {
+        colorManager.dispose();
+        super.dispose();
+    }
 
-	@Override
-	public void doSave(IProgressMonitor progressMonitor) {
-		super.doSave(progressMonitor);
-		setDirty(false);
-	}
+    @Override
+    public void doSave(IProgressMonitor progressMonitor) {
+        super.doSave(progressMonitor);
+        setDirty(false);
+    }
 
-	@Override
-	public void doSaveAs() {
-		doSave(getProgressMonitor());
-	}
+    @Override
+    public void doSaveAs() {
+        doSave(getProgressMonitor());
+    }
 
-	@Override
-	public void init(IEditorSite site, IEditorInput input) throws PartInitException {
-		super.init(site, input);
-		editorCacheInitializer.initializeCaches();
-		commandName = commandNameToFilenameMapper.mapToCommandName(getPartName());
-		setPartName(commandName);
-		firePropertyChange(IEditorPart.PROP_TITLE);
-	}
+    @Override
+    public void init(IEditorSite site, IEditorInput input) throws PartInitException {
+        super.init(site, input);
+        editorCacheInitializer.initializeCaches();
+        commandName = commandNameToFilenameMapper.mapToCommandName(getPartName());
+        setPartName(commandName);
+        firePropertyChange(IEditorPart.PROP_TITLE);
+    }
 
-	public void setDirty(boolean dirty) {
-		if (commandNameModified != dirty) {
-			commandNameModified = dirty;
-			firePropertyChange(IEditorPart.PROP_DIRTY);
-		}
-	}
+    public void setDirty(boolean dirty) {
+        if (commandNameModified != dirty) {
+            commandNameModified = dirty;
+            firePropertyChange(IEditorPart.PROP_DIRTY);
+        }
+    }
 
-	@Override
-	public boolean isDirty() {
-		return super.isDirty() || commandNameModified;
-	}
+    @Override
+    public boolean isDirty() {
+        return super.isDirty() || commandNameModified;
+    }
 
-	@Override
-	public String getTitleToolTip() {
-		return commandName + " - SparkTemplatingTool";
-	}
+    @Override
+    public String getTitleToolTip() {
+        return commandName + " - SparkTemplatingTool";
+    }
 }

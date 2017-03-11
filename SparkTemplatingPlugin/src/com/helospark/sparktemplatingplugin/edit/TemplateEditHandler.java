@@ -10,9 +10,11 @@ import com.helospark.sparktemplatingplugin.DiContainer;
 import com.helospark.sparktemplatingplugin.TemplatingEditorOpener;
 import com.helospark.sparktemplatingplugin.repository.ScriptRepository;
 import com.helospark.sparktemplatingplugin.repository.domain.ScriptEntity;
+import com.helospark.sparktemplatingplugin.support.logging.PluginLogger;
 import com.helospark.sparktemplatingplugin.ui.dialog.TemplateBrowseDialog;
 
 public class TemplateEditHandler extends AbstractHandler {
+    private static final PluginLogger LOGGER = new PluginLogger(TemplateEditHandler.class);
     private ScriptRepository scriptRepository;
     private TemplatingEditorOpener templatingEditorOpener;
 
@@ -23,14 +25,18 @@ public class TemplateEditHandler extends AbstractHandler {
 
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
-        Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
-        TemplateBrowseDialog templateBrowseDialog = new TemplateBrowseDialog(shell, scriptRepository, "Select an template to edit");
-        templateBrowseDialog.setTitle("Edit template");
-        templateBrowseDialog.open();
-        ScriptEntity result = (ScriptEntity) templateBrowseDialog.getFirstResult();
+        try {
+            Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
+            TemplateBrowseDialog templateBrowseDialog = new TemplateBrowseDialog(shell, scriptRepository, "Select an template to edit");
+            templateBrowseDialog.setTitle("Edit template");
+            templateBrowseDialog.open();
+            ScriptEntity result = (ScriptEntity) templateBrowseDialog.getFirstResult();
 
-        if (result != null) {
-            templatingEditorOpener.openEditorForCommand(result.getCommandName());
+            if (result != null) {
+                templatingEditorOpener.openEditorForCommand(result.getCommandName());
+            }
+        } catch (Exception e) {
+            LOGGER.error("Unable to edit template", e);
         }
 
         return null;

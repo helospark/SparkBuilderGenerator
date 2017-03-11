@@ -4,10 +4,11 @@ import java.util.Objects;
 
 import com.helospark.sparktemplatingplugin.preferences.PreferenceStore;
 import com.helospark.sparktemplatingplugin.support.BundleVersionProvider;
+import com.helospark.sparktemplatingplugin.support.logging.PluginLogger;
 
 public class ExampleScriptInitializerVersionFilteringDecorator {
+    private static final PluginLogger LOGGER = new PluginLogger(ExampleScriptInitializerVersionFilteringDecorator.class);
     public static final String EXAMPLE_SCRIPTS_INITIALIZED_VERSION_KEY = "com.helospark.example.scripts.initialized.version";
-
     private ExampleScriptInitializer exampleScriptInitializer;
     private PreferenceStore preferenceStore;
     private BundleVersionProvider bundleVersionProvider;
@@ -27,8 +28,7 @@ public class ExampleScriptInitializerVersionFilteringDecorator {
                 preferenceStore.setPreference(EXAMPLE_SCRIPTS_INITIALIZED_VERSION_KEY, currentVersion);
             }
         } catch (Exception e) {
-            System.out.println("[WARNING] Cannot initialize example scripts");
-            e.printStackTrace();
+            LOGGER.error("Cannot initialize example scripts", e);
         }
     }
 }

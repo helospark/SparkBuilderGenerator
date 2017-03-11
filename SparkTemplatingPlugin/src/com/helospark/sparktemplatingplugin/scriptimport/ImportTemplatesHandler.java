@@ -13,8 +13,10 @@ import org.eclipse.ui.PlatformUI;
 import com.helospark.sparktemplatingplugin.DiContainer;
 import com.helospark.sparktemplatingplugin.scriptimport.job.ImportJob;
 import com.helospark.sparktemplatingplugin.scriptimport.job.ImportJobWorker;
+import com.helospark.sparktemplatingplugin.support.logging.PluginLogger;
 
 public class ImportTemplatesHandler extends AbstractHandler {
+    private static final PluginLogger LOGGER = new PluginLogger(ImportTemplatesHandler.class);
     private ImportJobWorker importJobWorker;
 
     public ImportTemplatesHandler() {
@@ -23,10 +25,14 @@ public class ImportTemplatesHandler extends AbstractHandler {
 
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
-        Optional<String> result = createOpenDialog();
-        if (result.isPresent()) {
-            ImportJob importJob = new ImportJob(importJobWorker, result.get());
-            importJob.schedule();
+        try {
+            Optional<String> result = createOpenDialog();
+            if (result.isPresent()) {
+                ImportJob importJob = new ImportJob(importJobWorker, result.get());
+                importJob.schedule();
+            }
+        } catch (Exception e) {
+            LOGGER.error("Unable to import templates", e);
         }
         return null;
     }
