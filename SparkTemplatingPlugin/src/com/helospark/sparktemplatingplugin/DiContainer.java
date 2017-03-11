@@ -13,6 +13,7 @@ import com.helospark.sparktemplatingplugin.execute.templater.Templater;
 import com.helospark.sparktemplatingplugin.execute.templater.TemplatingResultFactory;
 import com.helospark.sparktemplatingplugin.execute.templater.helper.CompilationUnitCreator;
 import com.helospark.sparktemplatingplugin.execute.templater.helper.PackageRootFinder;
+import com.helospark.sparktemplatingplugin.execute.templater.provider.CodeFormatterServiceProvider;
 import com.helospark.sparktemplatingplugin.execute.templater.provider.CompilationUnitProvider;
 import com.helospark.sparktemplatingplugin.execute.templater.provider.CurrentClassProvider;
 import com.helospark.sparktemplatingplugin.execute.templater.provider.CurrentProjectProvider;
@@ -62,6 +63,7 @@ public class DiContainer {
         addDependency(new CompilationUnitCreator());
         addDependency(new PackageRootFinder());
         addDependency(new CompilationUnitProvider());
+        addDependency(new CodeFormatterServiceProvider(getDependency(CompilationUnitProvider.class)));
         addDependency(new ClassInClasspathLocator());
         addDependency(
                 new TemplatingResultFactory(getDependency(CompilationUnitProvider.class),

@@ -58,6 +58,8 @@ public class ContentAssistIT {
                 { "result.getExposedName().", "toString()" },
                 { "globalConfig.S", "SCRIPT_NAME" },
                 { "globalConfig.s", "SCRIPT_NAME" },
+                { "codeForm", "codeFormatter" },
+                { "codeFormatter.form", "formatCurrentCompilationUnit()" },
                 //  { "SttJavaProject.findType(\"package\", \"clazz\")", "getClass()" } // will be done as part of a bug
         };
     }
