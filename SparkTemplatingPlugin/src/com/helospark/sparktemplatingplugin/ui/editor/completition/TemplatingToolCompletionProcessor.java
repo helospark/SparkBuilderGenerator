@@ -78,6 +78,7 @@ public class TemplatingToolCompletionProcessor implements IContentAssistProcesso
                     .withClazz(Optional.ofNullable(clazz))
                     .withDocument(document)
                     .withExpression(currentElement.trim())
+                    .withOffset(offset)
                     .withCompletitionOffset(offset)
                     .build();
             List<CompletitionProposalResponse> response = chain.stream()

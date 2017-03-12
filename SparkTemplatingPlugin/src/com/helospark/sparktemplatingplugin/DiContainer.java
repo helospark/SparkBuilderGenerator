@@ -47,8 +47,14 @@ import com.helospark.sparktemplatingplugin.ui.editor.completition.ProposalToDocu
 import com.helospark.sparktemplatingplugin.ui.editor.completition.TemplatingToolCompletionProcessor;
 import com.helospark.sparktemplatingplugin.ui.editor.completition.chain.FieldCompletitionChainItem;
 import com.helospark.sparktemplatingplugin.ui.editor.completition.chain.ImportedPackageClassCompletitionChainItem;
+import com.helospark.sparktemplatingplugin.ui.editor.completition.chain.LocalVariableCompletitionChain;
 import com.helospark.sparktemplatingplugin.ui.editor.completition.chain.MethodCallCompletitionChainItem;
 import com.helospark.sparktemplatingplugin.ui.editor.completition.chain.ScriptExposedObjectCompletitionChainItem;
+import com.helospark.sparktemplatingplugin.ui.editor.completition.chain.localvariable.CodeCleanerForLocalVariableFinder;
+import com.helospark.sparktemplatingplugin.ui.editor.completition.chain.localvariable.CurrentLineSubstringScriptPreprocessor;
+import com.helospark.sparktemplatingplugin.ui.editor.completition.chain.localvariable.InnerBlockRemoverSourceProcessor;
+import com.helospark.sparktemplatingplugin.ui.editor.completition.chain.localvariable.NoSourceCleaningSourceProcessor;
+import com.helospark.sparktemplatingplugin.ui.editor.completition.chain.localvariable.RegexMatchingLocalVariableExtractor;
 
 public class DiContainer {
     private static List<Object> diContainer = new ArrayList<>();
@@ -76,8 +82,17 @@ public class DiContainer {
         addDependency(new ScriptInterpreter(getDependency(ScriptExposedObjectProvider.class)));
         addDependency(new DocumentationProvider(getDependencyList(IDocumented.class)));
         addDependency(new ProposalToDocumentationConverter());
+
         addDependency(new MethodCallCompletitionChainItem(getDependency(ProposalToDocumentationConverter.class)));
         addDependency(new FieldCompletitionChainItem());
+        addDependency(new RegexMatchingLocalVariableExtractor());
+        addDependency(new CurrentLineSubstringScriptPreprocessor());
+        addDependency(new NoSourceCleaningSourceProcessor());
+        addDependency(new InnerBlockRemoverSourceProcessor());
+        addDependency(new CodeCleanerForLocalVariableFinder(getDependency(ScriptPreProcessor.class), getDependency(NoSourceCleaningSourceProcessor.class),
+                getDependency(CurrentLineSubstringScriptPreprocessor.class), getDependency(InnerBlockRemoverSourceProcessor.class)));
+        addDependency(new LocalVariableCompletitionChain(getDependency(CodeCleanerForLocalVariableFinder.class), getDependency(RegexMatchingLocalVariableExtractor.class),
+                getDependency(ClassInClasspathLocator.class)));
         addDependency(new ScriptExposedObjectCompletitionChainItem(getDependency(ScriptExposedObjectProvider.class)));
         addDependency(new ImportedPackageClassCompletitionChainItem(getDependency(ClassInClasspathLocator.class)));
         addDependency(new TemplatingToolCompletionProcessor(getDependencyList(CompletitionChain.class)));

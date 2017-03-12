@@ -11,6 +11,7 @@ public class CompletitionProposalRequest {
     private String expression;
     private int completitionOffset;
     private Optional<Class<?>> clazz;
+    private int offset;
 
     @Generated("SparkTools")
     private CompletitionProposalRequest(Builder builder) {
@@ -18,6 +19,7 @@ public class CompletitionProposalRequest {
         this.expression = builder.expression;
         this.completitionOffset = builder.completitionOffset;
         this.clazz = builder.clazz;
+        this.offset = builder.offset;
     }
 
     public CompletitionProposalRequest(IDocument document, String expression, int completitionOffset) {
@@ -42,6 +44,10 @@ public class CompletitionProposalRequest {
         return clazz;
     }
 
+    public int getOffset() {
+        return offset;
+    }
+
     @Generated("SparkTools")
     public static Builder builder() {
         return new Builder();
@@ -53,6 +59,7 @@ public class CompletitionProposalRequest {
         private String expression;
         private int completitionOffset;
         private Optional<Class<?>> clazz;
+        private int offset;
 
         private Builder() {
         }
@@ -74,6 +81,11 @@ public class CompletitionProposalRequest {
 
         public Builder withClazz(Optional<Class<?>> clazz) {
             this.clazz = clazz;
+            return this;
+        }
+
+        public Builder withOffset(int offset) {
+            this.offset = offset;
             return this;
         }
 

@@ -60,6 +60,7 @@ public class ContentAssistIT {
                 { "globalConfig.s", "SCRIPT_NAME" },
                 { "codeForm", "codeFormatter" },
                 { "codeFormatter.form", "formatCurrentCompilationUnit()" },
+                { "SttType localVariable;\nloc", "localVariable" },
                 //  { "SttJavaProject.findType(\"package\", \"clazz\")", "getClass()" } // will be done as part of a bug
         };
     }
@@ -86,7 +87,8 @@ public class ContentAssistIT {
                 { "result.", "result" },
                 { "result.", "SttAnnotation" },
                 { "", "getClass()" },
-                { ".", "getClass()" }
+                { ".", "getClass()" },
+                { "{\nSttType localVariable;\n}\nloc", "localVariable" }
         };
     }
 
