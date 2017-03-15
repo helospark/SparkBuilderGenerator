@@ -10,6 +10,7 @@ import org.eclipse.jdt.core.dom.Modifier;
 import org.eclipse.jdt.core.dom.Modifier.ModifierKeyword;
 import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
 
+import com.helospark.spark.builder.handlers.codegenerator.component.helper.VariableDeclarationToFieldNameConverter;
 import com.helospark.spark.builder.handlers.codegenerator.domain.NamedVariableDeclarationField;
 
 /**
@@ -18,12 +19,16 @@ import com.helospark.spark.builder.handlers.codegenerator.domain.NamedVariableDe
  * @author helospark
  */
 public class ApplicableFieldExtractor {
+    private VariableDeclarationToFieldNameConverter variableDeclarationToFieldNameConverter;
+
+    public ApplicableFieldExtractor(VariableDeclarationToFieldNameConverter variableDeclarationToFieldNameConverter) {
+        this.variableDeclarationToFieldNameConverter = variableDeclarationToFieldNameConverter;
+    }
 
     @SuppressWarnings("unchecked")
     public List<NamedVariableDeclarationField> filterApplicableFields(FieldDeclaration[] fields) {
         List<NamedVariableDeclarationField> namedVariableDeclarations = new ArrayList<>();
         for (FieldDeclaration field : fields) {
-            Object o = field.fragments().get(0);
             List<VariableDeclarationFragment> fragments = field.fragments();
             namedVariableDeclarations.addAll(getFilteredDeclarations(field, fragments));
         }
@@ -38,7 +43,7 @@ public class ApplicableFieldExtractor {
     }
 
     private NamedVariableDeclarationField createNamedVariableDeclarations(VariableDeclarationFragment variableDeclarationFragment, FieldDeclaration fieldDeclaration) {
-        String fieldName = variableDeclarationFragment.getName().toString();
+        String fieldName = variableDeclarationToFieldNameConverter.convertToFieldName(variableDeclarationFragment);
         return new NamedVariableDeclarationField(fieldDeclaration, fieldName);
     }
 

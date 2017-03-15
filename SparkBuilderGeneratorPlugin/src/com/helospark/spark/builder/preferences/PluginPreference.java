@@ -2,8 +2,9 @@ package com.helospark.spark.builder.preferences;
 
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.jface.preference.FieldEditor;
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.widgets.Composite;
+
+import com.helospark.spark.builder.handlers.codegenerator.component.helper.PreferenceStoreWrapper;
 
 /**
  * Defines a plugin preference. Contains a key as unique identifier, a description to be shown to the user and a default
@@ -35,7 +36,7 @@ public interface PluginPreference<T> {
      * @param preferenceStore the preference store from which to extract the preference value
      * @return the current value for this preference
      */
-    T getCurrentPreferenceValue(IPreferenceStore preferenceStore);
+    T getCurrentPreferenceValue(PreferenceStoreWrapper preferenceStore);
 
     /**
      * Creates a {@link FieldEditor} for this preference

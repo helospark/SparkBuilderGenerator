@@ -13,4 +13,5 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.jface.text
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
-Import-Package: org.osgi.framework
+Import-Package: org.eclipse.ui.texteditor,
+ org.osgi.framework

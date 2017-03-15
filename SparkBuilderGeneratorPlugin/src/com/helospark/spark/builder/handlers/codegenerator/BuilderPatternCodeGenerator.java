@@ -50,14 +50,14 @@ public class BuilderPatternCodeGenerator {
     }
 
     private void addBuilderToAst(AST ast, TypeDeclaration originalType, ListRewrite listRewrite) {
-        List<NamedVariableDeclarationField> namedVariableDeclarations = findBuildableFields(originalType);
+        List<NamedVariableDeclarationField> namedVariableDeclarations = collectBuildableFields(originalType);
         TypeDeclaration builderType = builderClassCreator.createBuilderClass(ast, originalType, namedVariableDeclarations);
         privateConstructorPopulator.addPrivateConstructorToCompilationUnit(ast, originalType, builderType, listRewrite, namedVariableDeclarations);
         builderMethodPopulator.addBuilderMethodToCompilationUnit(ast, listRewrite, originalType, builderType);
         listRewrite.insertLast(builderType, null);
     }
 
-    private List<NamedVariableDeclarationField> findBuildableFields(TypeDeclaration typeDecl) {
+    private List<NamedVariableDeclarationField> collectBuildableFields(TypeDeclaration typeDecl) {
         FieldDeclaration[] fields = typeDecl.getFields();
         return applicableFieldExtractor.filterApplicableFields(fields);
     }

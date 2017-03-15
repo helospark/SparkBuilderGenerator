@@ -12,13 +12,13 @@ import com.helospark.spark.builder.preferences.PreferencesManager;
  * @author helospark
  */
 public class BuilderMethodNameBuilder {
-    private VariableNameToUpperCamelCaseConverter variableNameToUpperCamelCaseConverter;
+    private CamelCaseConverter camelCaseConverter;
     private PreferencesManager preferencesManager;
     private TemplateResolver templateResolver;
 
-    public BuilderMethodNameBuilder(VariableNameToUpperCamelCaseConverter variableNameToUpperCamelCaseConverter, PreferencesManager preferencesManager,
+    public BuilderMethodNameBuilder(CamelCaseConverter camelCaseConverter, PreferencesManager preferencesManager,
             TemplateResolver templateResolver) {
-        this.variableNameToUpperCamelCaseConverter = variableNameToUpperCamelCaseConverter;
+        this.camelCaseConverter = camelCaseConverter;
         this.preferencesManager = preferencesManager;
         this.templateResolver = templateResolver;
     }
@@ -26,7 +26,7 @@ public class BuilderMethodNameBuilder {
     public String build(String fieldName) {
         Map<String, String> replacements = new HashMap<>();
         replacements.put("fieldName", fieldName);
-        replacements.put("FieldName", variableNameToUpperCamelCaseConverter.convert(fieldName));
+        replacements.put("FieldName", camelCaseConverter.toUpperCamelCase(fieldName));
         String name = preferencesManager.getPreferenceValue(PluginPreferenceList.BUILDERS_METHOD_NAME_PATTERN);
         return templateResolver.resolveTemplate(name, replacements);
     }

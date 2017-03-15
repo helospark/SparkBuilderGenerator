@@ -21,52 +21,63 @@ import com.helospark.spark.builder.handlers.codegenerator.component.BuilderMetho
 import com.helospark.spark.builder.handlers.codegenerator.component.ImportPopulator;
 import com.helospark.spark.builder.handlers.codegenerator.component.PrivateConstructorListRewritePopulator;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.BuilderMethodNameBuilder;
+import com.helospark.spark.builder.handlers.codegenerator.component.helper.CamelCaseConverter;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.ClassNameToVariableNameConverter;
+import com.helospark.spark.builder.handlers.codegenerator.component.helper.FieldPrefixPostfixProvider;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.GeneratedAnnotationPopulator;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.JavadocGenerator;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.NonNullAnnotationAttacher;
+import com.helospark.spark.builder.handlers.codegenerator.component.helper.PreferenceStoreProvider;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.TemplateResolver;
-import com.helospark.spark.builder.handlers.codegenerator.component.helper.VariableNameToUpperCamelCaseConverter;
+import com.helospark.spark.builder.handlers.codegenerator.component.helper.VariableDeclarationToFieldNameConverter;
 import com.helospark.spark.builder.preferences.PreferencesManager;
 
 public class DiContainer {
     public static Map<String, Object> diContainer = new HashMap<>();
 
+    public static void clearDiContainer() {
+        diContainer.clear();
+    }
+
     // Visible for testing
     public static void initializeDiContainer() {
-        addDepenency(new ClassNameToVariableNameConverter());
-        addDepenency(new VariableNameToUpperCamelCaseConverter());
-        addDepenency(new JavadocGenerator());
-        addDepenency(new TemplateResolver());
-        addDepenency(new PreferencesManager());
-        addDepenency(new BuilderRemover());
-        addDepenency(new CompilationUnitSourceSetter());
-        addDepenency(new CurrentShellProvider());
-        addDepenency(new DialogWrapper(getDependency(CurrentShellProvider.class)));
-        addDepenency(new ErrorHandlerHook(getDependency(DialogWrapper.class)));
-        addDepenency(new HandlerUtilWrapper());
-        addDepenency(new WorkingCopyManager());
-        addDepenency(new WorkingCopyManagerWrapper(getDependency(HandlerUtilWrapper.class)));
-        addDepenency(new CompilationUnitParser());
-        addDepenency(new GeneratedAnnotationPopulator());
-        addDepenency(new NonNullAnnotationAttacher());
-        addDepenency(new ImportPopulator(getDependency(PreferencesManager.class)));
-        addDepenency(new BuilderMethodNameBuilder(getDependency(VariableNameToUpperCamelCaseConverter.class), getDependency(PreferencesManager.class),
+        addDependency(new ClassNameToVariableNameConverter());
+        addDependency(new CamelCaseConverter());
+        addDependency(new JavadocGenerator());
+        addDependency(new TemplateResolver());
+        addDependency(new PreferenceStoreProvider());
+        addDependency(new PreferencesManager(getDependency(PreferenceStoreProvider.class)));
+        addDependency(new BuilderRemover());
+        addDependency(new CompilationUnitSourceSetter());
+        addDependency(new CurrentShellProvider());
+        addDependency(new DialogWrapper(getDependency(CurrentShellProvider.class)));
+        addDependency(new ErrorHandlerHook(getDependency(DialogWrapper.class)));
+        addDependency(new HandlerUtilWrapper());
+        addDependency(new WorkingCopyManager());
+        addDependency(new WorkingCopyManagerWrapper(getDependency(HandlerUtilWrapper.class)));
+        addDependency(new CompilationUnitParser());
+        addDependency(new GeneratedAnnotationPopulator());
+        addDependency(new NonNullAnnotationAttacher());
+        addDependency(new ImportPopulator(getDependency(PreferencesManager.class)));
+        addDependency(new BuilderMethodNameBuilder(getDependency(CamelCaseConverter.class), getDependency(PreferencesManager.class),
                 getDependency(TemplateResolver.class)));
-        addDepenency(new BuilderClassCreator(getDependency(BuilderMethodNameBuilder.class), getDependency(TemplateResolver.class), getDependency(PreferencesManager.class),
+        addDependency(new BuilderClassCreator(getDependency(BuilderMethodNameBuilder.class), getDependency(TemplateResolver.class), getDependency(PreferencesManager.class),
                 getDependency(JavadocGenerator.class), getDependency(NonNullAnnotationAttacher.class), getDependency(GeneratedAnnotationPopulator.class)));
-        addDepenency(new BuilderMethodListRewritePopulator(getDependency(TemplateResolver.class), getDependency(PreferencesManager.class),
+        addDependency(new BuilderMethodListRewritePopulator(getDependency(TemplateResolver.class), getDependency(PreferencesManager.class),
                 getDependency(JavadocGenerator.class), getDependency(GeneratedAnnotationPopulator.class), getDependency(PreferencesManager.class)));
-        addDepenency(new PrivateConstructorListRewritePopulator(getDependency(ClassNameToVariableNameConverter.class), getDependency(GeneratedAnnotationPopulator.class),
+        addDependency(new PrivateConstructorListRewritePopulator(getDependency(ClassNameToVariableNameConverter.class), getDependency(GeneratedAnnotationPopulator.class),
                 getDependency(PreferencesManager.class)));
-        addDepenency(new ApplicableFieldExtractor());
-        addDepenency(new BuilderPatternCodeGenerator(getDependency(ApplicableFieldExtractor.class), getDependency(BuilderClassCreator.class),
+        addDependency(new FieldPrefixPostfixProvider(getDependency(PreferenceStoreProvider.class)));
+        addDependency(new VariableDeclarationToFieldNameConverter(getDependency(PreferencesManager.class), getDependency(FieldPrefixPostfixProvider.class),
+                getDependency(CamelCaseConverter.class)));
+        addDependency(new ApplicableFieldExtractor(getDependency(VariableDeclarationToFieldNameConverter.class)));
+        addDependency(new BuilderPatternCodeGenerator(getDependency(ApplicableFieldExtractor.class), getDependency(BuilderClassCreator.class),
                 getDependency(PrivateConstructorListRewritePopulator.class), getDependency(BuilderMethodListRewritePopulator.class), getDependency(ImportPopulator.class)));
 
     }
 
     // Visible for testing
-    public static void addDepenency(Object dependecy) {
+    public static void addDependency(Object dependecy) {
         String correctedName = getClassNameWithoutTestPostfix(dependecy);
         diContainer.putIfAbsent(correctedName, dependecy);
     }

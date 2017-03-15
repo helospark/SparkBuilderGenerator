@@ -52,6 +52,10 @@ public final class PluginPreferenceList {
     public static final PluginPreference<Boolean> OVERRIDE_PREVIOUS_BUILDER = new BooleanPluginPreference("override_previous_builder",
             "Override previous builder", Boolean.TRUE);
 
+    public static final PluginPreference<Boolean> REMOVE_PREFIX_AND_POSTFIX_FROM_BUILDER_NAMES = new BooleanPluginPreference(
+            "org.helospark.builder.removePrefixAndPostfixFromBuilderNames",
+            "Remove prefix and postfix (set in code style) from builder names", Boolean.TRUE);
+
     public static LinkedHashSet<PluginPreference<?>> getAllPreferences() {
         LinkedHashSet<PluginPreference<?>> allPreferences = new LinkedHashSet<PluginPreference<?>>();
         allPreferences.add(CREATE_BUILDER_METHOD_PATTERN);
@@ -65,6 +69,7 @@ public final class PluginPreferenceList {
         allPreferences.add(ADD_NONNULL_ON_PARAMETERS);
         allPreferences.add(ADD_GENERATED_ANNOTATION);
         allPreferences.add(OVERRIDE_PREVIOUS_BUILDER);
+        allPreferences.add(REMOVE_PREFIX_AND_POSTFIX_FROM_BUILDER_NAMES);
         return allPreferences;
     }
 }
