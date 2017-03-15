@@ -17,7 +17,7 @@ import org.testng.annotations.Test;
 import com.helospark.spark.builder.DiContainer;
 
 public class VariableDeclarationToFieldNameConverterIT {
-    private VariableDeclarationToFieldNameConverter underTest;
+    private FieldNameToBuilderFieldNameConverter underTest;
 
     @Mock
     private VariableDeclarationFragment fragment;
@@ -40,7 +40,7 @@ public class VariableDeclarationToFieldNameConverterIT {
         // end of overrides
 
         DiContainer.initializeDiContainer();
-        underTest = DiContainer.getDependency(VariableDeclarationToFieldNameConverter.class);
+        underTest = DiContainer.getDependency(FieldNameToBuilderFieldNameConverter.class);
 
         given(preferenceStoreProvider.providerDefaultPreferenceStore()).willReturn(preferenceStoreWrapper);
     }
@@ -52,10 +52,8 @@ public class VariableDeclarationToFieldNameConverterIT {
         given(preferenceStoreWrapper.getString("org.eclipse.jdt.core.codeComplete.fieldSuffixes")).willReturn(of("Postfix, B  "));
         given(preferenceStoreWrapper.getBoolean("org.helospark.builder.removePrefixAndPostfixFromBuilderNames")).willReturn(true);
 
-        configureFragmentToReturnInput(input);
-
         // WHEN
-        String result = underTest.convertToFieldName(fragment);
+        String result = underTest.convertFieldName(input);
 
         // THEN
         assertEquals(expectedResult, result);
@@ -70,6 +68,8 @@ public class VariableDeclarationToFieldNameConverterIT {
                 { "fieldB", "field" },
                 { "prefix", "prefix" },
                 { "a", "a" },
+                { "B", "B" },
+                { "Postfix", "Postfix" },
                 { "aFieldB", "field" },
                 { "prefixFieldB", "field" },
                 { "aFIeldB", "fIeld" },
@@ -87,10 +87,8 @@ public class VariableDeclarationToFieldNameConverterIT {
         given(preferenceStoreWrapper.getString("org.eclipse.jdt.core.codeComplete.fieldSuffixes")).willReturn(of(""));
         given(preferenceStoreWrapper.getBoolean("org.helospark.builder.removePrefixAndPostfixFromBuilderNames")).willReturn(true);
 
-        configureFragmentToReturnInput(input);
-
         // WHEN
-        String result = underTest.convertToFieldName(fragment);
+        String result = underTest.convertFieldName(input);
 
         // THEN
         assertEquals(input, result);
@@ -103,10 +101,8 @@ public class VariableDeclarationToFieldNameConverterIT {
         given(preferenceStoreWrapper.getString("org.eclipse.jdt.core.codeComplete.fieldSuffixes")).willReturn(of("Postfix, B"));
         given(preferenceStoreWrapper.getBoolean("org.helospark.builder.removePrefixAndPostfixFromBuilderNames")).willReturn(false);
 
-        configureFragmentToReturnInput(input);
-
         // WHEN
-        String result = underTest.convertToFieldName(fragment);
+        String result = underTest.convertFieldName(input);
 
         // THEN
         assertEquals(input, result);
@@ -122,10 +118,5 @@ public class VariableDeclarationToFieldNameConverterIT {
                 { "prefix" },
                 { "a" }
         };
-    }
-
-    private void configureFragmentToReturnInput(String input) {
-        given(fragment.getName()).willReturn(simpleName);
-        given(simpleName.toString()).willReturn(input);
     }
 }

@@ -12,7 +12,7 @@ import com.helospark.spark.builder.handlers.DialogWrapper;
 import com.helospark.spark.builder.handlers.ErrorHandlerHook;
 import com.helospark.spark.builder.handlers.HandlerUtilWrapper;
 import com.helospark.spark.builder.handlers.WorkingCopyManagerWrapper;
-import com.helospark.spark.builder.handlers.codegenerator.ApplicableFieldExtractor;
+import com.helospark.spark.builder.handlers.codegenerator.ApplicableBuilderFieldConverter;
 import com.helospark.spark.builder.handlers.codegenerator.BuilderPatternCodeGenerator;
 import com.helospark.spark.builder.handlers.codegenerator.BuilderRemover;
 import com.helospark.spark.builder.handlers.codegenerator.CompilationUnitParser;
@@ -22,14 +22,13 @@ import com.helospark.spark.builder.handlers.codegenerator.component.ImportPopula
 import com.helospark.spark.builder.handlers.codegenerator.component.PrivateConstructorListRewritePopulator;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.BuilderMethodNameBuilder;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.CamelCaseConverter;
-import com.helospark.spark.builder.handlers.codegenerator.component.helper.ClassNameToVariableNameConverter;
-import com.helospark.spark.builder.handlers.codegenerator.component.helper.FieldPrefixPostfixProvider;
+import com.helospark.spark.builder.handlers.codegenerator.component.helper.FieldPrefixSuffixPreferenceProvider;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.GeneratedAnnotationPopulator;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.JavadocGenerator;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.NonNullAnnotationAttacher;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.PreferenceStoreProvider;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.TemplateResolver;
-import com.helospark.spark.builder.handlers.codegenerator.component.helper.VariableDeclarationToFieldNameConverter;
+import com.helospark.spark.builder.handlers.codegenerator.component.helper.FieldNameToBuilderFieldNameConverter;
 import com.helospark.spark.builder.preferences.PreferencesManager;
 
 public class DiContainer {
@@ -41,7 +40,6 @@ public class DiContainer {
 
     // Visible for testing
     public static void initializeDiContainer() {
-        addDependency(new ClassNameToVariableNameConverter());
         addDependency(new CamelCaseConverter());
         addDependency(new JavadocGenerator());
         addDependency(new TemplateResolver());
@@ -65,13 +63,13 @@ public class DiContainer {
                 getDependency(JavadocGenerator.class), getDependency(NonNullAnnotationAttacher.class), getDependency(GeneratedAnnotationPopulator.class)));
         addDependency(new BuilderMethodListRewritePopulator(getDependency(TemplateResolver.class), getDependency(PreferencesManager.class),
                 getDependency(JavadocGenerator.class), getDependency(GeneratedAnnotationPopulator.class), getDependency(PreferencesManager.class)));
-        addDependency(new PrivateConstructorListRewritePopulator(getDependency(ClassNameToVariableNameConverter.class), getDependency(GeneratedAnnotationPopulator.class),
+        addDependency(new PrivateConstructorListRewritePopulator(getDependency(CamelCaseConverter.class), getDependency(GeneratedAnnotationPopulator.class),
                 getDependency(PreferencesManager.class)));
-        addDependency(new FieldPrefixPostfixProvider(getDependency(PreferenceStoreProvider.class)));
-        addDependency(new VariableDeclarationToFieldNameConverter(getDependency(PreferencesManager.class), getDependency(FieldPrefixPostfixProvider.class),
+        addDependency(new FieldPrefixSuffixPreferenceProvider(getDependency(PreferenceStoreProvider.class)));
+        addDependency(new FieldNameToBuilderFieldNameConverter(getDependency(PreferencesManager.class), getDependency(FieldPrefixSuffixPreferenceProvider.class),
                 getDependency(CamelCaseConverter.class)));
-        addDependency(new ApplicableFieldExtractor(getDependency(VariableDeclarationToFieldNameConverter.class)));
-        addDependency(new BuilderPatternCodeGenerator(getDependency(ApplicableFieldExtractor.class), getDependency(BuilderClassCreator.class),
+        addDependency(new ApplicableBuilderFieldConverter(getDependency(FieldNameToBuilderFieldNameConverter.class)));
+        addDependency(new BuilderPatternCodeGenerator(getDependency(ApplicableBuilderFieldConverter.class), getDependency(BuilderClassCreator.class),
                 getDependency(PrivateConstructorListRewritePopulator.class), getDependency(BuilderMethodListRewritePopulator.class), getDependency(ImportPopulator.class)));
 
     }

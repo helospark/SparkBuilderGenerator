@@ -4,28 +4,30 @@ import static com.helospark.spark.builder.preferences.PluginPreferenceList.REMOV
 
 import java.util.List;
 
-import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
-
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.domain.PrefixSuffixHolder;
 import com.helospark.spark.builder.preferences.PreferencesManager;
 
-public class VariableDeclarationToFieldNameConverter {
+/**
+ * Converts original field name to the field name used in the builder.
+ *
+ * @author helospark
+ */
+public class FieldNameToBuilderFieldNameConverter {
     private PreferencesManager preferencesManager;
-    private FieldPrefixPostfixProvider fieldPrefixPostfixProvider;
+    private FieldPrefixSuffixPreferenceProvider fieldPrefixSuffixPreferenceProvider;
     private CamelCaseConverter camelCaseConverter;
 
-    public VariableDeclarationToFieldNameConverter(PreferencesManager preferencesManager, FieldPrefixPostfixProvider fieldPrefixPostfixProvider,
+    public FieldNameToBuilderFieldNameConverter(PreferencesManager preferencesManager, FieldPrefixSuffixPreferenceProvider fieldPrefixSuffixPreferenceProvider,
             CamelCaseConverter camelCaseConverter) {
         this.preferencesManager = preferencesManager;
-        this.fieldPrefixPostfixProvider = fieldPrefixPostfixProvider;
+        this.fieldPrefixSuffixPreferenceProvider = fieldPrefixSuffixPreferenceProvider;
         this.camelCaseConverter = camelCaseConverter;
     }
 
-    public String convertToFieldName(VariableDeclarationFragment fragment) {
-        String rawFieldName = fragment.getName().toString();
+    public String convertFieldName(String rawFieldName) {
         String result = rawFieldName;
         if (preferencesManager.getPreferenceValue(REMOVE_PREFIX_AND_POSTFIX_FROM_BUILDER_NAMES)) {
-            PrefixSuffixHolder prefixSuffixHolder = fieldPrefixPostfixProvider.provideFieldPrefixAndSuffixPreference();
+            PrefixSuffixHolder prefixSuffixHolder = fieldPrefixSuffixPreferenceProvider.provideFieldPrefixAndSuffixPreference();
             result = removeMatchingPrefix(result, prefixSuffixHolder.getPrefixes());
             result = removeMatchingSuffix(result, prefixSuffixHolder.getSuffixes());
         }

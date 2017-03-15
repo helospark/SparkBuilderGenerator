@@ -2,7 +2,7 @@
 <feature
       id="com.helospark.SparkBuilderGeneratorFeature"
       label="SparkBuilderGeneratorFeature"
-      version="0.0.4.qualifier">
+      version="0.0.5.qualifier">
 
    <description url="ftp://helospark.com/SparkBuilderGeneratorPlugin/">
       Spark builder generator plugin
@@ -11,6 +11,13 @@ Features:
 - Capable of regenerating the builder
 - Can generate Javadoc and add @Nonnull
 - Eclipse 3 compatible (does not use e4)
+
+Release notes:
+  - Pre 0.0.5
+    Base builder generator plugin
+
+  - 0.0.5
+    Add option to remove prefix and postfix from builder method name
    </description>
 
    <url>

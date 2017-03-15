@@ -4,6 +4,11 @@ import java.util.Optional;
 
 import org.eclipse.jface.preference.IPreferenceStore;
 
+/**
+ * Wrapper around Eclipse's IPreferenceStore.
+ * 
+ * @author helospark
+ */
 public class PreferenceStoreWrapper {
     private IPreferenceStore preferenceStore;
 

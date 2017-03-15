@@ -15,19 +15,19 @@ import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.jdt.core.dom.rewrite.ListRewrite;
 
-import com.helospark.spark.builder.handlers.codegenerator.component.helper.ClassNameToVariableNameConverter;
+import com.helospark.spark.builder.handlers.codegenerator.component.helper.CamelCaseConverter;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.GeneratedAnnotationPopulator;
 import com.helospark.spark.builder.handlers.codegenerator.domain.NamedVariableDeclarationField;
 import com.helospark.spark.builder.preferences.PreferencesManager;
 
 public class PrivateConstructorListRewritePopulator {
-    private ClassNameToVariableNameConverter classNameToVariableNameConverter;
+    private CamelCaseConverter camelCaseConverter;
     private GeneratedAnnotationPopulator generatedAnnotationPopulator;
     private PreferencesManager preferencesManager;
 
-    public PrivateConstructorListRewritePopulator(ClassNameToVariableNameConverter classNameToVariableNameConverter,
+    public PrivateConstructorListRewritePopulator(CamelCaseConverter camelCaseConverter,
             GeneratedAnnotationPopulator generatedAnnotationPopulator, PreferencesManager preferencesManager) {
-        this.classNameToVariableNameConverter = classNameToVariableNameConverter;
+        this.camelCaseConverter = camelCaseConverter;
         this.generatedAnnotationPopulator = generatedAnnotationPopulator;
         this.preferencesManager = preferencesManager;
     }
@@ -50,12 +50,12 @@ public class PrivateConstructorListRewritePopulator {
             Assignment assignment = ast.newAssignment();
             FieldAccess fieldAccess = ast.newFieldAccess();
             fieldAccess.setExpression(ast.newThisExpression());
-            fieldAccess.setName(ast.newSimpleName(field.getFieldName()));
+            fieldAccess.setName(ast.newSimpleName(field.getOriginalFieldName()));
             assignment.setLeftHandSide(fieldAccess);
 
             FieldAccess builderFieldAccess = ast.newFieldAccess();
-            builderFieldAccess.setExpression(ast.newSimpleName(classNameToVariableNameConverter.convert(builderType.getName().toString())));
-            builderFieldAccess.setName(ast.newSimpleName(field.getFieldName()));
+            builderFieldAccess.setExpression(ast.newSimpleName(camelCaseConverter.toLowerCamelCase(builderType.getName().toString())));
+            builderFieldAccess.setName(ast.newSimpleName(field.getOriginalFieldName()));
             assignment.setRightHandSide(builderFieldAccess);
 
             body.statements().add(ast.newExpressionStatement(assignment));
@@ -72,7 +72,7 @@ public class PrivateConstructorListRewritePopulator {
 
         SingleVariableDeclaration methodParameterDeclaration = ast.newSingleVariableDeclaration();
         methodParameterDeclaration.setType(ast.newSimpleType(ast.newName(builderType.getName().toString())));
-        methodParameterDeclaration.setName(ast.newSimpleName(classNameToVariableNameConverter.convert(builderType.getName().toString())));
+        methodParameterDeclaration.setName(ast.newSimpleName(camelCaseConverter.toLowerCamelCase(builderType.getName().toString())));
 
         method.parameters().add(methodParameterDeclaration);
         return method;

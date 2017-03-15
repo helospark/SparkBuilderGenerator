@@ -7,13 +7,19 @@ import java.util.stream.Collectors;
 
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.domain.PrefixSuffixHolder;
 
-public class FieldPrefixPostfixProvider {
+/**
+ * Provides the prefix and suffix values set in Eclipse's setting.
+ * Setting is located in Window->Preference->Code Style: Field (prefix, suffix)
+ *
+ * @author helospark
+ */
+public class FieldPrefixSuffixPreferenceProvider {
     private static final String PREFERENCE_VALUE_SEPARATOR = ",";
     private static final String FIELD_PREFIX_PROPERTY = "org.eclipse.jdt.core.codeComplete.fieldPrefixes";
     private static final String FIELD_SUFFIX_PROPERTY = "org.eclipse.jdt.core.codeComplete.fieldSuffixes";
     private PreferenceStoreProvider preferenceStoreProvider;
 
-    public FieldPrefixPostfixProvider(PreferenceStoreProvider preferenceStoreProvider) {
+    public FieldPrefixSuffixPreferenceProvider(PreferenceStoreProvider preferenceStoreProvider) {
         this.preferenceStoreProvider = preferenceStoreProvider;
     }
 

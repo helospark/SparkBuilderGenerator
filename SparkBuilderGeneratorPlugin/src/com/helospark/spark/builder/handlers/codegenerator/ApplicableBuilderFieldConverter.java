@@ -10,23 +10,23 @@ import org.eclipse.jdt.core.dom.Modifier;
 import org.eclipse.jdt.core.dom.Modifier.ModifierKeyword;
 import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
 
-import com.helospark.spark.builder.handlers.codegenerator.component.helper.VariableDeclarationToFieldNameConverter;
+import com.helospark.spark.builder.handlers.codegenerator.component.helper.FieldNameToBuilderFieldNameConverter;
 import com.helospark.spark.builder.handlers.codegenerator.domain.NamedVariableDeclarationField;
 
 /**
- * Extracts fields which can be added to the builder.
+ * Filters and converts given fields to {@link NamedVariableDeclarationField}.
  *
  * @author helospark
  */
-public class ApplicableFieldExtractor {
-    private VariableDeclarationToFieldNameConverter variableDeclarationToFieldNameConverter;
+public class ApplicableBuilderFieldConverter {
+    private FieldNameToBuilderFieldNameConverter fieldNameToBuilderFieldNameConverter;
 
-    public ApplicableFieldExtractor(VariableDeclarationToFieldNameConverter variableDeclarationToFieldNameConverter) {
-        this.variableDeclarationToFieldNameConverter = variableDeclarationToFieldNameConverter;
+    public ApplicableBuilderFieldConverter(FieldNameToBuilderFieldNameConverter fieldNameToBuilderFieldNameConverter) {
+        this.fieldNameToBuilderFieldNameConverter = fieldNameToBuilderFieldNameConverter;
     }
 
     @SuppressWarnings("unchecked")
-    public List<NamedVariableDeclarationField> filterApplicableFields(FieldDeclaration[] fields) {
+    public List<NamedVariableDeclarationField> convertApplicableFields(FieldDeclaration[] fields) {
         List<NamedVariableDeclarationField> namedVariableDeclarations = new ArrayList<>();
         for (FieldDeclaration field : fields) {
             List<VariableDeclarationFragment> fragments = field.fragments();
@@ -43,8 +43,13 @@ public class ApplicableFieldExtractor {
     }
 
     private NamedVariableDeclarationField createNamedVariableDeclarations(VariableDeclarationFragment variableDeclarationFragment, FieldDeclaration fieldDeclaration) {
-        String fieldName = variableDeclarationToFieldNameConverter.convertToFieldName(variableDeclarationFragment);
-        return new NamedVariableDeclarationField(fieldDeclaration, fieldName);
+        String originalFieldName = variableDeclarationFragment.getName().toString();
+        String builderFieldName = fieldNameToBuilderFieldNameConverter.convertFieldName(originalFieldName);
+        return NamedVariableDeclarationField.builder()
+                .withFieldDeclaration(fieldDeclaration)
+                .withOriginalFieldName(originalFieldName)
+                .withBuilderFieldName(builderFieldName)
+                .build();
     }
 
     private boolean isStatic(FieldDeclaration field) {

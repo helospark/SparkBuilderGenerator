@@ -5,16 +5,8 @@ import java.util.List;
 import org.eclipse.jdt.core.IMemberValuePair;
 import org.eclipse.jdt.core.JavaModelException;
 
-/**
- * Class description.
- * @author helospark
- */
 public interface SttMethod {
 
-    /**
-     * Method description.
-     * @throws JavaModelException on error
-     */
     void delete() throws JavaModelException;
 
     SttAnnotation getAnnotation(String annotationName);

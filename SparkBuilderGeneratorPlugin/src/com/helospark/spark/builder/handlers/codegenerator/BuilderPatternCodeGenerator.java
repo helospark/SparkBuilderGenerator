@@ -22,16 +22,16 @@ import com.helospark.spark.builder.handlers.exception.PluginException;
  * @author helospark
  */
 public class BuilderPatternCodeGenerator {
-    private ApplicableFieldExtractor applicableFieldExtractor;
+    private ApplicableBuilderFieldConverter applicableBuilderFieldConverter;
     private BuilderClassCreator builderClassCreator;
     private PrivateConstructorListRewritePopulator privateConstructorPopulator;
     private BuilderMethodListRewritePopulator builderMethodPopulator;
     private ImportPopulator importPopulator;
 
-    public BuilderPatternCodeGenerator(ApplicableFieldExtractor applicableFieldExtractor, BuilderClassCreator builderClassCreator,
+    public BuilderPatternCodeGenerator(ApplicableBuilderFieldConverter applicableBuilderFieldConverter, BuilderClassCreator builderClassCreator,
             PrivateConstructorListRewritePopulator privateConstructorCreator, BuilderMethodListRewritePopulator builderMethodCreator,
             ImportPopulator importPopulator) {
-        this.applicableFieldExtractor = applicableFieldExtractor;
+        this.applicableBuilderFieldConverter = applicableBuilderFieldConverter;
         this.builderClassCreator = builderClassCreator;
         this.privateConstructorPopulator = privateConstructorCreator;
         this.builderMethodPopulator = builderMethodCreator;
@@ -59,7 +59,7 @@ public class BuilderPatternCodeGenerator {
 
     private List<NamedVariableDeclarationField> collectBuildableFields(TypeDeclaration typeDecl) {
         FieldDeclaration[] fields = typeDecl.getFields();
-        return applicableFieldExtractor.filterApplicableFields(fields);
+        return applicableBuilderFieldConverter.convertApplicableFields(fields);
     }
 
 }

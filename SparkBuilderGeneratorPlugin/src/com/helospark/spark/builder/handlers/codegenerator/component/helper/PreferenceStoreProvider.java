@@ -7,6 +7,11 @@ import org.eclipse.ui.texteditor.ChainedPreferenceStore;
 
 import com.helospark.spark.builder.Activator;
 
+/**
+ * Provides this plugin's necessary preference stores.
+ * 
+ * @author helospark
+ */
 public class PreferenceStoreProvider {
 
     public PreferenceStoreWrapper providerDefaultPreferenceStore() {
