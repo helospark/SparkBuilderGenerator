@@ -6,7 +6,6 @@ import org.eclipse.jdt.core.IMemberValuePair;
 import org.eclipse.jdt.core.JavaModelException;
 
 public interface SttMethod {
-
     void delete() throws JavaModelException;
 
     SttAnnotation getAnnotation(String annotationName);

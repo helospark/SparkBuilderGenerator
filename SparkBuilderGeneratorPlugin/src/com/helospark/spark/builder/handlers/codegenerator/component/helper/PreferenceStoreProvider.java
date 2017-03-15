@@ -9,7 +9,7 @@ import com.helospark.spark.builder.Activator;
 
 /**
  * Provides this plugin's necessary preference stores.
- * 
+ *
  * @author helospark
  */
 public class PreferenceStoreProvider {
@@ -17,7 +17,7 @@ public class PreferenceStoreProvider {
     public PreferenceStoreWrapper providerDefaultPreferenceStore() {
         IPreferenceStore[] listOfPreferenceStoresToUse = new IPreferenceStore[] {
                 Activator.getDefault().getPreferenceStore(),
-                new ScopedPreferenceStore(InstanceScope.INSTANCE, "org.eclipse.jdt.core") // to get prefix, postfix preference value
+                new ScopedPreferenceStore(InstanceScope.INSTANCE, "org.eclipse.jdt.core") // to get prefix, suffix preference value
         };
 
         return new PreferenceStoreWrapper(new ChainedPreferenceStore(listOfPreferenceStoresToUse));

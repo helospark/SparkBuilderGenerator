@@ -30,7 +30,8 @@ public class FieldPrefixSuffixPreferenceProvider {
             prefixes = getPreferenceList(FIELD_PREFIX_PROPERTY);
             suffixes = getPreferenceList(FIELD_SUFFIX_PROPERTY);
         } catch (Exception e) {
-
+            System.out.println("[ERROR] while extracting prefix and suffix preferences");
+            e.printStackTrace();
         }
         return PrefixSuffixHolder.builder()
                 .withSuffixes(suffixes)
@@ -42,13 +43,13 @@ public class FieldPrefixSuffixPreferenceProvider {
         PreferenceStoreWrapper preferenceStore = preferenceStoreProvider.providerDefaultPreferenceStore();
 
         List<String> preferenceValueList = preferenceStore.getString(preferenceKey)
-                .map(p -> p.split(PREFERENCE_VALUE_SEPARATOR))
-                .map(p -> Arrays.asList(p))
+                .map(preference -> preference.split(PREFERENCE_VALUE_SEPARATOR))
+                .map(preferenceArray -> Arrays.asList(preferenceArray))
                 .orElse(Collections.emptyList());
 
         return preferenceValueList.stream()
-                .map(p -> p.trim())
-                .filter(p -> !p.isEmpty())
+                .map(preference -> preference.trim())
+                .filter(preference -> !preference.isEmpty())
                 .collect(Collectors.toList());
     }
 }

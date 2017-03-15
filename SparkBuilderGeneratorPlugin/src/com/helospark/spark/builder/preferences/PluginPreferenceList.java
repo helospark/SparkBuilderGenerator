@@ -7,7 +7,7 @@ import com.helospark.spark.builder.preferences.impl.StringPluginPreference;
 
 /**
  * Holds all the {@link PluginPreference}s for this plugin.
- * 
+ *
  * @author maudrain, helospark
  */
 public final class PluginPreferenceList {
@@ -54,7 +54,7 @@ public final class PluginPreferenceList {
 
     public static final PluginPreference<Boolean> REMOVE_PREFIX_AND_POSTFIX_FROM_BUILDER_NAMES = new BooleanPluginPreference(
             "org.helospark.builder.removePrefixAndPostfixFromBuilderNames",
-            "Remove prefix and postfix (set in code style) from builder names", Boolean.TRUE);
+            "Remove prefix and postfix (set in Preferences->Java->Code style)\nfrom builder names", Boolean.TRUE);
 
     public static LinkedHashSet<PluginPreference<?>> getAllPreferences() {
         LinkedHashSet<PluginPreference<?>> allPreferences = new LinkedHashSet<PluginPreference<?>>();
