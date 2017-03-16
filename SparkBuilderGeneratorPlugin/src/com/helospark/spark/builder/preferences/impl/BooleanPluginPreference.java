@@ -3,9 +3,9 @@ package com.helospark.spark.builder.preferences.impl;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.FieldEditor;
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.widgets.Composite;
 
+import com.helospark.spark.builder.handlers.codegenerator.component.helper.PreferenceStoreWrapper;
 import com.helospark.spark.builder.preferences.PluginPreference;
 
 /**
@@ -31,8 +31,8 @@ public final class BooleanPluginPreference extends AbstractPluginPreference<Bool
     }
 
     @Override
-    public Boolean getCurrentPreferenceValue(IPreferenceStore preferenceStore) {
-        return Boolean.valueOf(preferenceStore.getBoolean(this.getKey()));
+    public Boolean getCurrentPreferenceValue(PreferenceStoreWrapper preferenceStore) {
+        return preferenceStore.getBoolean(this.getKey());
     }
 
     @Override

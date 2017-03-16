@@ -2,10 +2,10 @@ package com.helospark.spark.builder.preferences.impl;
 
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.jface.preference.FieldEditor;
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.swt.widgets.Composite;
 
+import com.helospark.spark.builder.handlers.codegenerator.component.helper.PreferenceStoreWrapper;
 import com.helospark.spark.builder.preferences.PluginPreference;
 
 /**
@@ -30,8 +30,8 @@ public final class StringPluginPreference extends AbstractPluginPreference<Strin
     }
 
     @Override
-    public String getCurrentPreferenceValue(IPreferenceStore preferenceStore) {
-        return preferenceStore.getString(this.getKey());
+    public String getCurrentPreferenceValue(PreferenceStoreWrapper preferenceStore) {
+        return preferenceStore.getString(this.getKey()).orElse(null);
     }
 
     @Override

@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: SparkBuilderGenerator
 Bundle-SymbolicName: com.helospark.SparkBuilderGenerator;singleton:=true
-Bundle-Version: 0.0.4.qualifier
+Bundle-Version: 0.0.5.qualifier
 Bundle-ClassPath: .
 Bundle-Activator: com.helospark.spark.builder.Activator
 Require-Bundle: org.eclipse.ui,
@@ -13,4 +13,5 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.jface.text
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
-Import-Package: org.osgi.framework
+Import-Package: org.eclipse.ui.texteditor,
+ org.osgi.framework

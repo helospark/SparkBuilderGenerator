@@ -43,7 +43,7 @@ import com.helospark.spark.builder.preferences.PreferencesManager;
 
 /**
  * Generates the builder class.
- * 
+ *
  * @author helospark
  */
 @SuppressWarnings("unchecked")
@@ -89,7 +89,7 @@ public class BuilderClassCreator {
 
     private void addFieldToBuilder(AST ast, TypeDeclaration newType, NamedVariableDeclarationField namedVariableDeclarationField) {
         VariableDeclarationFragment variableDeclarationFragment = ast.newVariableDeclarationFragment();
-        variableDeclarationFragment.setName(ast.newSimpleName(namedVariableDeclarationField.getFieldName()));
+        variableDeclarationFragment.setName(ast.newSimpleName(namedVariableDeclarationField.getOriginalFieldName()));
         FieldDeclaration fieldDeclaration = ast.newFieldDeclaration(variableDeclarationFragment);
         fieldDeclaration.modifiers().add(ast.newModifier(ModifierKeyword.PRIVATE_KEYWORD));
         fieldDeclaration.setType((Type) ASTNode.copySubtree(ast, namedVariableDeclarationField.getFieldDeclaration().getType()));
@@ -105,14 +105,15 @@ public class BuilderClassCreator {
     }
 
     private void addWithMethodToBuilder(AST ast, TypeDeclaration newType, NamedVariableDeclarationField namedVariableDeclarationField) {
-        String fieldName = namedVariableDeclarationField.getFieldName();
-        Block newBlock = createWithMethodBody(ast, fieldName);
-        SingleVariableDeclaration methodParameterDeclaration = createMethodParameter(ast, namedVariableDeclarationField.getFieldDeclaration(), fieldName);
-        MethodDeclaration newMethod = createNewWithMethod(ast, fieldName, newBlock, methodParameterDeclaration, newType);
+        String originalFieldName = namedVariableDeclarationField.getOriginalFieldName();
+        String builderFieldName = namedVariableDeclarationField.getBuilderFieldName();
+        Block newBlock = createWithMethodBody(ast, originalFieldName, builderFieldName);
+        SingleVariableDeclaration methodParameterDeclaration = createMethodParameter(ast, namedVariableDeclarationField.getFieldDeclaration(), builderFieldName);
+        MethodDeclaration newMethod = createNewWithMethod(ast, builderFieldName, newBlock, methodParameterDeclaration, newType);
         newType.bodyDeclarations().add(newMethod);
     }
 
-    private Block createWithMethodBody(AST ast, String fieldName) {
+    private Block createWithMethodBody(AST ast, String originalFieldName, String builderFieldName) {
         Block newBlock = ast.newBlock();
         ReturnStatement builderReturnStatement = ast.newReturnStatement();
         builderReturnStatement.setExpression(ast.newThisExpression());
@@ -121,9 +122,9 @@ public class BuilderClassCreator {
 
         FieldAccess fieldAccess = ast.newFieldAccess();
         fieldAccess.setExpression(ast.newThisExpression());
-        fieldAccess.setName(ast.newSimpleName(fieldName));
+        fieldAccess.setName(ast.newSimpleName(originalFieldName));
         newAssignment.setLeftHandSide(fieldAccess);
-        newAssignment.setRightHandSide(ast.newSimpleName(fieldName));
+        newAssignment.setRightHandSide(ast.newSimpleName(builderFieldName));
 
         newBlock.statements().add(ast.newExpressionStatement(newAssignment));
         newBlock.statements().add(builderReturnStatement);
