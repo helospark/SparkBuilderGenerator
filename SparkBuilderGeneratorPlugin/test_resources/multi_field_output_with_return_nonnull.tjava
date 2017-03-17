@@ -1,0 +1,58 @@
+import javax.annotation.Nonnull;
+
+public class TestClass {
+    private String testField;
+    private Integer data;
+    private long something;
+    private List<String> list;
+
+    private TestClass(Builder builder) {
+        this.testField = builder.testField;
+        this.data = builder.data;
+        this.something = builder.something;
+        this.list = builder.list;
+    }
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public static final class Builder {
+        private String testField;
+        private Integer data;
+        private long something;
+        private List<String> list;
+
+        private Builder() {
+        }
+
+        @Nonnull
+        public Builder withTestField(String testField) {
+            this.testField = testField;
+            return this;
+        }
+
+        @Nonnull
+        public Builder withData(Integer data) {
+            this.data = data;
+            return this;
+        }
+
+        @Nonnull
+        public Builder withSomething(long something) {
+            this.something = something;
+            return this;
+        }
+
+        @Nonnull
+        public Builder withList(List<String> list) {
+            this.list = list;
+            return this;
+        }
+
+        @Nonnull
+        public TestClass build() {
+            return new TestClass(this);
+        }
+    }
+}

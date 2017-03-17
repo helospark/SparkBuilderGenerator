@@ -1,0 +1,59 @@
+public class TestClass {
+    private String prefixTestField;
+    private Integer prefixDataSuffix;
+    private int otherB;
+    private long prefixSomething;
+    private String noPrefixNorsuffix;
+
+    private TestClass(Builder builder) {
+        this.prefixTestField = builder.prefixTestField;
+        this.prefixDataSuffix = builder.prefixDataSuffix;
+        this.otherB = builder.otherB;
+        this.prefixSomething = builder.prefixSomething;
+        this.noPrefixNorsuffix = builder.noPrefixNorsuffix;
+    }
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public static final class Builder {
+        private String prefixTestField;
+        private Integer prefixDataSuffix;
+        private int otherB;
+        private long prefixSomething;
+        private String noPrefixNorsuffix;
+
+        private Builder() {
+        }
+
+        public Builder withTestField(String testField) {
+            this.prefixTestField = testField;
+            return this;
+        }
+
+        public Builder withData(Integer data) {
+            this.prefixDataSuffix = data;
+            return this;
+        }
+
+        public Builder withOther(int other) {
+            this.otherB = other;
+            return this;
+        }
+
+        public Builder withSomething(long something) {
+            this.prefixSomething = something;
+            return this;
+        }
+
+        public Builder withNoPrefixNorsuffix(String noPrefixNorsuffix) {
+            this.noPrefixNorsuffix = noPrefixNorsuffix;
+            return this;
+        }
+
+        public TestClass build() {
+            return new TestClass(this);
+        }
+    }
+}

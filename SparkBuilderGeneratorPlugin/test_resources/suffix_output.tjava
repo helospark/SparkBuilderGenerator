@@ -1,0 +1,43 @@
+public class TestClass {
+    private String testFieldSuffix;
+    private Integer dataB;
+    private int other;
+
+    private TestClass(Builder builder) {
+        this.testFieldSuffix = builder.testFieldSuffix;
+        this.dataB = builder.dataB;
+        this.other = builder.other;
+    }
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public static final class Builder {
+        private String testFieldSuffix;
+        private Integer dataB;
+        private int other;
+
+        private Builder() {
+        }
+
+        public Builder withTestField(String testField) {
+            this.testFieldSuffix = testField;
+            return this;
+        }
+
+        public Builder withData(Integer data) {
+            this.dataB = data;
+            return this;
+        }
+
+        public Builder withOther(int other) {
+            this.other = other;
+            return this;
+        }
+
+        public TestClass build() {
+            return new TestClass(this);
+        }
+    }
+}

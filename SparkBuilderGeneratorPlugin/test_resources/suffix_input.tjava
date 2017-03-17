@@ -1,0 +1,5 @@
+public class TestClass {
+	private String testFieldSuffix;
+	private Integer dataB;
+	private int other;
+}

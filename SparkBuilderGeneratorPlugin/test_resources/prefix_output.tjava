@@ -1,0 +1,43 @@
+public class TestClass {
+    private String prefixTestField;
+    private Integer noPrefixData;
+    private int data;
+
+    private TestClass(Builder builder) {
+        this.prefixTestField = builder.prefixTestField;
+        this.noPrefixData = builder.noPrefixData;
+        this.data = builder.data;
+    }
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public static final class Builder {
+        private String prefixTestField;
+        private Integer noPrefixData;
+        private int data;
+
+        private Builder() {
+        }
+
+        public Builder withTestField(String testField) {
+            this.prefixTestField = testField;
+            return this;
+        }
+
+        public Builder withNoPrefixData(Integer noPrefixData) {
+            this.noPrefixData = noPrefixData;
+            return this;
+        }
+
+        public Builder withData(int data) {
+            this.data = data;
+            return this;
+        }
+
+        public TestClass build() {
+            return new TestClass(this);
+        }
+    }
+}

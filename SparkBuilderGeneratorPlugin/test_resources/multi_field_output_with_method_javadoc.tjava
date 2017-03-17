@@ -1,0 +1,71 @@
+public class TestClass {
+    private String testField;
+    private Integer data;
+    private long something;
+    private List<String> list;
+
+    private TestClass(Builder builder) {
+        this.testField = builder.testField;
+        this.data = builder.data;
+        this.something = builder.something;
+        this.list = builder.list;
+    }
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public static final class Builder {
+        private String testField;
+        private Integer data;
+        private long something;
+        private List<String> list;
+
+        private Builder() {
+        }
+
+        /** 
+        * Builder method for testField parameter.
+        * @return builder
+        */
+        public Builder withTestField(String testField) {
+            this.testField = testField;
+            return this;
+        }
+
+        /** 
+        * Builder method for data parameter.
+        * @return builder
+        */
+        public Builder withData(Integer data) {
+            this.data = data;
+            return this;
+        }
+
+        /** 
+        * Builder method for something parameter.
+        * @return builder
+        */
+        public Builder withSomething(long something) {
+            this.something = something;
+            return this;
+        }
+
+        /** 
+        * Builder method for list parameter.
+        * @return builder
+        */
+        public Builder withList(List<String> list) {
+            this.list = list;
+            return this;
+        }
+
+        /** 
+        * Builder method of the builder.
+        * @return built class
+        */
+        public TestClass build() {
+            return new TestClass(this);
+        }
+    }
+}

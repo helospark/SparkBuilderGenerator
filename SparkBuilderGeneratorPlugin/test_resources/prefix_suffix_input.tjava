@@ -1,0 +1,7 @@
+public class TestClass {
+	private String prefixTestField;
+	private Integer prefixDataSuffix;
+	private int otherB;
+	private long prefixSomething;
+	private String noPrefixNorsuffix;
+}

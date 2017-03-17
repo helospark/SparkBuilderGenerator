@@ -1,0 +1,27 @@
+public class TestClass {
+	private String testField;
+
+	private TestClass(Builder builder) {
+		this.testField = builder.testField;
+	}
+
+	public static Builder builder() {
+		return new Builder();
+	}
+
+	public static final class Builder {
+		private String testField;
+
+		private Builder() {
+		}
+
+		public Builder withTestField(String testField) {
+			this.testField = testField;
+			return this;
+		}
+
+		public TestClass build() {
+			return new TestClass(this);
+		}
+	}
+}

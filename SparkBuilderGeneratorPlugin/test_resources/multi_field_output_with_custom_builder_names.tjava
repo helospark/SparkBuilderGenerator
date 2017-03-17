@@ -1,0 +1,51 @@
+public class TestClass {
+    private String testField;
+    private Integer data;
+    private long something;
+    private List<String> list;
+
+    private TestClass(CustomBuilder customBuilder) {
+        this.testField = customBuilder.testField;
+        this.data = customBuilder.data;
+        this.something = customBuilder.something;
+        this.list = customBuilder.list;
+    }
+
+    public static CustomBuilder customGetBuilder() {
+        return new CustomBuilder();
+    }
+
+    public static final class CustomBuilder {
+        private String testField;
+        private Integer data;
+        private long something;
+        private List<String> list;
+
+        private CustomBuilder() {
+        }
+
+        public CustomBuilder withCustomTestField(String testField) {
+            this.testField = testField;
+            return this;
+        }
+
+        public CustomBuilder withCustomData(Integer data) {
+            this.data = data;
+            return this;
+        }
+
+        public CustomBuilder withCustomSomething(long something) {
+            this.something = something;
+            return this;
+        }
+
+        public CustomBuilder withCustomList(List<String> list) {
+            this.list = list;
+            return this;
+        }
+
+        public TestClass customBuild() {
+            return new TestClass(this);
+        }
+    }
+}
