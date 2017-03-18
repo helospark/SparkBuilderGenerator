@@ -42,7 +42,7 @@ public class VariableDeclarationToFieldNameConverterIT {
         DiContainer.initializeDiContainer();
         underTest = DiContainer.getDependency(FieldNameToBuilderFieldNameConverter.class);
 
-        given(preferenceStoreProvider.providerDefaultPreferenceStore()).willReturn(preferenceStoreWrapper);
+        given(preferenceStoreProvider.providePreferenceStore()).willReturn(preferenceStoreWrapper);
     }
 
     @Test(dataProvider = "inputDataWithReplacements")

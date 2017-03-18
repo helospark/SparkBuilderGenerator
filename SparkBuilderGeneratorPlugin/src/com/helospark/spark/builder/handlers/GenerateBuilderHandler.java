@@ -18,6 +18,7 @@ import com.helospark.spark.builder.DiContainer;
 import com.helospark.spark.builder.handlers.codegenerator.BuilderPatternCodeGenerator;
 import com.helospark.spark.builder.handlers.codegenerator.BuilderRemover;
 import com.helospark.spark.builder.handlers.codegenerator.CompilationUnitParser;
+import com.helospark.spark.builder.handlers.codegenerator.component.helper.PreferenceStoreProvider;
 import com.helospark.spark.builder.handlers.exception.PluginException;
 import com.helospark.spark.builder.preferences.PreferencesManager;
 
@@ -36,6 +37,7 @@ public class GenerateBuilderHandler extends AbstractHandler {
     private WorkingCopyManagerWrapper workingCopyManagerWrapper;
     private CompilationUnitSourceSetter compilationUnitSourceSetter;
     private ErrorHandlerHook errorHandlerHook;
+    private PreferenceStoreProvider preferenceStoreProvider;
 
     /**
      * Fake dependency injection constructor.
@@ -48,12 +50,14 @@ public class GenerateBuilderHandler extends AbstractHandler {
                 DiContainer.getDependency(ErrorHandlerHook.class),
                 DiContainer.getDependency(HandlerUtilWrapper.class),
                 DiContainer.getDependency(WorkingCopyManagerWrapper.class),
-                DiContainer.getDependency(CompilationUnitSourceSetter.class));
+                DiContainer.getDependency(CompilationUnitSourceSetter.class),
+                DiContainer.getDependency(PreferenceStoreProvider.class));
     }
 
     public GenerateBuilderHandler(CompilationUnitParser compilationUnitParser, BuilderPatternCodeGenerator builderGenerator, BuilderRemover builderRemover,
             PreferencesManager preferencesManager, ErrorHandlerHook errorHandlerHook, HandlerUtilWrapper handlerUtilWrapper,
-            WorkingCopyManagerWrapper workingCopyManagerWrapper, CompilationUnitSourceSetter compilationUnitSourceSetter) {
+            WorkingCopyManagerWrapper workingCopyManagerWrapper, CompilationUnitSourceSetter compilationUnitSourceSetter,
+            PreferenceStoreProvider preferenceStoreProvider) {
         this.compilationUnitParser = compilationUnitParser;
         this.builderGenerator = builderGenerator;
         this.builderRemover = builderRemover;
@@ -62,6 +66,7 @@ public class GenerateBuilderHandler extends AbstractHandler {
         this.workingCopyManagerWrapper = workingCopyManagerWrapper;
         this.compilationUnitSourceSetter = compilationUnitSourceSetter;
         this.errorHandlerHook = errorHandlerHook;
+        this.preferenceStoreProvider = preferenceStoreProvider;
     }
 
     @Override
@@ -80,6 +85,7 @@ public class GenerateBuilderHandler extends AbstractHandler {
 
     private void addBuilder(ICompilationUnit iCompilationUnit) {
         try {
+            initializeStatefulBeans(iCompilationUnit);
             CompilationUnit compilationUnit = compilationUnitParser.parse(iCompilationUnit);
             AST ast = compilationUnit.getAST();
             ASTRewrite rewriter = ASTRewrite.create(ast);
@@ -99,7 +105,19 @@ public class GenerateBuilderHandler extends AbstractHandler {
         } catch (Exception e) {
             errorHandlerHook.onUnexpectedException(e);
             throw new RuntimeException(e.getMessage(), e);
+        } finally {
+            clearStatefulBeans();
         }
+    }
+
+    @Deprecated
+    private void initializeStatefulBeans(ICompilationUnit iCompilationUnit) {
+        preferenceStoreProvider.setJavaProject(iCompilationUnit.getJavaProject());
+    }
+
+    @Deprecated
+    private void clearStatefulBeans() {
+        preferenceStoreProvider.clearState();
     }
 
     private void commitCodeChanges(ICompilationUnit iCompilationUnit, ASTRewrite rewriter)

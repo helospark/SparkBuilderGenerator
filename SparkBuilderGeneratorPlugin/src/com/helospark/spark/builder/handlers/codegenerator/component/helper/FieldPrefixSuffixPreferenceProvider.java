@@ -40,7 +40,7 @@ public class FieldPrefixSuffixPreferenceProvider {
     }
 
     private List<String> getPreferenceList(String preferenceKey) {
-        PreferenceStoreWrapper preferenceStore = preferenceStoreProvider.providerDefaultPreferenceStore();
+        PreferenceStoreWrapper preferenceStore = preferenceStoreProvider.providePreferenceStore();
 
         List<String> preferenceValueList = preferenceStore.getString(preferenceKey)
                 .map(preference -> preference.split(PREFERENCE_VALUE_SEPARATOR))

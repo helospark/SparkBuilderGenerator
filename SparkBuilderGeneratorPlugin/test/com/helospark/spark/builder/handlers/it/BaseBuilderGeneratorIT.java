@@ -67,7 +67,7 @@ public class BaseBuilderGeneratorIT {
 
         given(handlerUtilWrapper.getActivePartId(dummyExecutionEvent)).willReturn("org.eclipse.jdt.ui.CompilationUnitEditor");
         given(workingCopyManagerWrapper.getCurrentCompilationUnit(dummyExecutionEvent)).willReturn(iCompilationUnit);
-        given(preferenceStoreProvider.providerDefaultPreferenceStore()).willReturn(preferenceStore);
+        given(preferenceStoreProvider.providePreferenceStore()).willReturn(preferenceStore);
         given(iCompilationUnit.getBuffer()).willReturn(iBuffer);
         setDefaultPreferenceStoreSettings();
         doNothing().when(iBuffer).setContents(outputCaptor.capture());

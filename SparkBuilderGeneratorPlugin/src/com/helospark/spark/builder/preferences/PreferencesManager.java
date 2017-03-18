@@ -15,6 +15,6 @@ public class PreferencesManager {
     }
 
     public <T> T getPreferenceValue(PluginPreference<T> preference) {
-        return preference.getCurrentPreferenceValue(preferenceStoreProvider.providerDefaultPreferenceStore());
+        return preference.getCurrentPreferenceValue(preferenceStoreProvider.providePreferenceStore());
     }
 }
