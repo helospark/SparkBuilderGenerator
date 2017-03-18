@@ -13,7 +13,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import com.helospark.spark.builder.DiContainer;
-import com.helospark.spark.builder.handlers.codegenerator.BuilderPatternCodeGenerator;
+import com.helospark.spark.builder.handlers.codegenerator.BuilderPatternCompilationUnitGenerator;
 import com.helospark.spark.builder.handlers.codegenerator.BuilderRemover;
 import com.helospark.spark.builder.handlers.exception.PluginException;
 
@@ -21,7 +21,7 @@ public class ExceptionFlowE2ETest extends BaseBuilderGeneratorIT {
     @Mock
     private BuilderRemover builderRemover;
     @Mock
-    private BuilderPatternCodeGenerator builderPatternCodeGenerator;
+    private BuilderPatternCompilationUnitGenerator builderPatternCompilationUnitGenerator;
 
     @BeforeMethod
     public void beforeMethod() throws JavaModelException {
@@ -32,7 +32,7 @@ public class ExceptionFlowE2ETest extends BaseBuilderGeneratorIT {
     protected void diContainerOverrides() {
         super.diContainerOverrides();
         DiContainer.addDependency(builderRemover);
-        DiContainer.addDependency(builderPatternCodeGenerator);
+        DiContainer.addDependency(builderPatternCompilationUnitGenerator);
     }
 
     @Test
@@ -54,7 +54,7 @@ public class ExceptionFlowE2ETest extends BaseBuilderGeneratorIT {
     public void testWhenPluginExceptionOccurresShouldShowDialog() throws Exception {
         // GIVEN
         willThrow(new PluginException("Cause"))
-                .given(builderPatternCodeGenerator)
+                .given(builderPatternCompilationUnitGenerator)
                 .generateBuilder(any(AST.class), any(ASTRewrite.class), any(CompilationUnit.class));
         super.setInput("class TestClass {}");
 
@@ -70,7 +70,7 @@ public class ExceptionFlowE2ETest extends BaseBuilderGeneratorIT {
         // GIVEN
         RuntimeException unexpectedException = new RuntimeException("Cause");
         willThrow(unexpectedException)
-                .given(builderPatternCodeGenerator)
+                .given(builderPatternCompilationUnitGenerator)
                 .generateBuilder(any(AST.class), any(ASTRewrite.class), any(CompilationUnit.class));
         super.setInput("class TestClass {}");
 
@@ -85,7 +85,7 @@ public class ExceptionFlowE2ETest extends BaseBuilderGeneratorIT {
         // GIVEN
         RuntimeException unexpectedException = new RuntimeException("Cause");
         willThrow(unexpectedException)
-                .given(builderPatternCodeGenerator)
+                .given(builderPatternCompilationUnitGenerator)
                 .generateBuilder(any(AST.class), any(ASTRewrite.class), any(CompilationUnit.class));
         super.setInput("class TestClass {}");
 

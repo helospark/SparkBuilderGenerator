@@ -15,7 +15,7 @@ import org.eclipse.jface.text.Document;
 import org.eclipse.text.edits.TextEdit;
 
 import com.helospark.spark.builder.DiContainer;
-import com.helospark.spark.builder.handlers.codegenerator.BuilderPatternCodeGenerator;
+import com.helospark.spark.builder.handlers.codegenerator.BuilderPatternCompilationUnitGenerator;
 import com.helospark.spark.builder.handlers.codegenerator.BuilderRemover;
 import com.helospark.spark.builder.handlers.codegenerator.CompilationUnitParser;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.PreferenceStoreProvider;
@@ -30,7 +30,7 @@ import com.helospark.spark.builder.preferences.PreferencesManager;
 public class GenerateBuilderHandler extends AbstractHandler {
     private static final String JAVA_TYPE = "org.eclipse.jdt.ui.CompilationUnitEditor";
     private CompilationUnitParser compilationUnitParser;
-    private BuilderPatternCodeGenerator builderGenerator;
+    private BuilderPatternCompilationUnitGenerator builderGenerator;
     private BuilderRemover builderRemover;
     private PreferencesManager preferencesManager;
     private HandlerUtilWrapper handlerUtilWrapper;
@@ -44,7 +44,7 @@ public class GenerateBuilderHandler extends AbstractHandler {
      */
     public GenerateBuilderHandler() {
         this(DiContainer.getDependency(CompilationUnitParser.class),
-                DiContainer.getDependency(BuilderPatternCodeGenerator.class),
+                DiContainer.getDependency(BuilderPatternCompilationUnitGenerator.class),
                 DiContainer.getDependency(BuilderRemover.class),
                 DiContainer.getDependency(PreferencesManager.class),
                 DiContainer.getDependency(ErrorHandlerHook.class),
@@ -54,7 +54,7 @@ public class GenerateBuilderHandler extends AbstractHandler {
                 DiContainer.getDependency(PreferenceStoreProvider.class));
     }
 
-    public GenerateBuilderHandler(CompilationUnitParser compilationUnitParser, BuilderPatternCodeGenerator builderGenerator, BuilderRemover builderRemover,
+    public GenerateBuilderHandler(CompilationUnitParser compilationUnitParser, BuilderPatternCompilationUnitGenerator builderGenerator, BuilderRemover builderRemover,
             PreferencesManager preferencesManager, ErrorHandlerHook errorHandlerHook, HandlerUtilWrapper handlerUtilWrapper,
             WorkingCopyManagerWrapper workingCopyManagerWrapper, CompilationUnitSourceSetter compilationUnitSourceSetter,
             PreferenceStoreProvider preferenceStoreProvider) {

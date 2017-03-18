@@ -11,6 +11,10 @@
             categoryId="com.helospark.spark.builder.commands.category"
             id="com.helospark.spark.builder.commands.generateBuilderCommand">
       </command>
+      <command
+            name="Generate Staged Builder"
+            id="com.helospark.spark.builder.commands.generateStagedBuilderCommand">
+      </command>
    </extension>
    <extension point="org.eclipse.ui.handlers">
       <handler commandId="com.helospark.spark.builder.commands.generateBuilderCommand" class="com.helospark.spark.builder.handlers.GenerateBuilderHandler">
@@ -30,9 +34,26 @@
 		  </or>
 		</enabledWhen>
       </handler>
+      <handler commandId="com.helospark.spark.builder.commands.generateStagedBuilderCommand" class="com.helospark.spark.builder.handlers.GenerateStagedBuilderHandler">
+		<enabledWhen>
+		  <or>
+		    <with variable="activePartId">
+		      <equals value="org.eclipse.jdt.ui.CompilationUnitEditor" />
+		    </with>
+		    <with variable="activeMenuSelection">
+		      <iterate ifEmpty="false" operator="and">
+		        <or>
+		          <adapt type="org.eclipse.jdt.core.IType" />
+		          <adapt type="org.eclipse.jdt.core.ICompilationUnit" />
+		        </or>
+		      </iterate>
+		    </with>
+		  </or>
+		</enabledWhen>
+      </handler>
    </extension>
    <extension point="org.eclipse.ui.bindings">
-      <key commandId="com.helospark.spark.builder.commands.generateBuilderCommand"
+      <key commandId="com.helospark.spark.builder.commands.generateStagedBuilderCommand"
             contextId="org.eclipse.ui.contexts.window"
             sequence="M1+M2+B"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
