@@ -1,0 +1,51 @@
+public class TestClass {
+    private String testField;
+    private Integer data;
+    private long something;
+    private List<String> list;
+
+    private TestClass(TestClassBuilder testClassBuilder) {
+        this.testField = testClassBuilder.testField;
+        this.data = testClassBuilder.data;
+        this.something = testClassBuilder.something;
+        this.list = testClassBuilder.list;
+    }
+
+    public static TestClassBuilder createTestClassBuilder() {
+        return new TestClassBuilder();
+    }
+
+    public static final class TestClassBuilder {
+        private String testField;
+        private Integer data;
+        private long something;
+        private List<String> list;
+
+        private TestClassBuilder() {
+        }
+
+        public TestClassBuilder withtestFieldorTestField(String testField) {
+            this.testField = testField;
+            return this;
+        }
+
+        public TestClassBuilder withdataorData(Integer data) {
+            this.data = data;
+            return this;
+        }
+
+        public TestClassBuilder withsomethingorSomething(long something) {
+            this.something = something;
+            return this;
+        }
+
+        public TestClassBuilder withlistorList(List<String> list) {
+            this.list = list;
+            return this;
+        }
+
+        public TestClass buildTestClass() {
+            return new TestClass(this);
+        }
+    }
+}

@@ -10,6 +10,8 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
+import com.helospark.spark.builder.handlers.exception.PluginException;
+
 public class TemplateResolverTest {
     private TemplateResolver underTest;
 
@@ -34,7 +36,6 @@ public class TemplateResolverTest {
         return new Object[][] {
                 { "test", "test", Collections.emptyMap() },
                 { "test[template]", "testData", Collections.singletonMap("template", "Data") },
-                { "test[template]", "test[template]", Collections.emptyMap() },
                 { "test[a][b]", "testAB", new HashMap<String, String>() {
                     {
                         put("a", "A");
@@ -48,5 +49,15 @@ public class TemplateResolverTest {
                     }
                 } }
         };
+    }
+
+    @Test(expectedExceptions = PluginException.class)
+    public void testResolveShouldThrowWhenTemplateIsMissing() {
+        // GIVEN
+
+        // WHEN
+        underTest.resolveTemplate("test[notValid]", Collections.singletonMap("valid", "value"));
+
+        // THEN throws
     }
 }

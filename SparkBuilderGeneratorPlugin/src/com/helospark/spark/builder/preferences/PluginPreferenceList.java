@@ -17,16 +17,16 @@ public final class PluginPreferenceList {
     }
 
     public static final PluginPreference<String> CREATE_BUILDER_METHOD_PATTERN = new StringPluginPreference("create_builder_method_pattern",
-            "Create builder method pattern", "builder");
+            "Create builder method templated pattern", "builder");
 
     public static final PluginPreference<String> BUILDER_CLASS_NAME_PATTERN = new StringPluginPreference("builder_class_name_pattern",
-            "Builder class name pattern", "Builder");
+            "Builder class name templated pattern", "Builder");
 
     public static final PluginPreference<String> BUILD_METHOD_NAME_PATTERN = new StringPluginPreference("build_method_name",
-            "Build method name pattern", "build");
+            "Build method name templated pattern", "build");
 
     public static final PluginPreference<String> BUILDERS_METHOD_NAME_PATTERN = new StringPluginPreference("builders_method_name_pattern",
-            "Builder's methods name pattern", "with[FieldName]");
+            "Builder's methods name templated pattern", "with[FieldName]");
 
     public static final PluginPreference<Boolean> GENERATE_JAVADOC_ON_BUILDER_METHOD = new BooleanPluginPreference("generate_javadoc_on_builder_method",
             "Generate Javadoc on builder method", Boolean.TRUE);
@@ -52,9 +52,9 @@ public final class PluginPreferenceList {
     public static final PluginPreference<Boolean> OVERRIDE_PREVIOUS_BUILDER = new BooleanPluginPreference("override_previous_builder",
             "Override previous builder", Boolean.TRUE);
 
-    public static final PluginPreference<Boolean> REMOVE_PREFIX_AND_POSTFIX_FROM_BUILDER_NAMES = new BooleanPluginPreference(
+    public static final PluginPreference<Boolean> REMOVE_PREFIX_AND_SUFFIX_FROM_BUILDER_NAMES = new BooleanPluginPreference(
             "org.helospark.builder.removePrefixAndPostfixFromBuilderNames",
-            "Remove prefix and postfix (set in Preferences->Java->Code style)\nfrom builder names", Boolean.TRUE);
+            "Remove prefix and suffix (set in Preferences->Java->Code style)\nfrom builder names", Boolean.TRUE);
 
     public static LinkedHashSet<PluginPreference<?>> getAllPreferences() {
         LinkedHashSet<PluginPreference<?>> allPreferences = new LinkedHashSet<PluginPreference<?>>();
@@ -69,7 +69,7 @@ public final class PluginPreferenceList {
         allPreferences.add(ADD_NONNULL_ON_PARAMETERS);
         allPreferences.add(ADD_GENERATED_ANNOTATION);
         allPreferences.add(OVERRIDE_PREVIOUS_BUILDER);
-        allPreferences.add(REMOVE_PREFIX_AND_POSTFIX_FROM_BUILDER_NAMES);
+        allPreferences.add(REMOVE_PREFIX_AND_SUFFIX_FROM_BUILDER_NAMES);
         return allPreferences;
     }
 }

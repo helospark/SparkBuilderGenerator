@@ -9,7 +9,7 @@ import com.helospark.spark.builder.Activator;
 
 /**
  * Preferences page for this plugin.
- * 
+ *
  * @author helospark
  */
 public class BuilderGeneratorPreferences extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {

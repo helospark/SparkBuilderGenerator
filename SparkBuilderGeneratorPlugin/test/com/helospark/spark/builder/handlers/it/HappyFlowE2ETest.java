@@ -43,6 +43,7 @@ public class HappyFlowE2ETest extends BaseBuilderGeneratorIT {
                 { "singlefield_input.tjava", "singlefield_output.tjava" },
                 { "primitive_field_input.tjava", "primitive_field_output.tjava" },
                 { "multi_field_input.tjava", "multi_field_output.tjava" },
+                { "annotated_fields_input.tjava", "annotated_fields_output.tjava" },
         };
     }
 
@@ -94,7 +95,24 @@ public class HappyFlowE2ETest extends BaseBuilderGeneratorIT {
         super.assertEqualsJavaContents(outputCaptor.getValue(), expectedResult);
     }
 
-    // TODO: More tests with template params
+    @Test
+    public void testWithCustomBuilderNamesWithDifferentTemplates() throws Exception {
+        // GIVEN
+        String input = readClasspathFile("multi_field_input.tjava");
+        String expectedResult = readClasspathFile("multi_field_output_with_templated_builder_names.tjava");
+
+        given(preferenceStore.getString("create_builder_method_pattern")).willReturn(of("create[className]Builder"));
+        given(preferenceStore.getString("builder_class_name_pattern")).willReturn(of("[className]Builder"));
+        given(preferenceStore.getString("build_method_name")).willReturn(of("build[className]"));
+        given(preferenceStore.getString("builders_method_name_pattern")).willReturn(of("with[fieldName]or[FieldName]"));
+        super.setInput(input);
+
+        // WHEN
+        underTest.execute(dummyExecutionEvent);
+
+        // THEN
+        super.assertEqualsJavaContents(outputCaptor.getValue(), expectedResult);
+    }
 
     @Test(dataProvider = "testCasesWithWithPrefixAndSuffixRemoval")
     public void testWithWithPrefixAndSuffixRemoval(String inputFileName, String outputFileName) throws Exception {

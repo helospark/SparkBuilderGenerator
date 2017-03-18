@@ -1,0 +1,6 @@
+public class TestClass {
+	@Nonnul
+	private String testField;
+	@Valid
+	private Integer data;
+}

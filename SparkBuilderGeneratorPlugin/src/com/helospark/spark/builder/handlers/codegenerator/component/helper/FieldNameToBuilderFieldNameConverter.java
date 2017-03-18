@@ -1,6 +1,6 @@
 package com.helospark.spark.builder.handlers.codegenerator.component.helper;
 
-import static com.helospark.spark.builder.preferences.PluginPreferenceList.REMOVE_PREFIX_AND_POSTFIX_FROM_BUILDER_NAMES;
+import static com.helospark.spark.builder.preferences.PluginPreferenceList.REMOVE_PREFIX_AND_SUFFIX_FROM_BUILDER_NAMES;
 
 import java.util.List;
 
@@ -26,7 +26,7 @@ public class FieldNameToBuilderFieldNameConverter {
 
     public String convertFieldName(String rawFieldName) {
         String result = rawFieldName;
-        if (preferencesManager.getPreferenceValue(REMOVE_PREFIX_AND_POSTFIX_FROM_BUILDER_NAMES)) {
+        if (preferencesManager.getPreferenceValue(REMOVE_PREFIX_AND_SUFFIX_FROM_BUILDER_NAMES)) {
             PrefixSuffixHolder prefixSuffixHolder = fieldPrefixSuffixPreferenceProvider.provideFieldPrefixAndSuffixPreference();
             result = removeMatchingPrefix(result, prefixSuffixHolder.getPrefixes());
             result = removeMatchingSuffix(result, prefixSuffixHolder.getSuffixes());
