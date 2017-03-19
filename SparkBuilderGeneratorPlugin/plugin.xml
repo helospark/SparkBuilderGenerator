@@ -10,46 +10,57 @@
             name="Generate Builder"
             categoryId="com.helospark.spark.builder.commands.category"
             id="com.helospark.spark.builder.commands.generateBuilderCommand">
+            <parameter
+                id="org.helospark.builder.generatorType"
+                name="regularBuilderName"
+                value="stagedBuilder" />
       </command>
       <command
             name="Generate Staged Builder"
+            categoryId="com.helospark.spark.builder.commands.category"
             id="com.helospark.spark.builder.commands.generateStagedBuilderCommand">
+            <parameter
+                id="org.helospark.builder.generatorType"
+                name="regularBuilderName"
+                value="regularBuilder" />
       </command>
    </extension>
    <extension point="org.eclipse.ui.handlers">
-      <handler commandId="com.helospark.spark.builder.commands.generateBuilderCommand" class="com.helospark.spark.builder.handlers.GenerateBuilderHandler">
-		<enabledWhen>
-		  <or>
-		    <with variable="activePartId">
-		      <equals value="org.eclipse.jdt.ui.CompilationUnitEditor" />
-		    </with>
-		    <with variable="activeMenuSelection">
-		      <iterate ifEmpty="false" operator="and">
-		        <or>
-		          <adapt type="org.eclipse.jdt.core.IType" />
-		          <adapt type="org.eclipse.jdt.core.ICompilationUnit" />
-		        </or>
-		      </iterate>
-		    </with>
-		  </or>
-		</enabledWhen>
+      <handler commandId="com.helospark.spark.builder.commands.generateBuilderCommand" class="com.helospark.spark.builder.handlers.GenerateRegularBuilderHandler">
+        <enabledWhen>
+          <or>
+            <with variable="activePartId">
+              <equals value="org.eclipse.jdt.ui.CompilationUnitEditor" />
+            </with>
+            <with variable="activeMenuSelection">
+              <iterate ifEmpty="false" operator="and">
+                <or>
+                  <adapt type="org.eclipse.jdt.core.IType" />
+                  <adapt type="org.eclipse.jdt.core.ICompilationUnit" />
+                </or>
+              </iterate>
+            </with>
+          </or>
+        </enabledWhen>
       </handler>
+   </extension>
+   <extension point="org.eclipse.ui.handlers">
       <handler commandId="com.helospark.spark.builder.commands.generateStagedBuilderCommand" class="com.helospark.spark.builder.handlers.GenerateStagedBuilderHandler">
-		<enabledWhen>
-		  <or>
-		    <with variable="activePartId">
-		      <equals value="org.eclipse.jdt.ui.CompilationUnitEditor" />
-		    </with>
-		    <with variable="activeMenuSelection">
-		      <iterate ifEmpty="false" operator="and">
-		        <or>
-		          <adapt type="org.eclipse.jdt.core.IType" />
-		          <adapt type="org.eclipse.jdt.core.ICompilationUnit" />
-		        </or>
-		      </iterate>
-		    </with>
-		  </or>
-		</enabledWhen>
+        <enabledWhen>
+          <or>
+            <with variable="activePartId">
+              <equals value="org.eclipse.jdt.ui.CompilationUnitEditor" />
+            </with>
+            <with variable="activeMenuSelection">
+              <iterate ifEmpty="false" operator="and">
+                <or>
+                  <adapt type="org.eclipse.jdt.core.IType" />
+                  <adapt type="org.eclipse.jdt.core.ICompilationUnit" />
+                </or>
+              </iterate>
+            </with>
+          </or>
+        </enabledWhen>
       </handler>
    </extension>
    <extension point="org.eclipse.ui.bindings">
@@ -71,6 +82,20 @@
          </toolbar>
       </menuContribution>
    </extension>
+   <!-- TMP -->
+   <extension point="org.eclipse.ui.menus">
+      <menuContribution locationURI="toolbar:org.eclipse.ui.main.toolbar?after=additions">
+         <toolbar id="com.helospark.spark.builder.toolbars.generateBuilderToolbar">
+            <command
+                  commandId="com.helospark.spark.builder.commands.generateStagedBuilderCommand"
+                  icon="icons/builder.gif"
+                  tooltip="Generate a builder (ctrl+shift+b)"
+                  id="com.helospark.spark.builder.toolbars.generateStagedBuilderCommand">
+            </command>
+         </toolbar>
+      </menuContribution>
+   </extension>
+   <!-- end of TMP -->
    <extension point="org.eclipse.core.runtime.preferences">
       <initializer class="com.helospark.spark.builder.preferences.PluginPreferenceInitializer"/>
    </extension>

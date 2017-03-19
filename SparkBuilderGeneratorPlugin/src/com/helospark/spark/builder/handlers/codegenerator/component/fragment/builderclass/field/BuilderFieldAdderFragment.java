@@ -1,4 +1,4 @@
-package com.helospark.spark.builder.handlers.codegenerator.component.fragment;
+package com.helospark.spark.builder.handlers.codegenerator.component.fragment.builderclass.field;
 
 import java.util.List;
 import java.util.stream.Collectors;

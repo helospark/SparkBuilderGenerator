@@ -1,4 +1,4 @@
-package com.helospark.spark.builder.handlers.codegenerator.component;
+package com.helospark.spark.builder.handlers.codegenerator.component.fragment.buildermethod;
 
 import static com.helospark.spark.builder.preferences.PluginPreferenceList.ADD_GENERATED_ANNOTATION;
 import static com.helospark.spark.builder.preferences.StaticPreferences.RETURN_JAVADOC_TAG_NAME;
@@ -9,14 +9,10 @@ import java.util.Locale;
 import java.util.Map;
 
 import org.eclipse.jdt.core.dom.AST;
-import org.eclipse.jdt.core.dom.Block;
-import org.eclipse.jdt.core.dom.ClassInstanceCreation;
 import org.eclipse.jdt.core.dom.Javadoc;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.Modifier.ModifierKeyword;
-import org.eclipse.jdt.core.dom.ReturnStatement;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
-import org.eclipse.jdt.core.dom.rewrite.ListRewrite;
 
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.GeneratedAnnotationPopulator;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.JavadocGenerator;
@@ -24,14 +20,14 @@ import com.helospark.spark.builder.handlers.codegenerator.component.helper.Templ
 import com.helospark.spark.builder.preferences.PluginPreferenceList;
 import com.helospark.spark.builder.preferences.PreferencesManager;
 
-public class BuilderMethodListRewritePopulator {
+public class BuilderMethodDefinitionCreatorFragment {
     private TemplateResolver templateResolver;
     private PreferencesManager preferenceManager;
     private JavadocGenerator javadocGenerator;
     private GeneratedAnnotationPopulator generatedAnnotationPopulator;
     private PreferencesManager preferencesManager;
 
-    public BuilderMethodListRewritePopulator(TemplateResolver templateResolver, PreferencesManager preferenceManager, JavadocGenerator javadocGenerator,
+    public BuilderMethodDefinitionCreatorFragment(TemplateResolver templateResolver, PreferencesManager preferenceManager, JavadocGenerator javadocGenerator,
             GeneratedAnnotationPopulator generatedAnnotationPopulator, PreferencesManager preferencesManager) {
         this.templateResolver = templateResolver;
         this.preferenceManager = preferenceManager;
@@ -40,17 +36,10 @@ public class BuilderMethodListRewritePopulator {
         this.preferencesManager = preferencesManager;
     }
 
-    public void addBuilderMethodToCompilationUnit(AST ast, ListRewrite listRewrite, TypeDeclaration typeDeclaration, TypeDeclaration builderType) {
-        MethodDeclaration builderBuilderMethod = createBuilderMethod(ast, typeDeclaration, builderType);
-        listRewrite.insertLast(builderBuilderMethod, null);
-    }
-
     @SuppressWarnings("unchecked")
-    private MethodDeclaration createBuilderMethod(AST ast, TypeDeclaration originalType, TypeDeclaration builderType) {
-        Block builderMethodBlock = createReturnBlock(ast, builderType);
+    public MethodDeclaration createBuilderMethod(AST ast, TypeDeclaration originalType, TypeDeclaration builderType) {
         MethodDeclaration builderMethod = ast.newMethodDeclaration();
         builderMethod.setName(ast.newSimpleName(getBuilderMethodName(originalType)));
-        builderMethod.setBody(builderMethodBlock);
         addGenerateAnnotationIfNeeded(ast, builderMethod);
         builderMethod.modifiers().add(ast.newModifier(ModifierKeyword.PUBLIC_KEYWORD));
         builderMethod.modifiers().add(ast.newModifier(ModifierKeyword.STATIC_KEYWORD));
@@ -69,16 +58,6 @@ public class BuilderMethodListRewritePopulator {
         if (preferencesManager.getPreferenceValue(ADD_GENERATED_ANNOTATION)) {
             generatedAnnotationPopulator.addGeneratedAnnotation(ast, builderMethod);
         }
-    }
-
-    private Block createReturnBlock(AST ast, TypeDeclaration builderType) {
-        Block builderMethodBlock = ast.newBlock();
-        ReturnStatement returnStatement = ast.newReturnStatement();
-        ClassInstanceCreation newClassInstanceCreation = ast.newClassInstanceCreation();
-        newClassInstanceCreation.setType(ast.newSimpleType(ast.newName(builderType.getName().toString())));
-        returnStatement.setExpression(newClassInstanceCreation);
-        builderMethodBlock.statements().add(returnStatement);
-        return builderMethodBlock;
     }
 
     private String getBuilderMethodName(TypeDeclaration originalType) {

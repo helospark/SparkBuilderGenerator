@@ -1,4 +1,4 @@
-package com.helospark.spark.builder.handlers.codegenerator.component.fragment;
+package com.helospark.spark.builder.handlers.codegenerator.component.fragment.builderclass;
 
 import static com.helospark.spark.builder.preferences.PluginPreferenceList.ADD_GENERATED_ANNOTATION;
 import static com.helospark.spark.builder.preferences.PluginPreferenceList.BUILDER_CLASS_NAME_PATTERN;

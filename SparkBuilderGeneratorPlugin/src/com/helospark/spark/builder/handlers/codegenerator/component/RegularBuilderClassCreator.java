@@ -5,11 +5,11 @@ import java.util.List;
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 
-import com.helospark.spark.builder.handlers.codegenerator.component.fragment.BuilderFieldAdderFragment;
-import com.helospark.spark.builder.handlers.codegenerator.component.fragment.BuilderMethodAdderFragment;
-import com.helospark.spark.builder.handlers.codegenerator.component.fragment.EmptyBuilderClassGeneratorFragment;
-import com.helospark.spark.builder.handlers.codegenerator.component.fragment.PrivateConstructorAdderFragment;
-import com.helospark.spark.builder.handlers.codegenerator.component.fragment.RegularBuilderWithMethodAdderFragment;
+import com.helospark.spark.builder.handlers.codegenerator.component.fragment.builderclass.EmptyBuilderClassGeneratorFragment;
+import com.helospark.spark.builder.handlers.codegenerator.component.fragment.builderclass.buildmethod.BuildMethodAdderFragment;
+import com.helospark.spark.builder.handlers.codegenerator.component.fragment.builderclass.constructor.PrivateConstructorAdderFragment;
+import com.helospark.spark.builder.handlers.codegenerator.component.fragment.builderclass.field.BuilderFieldAdderFragment;
+import com.helospark.spark.builder.handlers.codegenerator.component.fragment.builderclass.withmethod.RegularBuilderWithMethodAdderFragment;
 import com.helospark.spark.builder.handlers.codegenerator.domain.NamedVariableDeclarationField;
 
 /**
@@ -17,19 +17,19 @@ import com.helospark.spark.builder.handlers.codegenerator.domain.NamedVariableDe
  *
  * @author helospark
  */
-public class BuilderClassCreator {
+public class RegularBuilderClassCreator {
     private PrivateConstructorAdderFragment privateConstructorAdderFragment;
     private EmptyBuilderClassGeneratorFragment emptyBuilderClassGeneratorFragment;
-    private BuilderMethodAdderFragment builderMethodAdderFragment;
+    private BuildMethodAdderFragment buildMethodAdderFragment;
     private BuilderFieldAdderFragment builderFieldAdderFragment;
     private RegularBuilderWithMethodAdderFragment regularBuilderWithMethodAdderFragment;
 
-    public BuilderClassCreator(PrivateConstructorAdderFragment privateConstructorAdderFragment, EmptyBuilderClassGeneratorFragment emptyBuilderClassGeneratorFragment,
-            BuilderMethodAdderFragment builderMethodAdderFragment, BuilderFieldAdderFragment builderFieldAdderFragment,
+    public RegularBuilderClassCreator(PrivateConstructorAdderFragment privateConstructorAdderFragment, EmptyBuilderClassGeneratorFragment emptyBuilderClassGeneratorFragment,
+            BuildMethodAdderFragment buildMethodAdderFragment, BuilderFieldAdderFragment builderFieldAdderFragment,
             RegularBuilderWithMethodAdderFragment regularBuilderWithMethodAdderFragment) {
         this.privateConstructorAdderFragment = privateConstructorAdderFragment;
         this.emptyBuilderClassGeneratorFragment = emptyBuilderClassGeneratorFragment;
-        this.builderMethodAdderFragment = builderMethodAdderFragment;
+        this.buildMethodAdderFragment = buildMethodAdderFragment;
         this.builderFieldAdderFragment = builderFieldAdderFragment;
         this.regularBuilderWithMethodAdderFragment = regularBuilderWithMethodAdderFragment;
     }
@@ -41,7 +41,7 @@ public class BuilderClassCreator {
             builderFieldAdderFragment.addFieldToBuilder(ast, builderType, namedVariableDeclarationField);
             regularBuilderWithMethodAdderFragment.addWithMethodToBuilder(ast, builderType, namedVariableDeclarationField);
         }
-        builderMethodAdderFragment.addBuildMethodToBuilder(ast, originalName, builderType);
+        buildMethodAdderFragment.addBuildMethodToBuilder(ast, originalName, builderType);
         return builderType;
     }
 

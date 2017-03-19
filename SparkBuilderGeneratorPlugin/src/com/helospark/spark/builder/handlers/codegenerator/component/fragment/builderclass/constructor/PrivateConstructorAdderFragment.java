@@ -1,4 +1,4 @@
-package com.helospark.spark.builder.handlers.codegenerator.component.fragment;
+package com.helospark.spark.builder.handlers.codegenerator.component.fragment.builderclass.constructor;
 
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
