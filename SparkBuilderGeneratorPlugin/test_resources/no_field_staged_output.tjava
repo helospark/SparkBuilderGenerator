@@ -1,15 +1,23 @@
 public class TestClass {
+    private String testField;
+
     private TestClass(Builder builder) {
     }
 
-    public static Builder builder() {
+    public static IBuildStage builder() {
         return new Builder();
     }
 
-    public static final class Builder {
+    public interface IBuildStage {
+        public TestClass build();
+    }
+
+    public static final class Builder implements IBuildStage {
+
         private Builder() {
         }
 
+        @Override
         public TestClass build() {
             return new TestClass(this);
         }

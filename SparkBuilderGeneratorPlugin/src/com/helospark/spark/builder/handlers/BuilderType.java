@@ -2,25 +2,35 @@ package com.helospark.spark.builder.handlers;
 
 import java.util.Arrays;
 
-public enum BuilderType {
-	REGULAR("regularBuilder"),
-	STAGED("stagedBuilder");
+import com.helospark.spark.builder.NamedElement;
 
-	private String name;
+public enum BuilderType implements NamedElement {
+	REGULAR("regularBuilder", "Regular builder"),
+	STAGED("stagedBuilder", "Staged builder");
 
-	BuilderType(String name) {
-		this.name = name;
+	private String id;
+	private String displayName;
+
+	BuilderType(String id, String displayName) {
+		this.id = id;
+		this.displayName = displayName;
 	}
 
-	public String getName() {
-		return name;
+	@Override
+	public String getId() {
+		return id;
 	}
 
-	public BuilderType getFromName(String fromName) {
+	@Override
+	public String getDisplayName() {
+		return displayName;
+	}
+
+	public BuilderType getFromId(String id) {
 		return Arrays.stream(values())
-				.filter(e -> e.getName().equals(fromName))
+				.filter(e -> e.getId().equals(id))
 				.findFirst()
-				.orElseThrow(() -> new IllegalArgumentException("Cannot find enum with value " + fromName));
+				.orElseThrow(() -> new IllegalArgumentException("Cannot find enum with value " + id));
 	}
 
 }

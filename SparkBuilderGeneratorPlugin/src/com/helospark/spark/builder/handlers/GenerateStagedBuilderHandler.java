@@ -7,20 +7,20 @@ import org.eclipse.core.commands.ExecutionException;
 import com.helospark.spark.builder.DiContainer;
 
 public class GenerateStagedBuilderHandler extends AbstractHandler {
-	private GenerateBuilderExecutor generateBuilderExecutor;
+    private GenerateBuilderExecutor generateBuilderExecutor;
 
-	public GenerateStagedBuilderHandler() {
-		this(DiContainer.getDependency(StateInitializerGenerateBuilderExecutorDecorator.class));
-	}
+    public GenerateStagedBuilderHandler() {
+        this(DiContainer.getDependency(StateInitializerGenerateBuilderExecutorDecorator.class));
+    }
 
-	public GenerateStagedBuilderHandler(GenerateBuilderExecutor generateBuilderExecutor) {
-		this.generateBuilderExecutor = generateBuilderExecutor;
-	}
+    public GenerateStagedBuilderHandler(GenerateBuilderExecutor generateBuilderExecutor) {
+        this.generateBuilderExecutor = generateBuilderExecutor;
+    }
 
-	@Override
-	public Object execute(ExecutionEvent event) throws ExecutionException {
-		generateBuilderExecutor.execute(event, BuilderType.STAGED);
-		return null;
-	}
+    @Override
+    public Object execute(ExecutionEvent event) throws ExecutionException {
+        generateBuilderExecutor.execute(event, BuilderType.STAGED);
+        return null;
+    }
 
 }

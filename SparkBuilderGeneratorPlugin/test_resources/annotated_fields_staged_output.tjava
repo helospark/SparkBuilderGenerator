@@ -1,0 +1,49 @@
+public class TestClass {
+    @Nonnul
+    private String testField;
+    @Valid
+    private Integer data;
+
+    private TestClass(Builder builder) {
+        this.testField = builder.testField;
+        this.data = builder.data;
+    }
+
+    public static ITestFieldStage builder() {
+        return new Builder();
+    }
+
+    public interface ITestFieldStage {
+        public IDataStage withTestField(String testField);
+    }
+
+    public interface IDataStage {
+        public IBuildStage withData(Integer data);
+    }
+
+    public interface IBuildStage {
+        public TestClass build();
+    }
+
+    public static final class Builder implements ITestFieldStage, IDataStage, IBuildStage {
+        private String testField;
+        private Integer data;
+
+        private Builder() {
+        }
+
+        public IDataStage withTestField(String testField) {
+            this.testField = testField;
+            return this;
+        }
+
+        public IBuildStage withData(Integer data) {
+            this.data = data;
+            return this;
+        }
+
+        public TestClass build() {
+            return new TestClass(this);
+        }
+    }
+}
