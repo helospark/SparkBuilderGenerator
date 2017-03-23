@@ -12,7 +12,7 @@ import org.eclipse.jdt.core.dom.Type;
 
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.BuilderMethodNameBuilder;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.NonNullAnnotationAttacher;
-import com.helospark.spark.builder.handlers.codegenerator.component.helper.StagedBuilderFieldDomain;
+import com.helospark.spark.builder.handlers.codegenerator.component.helper.StagedBuilderProperties;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.StagedBuilderInterfaceNameProvider;
 import com.helospark.spark.builder.handlers.codegenerator.domain.NamedVariableDeclarationField;
 import com.helospark.spark.builder.preferences.PluginPreferenceList;
@@ -35,7 +35,7 @@ public class StagedBuilderMethodDefiniationCreatorFragment {
 	}
 
 	public MethodDeclaration createNewWithMethod(AST ast, NamedVariableDeclarationField namedVariableDeclarationField,
-			StagedBuilderFieldDomain nextStage) {
+			StagedBuilderProperties nextStage) {
 		String fieldName = namedVariableDeclarationField.getBuilderFieldName();
 		MethodDeclaration builderMethod = ast.newMethodDeclaration();
 		builderMethod.setName(ast.newSimpleName(builderClassMethodNameGeneratorService.build(fieldName)));

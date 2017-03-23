@@ -7,14 +7,14 @@ import javax.annotation.Generated;
 
 import com.helospark.spark.builder.handlers.codegenerator.domain.NamedVariableDeclarationField;
 
-public class StagedBuilderFieldDomain {
+public class StagedBuilderProperties {
 	private List<NamedVariableDeclarationField> namedVariableDeclarationField;
 	private String interfaceName;
 	private boolean isBuildStage;
-	private Optional<StagedBuilderFieldDomain> nextStage = Optional.empty();
+	private Optional<StagedBuilderProperties> nextStage = Optional.empty();
 
 	@Generated("SparkTools")
-	private StagedBuilderFieldDomain(Builder builder) {
+	private StagedBuilderProperties(Builder builder) {
 		this.namedVariableDeclarationField = builder.namedVariableDeclarationField;
 		this.interfaceName = builder.interfaceName;
 		this.isBuildStage = builder.isBuildStage;
@@ -32,11 +32,11 @@ public class StagedBuilderFieldDomain {
 		return isBuildStage;
 	}
 
-	public Optional<StagedBuilderFieldDomain> getNextStage() {
+	public Optional<StagedBuilderProperties> getNextStage() {
 		return nextStage;
 	}
 
-	public void setNextStage(StagedBuilderFieldDomain nextStage) {
+	public void setNextStage(StagedBuilderProperties nextStage) {
 		this.nextStage = Optional.of(nextStage);
 	}
 
@@ -70,8 +70,8 @@ public class StagedBuilderFieldDomain {
 			return this;
 		}
 
-		public StagedBuilderFieldDomain build() {
-			return new StagedBuilderFieldDomain(this);
+		public StagedBuilderProperties build() {
+			return new StagedBuilderProperties(this);
 		}
 	}
 

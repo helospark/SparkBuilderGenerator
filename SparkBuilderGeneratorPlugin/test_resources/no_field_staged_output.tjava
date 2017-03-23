@@ -1,6 +1,4 @@
 public class TestClass {
-    private String testField;
-
     private TestClass(Builder builder) {
     }
 
@@ -13,11 +11,9 @@ public class TestClass {
     }
 
     public static final class Builder implements IBuildStage {
-
         private Builder() {
         }
 
-        @Override
         public TestClass build() {
             return new TestClass(this);
         }
