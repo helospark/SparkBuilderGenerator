@@ -49,7 +49,7 @@ public class StagedBuilderFieldOrderProvider {
             List<StagedBuilderStagePropertiesDialogResult> list) {
         List<NamedVariableDeclarationField> optionalParameters = getOptionalNamedVariableDeclarations(namedVariableDeclarations, list);
         return StagedBuilderProperties.builder()
-                .withInterfaceName("IBuildStage")
+                .withInterfaceName(stagedBuilderInterfaceNameProvider.provideBuildStageInterfaceName())
                 .withIsBuildStage(true)
                 .withNamedVariableDeclarationField(optionalParameters)
                 .build();
@@ -64,7 +64,7 @@ public class StagedBuilderFieldOrderProvider {
     }
 
     private StagedBuilderProperties createStagedBuilderProperties(NamedVariableDeclarationField namedVariableDeclarationField) {
-        String interfaceName = stagedBuilderInterfaceNameProvider.composeNameFrom(namedVariableDeclarationField);
+        String interfaceName = stagedBuilderInterfaceNameProvider.provideInterfaceNameFrom(namedVariableDeclarationField);
         return StagedBuilderProperties.builder()
                 .withInterfaceName(interfaceName)
                 .withIsBuildStage(false)

@@ -32,16 +32,19 @@ public class TestClass {
         private Builder() {
         }
 
+        @Override
         public IDataStage withTestField(String testField) {
             this.testField = testField;
             return this;
         }
 
+        @Override
         public IBuildStage withData(Integer data) {
             this.data = data;
             return this;
         }
 
+        @Override
         public TestClass build() {
             return new TestClass(this);
         }

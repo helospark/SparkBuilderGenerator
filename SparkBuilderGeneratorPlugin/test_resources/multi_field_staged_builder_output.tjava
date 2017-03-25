@@ -44,26 +44,31 @@ public class TestClass {
 		private Builder() {
 		}
 
+        @Override
 		public IDataStage withTestField(String testField) {
 			this.testField = testField;
 			return this;
 		}
 
+        @Override
 		public ISomethingStage withData(Integer data) {
 			this.data = data;
 			return this;
 		}
 
+        @Override
 		public IListStage withSomething(long something) {
 			this.something = something;
 			return this;
 		}
 
+        @Override
 		public IBuildStage withList(List<String> list) {
 			this.list = list;
 			return this;
 		}
 
+        @Override
 		public TestClass build() {
 			return new TestClass(this);
 		}

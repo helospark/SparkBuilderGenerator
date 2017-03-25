@@ -31,17 +31,19 @@ import com.helospark.spark.builder.handlers.codegenerator.component.RegularBuild
 import com.helospark.spark.builder.handlers.codegenerator.component.StagedBuilderBuilderMethodCreator;
 import com.helospark.spark.builder.handlers.codegenerator.component.StagedBuilderClassCreator;
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.builderclass.EmptyBuilderClassGeneratorFragment;
-import com.helospark.spark.builder.handlers.codegenerator.component.fragment.builderclass.buildmethod.BuildMethodAdderFragment;
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.builderclass.buildmethod.BuildMethodBodyCreator;
+import com.helospark.spark.builder.handlers.codegenerator.component.fragment.builderclass.buildmethod.BuildMethodCreatorFragment;
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.builderclass.buildmethod.BuildMethodDeclarationCreatorFragment;
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.builderclass.constructor.PrivateConstructorAdderFragment;
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.builderclass.field.BuilderFieldAdderFragment;
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.builderclass.stagedinterface.StagedBuilderInterfaceCreatorFragment;
+import com.helospark.spark.builder.handlers.codegenerator.component.fragment.builderclass.stagedinterface.StagedBuilderInterfaceTypeDefinitionCreatorFragment;
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.builderclass.withmethod.RegularBuilderWithMethodAdderFragment;
+import com.helospark.spark.builder.handlers.codegenerator.component.fragment.builderclass.withmethod.StagedBuilderMethodDefiniationCreatorFragment;
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.builderclass.withmethod.StagedBuilderWithMethodAdderFragment;
+import com.helospark.spark.builder.handlers.codegenerator.component.fragment.builderclass.withmethod.WithMethodParameterCreatorFragment;
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.buildermethod.BlockWithNewBuilderCreationFragment;
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.buildermethod.BuilderMethodDefinitionCreatorFragment;
-import com.helospark.spark.builder.handlers.codegenerator.component.fragment.buildermethod.StagedBuilderMethodDefiniationCreatorFragment;
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.constructor.PrivateConstructorBodyCreationFragment;
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.constructor.PrivateConstructorInsertionFragment;
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.constructor.PrivateConstructorMethodDefinitionCreationFragment;
@@ -51,8 +53,9 @@ import com.helospark.spark.builder.handlers.codegenerator.component.helper.Field
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.FieldPrefixSuffixPreferenceProvider;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.GeneratedAnnotationPopulator;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.InterfaceSetter;
+import com.helospark.spark.builder.handlers.codegenerator.component.helper.JavadocAdder;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.JavadocGenerator;
-import com.helospark.spark.builder.handlers.codegenerator.component.helper.NonNullAnnotationAttacher;
+import com.helospark.spark.builder.handlers.codegenerator.component.helper.MarkerAnnotationAttacher;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.PreferenceStoreProvider;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.StagedBuilderFieldOrderProvider;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.StagedBuilderInterfaceNameProvider;
@@ -86,7 +89,7 @@ public class DiContainer {
         addDependency(new WorkingCopyManagerWrapper(getDependency(HandlerUtilWrapper.class)));
         addDependency(new CompilationUnitParser());
         addDependency(new GeneratedAnnotationPopulator());
-        addDependency(new NonNullAnnotationAttacher());
+        addDependency(new MarkerAnnotationAttacher());
         addDependency(new ImportPopulator(getDependency(PreferencesManager.class)));
         addDependency(new BuilderMethodNameBuilder(getDependency(CamelCaseConverter.class),
                 getDependency(PreferencesManager.class),
@@ -97,22 +100,27 @@ public class DiContainer {
                 getDependency(JavadocGenerator.class), getDependency(TemplateResolver.class)));
         addDependency(new BuildMethodBodyCreator());
         addDependency(new BuildMethodDeclarationCreatorFragment(getDependency(PreferencesManager.class),
-                getDependency(NonNullAnnotationAttacher.class), getDependency(JavadocGenerator.class),
+                getDependency(MarkerAnnotationAttacher.class), getDependency(JavadocGenerator.class),
                 getDependency(TemplateResolver.class)));
-        addDependency(new BuildMethodAdderFragment(getDependency(BuildMethodDeclarationCreatorFragment.class),
-                getDependency(BuildMethodBodyCreator.class)));
+        addDependency(new JavadocAdder(getDependency(JavadocGenerator.class), getDependency(PreferencesManager.class)));
+        addDependency(new BuildMethodCreatorFragment(getDependency(BuildMethodDeclarationCreatorFragment.class),
+                getDependency(BuildMethodBodyCreator.class),
+                getDependency(JavadocAdder.class)));
         addDependency(new BuilderFieldAdderFragment());
+        addDependency(new WithMethodParameterCreatorFragment(getDependency(PreferencesManager.class), getDependency(MarkerAnnotationAttacher.class)));
         addDependency(new RegularBuilderWithMethodAdderFragment(getDependency(PreferencesManager.class),
-                getDependency(JavadocGenerator.class),
-                getDependency(NonNullAnnotationAttacher.class), getDependency(BuilderMethodNameBuilder.class)));
+                getDependency(JavadocAdder.class),
+                getDependency(MarkerAnnotationAttacher.class),
+                getDependency(BuilderMethodNameBuilder.class),
+                getDependency(WithMethodParameterCreatorFragment.class)));
         addDependency(new RegularBuilderClassCreator(getDependency(PrivateConstructorAdderFragment.class),
                 getDependency(EmptyBuilderClassGeneratorFragment.class),
-                getDependency(BuildMethodAdderFragment.class),
+                getDependency(BuildMethodCreatorFragment.class),
                 getDependency(BuilderFieldAdderFragment.class),
                 getDependency(RegularBuilderWithMethodAdderFragment.class)));
         addDependency(new BuilderMethodDefinitionCreatorFragment(getDependency(TemplateResolver.class),
                 getDependency(PreferencesManager.class),
-                getDependency(JavadocGenerator.class), getDependency(GeneratedAnnotationPopulator.class),
+                getDependency(JavadocAdder.class), getDependency(GeneratedAnnotationPopulator.class),
                 getDependency(PreferencesManager.class)));
         addDependency(new BlockWithNewBuilderCreationFragment());
         addDependency(
@@ -143,22 +151,31 @@ public class DiContainer {
         // staged builder dependencies
         addDependency(new StagedBuilderBuilderMethodCreator(getDependency(BlockWithNewBuilderCreationFragment.class),
                 getDependency(BuilderMethodDefinitionCreatorFragment.class)));
-        addDependency(new StagedBuilderInterfaceNameProvider(getDependency(CamelCaseConverter.class)));
+        addDependency(new StagedBuilderInterfaceNameProvider(getDependency(PreferencesManager.class),
+                getDependency(CamelCaseConverter.class),
+                getDependency(TemplateResolver.class)));
         addDependency(new StagedBuilderMethodDefiniationCreatorFragment(getDependency(PreferencesManager.class),
                 getDependency(BuilderMethodNameBuilder.class),
-                getDependency(NonNullAnnotationAttacher.class),
-                getDependency(StagedBuilderInterfaceNameProvider.class)));
+                getDependency(MarkerAnnotationAttacher.class),
+                getDependency(StagedBuilderInterfaceNameProvider.class),
+                getDependency(WithMethodParameterCreatorFragment.class)));
+        addDependency(new StagedBuilderInterfaceTypeDefinitionCreatorFragment(getDependency(JavadocAdder.class)));
         addDependency(new StagedBuilderInterfaceCreatorFragment(getDependency(StagedBuilderMethodDefiniationCreatorFragment.class),
-                getDependency(BuildMethodDeclarationCreatorFragment.class)));
+                getDependency(StagedBuilderInterfaceTypeDefinitionCreatorFragment.class),
+                getDependency(StagedBuilderInterfaceTypeDefinitionCreatorFragment.class),
+                getDependency(BuildMethodDeclarationCreatorFragment.class),
+                getDependency(JavadocAdder.class)));
         addDependency(new StagedBuilderWithMethodAdderFragment(
-                getDependency(StagedBuilderMethodDefiniationCreatorFragment.class)));
+                getDependency(StagedBuilderMethodDefiniationCreatorFragment.class),
+                getDependency(MarkerAnnotationAttacher.class)));
         addDependency(new InterfaceSetter());
         addDependency(new StagedBuilderClassCreator(getDependency(PrivateConstructorAdderFragment.class),
                 getDependency(EmptyBuilderClassGeneratorFragment.class),
-                getDependency(BuildMethodAdderFragment.class),
+                getDependency(BuildMethodCreatorFragment.class),
                 getDependency(BuilderFieldAdderFragment.class),
                 getDependency(StagedBuilderWithMethodAdderFragment.class),
-                getDependency(InterfaceSetter.class)));
+                getDependency(InterfaceSetter.class),
+                getDependency(MarkerAnnotationAttacher.class)));
         addDependency(new StagedBuilderStagePropertyInputDialogOpener(getDependency(CurrentShellProvider.class)));
         addDependency(new StagedBuilderFieldOrderProvider(getDependency(StagedBuilderInterfaceNameProvider.class),
                 getDependency(StagedBuilderStagePropertyInputDialogOpener.class)));
@@ -174,7 +191,8 @@ public class DiContainer {
                 getDependencyList(BuilderCompilationUnitGenerator.class),
                 getDependency(BuilderRemover.class),
                 getDependency(IsEventOnJavaFilePredicate.class), getDependency(WorkingCopyManagerWrapper.class),
-                getDependency(CompilationUnitSourceSetter.class)));
+                getDependency(CompilationUnitSourceSetter.class),
+                getDependency(ErrorHandlerHook.class)));
         addDependency(new GenerateBuilderHandlerErrorHandlerDecorator(getDependency(GenerateBuilderExecutorImpl.class),
                 getDependency(ErrorHandlerHook.class)));
         addDependency(new StatefulBeanHandler(getDependency(PreferenceStoreProvider.class),

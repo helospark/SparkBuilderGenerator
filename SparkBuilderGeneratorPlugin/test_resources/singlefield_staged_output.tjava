@@ -23,11 +23,13 @@ public class TestClass {
         private Builder() {
         }
 
+        @Override
         public IBuildStage withTestField(String testField) {
             this.testField = testField;
             return this;
         }
 
+        @Override
         public TestClass build() {
             return new TestClass(this);
         }

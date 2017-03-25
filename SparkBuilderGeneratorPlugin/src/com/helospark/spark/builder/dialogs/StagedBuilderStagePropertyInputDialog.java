@@ -151,6 +151,7 @@ public class StagedBuilderStagePropertyInputDialog extends Dialog {
         Button cancelButton = new Button(shell, SWT.NONE);
         cancelButton.setBounds(10, 270, 101, 29);
         cancelButton.setText("Cancel");
+
         cancelButton.addSelectionListener(new SelectionListener() {
 
             @Override

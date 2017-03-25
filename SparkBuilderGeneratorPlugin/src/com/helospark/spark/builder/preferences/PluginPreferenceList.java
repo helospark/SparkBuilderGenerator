@@ -66,7 +66,10 @@ public final class PluginPreferenceList {
             "Last stage interface name for staged builder", "IBuildStage");
 
     public static final PluginPreference<Boolean> STAGED_BUILDER_SKIP_STATIC_BUILDER_METHOD = new BooleanPluginPreference("org.helospark.builder.skipStaticBuilderMethod",
-            "Skip static builder() method", Boolean.FALSE);
+            "Skip static builder() method for staged builder", Boolean.FALSE);
+
+    public static final PluginPreference<Boolean> STAGED_BUILDER_GENERATE_JAVADOC_ON_STAGE_INTERFACE = new BooleanPluginPreference("org.helospark.builder.generateJavadocOnStageInterface",
+            "Generate Javadoc on stage interface for staged builder", Boolean.FALSE);
 
     public static List<PluginPreferenceGroup> getAllPreferences() {
         return Arrays.asList(createGeneralPreferencesGroup(),
@@ -96,6 +99,7 @@ public final class PluginPreferenceList {
         stagedBuilderPreferences.add(STAGED_BUILDER_STAGE_INTERFACE_NAME);
         stagedBuilderPreferences.add(STAGED_BUILDER_LAST_STAGE_INTERFACE_NAME);
         stagedBuilderPreferences.add(STAGED_BUILDER_SKIP_STATIC_BUILDER_METHOD);
+        stagedBuilderPreferences.add(STAGED_BUILDER_GENERATE_JAVADOC_ON_STAGE_INTERFACE);
         return new PluginPreferenceGroup("Staged builder settings", stagedBuilderPreferences);
     }
 }

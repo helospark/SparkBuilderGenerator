@@ -1,16 +1,20 @@
 package com.helospark.spark.builder.handlers.codegenerator.component;
 
+import static com.helospark.spark.builder.handlers.codegenerator.component.helper.MarkerAnnotationAttacher.OVERRIDE_ANNOTATION;
+
 import java.util.List;
 
 import org.eclipse.jdt.core.dom.AST;
+import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.builderclass.EmptyBuilderClassGeneratorFragment;
-import com.helospark.spark.builder.handlers.codegenerator.component.fragment.builderclass.buildmethod.BuildMethodAdderFragment;
+import com.helospark.spark.builder.handlers.codegenerator.component.fragment.builderclass.buildmethod.BuildMethodCreatorFragment;
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.builderclass.constructor.PrivateConstructorAdderFragment;
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.builderclass.field.BuilderFieldAdderFragment;
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.builderclass.withmethod.StagedBuilderWithMethodAdderFragment;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.InterfaceSetter;
+import com.helospark.spark.builder.handlers.codegenerator.component.helper.MarkerAnnotationAttacher;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.StagedBuilderProperties;
 import com.helospark.spark.builder.handlers.codegenerator.domain.CompilationUnitModificationDomain;
 import com.helospark.spark.builder.handlers.codegenerator.domain.NamedVariableDeclarationField;
@@ -23,20 +27,23 @@ import com.helospark.spark.builder.handlers.codegenerator.domain.NamedVariableDe
 public class StagedBuilderClassCreator {
     private PrivateConstructorAdderFragment privateConstructorAdderFragment;
     private EmptyBuilderClassGeneratorFragment emptyBuilderClassGeneratorFragment;
-    private BuildMethodAdderFragment buildMethodAdderFragment;
+    private BuildMethodCreatorFragment buildMethodCreatorFragment;
     private BuilderFieldAdderFragment builderFieldAdderFragment;
     private StagedBuilderWithMethodAdderFragment stagedBuilderWithMethodAdderFragment;
     private InterfaceSetter interfaceSetter;
+    private MarkerAnnotationAttacher markerAnnotationAttacher;
 
     public StagedBuilderClassCreator(PrivateConstructorAdderFragment privateConstructorAdderFragment, EmptyBuilderClassGeneratorFragment emptyBuilderClassGeneratorFragment,
-            BuildMethodAdderFragment buildMethodAdderFragment, BuilderFieldAdderFragment builderFieldAdderFragment,
-            StagedBuilderWithMethodAdderFragment stagedBuilderWithMethodAdderFragment, InterfaceSetter interfaceSetter) {
+            BuildMethodCreatorFragment buildMethodCreatorFragment, BuilderFieldAdderFragment builderFieldAdderFragment,
+            StagedBuilderWithMethodAdderFragment stagedBuilderWithMethodAdderFragment, InterfaceSetter interfaceSetter,
+            MarkerAnnotationAttacher markerAnnotationAttacher) {
         this.privateConstructorAdderFragment = privateConstructorAdderFragment;
         this.emptyBuilderClassGeneratorFragment = emptyBuilderClassGeneratorFragment;
-        this.buildMethodAdderFragment = buildMethodAdderFragment;
+        this.buildMethodCreatorFragment = buildMethodCreatorFragment;
         this.builderFieldAdderFragment = builderFieldAdderFragment;
         this.stagedBuilderWithMethodAdderFragment = stagedBuilderWithMethodAdderFragment;
         this.interfaceSetter = interfaceSetter;
+        this.markerAnnotationAttacher = markerAnnotationAttacher;
     }
 
     public TypeDeclaration createBuilderClass(CompilationUnitModificationDomain modificationDomain,
@@ -56,7 +63,9 @@ public class StagedBuilderClassCreator {
                         namedVariableDeclarationField, nextStage);
             }
         }
-        buildMethodAdderFragment.addBuildMethodToBuilder(ast, originalType, builderType);
+        MethodDeclaration method = buildMethodCreatorFragment.addBuildMethodToBuilder(ast, originalType);
+        builderType.bodyDeclarations().add(method);
+        markerAnnotationAttacher.attachAnnotation(ast, method, OVERRIDE_ANNOTATION);
         setSuperInterfaces(ast, builderType, stageInterfaces);
         return builderType;
     }

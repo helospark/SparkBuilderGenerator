@@ -2,59 +2,70 @@ package com.helospark.spark.builder.handlers.codegenerator.component.fragment.bu
 
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
-import org.eclipse.jdt.core.dom.Modifier.ModifierKeyword;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.builderclass.buildmethod.BuildMethodDeclarationCreatorFragment;
-import com.helospark.spark.builder.handlers.codegenerator.component.fragment.buildermethod.StagedBuilderMethodDefiniationCreatorFragment;
+import com.helospark.spark.builder.handlers.codegenerator.component.fragment.builderclass.withmethod.StagedBuilderMethodDefiniationCreatorFragment;
+import com.helospark.spark.builder.handlers.codegenerator.component.helper.JavadocAdder;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.StagedBuilderProperties;
 import com.helospark.spark.builder.handlers.codegenerator.domain.CompilationUnitModificationDomain;
 import com.helospark.spark.builder.handlers.codegenerator.domain.NamedVariableDeclarationField;
 
 public class StagedBuilderInterfaceCreatorFragment {
+    private StagedBuilderInterfaceTypeDefinitionCreatorFragment interfaceDefinitionCreator;
     private StagedBuilderMethodDefiniationCreatorFragment stagedBuilderMethodDefiniationCreatorFragment;
     private BuildMethodDeclarationCreatorFragment buildMethodDeclarationCreatorFragment;
+    private JavadocAdder javadocAdder;
 
     public StagedBuilderInterfaceCreatorFragment(StagedBuilderMethodDefiniationCreatorFragment stagedBuilderMethodDefiniationCreatorFragment,
-            BuildMethodDeclarationCreatorFragment buildMethodDeclarationCreatorFragment) {
+            StagedBuilderInterfaceTypeDefinitionCreatorFragment stagedBuilderInterfaceTypeDefinitionCreatorFragment,
+            StagedBuilderInterfaceTypeDefinitionCreatorFragment interfaceDefinitionCreator,
+            BuildMethodDeclarationCreatorFragment buildMethodDeclarationCreatorFragment, JavadocAdder javadocAdder) {
         this.stagedBuilderMethodDefiniationCreatorFragment = stagedBuilderMethodDefiniationCreatorFragment;
         this.buildMethodDeclarationCreatorFragment = buildMethodDeclarationCreatorFragment;
+        this.javadocAdder = javadocAdder;
+        this.interfaceDefinitionCreator = interfaceDefinitionCreator;
     }
 
     public TypeDeclaration createInterfaceFor(CompilationUnitModificationDomain modificationDomain,
             StagedBuilderProperties stagedBuilderProperties) {
         String interfaceName = stagedBuilderProperties.getInterfaceName();
         AST ast = modificationDomain.getAst();
-        TypeDeclaration originalType = modificationDomain.getOriginalType();
 
-        TypeDeclaration addedInterface = ast.newTypeDeclaration();
-        addedInterface.setInterface(true);
-        addedInterface.setName(ast.newSimpleName(interfaceName));
-        addedInterface.modifiers().add(ast.newModifier(ModifierKeyword.PUBLIC_KEYWORD));
-
-        for (NamedVariableDeclarationField namedVariableDeclarationField : stagedBuilderProperties
-                .getNamedVariableDeclarationField()) {
-            StagedBuilderProperties nextStage = getNextStage(stagedBuilderProperties);
-
-            MethodDeclaration withMethodDeclaration = stagedBuilderMethodDefiniationCreatorFragment.createNewWithMethod(
-                    ast,
-                    namedVariableDeclarationField,
-                    nextStage);
-            addedInterface.bodyDeclarations().add(withMethodDeclaration);
-        }
+        TypeDeclaration addedInterface = interfaceDefinitionCreator.createStageBuilderInterface(ast, interfaceName);
+        addWithMethods(ast, stagedBuilderProperties, addedInterface);
         if (stagedBuilderProperties.isBuildStage()) {
-            MethodDeclaration buildMethod = buildMethodDeclarationCreatorFragment.createMethod(ast,
-                    originalType);
-            addedInterface.bodyDeclarations().add(buildMethod);
+            addBuildMethod(modificationDomain, addedInterface);
         }
 
         return addedInterface;
     }
 
+    private void addBuildMethod(CompilationUnitModificationDomain modificationDomain, TypeDeclaration addedInterface) {
+        AST ast = modificationDomain.getAst();
+        TypeDeclaration originalType = modificationDomain.getOriginalType();
+        MethodDeclaration buildMethod = buildMethodDeclarationCreatorFragment.createMethod(ast,
+                originalType);
+        javadocAdder.addJavadocForBuildMethod(ast, buildMethod);
+        addedInterface.bodyDeclarations().add(buildMethod);
+    }
+
+    private void addWithMethods(AST ast, StagedBuilderProperties stagedBuilderProperties, TypeDeclaration addedInterface) {
+        StagedBuilderProperties nextStage = getNextStage(stagedBuilderProperties);
+        for (NamedVariableDeclarationField field : stagedBuilderProperties.getNamedVariableDeclarationField()) {
+
+            MethodDeclaration withMethodDeclaration = stagedBuilderMethodDefiniationCreatorFragment.createNewWithMethod(
+                    ast,
+                    field,
+                    nextStage);
+            javadocAdder.addJavadocForWithMethod(ast, field.getBuilderFieldName(), withMethodDeclaration);
+            addedInterface.bodyDeclarations().add(withMethodDeclaration);
+        }
+    }
+
     private StagedBuilderProperties getNextStage(StagedBuilderProperties stagedBuilderProperties) {
-        StagedBuilderProperties nextStage = stagedBuilderProperties.isBuildStage() ? stagedBuilderProperties
+        return stagedBuilderProperties.isBuildStage() ? stagedBuilderProperties
                 : stagedBuilderProperties.getNextStage().get();
-        return nextStage;
     }
 
 }

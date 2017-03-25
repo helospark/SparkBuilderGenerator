@@ -3,10 +3,11 @@ package com.helospark.spark.builder.handlers.codegenerator.component;
 import java.util.List;
 
 import org.eclipse.jdt.core.dom.AST;
+import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.builderclass.EmptyBuilderClassGeneratorFragment;
-import com.helospark.spark.builder.handlers.codegenerator.component.fragment.builderclass.buildmethod.BuildMethodAdderFragment;
+import com.helospark.spark.builder.handlers.codegenerator.component.fragment.builderclass.buildmethod.BuildMethodCreatorFragment;
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.builderclass.constructor.PrivateConstructorAdderFragment;
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.builderclass.field.BuilderFieldAdderFragment;
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.builderclass.withmethod.RegularBuilderWithMethodAdderFragment;
@@ -20,16 +21,16 @@ import com.helospark.spark.builder.handlers.codegenerator.domain.NamedVariableDe
 public class RegularBuilderClassCreator {
     private PrivateConstructorAdderFragment privateConstructorAdderFragment;
     private EmptyBuilderClassGeneratorFragment emptyBuilderClassGeneratorFragment;
-    private BuildMethodAdderFragment buildMethodAdderFragment;
+    private BuildMethodCreatorFragment buildMethodCreatorFragment;
     private BuilderFieldAdderFragment builderFieldAdderFragment;
     private RegularBuilderWithMethodAdderFragment regularBuilderWithMethodAdderFragment;
 
     public RegularBuilderClassCreator(PrivateConstructorAdderFragment privateConstructorAdderFragment, EmptyBuilderClassGeneratorFragment emptyBuilderClassGeneratorFragment,
-            BuildMethodAdderFragment buildMethodAdderFragment, BuilderFieldAdderFragment builderFieldAdderFragment,
+            BuildMethodCreatorFragment buildMethodCreatorFragment, BuilderFieldAdderFragment builderFieldAdderFragment,
             RegularBuilderWithMethodAdderFragment regularBuilderWithMethodAdderFragment) {
         this.privateConstructorAdderFragment = privateConstructorAdderFragment;
         this.emptyBuilderClassGeneratorFragment = emptyBuilderClassGeneratorFragment;
-        this.buildMethodAdderFragment = buildMethodAdderFragment;
+        this.buildMethodCreatorFragment = buildMethodCreatorFragment;
         this.builderFieldAdderFragment = builderFieldAdderFragment;
         this.regularBuilderWithMethodAdderFragment = regularBuilderWithMethodAdderFragment;
     }
@@ -41,7 +42,8 @@ public class RegularBuilderClassCreator {
             builderFieldAdderFragment.addFieldToBuilder(ast, builderType, namedVariableDeclarationField);
             regularBuilderWithMethodAdderFragment.addWithMethodToBuilder(ast, builderType, namedVariableDeclarationField);
         }
-        buildMethodAdderFragment.addBuildMethodToBuilder(ast, originalName, builderType);
+        MethodDeclaration method = buildMethodCreatorFragment.addBuildMethodToBuilder(ast, originalName);
+        builderType.bodyDeclarations().add(method);
         return builderType;
     }
 
