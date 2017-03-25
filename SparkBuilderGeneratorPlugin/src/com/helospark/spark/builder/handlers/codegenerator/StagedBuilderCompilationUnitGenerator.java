@@ -14,7 +14,7 @@ import org.eclipse.jdt.core.dom.rewrite.ListRewrite;
 import com.helospark.spark.builder.handlers.BuilderType;
 import com.helospark.spark.builder.handlers.codegenerator.component.ImportPopulator;
 import com.helospark.spark.builder.handlers.codegenerator.component.PrivateInitializingConstructorCreator;
-import com.helospark.spark.builder.handlers.codegenerator.component.StagedBuilderBuilderMethodCreator;
+import com.helospark.spark.builder.handlers.codegenerator.component.StagedBuilderStaticBuilderCreatorMethodCreator;
 import com.helospark.spark.builder.handlers.codegenerator.component.StagedBuilderClassCreator;
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.builderclass.stagedinterface.StagedBuilderInterfaceCreatorFragment;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.StagedBuilderFieldOrderProvider;
@@ -31,7 +31,7 @@ public class StagedBuilderCompilationUnitGenerator implements BuilderCompilation
     private ApplicableBuilderFieldExtractor applicableBuilderFieldExtractor;
     private StagedBuilderClassCreator stagedBuilderClassCreator;
     private PrivateInitializingConstructorCreator privateConstructorPopulator;
-    private StagedBuilderBuilderMethodCreator stagedBuilderBuilderMethodCreator;
+    private StagedBuilderStaticBuilderCreatorMethodCreator stagedBuilderStaticBuilderCreatorMethodCreator;
     private ImportPopulator importPopulator;
     private BuilderOwnerClassFinder builderOwnerClassFinder;
     private StagedBuilderFieldOrderProvider stagedBuilderFieldOrderProvider;
@@ -40,14 +40,14 @@ public class StagedBuilderCompilationUnitGenerator implements BuilderCompilation
     public StagedBuilderCompilationUnitGenerator(ApplicableBuilderFieldExtractor applicableBuilderFieldExtractor,
             StagedBuilderClassCreator stagedBuilderClassCreator,
             PrivateInitializingConstructorCreator privateInitializingConstructorCreator,
-            StagedBuilderBuilderMethodCreator stagedBuilderBuilderMethodCreator,
+            StagedBuilderStaticBuilderCreatorMethodCreator stagedBuilderStaticBuilderCreatorMethodCreator,
             ImportPopulator importPopulator, BuilderOwnerClassFinder builderOwnerClassFinder,
             StagedBuilderFieldOrderProvider stagedBuilderFieldOrderProvider,
             StagedBuilderInterfaceCreatorFragment stagedBuilderInterfaceCreatorFragment) {
         this.applicableBuilderFieldExtractor = applicableBuilderFieldExtractor;
         this.stagedBuilderClassCreator = stagedBuilderClassCreator;
         this.privateConstructorPopulator = privateInitializingConstructorCreator;
-        this.stagedBuilderBuilderMethodCreator = stagedBuilderBuilderMethodCreator;
+        this.stagedBuilderStaticBuilderCreatorMethodCreator = stagedBuilderStaticBuilderCreatorMethodCreator;
         this.importPopulator = importPopulator;
         this.builderOwnerClassFinder = builderOwnerClassFinder;
         this.stagedBuilderFieldOrderProvider = stagedBuilderFieldOrderProvider;
@@ -67,7 +67,7 @@ public class StagedBuilderCompilationUnitGenerator implements BuilderCompilation
         TypeDeclaration builderType = stagedBuilderClassCreator.createBuilderClass(modificationDomain, stagedBuilderStages, stageInterfaces);
 
         privateConstructorPopulator.addPrivateConstructorToCompilationUnit(ast, originalType, builderType, listRewrite, fieldToIncludeInBuilder);
-        stagedBuilderBuilderMethodCreator.addBuilderMethodToCompilationUnit(modificationDomain, builderType, stageInterfaces.get(0));
+        stagedBuilderStaticBuilderCreatorMethodCreator.addBuilderMethodToCompilationUnit(modificationDomain, builderType, stagedBuilderStages);
 
         stageInterfaces.stream().forEach(stageInterface -> listRewrite.insertLast(stageInterface, null));
         listRewrite.insertLast(builderType, null);

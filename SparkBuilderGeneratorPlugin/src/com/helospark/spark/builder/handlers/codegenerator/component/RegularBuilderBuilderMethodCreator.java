@@ -21,7 +21,7 @@ public class RegularBuilderBuilderMethodCreator {
 
     public void addBuilderMethodToCompilationUnit(AST ast, ListRewrite listRewrite, TypeDeclaration typeDeclaration, TypeDeclaration builderType) {
         Block builderMethodBlock = blockWithNewBuilderCreationFragment.createReturnBlock(ast, builderType);
-        MethodDeclaration builderMethod = builderMethodDefinitionCreatorFragment.createBuilderMethod(ast, typeDeclaration, builderType);
+        MethodDeclaration builderMethod = builderMethodDefinitionCreatorFragment.createBuilderMethod(ast, typeDeclaration, builderType.getName().toString());
         builderMethod.setBody(builderMethodBlock);
         listRewrite.insertLast(builderMethod, null);
     }

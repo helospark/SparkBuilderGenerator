@@ -33,13 +33,13 @@ public class BuilderMethodDefinitionCreatorFragment {
     }
 
     @SuppressWarnings("unchecked")
-    public MethodDeclaration createBuilderMethod(AST ast, TypeDeclaration originalType, TypeDeclaration builderType) {
+    public MethodDeclaration createBuilderMethod(AST ast, TypeDeclaration originalType, String builderName) {
         MethodDeclaration builderMethod = ast.newMethodDeclaration();
         builderMethod.setName(ast.newSimpleName(getBuilderMethodName(originalType)));
         addGenerateAnnotationIfNeeded(ast, builderMethod);
         builderMethod.modifiers().add(ast.newModifier(ModifierKeyword.PUBLIC_KEYWORD));
         builderMethod.modifiers().add(ast.newModifier(ModifierKeyword.STATIC_KEYWORD));
-        builderMethod.setReturnType2(ast.newSimpleType(ast.newName(builderType.getName().toString())));
+        builderMethod.setReturnType2(ast.newSimpleType(ast.newName(builderName)));
 
         javadocAdder.addJavadocForBuilderMethod(ast, originalType.getName().toString(), builderMethod);
 

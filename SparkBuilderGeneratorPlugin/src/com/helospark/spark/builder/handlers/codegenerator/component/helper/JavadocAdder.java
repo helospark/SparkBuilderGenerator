@@ -56,4 +56,13 @@ public class JavadocAdder {
             builderMethod.setJavadoc(javadoc);
         }
     }
+
+    public void addJavadocForWithBuilderMethod(AST ast, String typeName, String parameterName, MethodDeclaration builderMethod) {
+        if (preferencesManager.getPreferenceValue(PluginPreferenceList.GENERATE_JAVADOC_ON_BUILDER_METHOD)) {
+            Javadoc javadoc = javadocGenerator.generateJavadoc(ast,
+                    String.format(Locale.ENGLISH, "Creates builder to build {@link %s} and setting %s parameter.", typeName, parameterName),
+                    Collections.singletonMap(RETURN_JAVADOC_TAG_NAME, "created builder"));
+            builderMethod.setJavadoc(javadoc);
+        }
+    }
 }

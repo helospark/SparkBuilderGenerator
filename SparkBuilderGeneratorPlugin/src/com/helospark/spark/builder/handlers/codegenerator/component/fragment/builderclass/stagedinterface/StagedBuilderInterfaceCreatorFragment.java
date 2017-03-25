@@ -6,6 +6,7 @@ import org.eclipse.jdt.core.dom.TypeDeclaration;
 
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.builderclass.buildmethod.BuildMethodDeclarationCreatorFragment;
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.builderclass.withmethod.StagedBuilderMethodDefiniationCreatorFragment;
+import com.helospark.spark.builder.handlers.codegenerator.component.helper.GeneratedAnnotationPopulator;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.JavadocAdder;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.StagedBuilderProperties;
 import com.helospark.spark.builder.handlers.codegenerator.domain.CompilationUnitModificationDomain;
@@ -16,15 +17,18 @@ public class StagedBuilderInterfaceCreatorFragment {
     private StagedBuilderMethodDefiniationCreatorFragment stagedBuilderMethodDefiniationCreatorFragment;
     private BuildMethodDeclarationCreatorFragment buildMethodDeclarationCreatorFragment;
     private JavadocAdder javadocAdder;
+    private GeneratedAnnotationPopulator generatedAnnotationPopulator;
 
     public StagedBuilderInterfaceCreatorFragment(StagedBuilderMethodDefiniationCreatorFragment stagedBuilderMethodDefiniationCreatorFragment,
             StagedBuilderInterfaceTypeDefinitionCreatorFragment stagedBuilderInterfaceTypeDefinitionCreatorFragment,
             StagedBuilderInterfaceTypeDefinitionCreatorFragment interfaceDefinitionCreator,
-            BuildMethodDeclarationCreatorFragment buildMethodDeclarationCreatorFragment, JavadocAdder javadocAdder) {
+            BuildMethodDeclarationCreatorFragment buildMethodDeclarationCreatorFragment, JavadocAdder javadocAdder,
+            GeneratedAnnotationPopulator generatedAnnotationPopulator) {
         this.stagedBuilderMethodDefiniationCreatorFragment = stagedBuilderMethodDefiniationCreatorFragment;
         this.buildMethodDeclarationCreatorFragment = buildMethodDeclarationCreatorFragment;
         this.javadocAdder = javadocAdder;
         this.interfaceDefinitionCreator = interfaceDefinitionCreator;
+        this.generatedAnnotationPopulator = generatedAnnotationPopulator;
     }
 
     public TypeDeclaration createInterfaceFor(CompilationUnitModificationDomain modificationDomain,
@@ -37,6 +41,7 @@ public class StagedBuilderInterfaceCreatorFragment {
         if (stagedBuilderProperties.isBuildStage()) {
             addBuildMethod(modificationDomain, addedInterface);
         }
+        generatedAnnotationPopulator.addGeneratedAnnotationOnStagedBuilderInterface(ast, addedInterface);
 
         return addedInterface;
     }

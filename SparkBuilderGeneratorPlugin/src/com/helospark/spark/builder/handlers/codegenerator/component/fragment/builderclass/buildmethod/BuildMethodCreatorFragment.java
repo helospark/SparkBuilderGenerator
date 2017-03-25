@@ -22,7 +22,6 @@ public class BuildMethodCreatorFragment {
     public MethodDeclaration addBuildMethodToBuilder(AST ast, TypeDeclaration originalType) {
         Block block = buildMethodBodyCreator.createBody(ast, originalType);
         MethodDeclaration method = buildMethodDeclarationCreatorFragment.createMethod(ast, originalType);
-        javadocAdder.addJavadocForBuildMethod(ast, method);
         method.setBody(block);
         return method;
     }

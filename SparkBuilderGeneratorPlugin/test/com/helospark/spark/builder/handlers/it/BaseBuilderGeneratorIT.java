@@ -117,6 +117,11 @@ public class BaseBuilderGeneratorIT {
         given(preferenceStore.getBoolean("org.helospark.builder.skipStaticBuilderMethod")).willReturn(false);
         given(preferenceStore.getString("org.helospark.builder.stagedEditorLastStageInterfaceName")).willReturn(of("IBuildStage"));
         given(preferenceStore.getString("org.helospark.builder.stagedEditorStageInterfaceName")).willReturn(of("I[FieldName]Stage"));
+        given(preferenceStore.getBoolean("org.helospark.builder.addGeneratedAnnotationOnStageInterface")).willReturn(false);
+
+        // prefix postfix
+        given(preferenceStore.getString("org.eclipse.jdt.core.codeComplete.fieldPrefixes")).willReturn(of(""));
+        given(preferenceStore.getString("org.eclipse.jdt.core.codeComplete.fieldSuffixes")).willReturn(of(""));
     }
 
     protected CompilationUnit parseAst(char[] source) {
