@@ -14,6 +14,14 @@ import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
 
 import com.helospark.spark.builder.handlers.codegenerator.domain.NamedVariableDeclarationField;
 
+/**
+ * Fragment to add private field to the builder. Field is added after the last field declaration.
+ * Generated code is something like:
+ * <pre>
+ * private String firstField;
+ * </pre>
+ * @author helospark
+ */
 public class BuilderFieldAdderFragment {
 
     public void addFieldToBuilder(AST ast, TypeDeclaration builderType, NamedVariableDeclarationField namedVariableDeclarationField) {

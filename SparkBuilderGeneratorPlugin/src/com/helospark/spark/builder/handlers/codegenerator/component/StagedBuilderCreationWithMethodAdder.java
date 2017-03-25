@@ -7,7 +7,7 @@ import org.eclipse.jdt.core.dom.Modifier.ModifierKeyword;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.jdt.core.dom.rewrite.ListRewrite;
 
-import com.helospark.spark.builder.handlers.codegenerator.component.fragment.builderclass.withmethod.StagedBuilderMethodDefiniationCreatorFragment;
+import com.helospark.spark.builder.handlers.codegenerator.component.fragment.builderclass.withmethod.StagedBuilderWithMethodDefiniationCreatorFragment;
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.buildermethod.NewBuilderAndWithMethodCallCreationFragment;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.JavadocAdder;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.StagedBuilderProperties;
@@ -23,14 +23,14 @@ import com.helospark.spark.builder.handlers.codegenerator.domain.NamedVariableDe
  * </pre>
  * @author helospark
  */
-public class StagedBuilderStaticWithMethodAdder {
-    private StagedBuilderMethodDefiniationCreatorFragment stagedBuilderMethodDefiniationCreatorFragment;
+public class StagedBuilderCreationWithMethodAdder {
+    private StagedBuilderWithMethodDefiniationCreatorFragment stagedBuilderWithMethodDefiniationCreatorFragment;
     private NewBuilderAndWithMethodCallCreationFragment newBuilderAndWithMethodCallCreationFragment;
     private JavadocAdder javadocAdder;
 
-    public StagedBuilderStaticWithMethodAdder(StagedBuilderMethodDefiniationCreatorFragment stagedBuilderMethodDefiniationCreatorFragment,
+    public StagedBuilderCreationWithMethodAdder(StagedBuilderWithMethodDefiniationCreatorFragment stagedBuilderWithMethodDefiniationCreatorFragment,
             NewBuilderAndWithMethodCallCreationFragment newBuilderAndWithMethodCallCreationFragment, JavadocAdder javadocAdder) {
-        this.stagedBuilderMethodDefiniationCreatorFragment = stagedBuilderMethodDefiniationCreatorFragment;
+        this.stagedBuilderWithMethodDefiniationCreatorFragment = stagedBuilderWithMethodDefiniationCreatorFragment;
         this.newBuilderAndWithMethodCallCreationFragment = newBuilderAndWithMethodCallCreationFragment;
         this.javadocAdder = javadocAdder;
     }
@@ -42,7 +42,7 @@ public class StagedBuilderStaticWithMethodAdder {
         NamedVariableDeclarationField firstField = currentStage.getNamedVariableDeclarationField().get(0);
 
         StagedBuilderProperties nextStage = currentStage.getNextStage().orElse(currentStage);
-        MethodDeclaration staticWithMethod = stagedBuilderMethodDefiniationCreatorFragment.createNewWithMethod(ast, firstField, nextStage);
+        MethodDeclaration staticWithMethod = stagedBuilderWithMethodDefiniationCreatorFragment.createNewWithMethod(ast, firstField, nextStage);
         staticWithMethod.modifiers().add(ast.newModifier(ModifierKeyword.STATIC_KEYWORD));
 
         String parameterName = firstField.getBuilderFieldName();

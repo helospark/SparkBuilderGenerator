@@ -18,6 +18,16 @@ import com.helospark.spark.builder.handlers.codegenerator.component.helper.Marke
 import com.helospark.spark.builder.handlers.codegenerator.domain.NamedVariableDeclarationField;
 import com.helospark.spark.builder.preferences.PreferencesManager;
 
+/**
+ * Adds a with method for regular builder.
+ * Generated code is something like:
+ * <pre>
+ * public Builder withFirstField(String firstField) {
+ *   this.firstField = firstField;
+ * }
+ * </pre>
+ * @author helospark
+ */
 public class RegularBuilderWithMethodAdderFragment {
     private PreferencesManager preferencesManager;
     private JavadocAdder javadocAdder;

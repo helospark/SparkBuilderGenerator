@@ -8,22 +8,26 @@ import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.jdt.core.dom.rewrite.ASTRewrite;
 
-import com.helospark.spark.builder.handlers.codegenerator.component.remover.helper.AnnotatedBodyDeclarationFilter;
+import com.helospark.spark.builder.handlers.codegenerator.component.remover.helper.GeneratedAnnotationContainingBodyDeclarationFilter;
 import com.helospark.spark.builder.handlers.codegenerator.component.remover.helper.BodyDeclarationOfTypeExtractor;
 
+/**
+ * Removes the previously generates stage interfaces.
+ * @author helospark
+ */
 public class StagedBuilderInterfaceRemover implements BuilderRemoverChainItem {
     private BodyDeclarationOfTypeExtractor bodyDeclarationOfTypeExtractor;
-    private AnnotatedBodyDeclarationFilter annotatedBodyDeclarationFilter;
+    private GeneratedAnnotationContainingBodyDeclarationFilter generatedAnnotationContainingBodyDeclarationFilter;
 
-    public StagedBuilderInterfaceRemover(BodyDeclarationOfTypeExtractor bodyDeclarationOfTypeExtractor, AnnotatedBodyDeclarationFilter annotatedBodyDeclarationFilter) {
+    public StagedBuilderInterfaceRemover(BodyDeclarationOfTypeExtractor bodyDeclarationOfTypeExtractor, GeneratedAnnotationContainingBodyDeclarationFilter generatedAnnotationContainingBodyDeclarationFilter) {
         this.bodyDeclarationOfTypeExtractor = bodyDeclarationOfTypeExtractor;
-        this.annotatedBodyDeclarationFilter = annotatedBodyDeclarationFilter;
+        this.generatedAnnotationContainingBodyDeclarationFilter = generatedAnnotationContainingBodyDeclarationFilter;
     }
 
     @Override
     public void remove(ASTRewrite rewriter, TypeDeclaration mainType) {
         List<TypeDeclaration> nestedInterfaces = getNestedInterfaces(mainType);
-        List<TypeDeclaration> interfacesWithGeneratedAnnotation = annotatedBodyDeclarationFilter.filterAnnotatedClasses(nestedInterfaces);
+        List<TypeDeclaration> interfacesWithGeneratedAnnotation = generatedAnnotationContainingBodyDeclarationFilter.filterAnnotatedClasses(nestedInterfaces);
 
         if (!interfacesWithGeneratedAnnotation.isEmpty()) {
             interfacesWithGeneratedAnnotation.stream()

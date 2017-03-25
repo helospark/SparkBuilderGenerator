@@ -10,6 +10,10 @@ import java.util.Map;
 import com.helospark.spark.builder.handlers.codegenerator.domain.NamedVariableDeclarationField;
 import com.helospark.spark.builder.preferences.PreferencesManager;
 
+/**
+ * Provides the interface name for the staged builder.
+ * @author helospark
+ */
 public class StagedBuilderInterfaceNameProvider {
     private PreferencesManager preferencesManager;
     private CamelCaseConverter camelCaseConverter;

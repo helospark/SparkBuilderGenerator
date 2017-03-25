@@ -13,25 +13,36 @@ import com.helospark.spark.builder.handlers.codegenerator.component.fragment.con
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.constructor.PrivateConstructorMethodDefinitionCreationFragment;
 import com.helospark.spark.builder.handlers.codegenerator.domain.NamedVariableDeclarationField;
 
+/**
+ * Generates a private constructor that initializes fields.
+ * Something like:
+ * <pre>
+ * private Clazz(Builder builder) {
+ *   this.firstField = builder.firstField;
+ *   this.secondField = builder.secondField;
+ * }
+ * </pre>
+ * @author helospark
+ */
 public class PrivateInitializingConstructorCreator {
-	private PrivateConstructorMethodDefinitionCreationFragment privateConstructorMethodDefinitionCreationFragment;
-	private PrivateConstructorBodyCreationFragment privateConstructorBodyCreationFragment;
-	private PrivateConstructorInsertionFragment privateConstructorInsertionFragment;
+    private PrivateConstructorMethodDefinitionCreationFragment privateConstructorMethodDefinitionCreationFragment;
+    private PrivateConstructorBodyCreationFragment privateConstructorBodyCreationFragment;
+    private PrivateConstructorInsertionFragment privateConstructorInsertionFragment;
 
-	public PrivateInitializingConstructorCreator(PrivateConstructorMethodDefinitionCreationFragment privateConstructorMethodDefinitionCreationFragment,
-			PrivateConstructorBodyCreationFragment privateConstructorBodyCreationFragment, PrivateConstructorInsertionFragment privateConstructorInsertionFragment) {
-		this.privateConstructorMethodDefinitionCreationFragment = privateConstructorMethodDefinitionCreationFragment;
-		this.privateConstructorBodyCreationFragment = privateConstructorBodyCreationFragment;
-		this.privateConstructorInsertionFragment = privateConstructorInsertionFragment;
-	}
+    public PrivateInitializingConstructorCreator(PrivateConstructorMethodDefinitionCreationFragment privateConstructorMethodDefinitionCreationFragment,
+            PrivateConstructorBodyCreationFragment privateConstructorBodyCreationFragment, PrivateConstructorInsertionFragment privateConstructorInsertionFragment) {
+        this.privateConstructorMethodDefinitionCreationFragment = privateConstructorMethodDefinitionCreationFragment;
+        this.privateConstructorBodyCreationFragment = privateConstructorBodyCreationFragment;
+        this.privateConstructorInsertionFragment = privateConstructorInsertionFragment;
+    }
 
-	public void addPrivateConstructorToCompilationUnit(AST ast, TypeDeclaration originalType, TypeDeclaration builderType, ListRewrite listRewrite,
-			List<NamedVariableDeclarationField> namedVariableDeclarations) {
-		Block body = privateConstructorBodyCreationFragment.createBody(ast, builderType, namedVariableDeclarations);
-		MethodDeclaration privateConstructor = privateConstructorMethodDefinitionCreationFragment.createPrivateConstructor(ast, originalType, builderType,
-				namedVariableDeclarations);
-		privateConstructor.setBody(body);
-		privateConstructorInsertionFragment.insertMethodToFirstPlace(originalType, listRewrite, privateConstructor);
-	}
+    public void addPrivateConstructorToCompilationUnit(AST ast, TypeDeclaration originalType, TypeDeclaration builderType, ListRewrite listRewrite,
+            List<NamedVariableDeclarationField> namedVariableDeclarations) {
+        Block body = privateConstructorBodyCreationFragment.createBody(ast, builderType, namedVariableDeclarations);
+        MethodDeclaration privateConstructorDefinition = privateConstructorMethodDefinitionCreationFragment.createPrivateConstructorDefinition(ast, originalType, builderType,
+                namedVariableDeclarations);
+        privateConstructorDefinition.setBody(body);
+        privateConstructorInsertionFragment.insertMethodToFirstPlace(originalType, listRewrite, privateConstructorDefinition);
+    }
 
 }

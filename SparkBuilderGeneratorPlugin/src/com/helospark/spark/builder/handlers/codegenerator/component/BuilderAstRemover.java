@@ -8,6 +8,10 @@ import org.eclipse.jdt.core.dom.rewrite.ASTRewrite;
 
 import com.helospark.spark.builder.handlers.codegenerator.component.remover.BuilderRemoverChainItem;
 
+/**
+ * Tries to remove the (earlier generated) builder from the given compilation unit.
+ * @author helospark
+ */
 public class BuilderAstRemover {
     private List<BuilderRemoverChainItem> builderRemovers;
 

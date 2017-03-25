@@ -11,24 +11,29 @@ import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.Modifier.ModifierKeyword;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 
-import com.helospark.spark.builder.handlers.codegenerator.component.helper.JavadocGenerator;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.MarkerAnnotationAttacher;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.TemplateResolver;
 import com.helospark.spark.builder.preferences.PreferencesManager;
 
+/**
+ * Fragment to create the build() method's declaration.
+ * Generated code is something like:
+ * <pre>
+ * public Clazz build();
+ * </pre>
+ * @author helospark
+ */
 public class BuildMethodDeclarationCreatorFragment {
     private static final String CLASS_NAME_REPLACEMENT_PATTERN = "className";
     private PreferencesManager preferencesManager;
     private MarkerAnnotationAttacher markerAnnotationAttacher;
-    private JavadocGenerator javadocGenerator;
     private TemplateResolver templateResolver;
 
     public BuildMethodDeclarationCreatorFragment(PreferencesManager preferencesManager,
-            MarkerAnnotationAttacher markerAnnotationAttacher, JavadocGenerator javadocGenerator,
+            MarkerAnnotationAttacher markerAnnotationAttacher,
             TemplateResolver templateResolver) {
         this.preferencesManager = preferencesManager;
         this.markerAnnotationAttacher = markerAnnotationAttacher;
-        this.javadocGenerator = javadocGenerator;
         this.templateResolver = templateResolver;
     }
 

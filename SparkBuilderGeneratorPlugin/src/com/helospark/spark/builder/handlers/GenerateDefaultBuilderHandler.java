@@ -9,6 +9,10 @@ import org.eclipse.core.commands.ExecutionException;
 import com.helospark.spark.builder.DiContainer;
 import com.helospark.spark.builder.preferences.PreferencesManager;
 
+/**
+ * Eclipse handler to generate default builder.
+ * @author helospark
+ */
 public class GenerateDefaultBuilderHandler extends AbstractHandler {
     private GenerateBuilderExecutor generateBuilderExecutor;
     private PreferencesManager preferencesManager;

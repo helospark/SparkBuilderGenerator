@@ -65,4 +65,19 @@ public class StagedBuilderWithChangedDialogSettingsE2ETest extends BaseBuilderGe
         super.assertEqualsJavaContents(outputCaptor.getValue(), expectedResult);
     }
 
+    @Test
+    public void testWithCancelClickedOnDialog() throws Exception {
+        // GIVEN
+        given(stagedBuilderStagePropertyInputDialogOpener.open(any(List.class))).willReturn(null);
+        String input = readClasspathFile("multi_field_input.tjava");
+        String expectedResult = readClasspathFile("multi_field_input.tjava");
+        super.setInput(input);
+
+        // WHEN
+        underTest.execute(dummyExecutionEvent);
+
+        // THEN
+        super.assertEqualsJavaContents(outputCaptor.getValue(), expectedResult);
+    }
+
 }

@@ -19,6 +19,16 @@ import com.helospark.spark.builder.handlers.codegenerator.component.helper.Javad
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.TemplateResolver;
 import com.helospark.spark.builder.preferences.PreferencesManager;
 
+/**
+ * Fragment to create empty builder class with Javadoc.
+ * Generated code is something like:
+ * <pre>
+ * public static final class Builder {
+ *
+ * }
+ * </pre>
+ * @author helospark
+ */
 public class EmptyBuilderClassGeneratorFragment {
     private static final String CLASS_NAME_REPLACEMENT_PATTERN = "className";
     private GeneratedAnnotationPopulator generatedAnnotationPopulator;

@@ -8,17 +8,28 @@ import java.util.stream.Collectors;
 import com.helospark.spark.builder.dialogs.StagedBuilderStagePropertiesDialogResult;
 import com.helospark.spark.builder.handlers.codegenerator.domain.NamedVariableDeclarationField;
 
-public class StagedBuilderFieldOrderProvider {
+/**
+ * Provides stage properties (field order and mandatory setting).
+ * Current implementation gets field order from user using a dialog.
+ * This implementation might return null, to indicate that the builder generation is no longer required.
+ * @author helospark
+ */
+public class StagedBuilderStagePropertiesProvider {
     private StagedBuilderInterfaceNameProvider stagedBuilderInterfaceNameProvider;
     private StagedBuilderStagePropertyInputDialogOpener dialogOpener;
 
-    public StagedBuilderFieldOrderProvider(StagedBuilderInterfaceNameProvider stagedBuilderInterfaceNameProvider, StagedBuilderStagePropertyInputDialogOpener dialogOpener) {
+    public StagedBuilderStagePropertiesProvider(StagedBuilderInterfaceNameProvider stagedBuilderInterfaceNameProvider, StagedBuilderStagePropertyInputDialogOpener dialogOpener) {
         this.stagedBuilderInterfaceNameProvider = stagedBuilderInterfaceNameProvider;
         this.dialogOpener = dialogOpener;
     }
 
     public List<StagedBuilderProperties> build(List<NamedVariableDeclarationField> namedVariableDeclarations) {
         List<StagedBuilderStagePropertiesDialogResult> stagePropertiesFromDialog = getStagePropertiesFromUser(namedVariableDeclarations);
+
+        // TODO: eventually have a better design to avoid nulls
+        if (stagePropertiesFromDialog == null) {
+            return null;
+        }
 
         List<StagedBuilderProperties> result = createMandatoryStagedBuilderProperties(namedVariableDeclarations, stagePropertiesFromDialog);
         StagedBuilderProperties buildStageWithOptionalParameters = createBuildStageWithOptionalParameters(namedVariableDeclarations, stagePropertiesFromDialog);

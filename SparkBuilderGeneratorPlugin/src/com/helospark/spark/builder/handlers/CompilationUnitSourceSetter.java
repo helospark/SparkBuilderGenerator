@@ -5,6 +5,10 @@ import org.eclipse.jdt.core.dom.rewrite.ASTRewrite;
 import org.eclipse.jface.text.Document;
 import org.eclipse.text.edits.TextEdit;
 
+/**
+ * Sets the changed source to the compilation unit.
+ * @author helospark
+ */
 public class CompilationUnitSourceSetter {
 
     public void commitCodeChange(ICompilationUnit iCompilationUnit, ASTRewrite rewriter) {

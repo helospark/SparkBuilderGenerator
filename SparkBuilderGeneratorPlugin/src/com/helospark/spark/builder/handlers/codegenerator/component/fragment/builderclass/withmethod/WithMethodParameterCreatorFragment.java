@@ -10,6 +10,10 @@ import com.helospark.spark.builder.handlers.codegenerator.component.helper.Marke
 import com.helospark.spark.builder.preferences.PluginPreferenceList;
 import com.helospark.spark.builder.preferences.PreferencesManager;
 
+/**
+ * Creates method parameter for a "with" method.
+ * @author helospark
+ */
 public class WithMethodParameterCreatorFragment {
     private PreferencesManager preferencesManager;
     private MarkerAnnotationAttacher markerAnnotationAttacher;

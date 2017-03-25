@@ -5,22 +5,28 @@ import org.eclipse.jdt.core.dom.Block;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 
-import com.helospark.spark.builder.handlers.codegenerator.component.helper.JavadocAdder;
-
+/**
+ * Fragment to create the build() method.
+ * Generated code is something like:
+ * <pre>
+ * public Clazz build() {
+ *   return new Clazz(this);
+ * }
+ * </pre>
+ * @author helospark
+ */
 public class BuildMethodCreatorFragment {
     private BuildMethodDeclarationCreatorFragment buildMethodDeclarationCreatorFragment;
-    private BuildMethodBodyCreator buildMethodBodyCreator;
-    private JavadocAdder javadocAdder;
+    private BuildMethodBodyCreatorFragment buildMethodBodyCreatorFragment;
 
     public BuildMethodCreatorFragment(BuildMethodDeclarationCreatorFragment buildMethodDeclarationCreatorFragment,
-            BuildMethodBodyCreator buildMethodBodyCreator, JavadocAdder javadocAdder) {
+            BuildMethodBodyCreatorFragment buildMethodBodyCreatorFragment) {
         this.buildMethodDeclarationCreatorFragment = buildMethodDeclarationCreatorFragment;
-        this.buildMethodBodyCreator = buildMethodBodyCreator;
-        this.javadocAdder = javadocAdder;
+        this.buildMethodBodyCreatorFragment = buildMethodBodyCreatorFragment;
     }
 
     public MethodDeclaration addBuildMethodToBuilder(AST ast, TypeDeclaration originalType) {
-        Block block = buildMethodBodyCreator.createBody(ast, originalType);
+        Block block = buildMethodBodyCreatorFragment.createBody(ast, originalType);
         MethodDeclaration method = buildMethodDeclarationCreatorFragment.createMethod(ast, originalType);
         method.setBody(block);
         return method;

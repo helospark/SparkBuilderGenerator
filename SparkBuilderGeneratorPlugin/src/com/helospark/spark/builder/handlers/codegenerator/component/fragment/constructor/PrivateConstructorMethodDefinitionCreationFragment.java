@@ -15,6 +15,14 @@ import com.helospark.spark.builder.handlers.codegenerator.component.helper.Gener
 import com.helospark.spark.builder.handlers.codegenerator.domain.NamedVariableDeclarationField;
 import com.helospark.spark.builder.preferences.PreferencesManager;
 
+/**
+ * Creates the method definition of the class initializing constructor.
+ * Generated code is something like:
+ * <pre>
+ * private Clazz(Builder builder);
+ * </pre>
+ * @author helospark
+ */
 public class PrivateConstructorMethodDefinitionCreationFragment {
     private PreferencesManager preferencesManager;
     private GeneratedAnnotationPopulator generatedAnnotationPopulator;
@@ -28,7 +36,7 @@ public class PrivateConstructorMethodDefinitionCreationFragment {
     }
 
     @SuppressWarnings("unchecked")
-    public MethodDeclaration createPrivateConstructor(AST ast, TypeDeclaration originalType, TypeDeclaration builderType,
+    public MethodDeclaration createPrivateConstructorDefinition(AST ast, TypeDeclaration originalType, TypeDeclaration builderType,
             List<NamedVariableDeclarationField> namedVariableDeclarations) {
 
         MethodDeclaration method = ast.newMethodDeclaration();

@@ -21,12 +21,12 @@ public class ModifiedStagedDialogSettingsAnswerProvider {
         List<StagedBuilderStagePropertiesDialogResult> result = new ArrayList<>();
         for (int i = 0; i < newOrderIndices.size(); ++i) {
             StagedBuilderStagePropertiesDialogResult otherRequest = request.get(newOrderIndices.get(i));
-            otherRequest.setSelected(false);
+            otherRequest.setMandatory(false);
             result.add(otherRequest);
 
         }
         for (int i = 0; i < mandatoryFieldIndices.size(); ++i) {
-            result.get(i).setSelected(true);
+            result.get(i).setMandatory(true);
         }
         return result;
     }

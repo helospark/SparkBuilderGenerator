@@ -14,15 +14,25 @@ import com.helospark.spark.builder.handlers.codegenerator.component.helper.Marke
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.StagedBuilderProperties;
 import com.helospark.spark.builder.handlers.codegenerator.domain.NamedVariableDeclarationField;
 
-@SuppressWarnings("unchecked")
+/**
+ * Adds a with method for staged builder.
+ * Generated code is something like:
+ * <pre>
+ * public ISecondStage withFirstField(String firstField) {
+ *   this.firstField = firstField;
+ *   return this;
+ * }
+ * </pre>
+ * @author helospark
+ */
 public class StagedBuilderWithMethodAdderFragment {
-    private StagedBuilderMethodDefiniationCreatorFragment stagedBuilderMethodDefiniationCreatorFragment;
+    private StagedBuilderWithMethodDefiniationCreatorFragment stagedBuilderWithMethodDefiniationCreatorFragment;
     private MarkerAnnotationAttacher markerAnnotationAttacher;
 
     public StagedBuilderWithMethodAdderFragment(
-            StagedBuilderMethodDefiniationCreatorFragment stagedBuilderMethodDefiniationCreatorFragment,
+            StagedBuilderWithMethodDefiniationCreatorFragment stagedBuilderWithMethodDefiniationCreatorFragment,
             MarkerAnnotationAttacher markerAnnotationAttacher) {
-        this.stagedBuilderMethodDefiniationCreatorFragment = stagedBuilderMethodDefiniationCreatorFragment;
+        this.stagedBuilderWithMethodDefiniationCreatorFragment = stagedBuilderWithMethodDefiniationCreatorFragment;
         this.markerAnnotationAttacher = markerAnnotationAttacher;
     }
 
@@ -30,7 +40,7 @@ public class StagedBuilderWithMethodAdderFragment {
             NamedVariableDeclarationField namedVariableDeclarationField,
             StagedBuilderProperties nextStage) {
         Block newBlock = createWithMethodBody(ast, namedVariableDeclarationField);
-        MethodDeclaration newWithMethod = stagedBuilderMethodDefiniationCreatorFragment.createNewWithMethod(ast,
+        MethodDeclaration newWithMethod = stagedBuilderWithMethodDefiniationCreatorFragment.createNewWithMethod(ast,
                 namedVariableDeclarationField, nextStage);
         newWithMethod.setBody(newBlock);
         markerAnnotationAttacher.attachAnnotation(ast, newWithMethod, OVERRIDE_ANNOTATION);

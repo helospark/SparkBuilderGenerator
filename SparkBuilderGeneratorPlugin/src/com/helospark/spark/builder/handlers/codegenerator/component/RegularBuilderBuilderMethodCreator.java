@@ -9,6 +9,16 @@ import org.eclipse.jdt.core.dom.rewrite.ListRewrite;
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.buildermethod.BlockWithNewBuilderCreationFragment;
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.buildermethod.BuilderMethodDefinitionCreatorFragment;
 
+/**
+ * Adds the builder() method for a regular builder.
+ * Generated code is something like:
+ * <pre>
+ * public static Builder builder() {
+ *   return new Builder();
+ * }
+ * </pre>
+ * @author helospark
+ */
 public class RegularBuilderBuilderMethodCreator {
     private BlockWithNewBuilderCreationFragment blockWithNewBuilderCreationFragment;
     private BuilderMethodDefinitionCreatorFragment builderMethodDefinitionCreatorFragment;

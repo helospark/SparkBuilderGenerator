@@ -12,7 +12,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import com.helospark.spark.builder.DiContainer;
-import com.helospark.spark.builder.NamedElement;
+import com.helospark.spark.builder.NamedElementWithId;
 import com.helospark.spark.builder.handlers.GenerateDefaultBuilderHandler;
 import com.helospark.spark.builder.handlers.GenerateRegularBuilderHandler;
 import com.helospark.spark.builder.handlers.GenerateStagedBuilderHandler;
@@ -44,8 +44,8 @@ public class DefaultPreferencesE2ETest extends BaseBuilderGeneratorIT {
             given(preferenceStore.getBoolean(key)).willReturn((Boolean) defaultValue);
         } else if (defaultValue instanceof String) {
             given(preferenceStore.getString(key)).willReturn(of((String) defaultValue));
-        } else if (defaultValue instanceof NamedElement) {
-            given(preferenceStore.getString(key)).willReturn(of(((NamedElement) defaultValue).getId()));
+        } else if (defaultValue instanceof NamedElementWithId) {
+            given(preferenceStore.getString(key)).willReturn(of(((NamedElementWithId) defaultValue).getId()));
         } else {
             throw new IllegalArgumentException("Unknown preference, test should fail, preference class: " + defaultValue.getClass());
         }

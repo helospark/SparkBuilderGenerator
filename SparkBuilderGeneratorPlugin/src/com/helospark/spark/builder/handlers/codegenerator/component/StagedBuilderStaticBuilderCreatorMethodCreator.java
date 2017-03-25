@@ -10,13 +10,24 @@ import com.helospark.spark.builder.handlers.codegenerator.component.helper.Stage
 import com.helospark.spark.builder.handlers.codegenerator.domain.CompilationUnitModificationDomain;
 import com.helospark.spark.builder.preferences.PreferencesManager;
 
+/**
+ * Adds static builder creator method, which is either
+ * <pre>
+ * public static IFirstStage builder() ...
+ * </pre>
+ * or
+ * <pre>
+ * public static ISecondStage withFirstField(...)
+ * </pre>
+ * @author helospark
+ */
 public class StagedBuilderStaticBuilderCreatorMethodCreator {
-    private StagedBuilderBuilderMethodAdder blockWithNewBuilderCreationFragment;
-    private StagedBuilderStaticWithMethodAdder builderMethodDefinitionCreatorFragment;
+    private StagedBuilderCreationBuilderMethodAdder blockWithNewBuilderCreationFragment;
+    private StagedBuilderCreationWithMethodAdder builderMethodDefinitionCreatorFragment;
     private PreferencesManager preferencesManager;
 
-    public StagedBuilderStaticBuilderCreatorMethodCreator(StagedBuilderBuilderMethodAdder blockWithNewBuilderCreationFragment,
-            StagedBuilderStaticWithMethodAdder builderMethodDefinitionCreatorFragment, PreferencesManager preferencesManager) {
+    public StagedBuilderStaticBuilderCreatorMethodCreator(StagedBuilderCreationBuilderMethodAdder blockWithNewBuilderCreationFragment,
+            StagedBuilderCreationWithMethodAdder builderMethodDefinitionCreatorFragment, PreferencesManager preferencesManager) {
         this.blockWithNewBuilderCreationFragment = blockWithNewBuilderCreationFragment;
         this.builderMethodDefinitionCreatorFragment = builderMethodDefinitionCreatorFragment;
         this.preferencesManager = preferencesManager;

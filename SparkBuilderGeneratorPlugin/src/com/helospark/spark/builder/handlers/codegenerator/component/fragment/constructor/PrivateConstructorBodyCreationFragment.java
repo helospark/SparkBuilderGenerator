@@ -11,6 +11,17 @@ import org.eclipse.jdt.core.dom.TypeDeclaration;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.CamelCaseConverter;
 import com.helospark.spark.builder.handlers.codegenerator.domain.NamedVariableDeclarationField;
 
+/**
+ * Creates the body of the private constructor that initializes the class.
+ * Generated code is something like:
+ * <pre>
+ * {
+ *   this.firstField = builder.firstField;
+ *   this.secondField = builder.secondField;
+ * }
+ * </pre>
+ * @author helospark
+ */
 public class PrivateConstructorBodyCreationFragment {
     private CamelCaseConverter camelCaseConverter;
 

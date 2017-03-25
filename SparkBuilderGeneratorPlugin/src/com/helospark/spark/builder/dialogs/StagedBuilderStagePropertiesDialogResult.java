@@ -1,22 +1,26 @@
 package com.helospark.spark.builder.dialogs;
 
+/**
+ * Result of the staged builder property change dialog.
+ * @author helospark
+ */
 public class StagedBuilderStagePropertiesDialogResult {
-    private boolean selected;
+    private boolean mandatory;
     private String fieldName;
     private int originalIndex;
 
     public StagedBuilderStagePropertiesDialogResult(boolean isMandatory, String fieldName, int originalIndex) {
-        this.selected = isMandatory;
+        this.mandatory = isMandatory;
         this.fieldName = fieldName;
         this.originalIndex = originalIndex;
     }
 
     public boolean isMandatory() {
-        return selected;
+        return mandatory;
     }
 
-    public void setSelected(boolean selected) {
-        this.selected = selected;
+    public void setMandatory(boolean selected) {
+        this.mandatory = selected;
     }
 
     public String getFieldName() {

@@ -7,6 +7,14 @@ import org.eclipse.jdt.core.dom.MethodInvocation;
 import org.eclipse.jdt.core.dom.ReturnStatement;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 
+/**
+ * Creates method block that combines creating a new builder and calling the first with method on the builder.
+ * Created code is something like:
+ * <pre>
+ * return new Builder().withFirstField(firstField);
+ * </pre>
+ * @author helospark
+ */
 public class NewBuilderAndWithMethodCallCreationFragment {
 
     public Block createReturnBlock(AST ast, TypeDeclaration builderType, String withName, String parameterName) {

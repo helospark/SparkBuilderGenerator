@@ -15,6 +15,10 @@ import org.eclipse.jdt.core.dom.TypeDeclaration;
 import com.helospark.spark.builder.preferences.PluginPreferenceList;
 import com.helospark.spark.builder.preferences.PreferencesManager;
 
+/**
+ * Decides whether javadoc is needed, and if needed adds them.
+ * @author helospark
+ */
 public class JavadocAdder {
     private JavadocGenerator javadocGenerator;
     private PreferencesManager preferencesManager;

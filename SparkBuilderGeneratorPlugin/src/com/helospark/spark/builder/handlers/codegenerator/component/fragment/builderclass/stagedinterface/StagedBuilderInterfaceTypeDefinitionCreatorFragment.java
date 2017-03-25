@@ -6,6 +6,14 @@ import org.eclipse.jdt.core.dom.TypeDeclaration;
 
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.JavadocAdder;
 
+/**
+ * Creates the interface definition for the staged builder's stage.
+ * Generated code is something like:
+ * <pre>
+ * public interface IFirstStage;
+ * </pre>
+ * @author helospark
+ */
 public class StagedBuilderInterfaceTypeDefinitionCreatorFragment {
     private JavadocAdder javadocAdder;
 

@@ -4,6 +4,12 @@ import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.jdt.core.dom.rewrite.ListRewrite;
 
+/**
+ * Contains all data necessary to modify a compilation unit.
+ * TODO: Better name is needed
+ * TODO: Should be replaced, where it is not yet used
+ * @author helospark
+ */
 public class CompilationUnitModificationDomain {
     private ListRewrite listRewrite;
     private AST ast;

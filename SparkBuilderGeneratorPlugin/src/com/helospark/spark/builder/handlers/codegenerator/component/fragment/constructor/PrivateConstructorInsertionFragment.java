@@ -5,6 +5,10 @@ import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.jdt.core.dom.rewrite.ListRewrite;
 
+/**
+ * Insert private constructor after fields, but before methods.
+ * @author helospark
+ */
 public class PrivateConstructorInsertionFragment {
     public void insertMethodToFirstPlace(TypeDeclaration originalType, ListRewrite listRewrite, MethodDeclaration privateConstructor) {
         FieldDeclaration[] fields = originalType.getFields();

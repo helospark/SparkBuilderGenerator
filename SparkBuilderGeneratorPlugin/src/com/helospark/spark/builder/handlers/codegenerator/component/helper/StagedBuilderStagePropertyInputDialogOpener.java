@@ -8,6 +8,10 @@ import com.helospark.spark.builder.dialogs.StagedBuilderStagePropertiesDialogRes
 import com.helospark.spark.builder.dialogs.StagedBuilderStagePropertyInputDialog;
 import com.helospark.spark.builder.handlers.CurrentShellProvider;
 
+/**
+ * Opens a dialog to get stage properties.
+ * @author helospark
+ */
 public class StagedBuilderStagePropertyInputDialogOpener {
     private CurrentShellProvider currentShellProvider;
 

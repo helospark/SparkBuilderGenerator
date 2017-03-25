@@ -6,21 +6,25 @@ import org.eclipse.core.commands.ExecutionException;
 
 import com.helospark.spark.builder.DiContainer;
 
+/**
+ * Eclipse handler to generate regular builder.
+ * @author helospark
+ */
 public class GenerateRegularBuilderHandler extends AbstractHandler {
-	private GenerateBuilderExecutor generateBuilderExecutor;
+    private GenerateBuilderExecutor generateBuilderExecutor;
 
-	public GenerateRegularBuilderHandler() {
-		this(DiContainer.getDependency(StateInitializerGenerateBuilderExecutorDecorator.class));
-	}
+    public GenerateRegularBuilderHandler() {
+        this(DiContainer.getDependency(StateInitializerGenerateBuilderExecutorDecorator.class));
+    }
 
-	public GenerateRegularBuilderHandler(GenerateBuilderExecutor generateBuilderExecutor) {
-		this.generateBuilderExecutor = generateBuilderExecutor;
-	}
+    public GenerateRegularBuilderHandler(GenerateBuilderExecutor generateBuilderExecutor) {
+        this.generateBuilderExecutor = generateBuilderExecutor;
+    }
 
-	@Override
-	public Object execute(ExecutionEvent event) throws ExecutionException {
-		generateBuilderExecutor.execute(event, BuilderType.REGULAR);
-		return null;
-	}
+    @Override
+    public Object execute(ExecutionEvent event) throws ExecutionException {
+        generateBuilderExecutor.execute(event, BuilderType.REGULAR);
+        return null;
+    }
 
 }

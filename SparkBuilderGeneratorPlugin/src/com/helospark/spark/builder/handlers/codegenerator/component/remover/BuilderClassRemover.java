@@ -6,22 +6,26 @@ import java.util.stream.Collectors;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.jdt.core.dom.rewrite.ASTRewrite;
 
-import com.helospark.spark.builder.handlers.codegenerator.component.remover.helper.AnnotatedBodyDeclarationFilter;
+import com.helospark.spark.builder.handlers.codegenerator.component.remover.helper.GeneratedAnnotationContainingBodyDeclarationFilter;
 import com.helospark.spark.builder.handlers.codegenerator.component.remover.helper.BodyDeclarationOfTypeExtractor;
 
+/**
+ * Removes the main builder class.
+ * @author helospark
+ */
 public class BuilderClassRemover implements BuilderRemoverChainItem {
     private BodyDeclarationOfTypeExtractor bodyDeclarationOfTypeExtractor;
-    private AnnotatedBodyDeclarationFilter annotatedBodyDeclarationFilter;
+    private GeneratedAnnotationContainingBodyDeclarationFilter generatedAnnotationContainingBodyDeclarationFilter;
 
-    public BuilderClassRemover(BodyDeclarationOfTypeExtractor bodyDeclarationOfTypeExtractor, AnnotatedBodyDeclarationFilter annotatedBodyDeclarationFilter) {
+    public BuilderClassRemover(BodyDeclarationOfTypeExtractor bodyDeclarationOfTypeExtractor, GeneratedAnnotationContainingBodyDeclarationFilter generatedAnnotationContainingBodyDeclarationFilter) {
         this.bodyDeclarationOfTypeExtractor = bodyDeclarationOfTypeExtractor;
-        this.annotatedBodyDeclarationFilter = annotatedBodyDeclarationFilter;
+        this.generatedAnnotationContainingBodyDeclarationFilter = generatedAnnotationContainingBodyDeclarationFilter;
     }
 
     @Override
     public void remove(ASTRewrite rewriter, TypeDeclaration rootType) {
         List<TypeDeclaration> nestedTypes = getNestedTypes(rootType);
-        List<TypeDeclaration> generatedAnnotationAnnotatedClasses = annotatedBodyDeclarationFilter.filterAnnotatedClasses(nestedTypes);
+        List<TypeDeclaration> generatedAnnotationAnnotatedClasses = generatedAnnotationContainingBodyDeclarationFilter.filterAnnotatedClasses(nestedTypes);
 
         if (generatedAnnotationAnnotatedClasses.size() > 0) {
             generatedAnnotationAnnotatedClasses.forEach(clazz -> rewriter.remove(clazz, null));

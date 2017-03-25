@@ -10,25 +10,29 @@ import org.eclipse.jdt.core.dom.Modifier;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.jdt.core.dom.rewrite.ASTRewrite;
 
-import com.helospark.spark.builder.handlers.codegenerator.component.remover.helper.AnnotatedBodyDeclarationFilter;
+import com.helospark.spark.builder.handlers.codegenerator.component.remover.helper.GeneratedAnnotationContainingBodyDeclarationFilter;
 import com.helospark.spark.builder.handlers.codegenerator.component.remover.helper.IsPublicPredicate;
 import com.helospark.spark.builder.handlers.codegenerator.component.remover.helper.IsStaticPredicate;
 
+/**
+ * Removes the previously generated static builder creation method.
+ * @author helospark
+ */
 public class StaticBuilderMethodRemover implements BuilderRemoverChainItem {
     private IsStaticPredicate isStaticPredicate;
     private IsPublicPredicate isPublicPredicate;
-    private AnnotatedBodyDeclarationFilter annotatedBodyDeclarationFilter;
+    private GeneratedAnnotationContainingBodyDeclarationFilter generatedAnnotationContainingBodyDeclarationFilter;
 
-    public StaticBuilderMethodRemover(IsStaticPredicate isStaticPredicate, IsPublicPredicate isPublicPredicate, AnnotatedBodyDeclarationFilter annotatedBodyDeclarationFilter) {
+    public StaticBuilderMethodRemover(IsStaticPredicate isStaticPredicate, IsPublicPredicate isPublicPredicate, GeneratedAnnotationContainingBodyDeclarationFilter generatedAnnotationContainingBodyDeclarationFilter) {
         this.isStaticPredicate = isStaticPredicate;
         this.isPublicPredicate = isPublicPredicate;
-        this.annotatedBodyDeclarationFilter = annotatedBodyDeclarationFilter;
+        this.generatedAnnotationContainingBodyDeclarationFilter = generatedAnnotationContainingBodyDeclarationFilter;
     }
 
     @Override
     public void remove(ASTRewrite rewriter, TypeDeclaration mainType) {
         List<MethodDeclaration> publicStaticMethods = extractPublicStaticMethods(mainType);
-        List<MethodDeclaration> annotatedMethods = annotatedBodyDeclarationFilter.filterAnnotatedClasses(publicStaticMethods);
+        List<MethodDeclaration> annotatedMethods = generatedAnnotationContainingBodyDeclarationFilter.filterAnnotatedClasses(publicStaticMethods);
         if (!annotatedMethods.isEmpty()) {
             annotatedMethods.stream()
                     .forEach(method -> rewriter.remove(method, null));

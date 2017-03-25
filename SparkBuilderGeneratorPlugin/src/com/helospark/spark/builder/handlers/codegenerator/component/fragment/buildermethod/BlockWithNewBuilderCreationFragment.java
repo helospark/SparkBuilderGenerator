@@ -6,6 +6,13 @@ import org.eclipse.jdt.core.dom.ClassInstanceCreation;
 import org.eclipse.jdt.core.dom.ReturnStatement;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 
+/**
+ * Creates a block which creates a builder, generated code is something like:
+ * <pre>
+ * return new Builder();
+ * </pre>
+ * @author helospark
+ */
 public class BlockWithNewBuilderCreationFragment {
 
     public Block createReturnBlock(AST ast, TypeDeclaration builderType) {

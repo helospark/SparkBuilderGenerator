@@ -23,6 +23,11 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 
+/**
+ * Dialog to set order and mandatory parameters for stage builder.
+ * Generated with WindowBuilder plugin
+ * @author helospark
+ */
 @Generated("WindowBuilder")
 public class StagedBuilderStagePropertyInputDialog extends Dialog {
     protected Object dialogResult;
@@ -31,12 +36,6 @@ public class StagedBuilderStagePropertyInputDialog extends Dialog {
     private CheckboxTableViewer checkboxTableViewer;
     private List<StagedBuilderStagePropertiesDialogResult> stagedBuilderStagePropertiesDialogResult;
 
-    /**
-     * Create the dialog.
-     *
-     * @param parent
-     * @param style
-     */
     public StagedBuilderStagePropertyInputDialog(Shell parent, List<StagedBuilderStagePropertiesDialogResult> stagedBuilderStagePropertiesDialogResult) {
         super(parent);
         setText("Staged builder generator - stage selection");
@@ -103,7 +102,7 @@ public class StagedBuilderStagePropertyInputDialog extends Dialog {
             @Override
             public void checkStateChanged(CheckStateChangedEvent checkStateChangedEvent) {
                 StagedBuilderStagePropertiesDialogResult domain = (StagedBuilderStagePropertiesDialogResult) checkStateChangedEvent.getElement();
-                domain.setSelected(checkStateChangedEvent.getChecked());
+                domain.setMandatory(checkStateChangedEvent.getChecked());
             }
         });
 

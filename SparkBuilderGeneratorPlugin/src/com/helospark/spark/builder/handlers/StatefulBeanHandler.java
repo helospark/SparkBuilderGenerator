@@ -6,7 +6,7 @@ import org.eclipse.jdt.core.ICompilationUnit;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.PreferenceStoreProvider;
 
 /**
- *
+ * Initializes stateful beans.
  * @deprecated There should not be stateful beans
  * @author helospark
  */

@@ -6,7 +6,7 @@ import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
 
 /**
- * Adds Nonnull annotation.
+ * Adds marker annotation.
  *
  * @author helospark
  */

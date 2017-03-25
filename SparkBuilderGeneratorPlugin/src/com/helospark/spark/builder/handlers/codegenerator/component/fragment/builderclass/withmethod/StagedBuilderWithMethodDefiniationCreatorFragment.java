@@ -13,13 +13,20 @@ import com.helospark.spark.builder.handlers.codegenerator.component.helper.Stage
 import com.helospark.spark.builder.handlers.codegenerator.domain.NamedVariableDeclarationField;
 import com.helospark.spark.builder.preferences.PreferencesManager;
 
-public class StagedBuilderMethodDefiniationCreatorFragment {
+/**
+ * Creates with method for staged builder.
+ * <pre>
+ * public ISecondStage withFirstField(String firstField);
+ * </pre>
+ * @author helospark
+ */
+public class StagedBuilderWithMethodDefiniationCreatorFragment {
     private PreferencesManager preferencesManager;
     private BuilderMethodNameBuilder builderClassMethodNameGeneratorService;
     private MarkerAnnotationAttacher markerAnnotationAttacher;
     private WithMethodParameterCreatorFragment withMethodParameterCreatorFragment;
 
-    public StagedBuilderMethodDefiniationCreatorFragment(PreferencesManager preferencesManager,
+    public StagedBuilderWithMethodDefiniationCreatorFragment(PreferencesManager preferencesManager,
             BuilderMethodNameBuilder builderClassMethodNameGeneratorService,
             MarkerAnnotationAttacher markerAnnotationAttacher,
             StagedBuilderInterfaceNameProvider stagedBuilderInterfaceNameProvider,

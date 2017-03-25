@@ -11,11 +11,21 @@ import com.helospark.spark.builder.handlers.codegenerator.component.fragment.bui
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.StagedBuilderProperties;
 import com.helospark.spark.builder.handlers.codegenerator.domain.CompilationUnitModificationDomain;
 
-public class StagedBuilderBuilderMethodAdder {
+/**
+ * Adds the builder() method for a staged builder.
+ * Generated code is something like:
+ * <pre>
+ * public static IFirstStage builder() {
+ *   return new Builder();
+ * }
+ * </pre>
+ * @author helospark
+ */
+public class StagedBuilderCreationBuilderMethodAdder {
     private BlockWithNewBuilderCreationFragment blockWithNewBuilderCreationFragment;
     private BuilderMethodDefinitionCreatorFragment builderMethodDefinitionCreatorFragment;
 
-    public StagedBuilderBuilderMethodAdder(BlockWithNewBuilderCreationFragment blockWithNewBuilderCreationFragment,
+    public StagedBuilderCreationBuilderMethodAdder(BlockWithNewBuilderCreationFragment blockWithNewBuilderCreationFragment,
             BuilderMethodDefinitionCreatorFragment builderMethodDefinitionCreatorFragment) {
         this.blockWithNewBuilderCreationFragment = blockWithNewBuilderCreationFragment;
         this.builderMethodDefinitionCreatorFragment = builderMethodDefinitionCreatorFragment;

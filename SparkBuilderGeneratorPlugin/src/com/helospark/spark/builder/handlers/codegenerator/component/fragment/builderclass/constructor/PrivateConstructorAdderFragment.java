@@ -5,6 +5,15 @@ import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.Modifier.ModifierKeyword;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 
+/**
+ * Fragment to add empty private constructor to the builder.
+ * Generated code is something like:
+ * <pre>
+ * private Clazz() {
+ * }
+ * </pre>
+ * @author helospark
+ */
 public class PrivateConstructorAdderFragment {
 
     public void addEmptyPrivateConstructor(AST ast, TypeDeclaration builderType) {

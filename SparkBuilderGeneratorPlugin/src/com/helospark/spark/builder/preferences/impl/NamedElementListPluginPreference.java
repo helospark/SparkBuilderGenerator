@@ -7,10 +7,14 @@ import org.eclipse.jface.preference.ComboFieldEditor;
 import org.eclipse.jface.preference.FieldEditor;
 import org.eclipse.swt.widgets.Composite;
 
-import com.helospark.spark.builder.NamedElement;
+import com.helospark.spark.builder.NamedElementWithId;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.PreferenceStoreWrapper;
 
-public class NamedElementListPluginPreference<T extends NamedElement> extends AbstractPluginPreference<T> {
+/**
+ * Preference that allows to select from a list of {@link NamedElementWithId<.
+ * @author helospark
+ */
+public class NamedElementListPluginPreference<T extends NamedElementWithId> extends AbstractPluginPreference<T> {
     private List<T> values;
 
     public NamedElementListPluginPreference(String key, String description, List<T> values, T defaultValue) {

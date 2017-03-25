@@ -14,10 +14,10 @@ import org.eclipse.jdt.core.dom.rewrite.ListRewrite;
 import com.helospark.spark.builder.handlers.BuilderType;
 import com.helospark.spark.builder.handlers.codegenerator.component.ImportPopulator;
 import com.helospark.spark.builder.handlers.codegenerator.component.PrivateInitializingConstructorCreator;
-import com.helospark.spark.builder.handlers.codegenerator.component.StagedBuilderStaticBuilderCreatorMethodCreator;
 import com.helospark.spark.builder.handlers.codegenerator.component.StagedBuilderClassCreator;
+import com.helospark.spark.builder.handlers.codegenerator.component.StagedBuilderStaticBuilderCreatorMethodCreator;
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.builderclass.stagedinterface.StagedBuilderInterfaceCreatorFragment;
-import com.helospark.spark.builder.handlers.codegenerator.component.helper.StagedBuilderFieldOrderProvider;
+import com.helospark.spark.builder.handlers.codegenerator.component.helper.StagedBuilderStagePropertiesProvider;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.StagedBuilderProperties;
 import com.helospark.spark.builder.handlers.codegenerator.domain.CompilationUnitModificationDomain;
 import com.helospark.spark.builder.handlers.codegenerator.domain.NamedVariableDeclarationField;
@@ -34,7 +34,7 @@ public class StagedBuilderCompilationUnitGenerator implements BuilderCompilation
     private StagedBuilderStaticBuilderCreatorMethodCreator stagedBuilderStaticBuilderCreatorMethodCreator;
     private ImportPopulator importPopulator;
     private BuilderOwnerClassFinder builderOwnerClassFinder;
-    private StagedBuilderFieldOrderProvider stagedBuilderFieldOrderProvider;
+    private StagedBuilderStagePropertiesProvider stagedBuilderStagePropertiesProvider;
     private StagedBuilderInterfaceCreatorFragment stagedBuilderInterfaceCreatorFragment;
 
     public StagedBuilderCompilationUnitGenerator(ApplicableBuilderFieldExtractor applicableBuilderFieldExtractor,
@@ -42,7 +42,7 @@ public class StagedBuilderCompilationUnitGenerator implements BuilderCompilation
             PrivateInitializingConstructorCreator privateInitializingConstructorCreator,
             StagedBuilderStaticBuilderCreatorMethodCreator stagedBuilderStaticBuilderCreatorMethodCreator,
             ImportPopulator importPopulator, BuilderOwnerClassFinder builderOwnerClassFinder,
-            StagedBuilderFieldOrderProvider stagedBuilderFieldOrderProvider,
+            StagedBuilderStagePropertiesProvider stagedBuilderStagePropertiesProvider,
             StagedBuilderInterfaceCreatorFragment stagedBuilderInterfaceCreatorFragment) {
         this.applicableBuilderFieldExtractor = applicableBuilderFieldExtractor;
         this.stagedBuilderClassCreator = stagedBuilderClassCreator;
@@ -50,29 +50,33 @@ public class StagedBuilderCompilationUnitGenerator implements BuilderCompilation
         this.stagedBuilderStaticBuilderCreatorMethodCreator = stagedBuilderStaticBuilderCreatorMethodCreator;
         this.importPopulator = importPopulator;
         this.builderOwnerClassFinder = builderOwnerClassFinder;
-        this.stagedBuilderFieldOrderProvider = stagedBuilderFieldOrderProvider;
+        this.stagedBuilderStagePropertiesProvider = stagedBuilderStagePropertiesProvider;
         this.stagedBuilderInterfaceCreatorFragment = stagedBuilderInterfaceCreatorFragment;
     }
 
     @Override
     public void generateBuilder(AST ast, ASTRewrite rewriter, CompilationUnit compilationUnit) {
-        CompilationUnitModificationDomain modificationDomain = builderOwnerClassFinder.asd(compilationUnit, ast,
+        CompilationUnitModificationDomain modificationDomain = builderOwnerClassFinder.provideBuilderOwnerClass(compilationUnit, ast,
                 rewriter);
         TypeDeclaration originalType = modificationDomain.getOriginalType();
         ListRewrite listRewrite = modificationDomain.getListRewrite();
 
         List<NamedVariableDeclarationField> fieldToIncludeInBuilder = applicableBuilderFieldExtractor.findBuilderFields(originalType);
-        List<StagedBuilderProperties> stagedBuilderStages = stagedBuilderFieldOrderProvider.build(fieldToIncludeInBuilder);
-        List<TypeDeclaration> stageInterfaces = createStageInterfaces(modificationDomain, stagedBuilderStages);
-        TypeDeclaration builderType = stagedBuilderClassCreator.createBuilderClass(modificationDomain, stagedBuilderStages, stageInterfaces);
+        List<StagedBuilderProperties> stagedBuilderStages = stagedBuilderStagePropertiesProvider.build(fieldToIncludeInBuilder);
 
-        privateConstructorPopulator.addPrivateConstructorToCompilationUnit(ast, originalType, builderType, listRewrite, fieldToIncludeInBuilder);
-        stagedBuilderStaticBuilderCreatorMethodCreator.addBuilderMethodToCompilationUnit(modificationDomain, builderType, stagedBuilderStages);
+        // TODO: eventually have a better design to avoid nulls here
+        if (stagedBuilderStages != null) {
+            List<TypeDeclaration> stageInterfaces = createStageInterfaces(modificationDomain, stagedBuilderStages);
+            TypeDeclaration builderType = stagedBuilderClassCreator.createBuilderClass(modificationDomain, stagedBuilderStages, stageInterfaces);
 
-        stageInterfaces.stream().forEach(stageInterface -> listRewrite.insertLast(stageInterface, null));
-        listRewrite.insertLast(builderType, null);
+            privateConstructorPopulator.addPrivateConstructorToCompilationUnit(ast, originalType, builderType, listRewrite, fieldToIncludeInBuilder);
+            stagedBuilderStaticBuilderCreatorMethodCreator.addBuilderMethodToCompilationUnit(modificationDomain, builderType, stagedBuilderStages);
 
-        importPopulator.populateImports(ast, rewriter, compilationUnit);
+            stageInterfaces.stream().forEach(stageInterface -> listRewrite.insertLast(stageInterface, null));
+            listRewrite.insertLast(builderType, null);
+
+            importPopulator.populateImports(ast, rewriter, compilationUnit);
+        }
     }
 
     private List<TypeDeclaration> createStageInterfaces(CompilationUnitModificationDomain modificationDomain,

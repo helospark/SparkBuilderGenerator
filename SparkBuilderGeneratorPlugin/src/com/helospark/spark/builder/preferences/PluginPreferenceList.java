@@ -60,7 +60,7 @@ public final class PluginPreferenceList {
             "Remove prefix and suffix (set in Preferences->Java->Code style)\nfrom builder names", Boolean.TRUE);
 
     public static final PluginPreference<String> STAGED_BUILDER_STAGE_INTERFACE_NAME = new StringPluginPreference("org.helospark.builder.stagedEditorStageInterfaceName",
-            "Stage interface name for staged builder", "I[FieldName]Stage");
+            "Stage interface pattern for staged builder", "I[FieldName]Stage");
 
     public static final PluginPreference<String> STAGED_BUILDER_LAST_STAGE_INTERFACE_NAME = new StringPluginPreference("org.helospark.builder.stagedEditorLastStageInterfaceName",
             "Last stage interface name for staged builder", "IBuildStage");

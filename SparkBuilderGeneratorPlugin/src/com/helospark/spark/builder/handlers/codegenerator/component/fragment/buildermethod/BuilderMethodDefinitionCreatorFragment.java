@@ -16,6 +16,13 @@ import com.helospark.spark.builder.handlers.codegenerator.component.helper.Templ
 import com.helospark.spark.builder.preferences.PluginPreferenceList;
 import com.helospark.spark.builder.preferences.PreferencesManager;
 
+/**
+ * Creates method definition of the builder method. Created definition is something like
+ * <pre>
+ * public static Builder builder();
+ * </pre>
+ * @author helospark
+ */
 public class BuilderMethodDefinitionCreatorFragment {
     private TemplateResolver templateResolver;
     private PreferencesManager preferenceManager;

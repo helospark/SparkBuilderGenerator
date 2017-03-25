@@ -5,10 +5,14 @@ import java.util.stream.Collectors;
 
 import org.eclipse.jdt.core.dom.BodyDeclaration;
 
-public class AnnotatedBodyDeclarationFilter {
+/**
+ * Filters the given list and return only those body declarations that contain Generated annotation.
+ * @author helospark
+ */
+public class GeneratedAnnotationContainingBodyDeclarationFilter {
     private GeneratedAnnotationPredicate generatedAnnotationPredicate;
 
-    public AnnotatedBodyDeclarationFilter(GeneratedAnnotationPredicate generatedAnnotationPredicate) {
+    public GeneratedAnnotationContainingBodyDeclarationFilter(GeneratedAnnotationPredicate generatedAnnotationPredicate) {
         this.generatedAnnotationPredicate = generatedAnnotationPredicate;
     }
 

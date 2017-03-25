@@ -8,23 +8,27 @@ import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.jdt.core.dom.rewrite.ASTRewrite;
 
-import com.helospark.spark.builder.handlers.codegenerator.component.remover.helper.AnnotatedBodyDeclarationFilter;
+import com.helospark.spark.builder.handlers.codegenerator.component.remover.helper.GeneratedAnnotationContainingBodyDeclarationFilter;
 import com.helospark.spark.builder.handlers.codegenerator.component.remover.helper.IsPrivatePredicate;
 
+/**
+ * Removes the previously generated class initializing private constructor.
+ * @author helospark
+ */
 public class PrivateConstructorRemover implements BuilderRemoverChainItem {
     private IsPrivatePredicate isPrivatePredicate;
-    private AnnotatedBodyDeclarationFilter annotatedBodyDeclarationFilter;
+    private GeneratedAnnotationContainingBodyDeclarationFilter generatedAnnotationContainingBodyDeclarationFilter;
 
     public PrivateConstructorRemover(IsPrivatePredicate isPrivatePredicate,
-            AnnotatedBodyDeclarationFilter annotatedBodyDeclarationFilter) {
+            GeneratedAnnotationContainingBodyDeclarationFilter generatedAnnotationContainingBodyDeclarationFilter) {
         this.isPrivatePredicate = isPrivatePredicate;
-        this.annotatedBodyDeclarationFilter = annotatedBodyDeclarationFilter;
+        this.generatedAnnotationContainingBodyDeclarationFilter = generatedAnnotationContainingBodyDeclarationFilter;
     }
 
     @Override
     public void remove(ASTRewrite rewriter, TypeDeclaration mainType) {
         List<MethodDeclaration> privateConstructors = extractPrivateConstructors(mainType);
-        List<MethodDeclaration> annotatedConstructors = annotatedBodyDeclarationFilter.filterAnnotatedClasses(privateConstructors);
+        List<MethodDeclaration> annotatedConstructors = generatedAnnotationContainingBodyDeclarationFilter.filterAnnotatedClasses(privateConstructors);
         if (!annotatedConstructors.isEmpty()) {
             annotatedConstructors.stream()
                     .forEach(constructor -> rewriter.remove(constructor, null));

@@ -6,6 +6,10 @@ import org.eclipse.jdt.core.dom.BodyDeclaration;
 import org.eclipse.jdt.core.dom.Modifier;
 import org.eclipse.jdt.core.dom.Modifier.ModifierKeyword;
 
+/**
+ * Return whether the given body declaration is public.
+ * @author helospark
+ */
 public class IsPublicPredicate implements Predicate<BodyDeclaration> {
     private GenericModifierPredicate genericModifierPredicate;
 

@@ -6,9 +6,13 @@ import org.eclipse.jdt.core.dom.rewrite.ASTRewrite;
 
 import com.helospark.spark.builder.handlers.BuilderType;
 
+/**
+ * Generates the builder to the given compilation unit.
+ * @author helospark
+ */
 public interface BuilderCompilationUnitGenerator {
 
-	void generateBuilder(AST ast, ASTRewrite rewriter, CompilationUnit compilationUnit);
+    void generateBuilder(AST ast, ASTRewrite rewriter, CompilationUnit compilationUnit);
 
-	boolean canHandle(BuilderType builderType);
+    boolean canHandle(BuilderType builderType);
 }

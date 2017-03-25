@@ -6,6 +6,10 @@ import org.eclipse.jdt.core.dom.BodyDeclaration;
 import org.eclipse.jdt.core.dom.Modifier;
 import org.eclipse.jdt.core.dom.Modifier.ModifierKeyword;
 
+/**
+ * Return whether the given body declaration is static.
+ * @author helospark
+ */
 public class IsStaticPredicate implements Predicate<BodyDeclaration> {
     private GenericModifierPredicate genericModifierPredicate;
 
