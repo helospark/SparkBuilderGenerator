@@ -1,5 +1,7 @@
 package com.helospark.spark.builder.handlers.codegenerator;
 
+import static com.helospark.spark.builder.preferences.PluginPreferenceList.INCLUDE_VISIBLE_FIELDS_FROM_SUPERCLASS;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -13,6 +15,8 @@ import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
 
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.FieldNameToBuilderFieldNameConverter;
 import com.helospark.spark.builder.handlers.codegenerator.domain.NamedVariableDeclarationField;
+import com.helospark.spark.builder.handlers.helper.TypeDeclarationFromSuperclassExtractor;
+import com.helospark.spark.builder.preferences.PreferencesManager;
 
 /**
  * Filters and converts given fields to {@link NamedVariableDeclarationField}.
@@ -21,15 +25,34 @@ import com.helospark.spark.builder.handlers.codegenerator.domain.NamedVariableDe
  */
 public class ApplicableBuilderFieldExtractor {
     private FieldNameToBuilderFieldNameConverter fieldNameToBuilderFieldNameConverter;
+    private PreferencesManager preferencesManager;
+    private TypeDeclarationFromSuperclassExtractor typeDeclarationFromSuperclassExtractor;
+    private ApplicableFieldVisibilityFilter applicableFieldVisibilityFilter;
 
-    public ApplicableBuilderFieldExtractor(FieldNameToBuilderFieldNameConverter fieldNameToBuilderFieldNameConverter) {
+    public ApplicableBuilderFieldExtractor(FieldNameToBuilderFieldNameConverter fieldNameToBuilderFieldNameConverter, PreferencesManager preferencesManager,
+            TypeDeclarationFromSuperclassExtractor typeDeclarationFromSuperclassExtractor, ApplicableFieldVisibilityFilter applicableFieldVisibilityFilter) {
         this.fieldNameToBuilderFieldNameConverter = fieldNameToBuilderFieldNameConverter;
+        this.preferencesManager = preferencesManager;
+        this.typeDeclarationFromSuperclassExtractor = typeDeclarationFromSuperclassExtractor;
+        this.applicableFieldVisibilityFilter = applicableFieldVisibilityFilter;
     }
 
-    @SuppressWarnings("unchecked")
     public List<NamedVariableDeclarationField> findBuilderFields(TypeDeclaration typeDeclaration) {
-        FieldDeclaration[] fields = typeDeclaration.getFields();
+        return findBuilderFieldsInternal(typeDeclaration, typeDeclaration);
+    }
+
+    private List<NamedVariableDeclarationField> findBuilderFieldsInternal(TypeDeclaration originalOwnerClasss, TypeDeclaration currentOwnerClass) {
         List<NamedVariableDeclarationField> namedVariableDeclarations = new ArrayList<>();
+
+        if (preferencesManager.getPreferenceValue(INCLUDE_VISIBLE_FIELDS_FROM_SUPERCLASS)) {
+            TypeDeclaration parentTypeDeclaration = typeDeclarationFromSuperclassExtractor.extractTypeDeclarationFromSuperClass(originalOwnerClasss);
+            if (parentTypeDeclaration != null) {
+                List<NamedVariableDeclarationField> allFields = findBuilderFields(parentTypeDeclaration);
+                namedVariableDeclarations.addAll(applicableFieldVisibilityFilter.filterSuperClassFieldsToVisibleFields(allFields, originalOwnerClasss));
+            }
+        }
+
+        FieldDeclaration[] fields = originalOwnerClasss.getFields();
         for (FieldDeclaration field : fields) {
             List<VariableDeclarationFragment> fragments = field.fragments();
             namedVariableDeclarations.addAll(getFilteredDeclarations(field, fragments));

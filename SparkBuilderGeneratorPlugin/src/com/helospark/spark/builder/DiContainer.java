@@ -17,6 +17,7 @@ import com.helospark.spark.builder.handlers.StateInitializerGenerateBuilderExecu
 import com.helospark.spark.builder.handlers.StatefulBeanHandler;
 import com.helospark.spark.builder.handlers.WorkingCopyManagerWrapper;
 import com.helospark.spark.builder.handlers.codegenerator.ApplicableBuilderFieldExtractor;
+import com.helospark.spark.builder.handlers.codegenerator.ApplicableFieldVisibilityFilter;
 import com.helospark.spark.builder.handlers.codegenerator.BuilderCompilationUnitGenerator;
 import com.helospark.spark.builder.handlers.codegenerator.BuilderOwnerClassFinder;
 import com.helospark.spark.builder.handlers.codegenerator.BuilderRemover;
@@ -76,6 +77,7 @@ import com.helospark.spark.builder.handlers.codegenerator.component.remover.help
 import com.helospark.spark.builder.handlers.codegenerator.component.remover.helper.IsPrivatePredicate;
 import com.helospark.spark.builder.handlers.codegenerator.component.remover.helper.IsPublicPredicate;
 import com.helospark.spark.builder.handlers.codegenerator.component.remover.helper.IsStaticPredicate;
+import com.helospark.spark.builder.handlers.helper.TypeDeclarationFromSuperclassExtractor;
 import com.helospark.spark.builder.preferences.PreferencesManager;
 
 public class DiContainer {
@@ -172,7 +174,11 @@ public class DiContainer {
         addDependency(new FieldNameToBuilderFieldNameConverter(getDependency(PreferencesManager.class),
                 getDependency(FieldPrefixSuffixPreferenceProvider.class),
                 getDependency(CamelCaseConverter.class)));
-        addDependency(new ApplicableBuilderFieldExtractor(getDependency(FieldNameToBuilderFieldNameConverter.class)));
+        addDependency(new TypeDeclarationFromSuperclassExtractor());
+        addDependency(new ApplicableFieldVisibilityFilter());
+        addDependency(new ApplicableBuilderFieldExtractor(getDependency(FieldNameToBuilderFieldNameConverter.class),
+                getDependency(PreferencesManager.class), getDependency(TypeDeclarationFromSuperclassExtractor.class),
+                getDependency(ApplicableFieldVisibilityFilter.class)));
         addDependency(new BuilderOwnerClassFinder());
         addDependency(new RegularBuilderCompilationUnitGenerator(getDependency(ApplicableBuilderFieldExtractor.class),
                 getDependency(RegularBuilderClassCreator.class),
