@@ -25,4 +25,9 @@ public class ErrorHandlerHook {
         dialogWrapper.openErrorDialogWithStacktrace(ERROR_TITLE,
                 UNEXPECTED_ERROR_MESSAGE, e);
     }
+
+    public void onCalledWithoutActiveJavaFile() {
+        dialogWrapper.openInformationDialog("No active Java editor",
+                "To generate builder execute this command in an active Java editor");
+    }
 }

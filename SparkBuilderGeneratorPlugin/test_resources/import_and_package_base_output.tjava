@@ -1,0 +1,39 @@
+package com.helospark.test;
+
+import java.util.List;
+
+public class TestClass {
+    private List<String> list;
+    private String other;
+
+    private TestClass(Builder builder) {
+        this.list = builder.list;
+        this.other = builder.other;
+    }
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public static final class Builder {
+        private List<String> list;
+        private String other;
+
+        private Builder() {
+        }
+
+        public Builder withList(List<String> list) {
+            this.list = list;
+            return this;
+        }
+
+        public Builder withOther(String other) {
+            this.other = other;
+            return this;
+        }
+
+        public TestClass build() {
+            return new TestClass(this);
+        }
+    }
+}

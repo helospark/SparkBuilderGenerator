@@ -1,0 +1,162 @@
+import javax.annotation.Nonnull;
+import javax.annotation.Generated;
+
+public class EmailMessage {
+    private String from;
+    private String to;
+    private String subject;
+    private String content;
+    private String mimeType;
+
+    @Generated("SparkTools")
+    private EmailMessage(Builder builder) {
+        this.from = builder.from;
+        this.to = builder.to;
+        this.subject = builder.subject;
+        this.content = builder.content;
+        this.mimeType = builder.mimeType;
+    }
+
+    /** 
+    * Creates builder to build {@link Builder} and setting from parameter.
+    * @return created builder
+    */
+    @Nonnull
+    public static IToStage from(@Nonnull String from) {
+        return new Builder().from(from);
+    }
+
+    /** 
+    * Definition of a stage for staged builder.
+    */
+    @Generated("SparkTools")
+    public interface IFromStage {
+        /** 
+        * Builder method for from parameter.
+        * @return builder
+        */
+        @Nonnull
+        public IToStage from(@Nonnull String from);
+    }
+
+    /** 
+    * Definition of a stage for staged builder.
+    */
+    @Generated("SparkTools")
+    public interface IToStage {
+        /** 
+        * Builder method for to parameter.
+        * @return builder
+        */
+        @Nonnull
+        public ISubjectStage to(@Nonnull String to);
+    }
+
+    /** 
+    * Definition of a stage for staged builder.
+    */
+    @Generated("SparkTools")
+    public interface ISubjectStage {
+        /** 
+        * Builder method for subject parameter.
+        * @return builder
+        */
+        @Nonnull
+        public IContentStage subject(@Nonnull String subject);
+    }
+
+    /** 
+    * Definition of a stage for staged builder.
+    */
+    @Generated("SparkTools")
+    public interface IContentStage {
+        /** 
+        * Builder method for content parameter.
+        * @return builder
+        */
+        @Nonnull
+        public IMimeTypeStage content(@Nonnull String content);
+    }
+
+    /** 
+    * Definition of a stage for staged builder.
+    */
+    @Generated("SparkTools")
+    public interface IMimeTypeStage {
+        /** 
+        * Builder method for mimeType parameter.
+        * @return builder
+        */
+        @Nonnull
+        public IBuildStage mimeType(@Nonnull String mimeType);
+    }
+
+    /** 
+    * Definition of a stage for staged builder.
+    */
+    @Generated("SparkTools")
+    public interface IBuildStage {
+        /** 
+        * Builder method of the builder.
+        * @return built class
+        */
+        @Nonnull
+        public EmailMessage build();
+    }
+
+    /** 
+    * Builder to build {@link EmailMessage}.
+    */
+    @Generated("SparkTools")
+    public static final class Builder implements IFromStage, IToStage, ISubjectStage, IContentStage, IMimeTypeStage, IBuildStage {
+        private String from;
+        private String to;
+        private String subject;
+        private String content;
+        private String mimeType;
+
+        private Builder() {
+        }
+
+        @Override
+        @Nonnull
+        public IToStage from(@Nonnull String from) {
+            this.from = from;
+            return this;
+        }
+
+        @Override
+        @Nonnull
+        public ISubjectStage to(@Nonnull String to) {
+            this.to = to;
+            return this;
+        }
+
+        @Override
+        @Nonnull
+        public IContentStage subject(@Nonnull String subject) {
+            this.subject = subject;
+            return this;
+        }
+
+        @Override
+        @Nonnull
+        public IMimeTypeStage content(@Nonnull String content) {
+            this.content = content;
+            return this;
+        }
+
+        @Override
+        @Nonnull
+        public IBuildStage mimeType(@Nonnull String mimeType) {
+            this.mimeType = mimeType;
+            return this;
+        }
+
+        @Override
+        @Nonnull
+        public EmailMessage build() {
+            return new EmailMessage(this);
+        }
+    }
+}

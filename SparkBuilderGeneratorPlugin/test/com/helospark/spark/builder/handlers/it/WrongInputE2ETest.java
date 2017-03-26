@@ -3,17 +3,19 @@ package com.helospark.spark.builder.handlers.it;
 import static java.util.Optional.of;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 import org.eclipse.jdt.core.JavaModelException;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
+import com.helospark.spark.builder.handlers.GenerateRegularBuilderHandler;
+
 public class WrongInputE2ETest extends BaseBuilderGeneratorIT {
     @BeforeMethod
     public void beforeMethod() throws JavaModelException {
         super.init();
+        underTest = new GenerateRegularBuilderHandler();
     }
 
     @Test
@@ -25,7 +27,8 @@ public class WrongInputE2ETest extends BaseBuilderGeneratorIT {
         underTest.execute(dummyExecutionEvent);
 
         // THEN
-        verifyNoMoreInteractions(iBuffer);
+        verify(dialogWrapper).openInformationDialog("No active Java editor",
+                "To generate builder execute this command in an active Java editor");
     }
 
     @Test

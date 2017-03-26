@@ -8,6 +8,7 @@ import org.eclipse.jdt.core.dom.FieldDeclaration;
 import org.eclipse.jdt.core.dom.IExtendedModifier;
 import org.eclipse.jdt.core.dom.Modifier;
 import org.eclipse.jdt.core.dom.Modifier.ModifierKeyword;
+import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
 
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.FieldNameToBuilderFieldNameConverter;
@@ -18,15 +19,16 @@ import com.helospark.spark.builder.handlers.codegenerator.domain.NamedVariableDe
  *
  * @author helospark
  */
-public class ApplicableBuilderFieldConverter {
+public class ApplicableBuilderFieldExtractor {
     private FieldNameToBuilderFieldNameConverter fieldNameToBuilderFieldNameConverter;
 
-    public ApplicableBuilderFieldConverter(FieldNameToBuilderFieldNameConverter fieldNameToBuilderFieldNameConverter) {
+    public ApplicableBuilderFieldExtractor(FieldNameToBuilderFieldNameConverter fieldNameToBuilderFieldNameConverter) {
         this.fieldNameToBuilderFieldNameConverter = fieldNameToBuilderFieldNameConverter;
     }
 
     @SuppressWarnings("unchecked")
-    public List<NamedVariableDeclarationField> convertApplicableFields(FieldDeclaration[] fields) {
+    public List<NamedVariableDeclarationField> findBuilderFields(TypeDeclaration typeDeclaration) {
+        FieldDeclaration[] fields = typeDeclaration.getFields();
         List<NamedVariableDeclarationField> namedVariableDeclarations = new ArrayList<>();
         for (FieldDeclaration field : fields) {
             List<VariableDeclarationFragment> fragments = field.fragments();

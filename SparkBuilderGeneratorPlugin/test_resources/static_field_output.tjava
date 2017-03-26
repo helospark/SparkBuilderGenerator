@@ -1,0 +1,36 @@
+public class TestClass {
+    private static final String shouldNotInclude;
+    private String testField;
+    private long something;
+
+    private TestClass(Builder builder) {
+        this.testField = builder.testField;
+        this.something = builder.something;
+    }
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public static final class Builder {
+        private String testField;
+        private long something;
+
+        private Builder() {
+        }
+
+        public Builder withTestField(String testField) {
+            this.testField = testField;
+            return this;
+        }
+
+        public Builder withSomething(long something) {
+            this.something = something;
+            return this;
+        }
+
+        public TestClass build() {
+            return new TestClass(this);
+        }
+    }
+}

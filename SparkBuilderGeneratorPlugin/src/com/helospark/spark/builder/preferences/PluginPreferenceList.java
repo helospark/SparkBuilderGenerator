@@ -1,8 +1,12 @@
 package com.helospark.spark.builder.preferences;
 
-import java.util.LinkedHashSet;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
+import com.helospark.spark.builder.handlers.BuilderType;
 import com.helospark.spark.builder.preferences.impl.BooleanPluginPreference;
+import com.helospark.spark.builder.preferences.impl.NamedElementListPluginPreference;
 import com.helospark.spark.builder.preferences.impl.StringPluginPreference;
 
 /**
@@ -12,9 +16,8 @@ import com.helospark.spark.builder.preferences.impl.StringPluginPreference;
  */
 public final class PluginPreferenceList {
 
-    private PluginPreferenceList() {
-        /* Only static constants */
-    }
+    public static final PluginPreference<BuilderType> DEFAULT_BUILDER_GENERATOR = new NamedElementListPluginPreference<>("org.helospark.defaultBuilderGenerator",
+            "Default builder generator implementation", Arrays.asList(BuilderType.values()), BuilderType.REGULAR);
 
     public static final PluginPreference<String> CREATE_BUILDER_METHOD_PATTERN = new StringPluginPreference("create_builder_method_pattern",
             "Create builder method templated pattern", "builder");
@@ -56,20 +59,53 @@ public final class PluginPreferenceList {
             "org.helospark.builder.removePrefixAndPostfixFromBuilderNames",
             "Remove prefix and suffix (set in Preferences->Java->Code style)\nfrom builder names", Boolean.TRUE);
 
-    public static LinkedHashSet<PluginPreference<?>> getAllPreferences() {
-        LinkedHashSet<PluginPreference<?>> allPreferences = new LinkedHashSet<PluginPreference<?>>();
-        allPreferences.add(CREATE_BUILDER_METHOD_PATTERN);
-        allPreferences.add(BUILDER_CLASS_NAME_PATTERN);
-        allPreferences.add(BUILD_METHOD_NAME_PATTERN);
-        allPreferences.add(BUILDERS_METHOD_NAME_PATTERN);
-        allPreferences.add(GENERATE_JAVADOC_ON_BUILDER_METHOD);
-        allPreferences.add(GENERATE_JAVADOC_ON_BUILDER_CLASS);
-        allPreferences.add(GENERATE_JAVADOC_ON_EACH_BUILDER_METHOD);
-        allPreferences.add(ADD_NONNULL_ON_RETURN);
-        allPreferences.add(ADD_NONNULL_ON_PARAMETERS);
-        allPreferences.add(ADD_GENERATED_ANNOTATION);
-        allPreferences.add(OVERRIDE_PREVIOUS_BUILDER);
-        allPreferences.add(REMOVE_PREFIX_AND_SUFFIX_FROM_BUILDER_NAMES);
-        return allPreferences;
+    public static final PluginPreference<String> STAGED_BUILDER_STAGE_INTERFACE_NAME = new StringPluginPreference("org.helospark.builder.stagedEditorStageInterfaceName",
+            "Stage interface pattern for staged builder", "I[FieldName]Stage");
+
+    public static final PluginPreference<String> STAGED_BUILDER_LAST_STAGE_INTERFACE_NAME = new StringPluginPreference("org.helospark.builder.stagedEditorLastStageInterfaceName",
+            "Last stage interface name for staged builder", "IBuildStage");
+
+    public static final PluginPreference<Boolean> STAGED_BUILDER_SKIP_STATIC_BUILDER_METHOD = new BooleanPluginPreference("org.helospark.builder.skipStaticBuilderMethod",
+            "Skip static builder() method for staged builder", Boolean.FALSE);
+
+    public static final PluginPreference<Boolean> STAGED_BUILDER_GENERATE_JAVADOC_ON_STAGE_INTERFACE = new BooleanPluginPreference(
+            "org.helospark.builder.generateJavadocOnStageInterface",
+            "Generate Javadoc on stage interface for staged builder", Boolean.FALSE);
+
+    public static final PluginPreference<Boolean> STAGED_BUILDER_ADD_GENERATED_ANNOTATION_ON_STAGE_INTERFACE = new BooleanPluginPreference(
+            "org.helospark.builder.addGeneratedAnnotationOnStageInterface",
+            "Add @Generated annotation on generated interfaces", Boolean.TRUE);
+
+    public static List<PluginPreferenceGroup> getAllPreferences() {
+        return Arrays.asList(createGeneralPreferencesGroup(),
+                createStagedPreferencesGroup());
+    }
+
+    private static PluginPreferenceGroup createGeneralPreferencesGroup() {
+        List<PluginPreference<?>> generalPreferences = new ArrayList<>();
+        generalPreferences.add(DEFAULT_BUILDER_GENERATOR);
+        generalPreferences.add(CREATE_BUILDER_METHOD_PATTERN);
+        generalPreferences.add(BUILDER_CLASS_NAME_PATTERN);
+        generalPreferences.add(BUILD_METHOD_NAME_PATTERN);
+        generalPreferences.add(BUILDERS_METHOD_NAME_PATTERN);
+        generalPreferences.add(GENERATE_JAVADOC_ON_BUILDER_METHOD);
+        generalPreferences.add(GENERATE_JAVADOC_ON_BUILDER_CLASS);
+        generalPreferences.add(GENERATE_JAVADOC_ON_EACH_BUILDER_METHOD);
+        generalPreferences.add(ADD_NONNULL_ON_RETURN);
+        generalPreferences.add(ADD_NONNULL_ON_PARAMETERS);
+        generalPreferences.add(ADD_GENERATED_ANNOTATION);
+        generalPreferences.add(OVERRIDE_PREVIOUS_BUILDER);
+        generalPreferences.add(REMOVE_PREFIX_AND_SUFFIX_FROM_BUILDER_NAMES);
+        return new PluginPreferenceGroup("General settings", generalPreferences);
+    }
+
+    private static PluginPreferenceGroup createStagedPreferencesGroup() {
+        List<PluginPreference<?>> stagedBuilderPreferences = new ArrayList<>();
+        stagedBuilderPreferences.add(STAGED_BUILDER_STAGE_INTERFACE_NAME);
+        stagedBuilderPreferences.add(STAGED_BUILDER_LAST_STAGE_INTERFACE_NAME);
+        stagedBuilderPreferences.add(STAGED_BUILDER_SKIP_STATIC_BUILDER_METHOD);
+        stagedBuilderPreferences.add(STAGED_BUILDER_GENERATE_JAVADOC_ON_STAGE_INTERFACE);
+        stagedBuilderPreferences.add(STAGED_BUILDER_ADD_GENERATED_ANNOTATION_ON_STAGE_INTERFACE);
+        return new PluginPreferenceGroup("Staged builder settings", stagedBuilderPreferences);
     }
 }

@@ -1,0 +1,51 @@
+public class TestClass {
+    private static final String shouldNotInclude;
+    private String testField;
+    private long something;
+
+    private TestClass(Builder builder) {
+        this.testField = builder.testField;
+        this.something = builder.something;
+    }
+
+    public static ITestFieldStage builder() {
+        return new Builder();
+    }
+
+    public interface ITestFieldStage {
+        public ISomethingStage withTestField(String testField);
+    }
+
+    public interface ISomethingStage {
+        public IBuildStage withSomething(long something);
+    }
+
+    public interface IBuildStage {
+        public TestClass build();
+    }
+
+    public static final class Builder implements ITestFieldStage, ISomethingStage, IBuildStage {
+        private String testField;
+        private long something;
+
+        private Builder() {
+        }
+
+        @Override
+        public ISomethingStage withTestField(String testField) {
+            this.testField = testField;
+            return this;
+        }
+
+        @Override
+        public IBuildStage withSomething(long something) {
+            this.something = something;
+            return this;
+        }
+
+        @Override
+        public TestClass build() {
+            return new TestClass(this);
+        }
+    }
+}

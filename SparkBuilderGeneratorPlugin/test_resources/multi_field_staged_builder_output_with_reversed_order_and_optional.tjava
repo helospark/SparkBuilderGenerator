@@ -1,0 +1,74 @@
+public class TestClass {
+    private String testField;
+    private Integer data;
+    private long something;
+    private List<String> list;
+
+    private TestClass(Builder builder) {
+        this.testField = builder.testField;
+        this.data = builder.data;
+        this.something = builder.something;
+        this.list = builder.list;
+    }
+
+    public static IListStage builder() {
+        return new Builder();
+    }
+
+    public interface IListStage {
+        public ISomethingStage withList(List<String> list);
+    }
+
+    public interface ISomethingStage {
+        public IDataStage withSomething(long something);
+    }
+
+    public interface IDataStage {
+        public IBuildStage withData(Integer data);
+    }
+
+    public interface IBuildStage {
+        public IBuildStage withTestField(String testField);
+
+        public TestClass build();
+    }
+
+    public static final class Builder implements IListStage, ISomethingStage, IDataStage, IBuildStage {
+        private List<String> list;
+        private long something;
+        private Integer data;
+        private String testField;
+
+        private Builder() {
+        }
+
+        @Override
+        public ISomethingStage withList(List<String> list) {
+            this.list = list;
+            return this;
+        }
+
+        @Override
+        public IDataStage withSomething(long something) {
+            this.something = something;
+            return this;
+        }
+
+        @Override
+        public IBuildStage withData(Integer data) {
+            this.data = data;
+            return this;
+        }
+
+        @Override
+        public IBuildStage withTestField(String testField) {
+            this.testField = testField;
+            return this;
+        }
+
+        @Override
+        public TestClass build() {
+            return new TestClass(this);
+        }
+    }
+}

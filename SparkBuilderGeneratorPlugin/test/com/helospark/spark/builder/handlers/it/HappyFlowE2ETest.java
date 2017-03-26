@@ -3,23 +3,19 @@ package com.helospark.spark.builder.handlers.it;
 import static java.util.Optional.of;
 import static org.mockito.BDDMockito.given;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-
 import org.eclipse.jdt.core.JavaModelException;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
+
+import com.helospark.spark.builder.handlers.GenerateRegularBuilderHandler;
 
 public class HappyFlowE2ETest extends BaseBuilderGeneratorIT {
 
     @BeforeMethod
     public void beforeMethod() throws JavaModelException {
         super.init();
+        underTest = new GenerateRegularBuilderHandler();
     }
 
     @Test(dataProvider = "baseTestCasesProvider")
@@ -44,6 +40,9 @@ public class HappyFlowE2ETest extends BaseBuilderGeneratorIT {
                 { "primitive_field_input.tjava", "primitive_field_output.tjava" },
                 { "multi_field_input.tjava", "multi_field_output.tjava" },
                 { "annotated_fields_input.tjava", "annotated_fields_output.tjava" },
+                { "import_and_package_input.tjava", "import_and_package_base_output.tjava" },
+                { "multi_field_staged_builder_output.tjava", "multi_field_output.tjava" },
+                { "static_field_input.tjava", "static_field_output.tjava" }
         };
     }
 
@@ -72,7 +71,8 @@ public class HappyFlowE2ETest extends BaseBuilderGeneratorIT {
                 { "multi_field_input.tjava", "multi_field_output_with_method_nonnull.tjava", "add_nonnull_on_parameter" },
                 { "multi_field_input.tjava", "multi_field_output_with_generated.tjava", "add_generated_annotation" },
                 { "multi_field_input.tjava", "multi_field_output.tjava", "override_previous_builder" },
-                { "multi_field_output.tjava", "multi_field_output.tjava", "override_previous_builder" }, // removed previous builder
+                { "multi_field_output.tjava", "multi_field_output.tjava", "override_previous_builder" },
+                { "import_and_package_input.tjava", "import_and_package_output_with_nonnull.tjava", "add_nonnull_on_parameter" },
         };
     }
 
@@ -135,7 +135,10 @@ public class HappyFlowE2ETest extends BaseBuilderGeneratorIT {
     @DataProvider(name = "testCasesWithWithPrefixAndSuffixRemoval")
     public Object[][] testCasesWithWithPrefixAndSuffixRemoval() {
         return new Object[][] {
-                { "multi_field_input.tjava", "multi_field_output.tjava" }, // no prefix or postfix
+                { "multi_field_input.tjava", "multi_field_output.tjava" }, // no
+                // prefix
+                // or
+                // postfix
                 { "prefix_input.tjava", "prefix_output.tjava" },
                 { "suffix_input.tjava", "suffix_output.tjava" },
                 { "prefix_suffix_input.tjava", "prefix_suffix_output.tjava" },
@@ -178,10 +181,5 @@ public class HappyFlowE2ETest extends BaseBuilderGeneratorIT {
 
         // THEN
         super.assertEqualsJavaContents(outputCaptor.getValue(), expectedResult);
-    }
-
-    public String readClasspathFile(String fileName) throws IOException, URISyntaxException {
-        Path uri = Paths.get(this.getClass().getResource("/" + fileName).toURI());
-        return new String(Files.readAllBytes(uri), Charset.forName("UTF-8"));
     }
 }

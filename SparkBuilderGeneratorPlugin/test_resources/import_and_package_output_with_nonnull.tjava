@@ -1,0 +1,40 @@
+package com.helospark.test;
+
+import java.util.List;
+import javax.annotation.Nonnull;
+
+public class TestClass {
+    private List<String> list;
+    private String other;
+
+    private TestClass(Builder builder) {
+        this.list = builder.list;
+        this.other = builder.other;
+    }
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public static final class Builder {
+        private List<String> list;
+        private String other;
+
+        private Builder() {
+        }
+
+        public Builder withList(@Nonnull List<String> list) {
+            this.list = list;
+            return this;
+        }
+
+        public Builder withOther(@Nonnull String other) {
+            this.other = other;
+            return this;
+        }
+
+        public TestClass build() {
+            return new TestClass(this);
+        }
+    }
+}

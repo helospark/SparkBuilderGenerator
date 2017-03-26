@@ -6,8 +6,15 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.testng.Assert.assertEquals;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Map;
 
+import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.jdt.core.IBuffer;
 import org.eclipse.jdt.core.ICompilationUnit;
@@ -22,7 +29,6 @@ import org.mockito.Mock;
 
 import com.helospark.spark.builder.DiContainer;
 import com.helospark.spark.builder.handlers.DialogWrapper;
-import com.helospark.spark.builder.handlers.GenerateBuilderHandler;
 import com.helospark.spark.builder.handlers.HandlerUtilWrapper;
 import com.helospark.spark.builder.handlers.WorkingCopyManagerWrapper;
 import com.helospark.spark.builder.handlers.codegenerator.CompilationUnitParser;
@@ -32,7 +38,7 @@ import com.helospark.spark.builder.handlers.codegenerator.component.helper.Prefe
 public class BaseBuilderGeneratorIT {
     protected ExecutionEvent dummyExecutionEvent = new ExecutionEvent();
 
-    protected GenerateBuilderHandler underTest;
+    protected AbstractHandler underTest;
 
     @Mock
     protected ICompilationUnit iCompilationUnit;
@@ -65,7 +71,8 @@ public class BaseBuilderGeneratorIT {
 
         DiContainer.initializeDiContainer();
 
-        given(handlerUtilWrapper.getActivePartId(dummyExecutionEvent)).willReturn("org.eclipse.jdt.ui.CompilationUnitEditor");
+        given(handlerUtilWrapper.getActivePartId(dummyExecutionEvent))
+                .willReturn("org.eclipse.jdt.ui.CompilationUnitEditor");
         given(workingCopyManagerWrapper.getCurrentCompilationUnit(dummyExecutionEvent)).willReturn(iCompilationUnit);
         given(preferenceStoreProvider.providePreferenceStore()).willReturn(preferenceStore);
         given(iCompilationUnit.getBuffer()).willReturn(iBuffer);
@@ -73,8 +80,6 @@ public class BaseBuilderGeneratorIT {
         doNothing().when(iBuffer).setContents(outputCaptor.capture());
 
         DiContainer.initializeDiContainer();
-
-        underTest = new GenerateBuilderHandler();
     }
 
     protected void diContainerOverrides() {
@@ -93,6 +98,7 @@ public class BaseBuilderGeneratorIT {
     }
 
     protected void setDefaultPreferenceStoreSettings() {
+        // general settings
         given(preferenceStore.getBoolean("override_previous_builder")).willReturn(true);
         given(preferenceStore.getString("create_builder_method_pattern")).willReturn(of("builder"));
         given(preferenceStore.getString("builder_class_name_pattern")).willReturn(of("Builder"));
@@ -105,6 +111,17 @@ public class BaseBuilderGeneratorIT {
         given(preferenceStore.getBoolean("add_nonnull_on_parameter")).willReturn(false);
         given(preferenceStore.getBoolean("add_generated_annotation")).willReturn(false);
         given(preferenceStore.getBoolean("org.helospark.builder.removePrefixAndPostfixFromBuilderNames")).willReturn(false);
+
+        // staged builder
+        given(preferenceStore.getBoolean("org.helospark.builder.generateJavadocOnStageInterface")).willReturn(false);
+        given(preferenceStore.getBoolean("org.helospark.builder.skipStaticBuilderMethod")).willReturn(false);
+        given(preferenceStore.getString("org.helospark.builder.stagedEditorLastStageInterfaceName")).willReturn(of("IBuildStage"));
+        given(preferenceStore.getString("org.helospark.builder.stagedEditorStageInterfaceName")).willReturn(of("I[FieldName]Stage"));
+        given(preferenceStore.getBoolean("org.helospark.builder.addGeneratedAnnotationOnStageInterface")).willReturn(false);
+
+        // prefix postfix
+        given(preferenceStore.getString("org.eclipse.jdt.core.codeComplete.fieldPrefixes")).willReturn(of(""));
+        given(preferenceStore.getString("org.eclipse.jdt.core.codeComplete.fieldSuffixes")).willReturn(of(""));
     }
 
     protected CompilationUnit parseAst(char[] source) {
@@ -123,5 +140,10 @@ public class BaseBuilderGeneratorIT {
         String actual = parseAst(actualValue.toCharArray()).toString();
         String expected = parseAst(expectedValue.toCharArray()).toString();
         assertEquals(actual, expected);
+    }
+
+    public String readClasspathFile(String fileName) throws IOException, URISyntaxException {
+        Path uri = Paths.get(this.getClass().getResource("/" + fileName).toURI());
+        return new String(Files.readAllBytes(uri), Charset.forName("UTF-8"));
     }
 }
