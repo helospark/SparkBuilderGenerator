@@ -1,50 +1,52 @@
 package com.helospark.spark.builder.handlers.helper;
 
+import static java.util.Collections.emptyList;
+import static java.util.Optional.empty;
+import static java.util.Optional.of;
+
 import java.util.List;
+import java.util.Optional;
 
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.dom.CompilationUnit;
-import org.eclipse.jdt.core.dom.ITypeBinding;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 
 import com.helospark.spark.builder.handlers.codegenerator.CompilationUnitParser;
 
 public class TypeDeclarationFromSuperclassExtractor {
-    private CompilationUnitParser compilationUnitParser = new CompilationUnitParser();
+    private CompilationUnitParser compilationUnitParser;
+    private ITypeExtractor iTypeExtractor;
 
-    public TypeDeclaration extractTypeDeclarationFromSuperClass(TypeDeclaration typeDeclaration) {
+    public TypeDeclarationFromSuperclassExtractor(CompilationUnitParser compilationUnitParser, ITypeExtractor iTypeExtractor) {
+        this.compilationUnitParser = compilationUnitParser;
+        this.iTypeExtractor = iTypeExtractor;
+    }
+
+    public Optional<TypeDeclaration> extractTypeDeclarationFromSuperClass(TypeDeclaration typeDeclaration) {
         try {
-            ITypeBinding superclass = typeDeclaration.resolveBinding().getSuperclass();
-            if (superclass != null && superclass.getJavaElement() instanceof IType) {
-                return extractTypeDeclaration(superclass);
-            }
-            return null;
+            return iTypeExtractor.extract(typeDeclaration)
+                    .flatMap(type -> extractTypeDeclaration(type));
         } catch (Exception e) {
             e.printStackTrace();
-            return null;
+            return empty();
         }
     }
 
-    private TypeDeclaration extractTypeDeclaration(ITypeBinding superclass) {
-        TypeDeclaration result = null;
-        IType superClassType = (IType) superclass.getJavaElement();
-        CompilationUnit compilationUnit = getCompilationUnit(superClassType);
-        if (compilationUnit != null) {
-            result = ((List<TypeDeclaration>) compilationUnit.types())
-                    .stream()
-                    .filter(type -> type.getName().toString().equals(superClassType.getElementName()))
-                    .findFirst()
-                    .orElse(null);
-        }
-        return result;
+    private Optional<TypeDeclaration> extractTypeDeclaration(IType superClassType) {
+        return getCompilationUnit(superClassType)
+                .map(iCompilationUnit -> ((List<TypeDeclaration>) iCompilationUnit.types()))
+                .orElse(emptyList())
+                .stream()
+                .filter(type -> type.getName().toString().equals(superClassType.getElementName()))
+                .findFirst();
     }
 
-    private CompilationUnit getCompilationUnit(IType superClassType) {
-        CompilationUnit result = null;
+    private Optional<CompilationUnit> getCompilationUnit(IType superClassType) {
+        Optional<CompilationUnit> result = empty();
         if (superClassType.getCompilationUnit() != null) {
-            result = compilationUnitParser.parse(superClassType.getCompilationUnit());
+            result = of(compilationUnitParser.parse(superClassType.getCompilationUnit()));
         } else if (superClassType.getClassFile() != null) {
-            result = compilationUnitParser.parse(superClassType.getClassFile());
+            result = of(compilationUnitParser.parse(superClassType.getClassFile()));
         }
         return result;
     }

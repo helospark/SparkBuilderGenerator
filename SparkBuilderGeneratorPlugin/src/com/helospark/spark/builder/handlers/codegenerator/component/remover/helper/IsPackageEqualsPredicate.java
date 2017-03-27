@@ -1,6 +1,7 @@
 package com.helospark.spark.builder.handlers.codegenerator.component.remover.helper;
 
 import java.util.Objects;
+import java.util.Optional;
 import java.util.function.BiPredicate;
 
 import org.eclipse.jdt.core.dom.ASTNode;
@@ -10,7 +11,18 @@ public class IsPackageEqualsPredicate implements BiPredicate<ASTNode, ASTNode> {
 
     @Override
     public boolean test(ASTNode first, ASTNode second) {
-        return Objects.equals(((CompilationUnit) first.getRoot()).getPackage().getName().toString(),
-                ((CompilationUnit) second.getRoot()).getPackage().getName().toString());
+        Optional<String> firstPackageName = getPackageName(first);
+        Optional<String> secondPackageName = getPackageName(second);
+
+        return Objects.equals(firstPackageName, secondPackageName);
+    }
+
+    private Optional<String> getPackageName(ASTNode first) {
+        return Optional.ofNullable(first.getRoot())
+                .filter(root -> root instanceof CompilationUnit)
+                .map(root -> (CompilationUnit) root)
+                .map(compilationUnit -> compilationUnit.getPackage())
+                .map(packageDeclaration -> packageDeclaration.getName())
+                .map(packageName -> packageName.toString());
     }
 }

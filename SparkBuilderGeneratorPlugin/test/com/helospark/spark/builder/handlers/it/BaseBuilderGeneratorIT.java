@@ -1,7 +1,9 @@
 package com.helospark.spark.builder.handlers.it;
 
+import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.testng.Assert.assertEquals;
@@ -23,6 +25,7 @@ import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTParser;
 import org.eclipse.jdt.core.dom.CompilationUnit;
+import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
@@ -34,6 +37,7 @@ import com.helospark.spark.builder.handlers.WorkingCopyManagerWrapper;
 import com.helospark.spark.builder.handlers.codegenerator.CompilationUnitParser;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.PreferenceStoreProvider;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.PreferenceStoreWrapper;
+import com.helospark.spark.builder.handlers.helper.ITypeExtractor;
 
 public class BaseBuilderGeneratorIT {
     protected ExecutionEvent dummyExecutionEvent = new ExecutionEvent();
@@ -56,6 +60,8 @@ public class BaseBuilderGeneratorIT {
     protected DialogWrapper dialogWrapper;
     @Mock
     protected IBuffer iBuffer;
+    @Mock
+    protected ITypeExtractor iTypeExtractor;
     @Captor
     protected ArgumentCaptor<String> outputCaptor;
 
@@ -76,6 +82,7 @@ public class BaseBuilderGeneratorIT {
         given(workingCopyManagerWrapper.getCurrentCompilationUnit(dummyExecutionEvent)).willReturn(iCompilationUnit);
         given(preferenceStoreProvider.providePreferenceStore()).willReturn(preferenceStore);
         given(iCompilationUnit.getBuffer()).willReturn(iBuffer);
+        given(iTypeExtractor.extract(any(TypeDeclaration.class))).willReturn(empty());
         setDefaultPreferenceStoreSettings();
         doNothing().when(iBuffer).setContents(outputCaptor.capture());
 
@@ -88,13 +95,18 @@ public class BaseBuilderGeneratorIT {
         DiContainer.addDependency(compilationUnitParser);
         DiContainer.addDependency(preferenceStoreProvider);
         DiContainer.addDependency(dialogWrapper);
+        DiContainer.addDependency(iTypeExtractor);
     }
 
     protected void setInput(String sourceAsString) throws JavaModelException {
+        setCompilationUnitInput(iCompilationUnit, sourceAsString);
+    }
+
+    protected void setCompilationUnitInput(ICompilationUnit iCompilationUnitParameter, String sourceAsString) throws JavaModelException {
         char[] source = sourceAsString.toCharArray();
         CompilationUnit cu = parseAst(source);
-        given(compilationUnitParser.parse(iCompilationUnit)).willReturn(cu);
-        given(iCompilationUnit.getSource()).willReturn(sourceAsString);
+        given(compilationUnitParser.parse(iCompilationUnitParameter)).willReturn(cu);
+        given(iCompilationUnitParameter.getSource()).willReturn(sourceAsString);
     }
 
     protected void setDefaultPreferenceStoreSettings() {
@@ -111,6 +123,7 @@ public class BaseBuilderGeneratorIT {
         given(preferenceStore.getBoolean("add_nonnull_on_parameter")).willReturn(false);
         given(preferenceStore.getBoolean("add_generated_annotation")).willReturn(false);
         given(preferenceStore.getBoolean("org.helospark.builder.removePrefixAndPostfixFromBuilderNames")).willReturn(false);
+        given(preferenceStore.getBoolean("org.helospark.builder.includeVisibleFieldsFromSuperclass")).willReturn(false);
 
         // staged builder
         given(preferenceStore.getBoolean("org.helospark.builder.generateJavadocOnStageInterface")).willReturn(false);

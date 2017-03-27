@@ -77,6 +77,7 @@ import com.helospark.spark.builder.handlers.codegenerator.component.remover.help
 import com.helospark.spark.builder.handlers.codegenerator.component.remover.helper.IsPrivatePredicate;
 import com.helospark.spark.builder.handlers.codegenerator.component.remover.helper.IsPublicPredicate;
 import com.helospark.spark.builder.handlers.codegenerator.component.remover.helper.IsStaticPredicate;
+import com.helospark.spark.builder.handlers.helper.ITypeExtractor;
 import com.helospark.spark.builder.handlers.helper.TypeDeclarationFromSuperclassExtractor;
 import com.helospark.spark.builder.preferences.PreferencesManager;
 
@@ -174,7 +175,9 @@ public class DiContainer {
         addDependency(new FieldNameToBuilderFieldNameConverter(getDependency(PreferencesManager.class),
                 getDependency(FieldPrefixSuffixPreferenceProvider.class),
                 getDependency(CamelCaseConverter.class)));
-        addDependency(new TypeDeclarationFromSuperclassExtractor());
+        addDependency(new ITypeExtractor());
+        addDependency(new TypeDeclarationFromSuperclassExtractor(getDependency(CompilationUnitParser.class),
+                getDependency(ITypeExtractor.class)));
         addDependency(new ApplicableFieldVisibilityFilter());
         addDependency(new ApplicableBuilderFieldExtractor(getDependency(FieldNameToBuilderFieldNameConverter.class),
                 getDependency(PreferencesManager.class), getDependency(TypeDeclarationFromSuperclassExtractor.class),

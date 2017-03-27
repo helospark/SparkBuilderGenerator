@@ -1,0 +1,4 @@
+
+public class TestClass extends TestSuperClass {
+	private String childField;
+}

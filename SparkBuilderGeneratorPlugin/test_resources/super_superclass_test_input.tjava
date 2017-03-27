@@ -1,0 +1,8 @@
+package com.helospark.differentpackage;
+
+public class TestSuperSuperClass {
+	public String publicSuperSuperClassField;
+	String defaultSuperSuperClassField;
+	protected String protectedSuperSuperClassField;
+	private String privateSuperSuperClassField;
+}

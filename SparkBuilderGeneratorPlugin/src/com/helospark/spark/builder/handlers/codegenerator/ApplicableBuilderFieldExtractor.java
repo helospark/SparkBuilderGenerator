@@ -1,6 +1,7 @@
 package com.helospark.spark.builder.handlers.codegenerator;
 
 import static com.helospark.spark.builder.preferences.PluginPreferenceList.INCLUDE_VISIBLE_FIELDS_FROM_SUPERCLASS;
+import static java.util.Collections.emptyList;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,26 +39,29 @@ public class ApplicableBuilderFieldExtractor {
     }
 
     public List<NamedVariableDeclarationField> findBuilderFields(TypeDeclaration typeDeclaration) {
-        return findBuilderFieldsInternal(typeDeclaration, typeDeclaration);
+        return findBuilderFieldsRecursively(typeDeclaration, typeDeclaration);
     }
 
-    private List<NamedVariableDeclarationField> findBuilderFieldsInternal(TypeDeclaration originalOwnerClasss, TypeDeclaration currentOwnerClass) {
+    private List<NamedVariableDeclarationField> findBuilderFieldsRecursively(TypeDeclaration originalOwnerClasss, TypeDeclaration currentOwnerClass) {
         List<NamedVariableDeclarationField> namedVariableDeclarations = new ArrayList<>();
 
         if (preferencesManager.getPreferenceValue(INCLUDE_VISIBLE_FIELDS_FROM_SUPERCLASS)) {
-            TypeDeclaration parentTypeDeclaration = typeDeclarationFromSuperclassExtractor.extractTypeDeclarationFromSuperClass(originalOwnerClasss);
-            if (parentTypeDeclaration != null) {
-                List<NamedVariableDeclarationField> allFields = findBuilderFields(parentTypeDeclaration);
-                namedVariableDeclarations.addAll(applicableFieldVisibilityFilter.filterSuperClassFieldsToVisibleFields(allFields, originalOwnerClasss));
-            }
+            namedVariableDeclarations.addAll(getFieldsFromSuperclass(currentOwnerClass));
         }
 
-        FieldDeclaration[] fields = originalOwnerClasss.getFields();
+        FieldDeclaration[] fields = currentOwnerClass.getFields();
         for (FieldDeclaration field : fields) {
             List<VariableDeclarationFragment> fragments = field.fragments();
             namedVariableDeclarations.addAll(getFilteredDeclarations(field, fragments));
         }
         return namedVariableDeclarations;
+    }
+
+    private List<NamedVariableDeclarationField> getFieldsFromSuperclass(TypeDeclaration currentTypeDeclaration) {
+        return typeDeclarationFromSuperclassExtractor.extractTypeDeclarationFromSuperClass(currentTypeDeclaration)
+                .map(parentTypeDeclaration -> findBuilderFieldsRecursively(currentTypeDeclaration, parentTypeDeclaration))
+                .map(fields -> applicableFieldVisibilityFilter.filterSuperClassFieldsToVisibleFields(fields, currentTypeDeclaration))
+                .orElse(emptyList());
     }
 
     private List<NamedVariableDeclarationField> getFilteredDeclarations(FieldDeclaration field, List<VariableDeclarationFragment> fragments) {
