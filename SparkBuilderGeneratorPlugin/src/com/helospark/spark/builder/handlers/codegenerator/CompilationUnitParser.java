@@ -20,14 +20,6 @@ public class CompilationUnitParser {
         return (CompilationUnit) parser.createAST(null);
     }
 
-    public CompilationUnit parseSource(String source) {
-        ASTParser parser = ASTParser.newParser(AST.JLS8);
-        parser.setKind(ASTParser.K_COMPILATION_UNIT);
-        parser.setSource(source.toCharArray());
-        parser.setResolveBindings(true);
-        return (CompilationUnit) parser.createAST(null);
-    }
-
     public CompilationUnit parse(IClassFile classFile) {
         ASTParser parser = ASTParser.newParser(AST.JLS8);
         parser.setKind(ASTParser.K_COMPILATION_UNIT);

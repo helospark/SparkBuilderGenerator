@@ -1,4 +1,4 @@
-package com.helospark.spark.builder.handlers.helper;
+package com.helospark.spark.builder.handlers.codegenerator.component.helper;
 
 import static java.util.Collections.emptyList;
 import static java.util.Optional.empty;
@@ -13,6 +13,10 @@ import org.eclipse.jdt.core.dom.TypeDeclaration;
 
 import com.helospark.spark.builder.handlers.codegenerator.CompilationUnitParser;
 
+/**
+ * Creates TypeDeclaration from the superclass of the given type declaration.
+ * @author helospark
+ */
 public class TypeDeclarationFromSuperclassExtractor {
     private CompilationUnitParser compilationUnitParser;
     private ITypeExtractor iTypeExtractor;
@@ -23,13 +27,8 @@ public class TypeDeclarationFromSuperclassExtractor {
     }
 
     public Optional<TypeDeclaration> extractTypeDeclarationFromSuperClass(TypeDeclaration typeDeclaration) {
-        try {
-            return iTypeExtractor.extract(typeDeclaration)
-                    .flatMap(type -> extractTypeDeclaration(type));
-        } catch (Exception e) {
-            e.printStackTrace();
-            return empty();
-        }
+        return iTypeExtractor.extract(typeDeclaration)
+                .flatMap(type -> extractTypeDeclaration(type));
     }
 
     private Optional<TypeDeclaration> extractTypeDeclaration(IType superClassType) {

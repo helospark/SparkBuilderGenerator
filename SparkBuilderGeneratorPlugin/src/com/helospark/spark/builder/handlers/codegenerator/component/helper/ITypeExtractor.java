@@ -1,10 +1,14 @@
-package com.helospark.spark.builder.handlers.helper;
+package com.helospark.spark.builder.handlers.codegenerator.component.helper;
 
 import java.util.Optional;
 
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 
+/**
+ * Extracts IType from the given TypeDeclaration.
+ * @author helospark
+ */
 public class ITypeExtractor {
 
     public Optional<IType> extract(TypeDeclaration typeDeclaration) {

@@ -17,7 +17,6 @@ import com.helospark.spark.builder.handlers.StateInitializerGenerateBuilderExecu
 import com.helospark.spark.builder.handlers.StatefulBeanHandler;
 import com.helospark.spark.builder.handlers.WorkingCopyManagerWrapper;
 import com.helospark.spark.builder.handlers.codegenerator.ApplicableBuilderFieldExtractor;
-import com.helospark.spark.builder.handlers.codegenerator.ApplicableFieldVisibilityFilter;
 import com.helospark.spark.builder.handlers.codegenerator.BuilderCompilationUnitGenerator;
 import com.helospark.spark.builder.handlers.codegenerator.BuilderOwnerClassFinder;
 import com.helospark.spark.builder.handlers.codegenerator.BuilderRemover;
@@ -51,11 +50,13 @@ import com.helospark.spark.builder.handlers.codegenerator.component.fragment.bui
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.constructor.PrivateConstructorBodyCreationFragment;
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.constructor.PrivateConstructorInsertionFragment;
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.constructor.PrivateConstructorMethodDefinitionCreationFragment;
+import com.helospark.spark.builder.handlers.codegenerator.component.helper.ApplicableFieldVisibilityFilter;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.BuilderMethodNameBuilder;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.CamelCaseConverter;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.FieldNameToBuilderFieldNameConverter;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.FieldPrefixSuffixPreferenceProvider;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.GeneratedAnnotationPopulator;
+import com.helospark.spark.builder.handlers.codegenerator.component.helper.ITypeExtractor;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.InterfaceSetter;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.JavadocAdder;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.JavadocGenerator;
@@ -65,6 +66,7 @@ import com.helospark.spark.builder.handlers.codegenerator.component.helper.Stage
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.StagedBuilderStagePropertiesProvider;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.StagedBuilderStagePropertyInputDialogOpener;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.TemplateResolver;
+import com.helospark.spark.builder.handlers.codegenerator.component.helper.TypeDeclarationFromSuperclassExtractor;
 import com.helospark.spark.builder.handlers.codegenerator.component.remover.BuilderClassRemover;
 import com.helospark.spark.builder.handlers.codegenerator.component.remover.BuilderRemoverChainItem;
 import com.helospark.spark.builder.handlers.codegenerator.component.remover.PrivateConstructorRemover;
@@ -77,8 +79,6 @@ import com.helospark.spark.builder.handlers.codegenerator.component.remover.help
 import com.helospark.spark.builder.handlers.codegenerator.component.remover.helper.IsPrivatePredicate;
 import com.helospark.spark.builder.handlers.codegenerator.component.remover.helper.IsPublicPredicate;
 import com.helospark.spark.builder.handlers.codegenerator.component.remover.helper.IsStaticPredicate;
-import com.helospark.spark.builder.handlers.helper.ITypeExtractor;
-import com.helospark.spark.builder.handlers.helper.TypeDeclarationFromSuperclassExtractor;
 import com.helospark.spark.builder.preferences.PreferencesManager;
 
 public class DiContainer {

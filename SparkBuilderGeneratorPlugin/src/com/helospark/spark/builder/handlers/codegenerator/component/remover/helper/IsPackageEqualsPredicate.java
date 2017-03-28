@@ -7,6 +7,10 @@ import java.util.function.BiPredicate;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 
+/**
+ * Determines if the package of the two given ASTNode is equals.
+ * @author helospark
+ */
 public class IsPackageEqualsPredicate implements BiPredicate<ASTNode, ASTNode> {
 
     @Override

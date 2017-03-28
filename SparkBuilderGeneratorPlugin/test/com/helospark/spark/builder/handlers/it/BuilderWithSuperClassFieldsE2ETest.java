@@ -5,6 +5,8 @@ import static java.util.Optional.of;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.any;
 
+import java.util.List;
+
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
@@ -16,8 +18,15 @@ import org.testng.annotations.Test;
 
 import com.helospark.spark.builder.DiContainer;
 import com.helospark.spark.builder.handlers.GenerateRegularBuilderHandler;
+import com.helospark.spark.builder.handlers.GenerateStagedBuilderHandler;
+import com.helospark.spark.builder.handlers.codegenerator.component.helper.StagedBuilderStagePropertyInputDialogOpener;
+import com.helospark.spark.builder.handlers.it.dummyService.NoDialogOperationPerformedStagedBuilderDialogAnswerProvider;
 
 public class BuilderWithSuperClassFieldsE2ETest extends BaseBuilderGeneratorIT {
+    private NoDialogOperationPerformedStagedBuilderDialogAnswerProvider dialogAnswerProvider = new NoDialogOperationPerformedStagedBuilderDialogAnswerProvider();
+    @Mock
+    private StagedBuilderStagePropertyInputDialogOpener stagedBuilderStagePropertyInputDialogOpener;
+
     @Mock
     private IType firstSuperClassType;
     @Mock
@@ -47,7 +56,7 @@ public class BuilderWithSuperClassFieldsE2ETest extends BaseBuilderGeneratorIT {
     @Override
     protected void diContainerOverrides() {
         super.diContainerOverrides();
-        DiContainer.addDependency(iTypeExtractor);
+        DiContainer.addDependency(stagedBuilderStagePropertyInputDialogOpener);
     }
 
     @Test(dataProvider = "simpleExtendsDataProvider")
@@ -96,6 +105,51 @@ public class BuilderWithSuperClassFieldsE2ETest extends BaseBuilderGeneratorIT {
 
         String input = readClasspathFile("superclass_test_extends_input.tjava");
         String expectedResult = readClasspathFile("superclass_with_two_superclasses_output.tjava");
+        super.setInput(input);
+
+        // WHEN
+        underTest.execute(dummyExecutionEvent);
+
+        // THEN
+        super.assertEqualsJavaContents(outputCaptor.getValue(), expectedResult);
+    }
+
+    @Test
+    public void testSimpleExtendsWithStagedBuilder() throws Exception {
+        // GIVEN
+        underTest = new GenerateStagedBuilderHandler();
+        given(iTypeExtractor.extract(any(TypeDeclaration.class)))
+                .willReturn(of(firstSuperClassType))
+                .willReturn(empty());
+        String superClassInput = readClasspathFile("superclass_test_superclass_input.tjava");
+        super.setCompilationUnitInput(firstSuperClassICompilationUnit, superClassInput);
+
+        String input = readClasspathFile("superclass_test_extends_input.tjava");
+        String expectedResult = readClasspathFile("superclass_test_output_with_staged_builder.tjava");
+        super.setInput(input);
+
+        // no change in order, all mandatory fields
+        given(stagedBuilderStagePropertyInputDialogOpener.open(any(List.class))).willAnswer(invocation -> dialogAnswerProvider.provideAnswer(invocation));
+
+        // WHEN
+        underTest.execute(dummyExecutionEvent);
+
+        // THEN
+        super.assertEqualsJavaContents(outputCaptor.getValue(), expectedResult);
+    }
+
+    @Test
+    public void testSimpleExtendsShouldNotIncludeSuperclassesWhenPreferencesIsTurnedOff() throws Exception {
+        // GIVEN
+        given(preferenceStore.getBoolean("org.helospark.builder.includeVisibleFieldsFromSuperclass")).willReturn(false);
+        given(iTypeExtractor.extract(any(TypeDeclaration.class)))
+                .willReturn(of(firstSuperClassType))
+                .willReturn(empty());
+        String superClassInput = readClasspathFile("superclass_test_superclass_input.tjava");
+        super.setCompilationUnitInput(firstSuperClassICompilationUnit, superClassInput);
+
+        String input = readClasspathFile("superclass_test_extends_input.tjava");
+        String expectedResult = readClasspathFile("superclass_test_with_disabled_preference.tjava");
         super.setInput(input);
 
         // WHEN

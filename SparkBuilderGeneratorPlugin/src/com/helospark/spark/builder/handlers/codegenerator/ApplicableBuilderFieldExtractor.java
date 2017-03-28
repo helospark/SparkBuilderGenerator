@@ -14,9 +14,10 @@ import org.eclipse.jdt.core.dom.Modifier.ModifierKeyword;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
 
+import com.helospark.spark.builder.handlers.codegenerator.component.helper.ApplicableFieldVisibilityFilter;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.FieldNameToBuilderFieldNameConverter;
+import com.helospark.spark.builder.handlers.codegenerator.component.helper.TypeDeclarationFromSuperclassExtractor;
 import com.helospark.spark.builder.handlers.codegenerator.domain.NamedVariableDeclarationField;
-import com.helospark.spark.builder.handlers.helper.TypeDeclarationFromSuperclassExtractor;
 import com.helospark.spark.builder.preferences.PreferencesManager;
 
 /**

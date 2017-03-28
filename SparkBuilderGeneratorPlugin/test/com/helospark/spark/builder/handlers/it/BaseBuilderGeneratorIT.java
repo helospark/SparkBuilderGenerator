@@ -35,9 +35,9 @@ import com.helospark.spark.builder.handlers.DialogWrapper;
 import com.helospark.spark.builder.handlers.HandlerUtilWrapper;
 import com.helospark.spark.builder.handlers.WorkingCopyManagerWrapper;
 import com.helospark.spark.builder.handlers.codegenerator.CompilationUnitParser;
+import com.helospark.spark.builder.handlers.codegenerator.component.helper.ITypeExtractor;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.PreferenceStoreProvider;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.PreferenceStoreWrapper;
-import com.helospark.spark.builder.handlers.helper.ITypeExtractor;
 
 public class BaseBuilderGeneratorIT {
     protected ExecutionEvent dummyExecutionEvent = new ExecutionEvent();

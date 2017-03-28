@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: SparkBuilderGenerator
 Bundle-SymbolicName: com.helospark.SparkBuilderGenerator;singleton:=true
-Bundle-Version: 0.0.6.qualifier
+Bundle-Version: 0.0.7.qualifier
 Bundle-ClassPath: .
 Bundle-Activator: com.helospark.spark.builder.Activator
 Require-Bundle: org.eclipse.ui,
