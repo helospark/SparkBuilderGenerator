@@ -12,11 +12,12 @@ import org.eclipse.jdt.core.dom.ImportDeclaration;
 import org.eclipse.jdt.core.dom.rewrite.ASTRewrite;
 import org.eclipse.jdt.core.dom.rewrite.ListRewrite;
 
+import com.helospark.spark.builder.handlers.codegenerator.domain.CompilationUnitModificationDomain;
 import com.helospark.spark.builder.preferences.PreferencesManager;
 
 /**
  * Add imports.
- * 
+ *
  * @author helospark
  */
 public class ImportPopulator {
@@ -28,7 +29,10 @@ public class ImportPopulator {
         this.preferencesManager = preferencesManager;
     }
 
-    public void populateImports(AST ast, ASTRewrite rewriter, CompilationUnit compilationUnit) {
+    public void populateImports(CompilationUnitModificationDomain compilationUnitModificationDomain) {
+        AST ast = compilationUnitModificationDomain.getAst();
+        ASTRewrite rewriter = compilationUnitModificationDomain.getAstRewriter();
+        CompilationUnit compilationUnit = compilationUnitModificationDomain.getCompilationUnit();
         ListRewrite importRewrite = rewriter.getListRewrite(compilationUnit, CompilationUnit.IMPORTS_PROPERTY);
 
         if (shouldAddNonnullAnnotation(compilationUnit)) {
@@ -62,4 +66,5 @@ public class ImportPopulator {
         importDeclaration.setName(ast.newName(fullyQualifierImport));
         importRewrite.insertLast(importDeclaration, null);
     }
+
 }

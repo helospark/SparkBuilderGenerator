@@ -10,8 +10,10 @@ import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.rewrite.ASTRewrite;
 
 import com.helospark.spark.builder.handlers.codegenerator.BuilderCompilationUnitGenerator;
+import com.helospark.spark.builder.handlers.codegenerator.BuilderOwnerClassFinder;
 import com.helospark.spark.builder.handlers.codegenerator.BuilderRemover;
 import com.helospark.spark.builder.handlers.codegenerator.CompilationUnitParser;
+import com.helospark.spark.builder.handlers.codegenerator.domain.CompilationUnitModificationDomain;
 
 /**
  * Generates a builder.
@@ -25,14 +27,16 @@ public class GenerateBuilderExecutorImpl implements GenerateBuilderExecutor {
     private IsEventOnJavaFilePredicate isEventOnJavaFilePredicate;
     private WorkingCopyManagerWrapper workingCopyManagerWrapper;
     private CompilationUnitSourceSetter compilationUnitSourceSetter;
-    private ErrorHandlerHook errorHandlerHook;;
+    private ErrorHandlerHook errorHandlerHook;
+    private BuilderOwnerClassFinder builderOwnerClassFinder;
 
     public GenerateBuilderExecutorImpl(CompilationUnitParser compilationUnitParser,
             List<BuilderCompilationUnitGenerator> builderGenerators, BuilderRemover builderRemover,
             IsEventOnJavaFilePredicate isEventOnJavaFilePredicate,
             WorkingCopyManagerWrapper workingCopyManagerWrapper,
             CompilationUnitSourceSetter compilationUnitSourceSetter,
-            ErrorHandlerHook errorHandlerHook) {
+            ErrorHandlerHook errorHandlerHook,
+            BuilderOwnerClassFinder builderOwnerClassFinder) {
         this.compilationUnitParser = compilationUnitParser;
         this.builderGenerators = builderGenerators;
         this.builderRemover = builderRemover;
@@ -40,6 +44,7 @@ public class GenerateBuilderExecutorImpl implements GenerateBuilderExecutor {
         this.workingCopyManagerWrapper = workingCopyManagerWrapper;
         this.compilationUnitSourceSetter = compilationUnitSourceSetter;
         this.errorHandlerHook = errorHandlerHook;
+        this.builderOwnerClassFinder = builderOwnerClassFinder;
     }
 
     @Override
@@ -58,11 +63,13 @@ public class GenerateBuilderExecutorImpl implements GenerateBuilderExecutor {
         ASTRewrite rewriter = ASTRewrite.create(ast);
 
         builderRemover.removeExistingBuilderWhenNeeded(ast, rewriter, compilationUnit);
+        CompilationUnitModificationDomain compilationUnitModificationDomain = builderOwnerClassFinder.provideBuilderOwnerClass(compilationUnit, ast, rewriter, iCompilationUnit);
+
         builderGenerators.stream()
                 .filter(builderGenerator -> builderGenerator.canHandle(builderType))
                 .findFirst()
                 .orElseThrow(() -> new IllegalStateException("No builder generator can handle " + builderType))
-                .generateBuilder(ast, rewriter, compilationUnit);
+                .generateBuilder(compilationUnitModificationDomain);
 
         compilationUnitSourceSetter.commitCodeChange(iCompilationUnit, rewriter);
     }

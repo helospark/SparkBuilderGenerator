@@ -1,7 +1,11 @@
 package com.helospark.spark.builder.handlers.codegenerator.domain;
 
+import javax.annotation.Generated;
+
 import org.eclipse.jdt.core.dom.AST;
+import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
+import org.eclipse.jdt.core.dom.rewrite.ASTRewrite;
 import org.eclipse.jdt.core.dom.rewrite.ListRewrite;
 
 /**
@@ -12,25 +16,84 @@ import org.eclipse.jdt.core.dom.rewrite.ListRewrite;
  */
 public class CompilationUnitModificationDomain {
     private ListRewrite listRewrite;
+    private ASTRewrite astRewriter;
     private AST ast;
     private TypeDeclaration originalType;
+    private CompilationUnit compilationUnit;
 
-    public CompilationUnitModificationDomain(ListRewrite listRewrite, AST ast, TypeDeclaration originalType) {
-        this.listRewrite = listRewrite;
-        this.ast = ast;
-        this.originalType = originalType;
+    @Generated("SparkTools")
+    private CompilationUnitModificationDomain(Builder builder) {
+        this.listRewrite = builder.listRewrite;
+        this.astRewriter = builder.astRewriter;
+        this.ast = builder.ast;
+        this.originalType = builder.originalType;
+        this.compilationUnit = builder.compilationUnit;
     }
 
     public ListRewrite getListRewrite() {
         return listRewrite;
     }
 
+    public ASTRewrite getAstRewriter() {
+        return astRewriter;
+    }
+
     public AST getAst() {
         return ast;
     }
 
+    public CompilationUnit getCompilationUnit() {
+        return compilationUnit;
+    }
+
     public TypeDeclaration getOriginalType() {
         return originalType;
+    }
+
+    @Generated("SparkTools")
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    @Generated("SparkTools")
+    public static final class Builder {
+        private ListRewrite listRewrite;
+        private ASTRewrite astRewriter;
+        private AST ast;
+        private TypeDeclaration originalType;
+        private CompilationUnit compilationUnit;
+
+        private Builder() {
+        }
+
+        public Builder withListRewrite(ListRewrite listRewrite) {
+            this.listRewrite = listRewrite;
+            return this;
+        }
+
+        public Builder withAstRewriter(ASTRewrite astRewriter) {
+            this.astRewriter = astRewriter;
+            return this;
+        }
+
+        public Builder withAst(AST ast) {
+            this.ast = ast;
+            return this;
+        }
+
+        public Builder withOriginalType(TypeDeclaration originalType) {
+            this.originalType = originalType;
+            return this;
+        }
+
+        public Builder withCompilationUnit(CompilationUnit compilationUnit) {
+            this.compilationUnit = compilationUnit;
+            return this;
+        }
+
+        public CompilationUnitModificationDomain build() {
+            return new CompilationUnitModificationDomain(this);
+        }
     }
 
 }

@@ -16,6 +16,7 @@ import com.helospark.spark.builder.handlers.IsEventOnJavaFilePredicate;
 import com.helospark.spark.builder.handlers.StateInitializerGenerateBuilderExecutorDecorator;
 import com.helospark.spark.builder.handlers.StatefulBeanHandler;
 import com.helospark.spark.builder.handlers.WorkingCopyManagerWrapper;
+import com.helospark.spark.builder.handlers.codegenerator.ActiveJavaEditorOffsetProvider;
 import com.helospark.spark.builder.handlers.codegenerator.ApplicableBuilderFieldExtractor;
 import com.helospark.spark.builder.handlers.codegenerator.BuilderCompilationUnitGenerator;
 import com.helospark.spark.builder.handlers.codegenerator.BuilderOwnerClassFinder;
@@ -182,12 +183,12 @@ public class DiContainer {
         addDependency(new ApplicableBuilderFieldExtractor(getDependency(FieldNameToBuilderFieldNameConverter.class),
                 getDependency(PreferencesManager.class), getDependency(TypeDeclarationFromSuperclassExtractor.class),
                 getDependency(ApplicableFieldVisibilityFilter.class)));
-        addDependency(new BuilderOwnerClassFinder());
+        addDependency(new ActiveJavaEditorOffsetProvider());
+        addDependency(new BuilderOwnerClassFinder(getDependency(ActiveJavaEditorOffsetProvider.class)));
         addDependency(new RegularBuilderCompilationUnitGenerator(getDependency(ApplicableBuilderFieldExtractor.class),
                 getDependency(RegularBuilderClassCreator.class),
                 getDependency(PrivateInitializingConstructorCreator.class),
-                getDependency(RegularBuilderBuilderMethodCreator.class), getDependency(ImportPopulator.class),
-                getDependency(BuilderOwnerClassFinder.class)));
+                getDependency(RegularBuilderBuilderMethodCreator.class), getDependency(ImportPopulator.class)));
         addDependency(new IsEventOnJavaFilePredicate(getDependency(HandlerUtilWrapper.class)));
 
         // staged builder dependencies
@@ -231,8 +232,9 @@ public class DiContainer {
         addDependency(new StagedBuilderCompilationUnitGenerator(getDependency(ApplicableBuilderFieldExtractor.class),
                 getDependency(StagedBuilderClassCreator.class),
                 getDependency(PrivateInitializingConstructorCreator.class),
-                getDependency(StagedBuilderStaticBuilderCreatorMethodCreator.class), getDependency(ImportPopulator.class),
-                getDependency(BuilderOwnerClassFinder.class), getDependency(StagedBuilderStagePropertiesProvider.class),
+                getDependency(StagedBuilderStaticBuilderCreatorMethodCreator.class),
+                getDependency(ImportPopulator.class),
+                getDependency(StagedBuilderStagePropertiesProvider.class),
                 getDependency(StagedBuilderInterfaceCreatorFragment.class)));
 
         // Generator chain
@@ -241,7 +243,8 @@ public class DiContainer {
                 getDependency(BuilderRemover.class),
                 getDependency(IsEventOnJavaFilePredicate.class), getDependency(WorkingCopyManagerWrapper.class),
                 getDependency(CompilationUnitSourceSetter.class),
-                getDependency(ErrorHandlerHook.class)));
+                getDependency(ErrorHandlerHook.class),
+                getDependency(BuilderOwnerClassFinder.class)));
         addDependency(new GenerateBuilderHandlerErrorHandlerDecorator(getDependency(GenerateBuilderExecutorImpl.class),
                 getDependency(ErrorHandlerHook.class)));
         addDependency(new StatefulBeanHandler(getDependency(PreferenceStoreProvider.class),

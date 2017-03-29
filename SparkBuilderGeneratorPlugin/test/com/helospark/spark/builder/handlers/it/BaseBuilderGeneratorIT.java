@@ -34,6 +34,7 @@ import com.helospark.spark.builder.DiContainer;
 import com.helospark.spark.builder.handlers.DialogWrapper;
 import com.helospark.spark.builder.handlers.HandlerUtilWrapper;
 import com.helospark.spark.builder.handlers.WorkingCopyManagerWrapper;
+import com.helospark.spark.builder.handlers.codegenerator.ActiveJavaEditorOffsetProvider;
 import com.helospark.spark.builder.handlers.codegenerator.CompilationUnitParser;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.ITypeExtractor;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.PreferenceStoreProvider;
@@ -62,6 +63,8 @@ public class BaseBuilderGeneratorIT {
     protected IBuffer iBuffer;
     @Mock
     protected ITypeExtractor iTypeExtractor;
+    @Mock
+    private ActiveJavaEditorOffsetProvider activeJavaEditorOffsetProvider;
     @Captor
     protected ArgumentCaptor<String> outputCaptor;
 
@@ -83,6 +86,7 @@ public class BaseBuilderGeneratorIT {
         given(preferenceStoreProvider.providePreferenceStore()).willReturn(preferenceStore);
         given(iCompilationUnit.getBuffer()).willReturn(iBuffer);
         given(iTypeExtractor.extract(any(TypeDeclaration.class))).willReturn(empty());
+        given(activeJavaEditorOffsetProvider.provideOffsetAtCurrentCursorPosition()).willReturn(0);
         setDefaultPreferenceStoreSettings();
         doNothing().when(iBuffer).setContents(outputCaptor.capture());
 
@@ -96,6 +100,7 @@ public class BaseBuilderGeneratorIT {
         DiContainer.addDependency(preferenceStoreProvider);
         DiContainer.addDependency(dialogWrapper);
         DiContainer.addDependency(iTypeExtractor);
+        DiContainer.addDependency(activeJavaEditorOffsetProvider);
     }
 
     protected void setInput(String sourceAsString) throws JavaModelException {
