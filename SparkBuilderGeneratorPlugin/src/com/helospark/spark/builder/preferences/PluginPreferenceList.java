@@ -59,6 +59,10 @@ public final class PluginPreferenceList {
             "org.helospark.builder.removePrefixAndPostfixFromBuilderNames",
             "Remove prefix and suffix (set in Preferences->Java->Code style)\nfrom builder names", Boolean.TRUE);
 
+    public static final PluginPreference<Boolean> INCLUDE_VISIBLE_FIELDS_FROM_SUPERCLASS = new BooleanPluginPreference(
+            "org.helospark.builder.includeVisibleFieldsFromSuperclass",
+            "Include visible fields from superclass", Boolean.TRUE);
+
     public static final PluginPreference<String> STAGED_BUILDER_STAGE_INTERFACE_NAME = new StringPluginPreference("org.helospark.builder.stagedEditorStageInterfaceName",
             "Stage interface pattern for staged builder", "I[FieldName]Stage");
 
@@ -96,6 +100,7 @@ public final class PluginPreferenceList {
         generalPreferences.add(ADD_GENERATED_ANNOTATION);
         generalPreferences.add(OVERRIDE_PREVIOUS_BUILDER);
         generalPreferences.add(REMOVE_PREFIX_AND_SUFFIX_FROM_BUILDER_NAMES);
+        generalPreferences.add(INCLUDE_VISIBLE_FIELDS_FROM_SUPERCLASS);
         return new PluginPreferenceGroup("General settings", generalPreferences);
     }
 

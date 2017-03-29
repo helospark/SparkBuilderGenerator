@@ -2,7 +2,7 @@
 <feature
       id="com.helospark.SparkBuilderGeneratorFeature"
       label="SparkBuilderGeneratorFeature"
-      version="0.0.6.qualifier">
+      version="0.0.7.qualifier">
 
    <description url="ftp://helospark.com/SparkBuilderGeneratorPlugin/">
       Spark builder generator plugin

@@ -24,6 +24,7 @@ Most configuration is on the preferences page: Preferences -> Java -> Spark buil
 | Last stage interface name for staged builder | Name of the last stage's interface, that contains the build() method | IBuildStage | - |
 | Stage interface pattern for staged builder | Pattern of the stage interface names | I[FieldName]Stage | `[fieldName]`, `[FieldName]` |
 | Remove prefix and suffix (set in Preferences->Java->Code style)\nfrom builder names | Whether to remove prefixes and suffixes set in code style from builder method names | true | - |
+| Include visible fields from superclass | Whether to also include visible fields from super class. Field is visible if it's public, protected. It's also visible if it has a default scope and it's in the same package. Private fields are never visible, therefore not set. | true | - |
 
 ### @Generated annotatation
 
@@ -37,6 +38,8 @@ Most configuration is on the preferences page: Preferences -> Java -> Spark buil
    Add option to remove prefix and postfix from builder method name
  - 0.0.6
    Add staged builder option
+ - 0.0.7
+   Option to include visible fields from superclass
 
 ## The generated code looks like the following:
 

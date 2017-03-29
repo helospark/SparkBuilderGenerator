@@ -50,11 +50,13 @@ import com.helospark.spark.builder.handlers.codegenerator.component.fragment.bui
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.constructor.PrivateConstructorBodyCreationFragment;
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.constructor.PrivateConstructorInsertionFragment;
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.constructor.PrivateConstructorMethodDefinitionCreationFragment;
+import com.helospark.spark.builder.handlers.codegenerator.component.helper.ApplicableFieldVisibilityFilter;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.BuilderMethodNameBuilder;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.CamelCaseConverter;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.FieldNameToBuilderFieldNameConverter;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.FieldPrefixSuffixPreferenceProvider;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.GeneratedAnnotationPopulator;
+import com.helospark.spark.builder.handlers.codegenerator.component.helper.ITypeExtractor;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.InterfaceSetter;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.JavadocAdder;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.JavadocGenerator;
@@ -64,6 +66,7 @@ import com.helospark.spark.builder.handlers.codegenerator.component.helper.Stage
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.StagedBuilderStagePropertiesProvider;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.StagedBuilderStagePropertyInputDialogOpener;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.TemplateResolver;
+import com.helospark.spark.builder.handlers.codegenerator.component.helper.TypeDeclarationFromSuperclassExtractor;
 import com.helospark.spark.builder.handlers.codegenerator.component.remover.BuilderClassRemover;
 import com.helospark.spark.builder.handlers.codegenerator.component.remover.BuilderRemoverChainItem;
 import com.helospark.spark.builder.handlers.codegenerator.component.remover.PrivateConstructorRemover;
@@ -172,7 +175,13 @@ public class DiContainer {
         addDependency(new FieldNameToBuilderFieldNameConverter(getDependency(PreferencesManager.class),
                 getDependency(FieldPrefixSuffixPreferenceProvider.class),
                 getDependency(CamelCaseConverter.class)));
-        addDependency(new ApplicableBuilderFieldExtractor(getDependency(FieldNameToBuilderFieldNameConverter.class)));
+        addDependency(new ITypeExtractor());
+        addDependency(new TypeDeclarationFromSuperclassExtractor(getDependency(CompilationUnitParser.class),
+                getDependency(ITypeExtractor.class)));
+        addDependency(new ApplicableFieldVisibilityFilter());
+        addDependency(new ApplicableBuilderFieldExtractor(getDependency(FieldNameToBuilderFieldNameConverter.class),
+                getDependency(PreferencesManager.class), getDependency(TypeDeclarationFromSuperclassExtractor.class),
+                getDependency(ApplicableFieldVisibilityFilter.class)));
         addDependency(new BuilderOwnerClassFinder());
         addDependency(new RegularBuilderCompilationUnitGenerator(getDependency(ApplicableBuilderFieldExtractor.class),
                 getDependency(RegularBuilderClassCreator.class),
