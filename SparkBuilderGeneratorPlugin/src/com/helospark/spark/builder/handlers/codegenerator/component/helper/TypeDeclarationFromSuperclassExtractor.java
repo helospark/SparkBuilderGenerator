@@ -27,8 +27,14 @@ public class TypeDeclarationFromSuperclassExtractor {
     }
 
     public Optional<TypeDeclaration> extractTypeDeclarationFromSuperClass(TypeDeclaration typeDeclaration) {
-        return iTypeExtractor.extract(typeDeclaration)
-                .flatMap(type -> extractTypeDeclaration(type));
+        try {
+            return iTypeExtractor.extract(typeDeclaration)
+                    .flatMap(type -> extractTypeDeclaration(type));
+        } catch (Exception e) {
+            System.out.println("[ERROR] while extracting parent type");
+            e.printStackTrace();
+            return Optional.empty();
+        }
     }
 
     private Optional<TypeDeclaration> extractTypeDeclaration(IType superClassType) {

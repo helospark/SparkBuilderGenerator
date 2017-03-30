@@ -40,6 +40,8 @@ Most configuration is on the preferences page: Preferences -> Java -> Spark buil
    Add staged builder option
  - 0.0.7
    Option to include visible fields from superclass
+ - 0.0.8
+   Regression bug was observed in 0.0.7 under some Eclipse configurations. IllegalArgumentException occured while trying to parse java.lang.Object class.
 
 ## The generated code looks like the following:
 
