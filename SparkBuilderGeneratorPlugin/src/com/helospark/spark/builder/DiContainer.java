@@ -54,14 +54,17 @@ import com.helospark.spark.builder.handlers.codegenerator.component.fragment.con
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.ApplicableFieldVisibilityFilter;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.BuilderMethodNameBuilder;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.CamelCaseConverter;
+import com.helospark.spark.builder.handlers.codegenerator.component.helper.CurrentlySelectedApplicableClassesClassNameProvider;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.FieldNameToBuilderFieldNameConverter;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.FieldPrefixSuffixPreferenceProvider;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.GeneratedAnnotationPopulator;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.ITypeExtractor;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.InterfaceSetter;
+import com.helospark.spark.builder.handlers.codegenerator.component.helper.IsTypeApplicableForBuilderGenerationPredicate;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.JavadocAdder;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.JavadocGenerator;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.MarkerAnnotationAttacher;
+import com.helospark.spark.builder.handlers.codegenerator.component.helper.ParentITypeExtractor;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.PreferenceStoreProvider;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.StagedBuilderInterfaceNameProvider;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.StagedBuilderStagePropertiesProvider;
@@ -111,7 +114,8 @@ public class DiContainer {
                 getDependency(GeneratedAnnotationContainingBodyDeclarationFilter.class)));
         addDependency(new BodyDeclarationOfTypeExtractor());
         addDependency(new BuilderClassRemover(getDependency(BodyDeclarationOfTypeExtractor.class),
-                getDependency(GeneratedAnnotationContainingBodyDeclarationFilter.class)));
+                getDependency(GeneratedAnnotationContainingBodyDeclarationFilter.class),
+                getDependency(IsPrivatePredicate.class)));
         addDependency(new StagedBuilderInterfaceRemover(getDependency(BodyDeclarationOfTypeExtractor.class),
                 getDependency(GeneratedAnnotationContainingBodyDeclarationFilter.class)));
         addDependency(new StaticBuilderMethodRemover(getDependency(IsStaticPredicate.class), getDependency(IsPublicPredicate.class),
@@ -184,7 +188,12 @@ public class DiContainer {
                 getDependency(PreferencesManager.class), getDependency(TypeDeclarationFromSuperclassExtractor.class),
                 getDependency(ApplicableFieldVisibilityFilter.class)));
         addDependency(new ActiveJavaEditorOffsetProvider());
-        addDependency(new BuilderOwnerClassFinder(getDependency(ActiveJavaEditorOffsetProvider.class)));
+        addDependency(new ParentITypeExtractor());
+        addDependency(new IsTypeApplicableForBuilderGenerationPredicate(getDependency(ParentITypeExtractor.class)));
+        addDependency(new CurrentlySelectedApplicableClassesClassNameProvider(getDependency(ActiveJavaEditorOffsetProvider.class),
+                getDependency(IsTypeApplicableForBuilderGenerationPredicate.class),
+                getDependency(ParentITypeExtractor.class)));
+        addDependency(new BuilderOwnerClassFinder(getDependency(CurrentlySelectedApplicableClassesClassNameProvider.class)));
         addDependency(new RegularBuilderCompilationUnitGenerator(getDependency(ApplicableBuilderFieldExtractor.class),
                 getDependency(RegularBuilderClassCreator.class),
                 getDependency(PrivateInitializingConstructorCreator.class),

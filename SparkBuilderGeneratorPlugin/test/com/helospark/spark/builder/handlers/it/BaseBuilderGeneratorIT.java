@@ -34,8 +34,8 @@ import com.helospark.spark.builder.DiContainer;
 import com.helospark.spark.builder.handlers.DialogWrapper;
 import com.helospark.spark.builder.handlers.HandlerUtilWrapper;
 import com.helospark.spark.builder.handlers.WorkingCopyManagerWrapper;
-import com.helospark.spark.builder.handlers.codegenerator.ActiveJavaEditorOffsetProvider;
 import com.helospark.spark.builder.handlers.codegenerator.CompilationUnitParser;
+import com.helospark.spark.builder.handlers.codegenerator.component.helper.CurrentlySelectedApplicableClassesClassNameProvider;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.ITypeExtractor;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.PreferenceStoreProvider;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.PreferenceStoreWrapper;
@@ -64,7 +64,7 @@ public class BaseBuilderGeneratorIT {
     @Mock
     protected ITypeExtractor iTypeExtractor;
     @Mock
-    private ActiveJavaEditorOffsetProvider activeJavaEditorOffsetProvider;
+    protected CurrentlySelectedApplicableClassesClassNameProvider currentlySelectedApplicableClassesClassNameProvider;
     @Captor
     protected ArgumentCaptor<String> outputCaptor;
 
@@ -86,7 +86,7 @@ public class BaseBuilderGeneratorIT {
         given(preferenceStoreProvider.providePreferenceStore()).willReturn(preferenceStore);
         given(iCompilationUnit.getBuffer()).willReturn(iBuffer);
         given(iTypeExtractor.extract(any(TypeDeclaration.class))).willReturn(empty());
-        given(activeJavaEditorOffsetProvider.provideOffsetAtCurrentCursorPosition()).willReturn(0);
+        given(currentlySelectedApplicableClassesClassNameProvider.provideCurrentlySelectedClassName(any(ICompilationUnit.class))).willReturn(empty());
         setDefaultPreferenceStoreSettings();
         doNothing().when(iBuffer).setContents(outputCaptor.capture());
 
@@ -100,7 +100,7 @@ public class BaseBuilderGeneratorIT {
         DiContainer.addDependency(preferenceStoreProvider);
         DiContainer.addDependency(dialogWrapper);
         DiContainer.addDependency(iTypeExtractor);
-        DiContainer.addDependency(activeJavaEditorOffsetProvider);
+        DiContainer.addDependency(currentlySelectedApplicableClassesClassNameProvider);
     }
 
     protected void setInput(String sourceAsString) throws JavaModelException {

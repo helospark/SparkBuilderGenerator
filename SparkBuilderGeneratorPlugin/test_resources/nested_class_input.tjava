@@ -1,0 +1,12 @@
+
+public class TestClass {
+	private String field;
+	
+	static class FirstNestedClass {
+		String firstNestedClassField;
+		
+		static class SecondNestedClass {
+			String secondNestedClassField;
+		}
+	}
+}

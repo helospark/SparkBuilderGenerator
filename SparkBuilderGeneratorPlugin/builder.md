@@ -25,6 +25,7 @@ Most configuration is on the preferences page: Preferences -> Java -> Spark buil
 | Stage interface pattern for staged builder | Pattern of the stage interface names | I[FieldName]Stage | `[fieldName]`, `[FieldName]` |
 | Remove prefix and suffix (set in Preferences->Java->Code style)\nfrom builder names | Whether to remove prefixes and suffixes set in code style from builder method names | true | - |
 | Include visible fields from superclass | Whether to also include visible fields from super class. Field is visible if it's public, protected. It's also visible if it has a default scope and it's in the same package. Private fields are never visible, therefore not set. | true | - |
+| Always generate builder to first (top level) class | Always generate builder to first (top level) class, this is the mode used before 0.0.9, in this case it's enough if you execute the command anywhere in the file, the builder will always be generated to the first class (usually the only public class). | false | - |
 
 ### @Generated annotatation
 
@@ -42,6 +43,9 @@ Most configuration is on the preferences page: Preferences -> Java -> Spark buil
    Option to include visible fields from superclass
  - 0.0.8
    Regression bug was observed in 0.0.7 under some Eclipse configurations. IllegalArgumentException occured while trying to parse java.lang.Object class.
+ - 0.0.9
+   Generate builder to the class under the cursor (in case of nested classes, or multiple classes in a single file)
+   Improvements to Builder class removing logic
 
 ## The generated code looks like the following:
 
