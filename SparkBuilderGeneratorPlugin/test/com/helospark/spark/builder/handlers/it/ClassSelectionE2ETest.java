@@ -9,18 +9,30 @@ import java.util.Optional;
 
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.JavaModelException;
+import org.mockito.Mock;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
+import com.helospark.spark.builder.DiContainer;
 import com.helospark.spark.builder.handlers.GenerateRegularBuilderHandler;
+import com.helospark.spark.builder.handlers.codegenerator.component.helper.CurrentlySelectedApplicableClassesClassNameProvider;
 
 public class ClassSelectionE2ETest extends BaseBuilderGeneratorIT {
+    @Mock
+    protected CurrentlySelectedApplicableClassesClassNameProvider currentlySelectedApplicableClassesClassNameProvider;
 
     @BeforeMethod
     public void beforeMethod() throws JavaModelException {
         super.init();
         underTest = new GenerateRegularBuilderHandler();
+        given(preferenceStore.getBoolean("org.helospark.builder.alwaysGenerateBuilderToFirstClass")).willReturn(false);
+    }
+
+    @Override
+    protected void diContainerOverrides() {
+        super.diContainerOverrides();
+        DiContainer.addDependency(currentlySelectedApplicableClassesClassNameProvider);
     }
 
     @Test(dataProvider = "multiClassTestFileNameProvider")

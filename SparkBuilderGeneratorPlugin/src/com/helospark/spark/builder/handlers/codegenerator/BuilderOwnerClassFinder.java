@@ -1,5 +1,7 @@
 package com.helospark.spark.builder.handlers.codegenerator;
 
+import static com.helospark.spark.builder.preferences.PluginPreferenceList.ALWAYS_GENERATE_BUILDER_TO_FIRST_CLASS;
+
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -14,6 +16,7 @@ import org.eclipse.jdt.core.dom.rewrite.ListRewrite;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.CurrentlySelectedApplicableClassesClassNameProvider;
 import com.helospark.spark.builder.handlers.codegenerator.domain.CompilationUnitModificationDomain;
 import com.helospark.spark.builder.handlers.exception.PluginException;
+import com.helospark.spark.builder.preferences.PreferencesManager;
 
 /**
  * Provides the owner class from the from the given compilation unit.
@@ -21,14 +24,15 @@ import com.helospark.spark.builder.handlers.exception.PluginException;
  */
 public class BuilderOwnerClassFinder {
     private CurrentlySelectedApplicableClassesClassNameProvider currentlySelectedApplicableClassesClassNameProvider;
+    private PreferencesManager preferencesManager;
 
-    public BuilderOwnerClassFinder(CurrentlySelectedApplicableClassesClassNameProvider currentlySelectedApplicableClassesClassNameProvider) {
+    public BuilderOwnerClassFinder(CurrentlySelectedApplicableClassesClassNameProvider currentlySelectedApplicableClassesClassNameProvider, PreferencesManager preferencesManager) {
         this.currentlySelectedApplicableClassesClassNameProvider = currentlySelectedApplicableClassesClassNameProvider;
+        this.preferencesManager = preferencesManager;
     }
 
     public CompilationUnitModificationDomain provideBuilderOwnerClass(CompilationUnit compilationUnit, AST ast, ASTRewrite rewriter, ICompilationUnit iCompilationUnit) {
-        TypeDeclaration builderType = getTypeAtCurrentSelection(iCompilationUnit, compilationUnit)
-                .orElse(getFirstType(compilationUnit));
+        TypeDeclaration builderType = getBuilderOwnerType(compilationUnit, iCompilationUnit);
 
         ListRewrite listRewrite = rewriter.getListRewrite(builderType, TypeDeclaration.BODY_DECLARATIONS_PROPERTY);
 
@@ -39,6 +43,15 @@ public class BuilderOwnerClassFinder {
                 .withOriginalType(builderType)
                 .withCompilationUnit(compilationUnit)
                 .build();
+    }
+
+    private TypeDeclaration getBuilderOwnerType(CompilationUnit compilationUnit, ICompilationUnit iCompilationUnit) {
+        if (preferencesManager.getPreferenceValue(ALWAYS_GENERATE_BUILDER_TO_FIRST_CLASS)) {
+            return getFirstType(compilationUnit);
+        } else {
+            return getTypeAtCurrentSelection(iCompilationUnit, compilationUnit)
+                    .orElse(getFirstType(compilationUnit));
+        }
     }
 
     private Optional<TypeDeclaration> getTypeAtCurrentSelection(ICompilationUnit iCompilationUnit, CompilationUnit compilationUnit) {

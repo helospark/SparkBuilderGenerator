@@ -16,7 +16,6 @@ import com.helospark.spark.builder.handlers.IsEventOnJavaFilePredicate;
 import com.helospark.spark.builder.handlers.StateInitializerGenerateBuilderExecutorDecorator;
 import com.helospark.spark.builder.handlers.StatefulBeanHandler;
 import com.helospark.spark.builder.handlers.WorkingCopyManagerWrapper;
-import com.helospark.spark.builder.handlers.codegenerator.ActiveJavaEditorOffsetProvider;
 import com.helospark.spark.builder.handlers.codegenerator.ApplicableBuilderFieldExtractor;
 import com.helospark.spark.builder.handlers.codegenerator.BuilderCompilationUnitGenerator;
 import com.helospark.spark.builder.handlers.codegenerator.BuilderOwnerClassFinder;
@@ -51,6 +50,7 @@ import com.helospark.spark.builder.handlers.codegenerator.component.fragment.bui
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.constructor.PrivateConstructorBodyCreationFragment;
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.constructor.PrivateConstructorInsertionFragment;
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.constructor.PrivateConstructorMethodDefinitionCreationFragment;
+import com.helospark.spark.builder.handlers.codegenerator.component.helper.ActiveJavaEditorOffsetProvider;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.ApplicableFieldVisibilityFilter;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.BuilderMethodNameBuilder;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.CamelCaseConverter;
@@ -193,7 +193,8 @@ public class DiContainer {
         addDependency(new CurrentlySelectedApplicableClassesClassNameProvider(getDependency(ActiveJavaEditorOffsetProvider.class),
                 getDependency(IsTypeApplicableForBuilderGenerationPredicate.class),
                 getDependency(ParentITypeExtractor.class)));
-        addDependency(new BuilderOwnerClassFinder(getDependency(CurrentlySelectedApplicableClassesClassNameProvider.class)));
+        addDependency(new BuilderOwnerClassFinder(getDependency(CurrentlySelectedApplicableClassesClassNameProvider.class),
+                getDependency(PreferencesManager.class)));
         addDependency(new RegularBuilderCompilationUnitGenerator(getDependency(ApplicableBuilderFieldExtractor.class),
                 getDependency(RegularBuilderClassCreator.class),
                 getDependency(PrivateInitializingConstructorCreator.class),

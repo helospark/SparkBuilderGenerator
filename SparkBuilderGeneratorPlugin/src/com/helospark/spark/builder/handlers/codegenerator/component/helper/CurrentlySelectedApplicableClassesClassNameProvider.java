@@ -10,8 +10,6 @@ import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
 
-import com.helospark.spark.builder.handlers.codegenerator.ActiveJavaEditorOffsetProvider;
-
 /**
  * Provides the class name of the currently selected class that can be used to generate builder based on the cursor position.
  * {@link IsTypeApplicableForBuilderGenerationPredicate} determines if the class is applicable for builde generation.
@@ -30,7 +28,7 @@ public class CurrentlySelectedApplicableClassesClassNameProvider {
     }
 
     public Optional<String> provideCurrentlySelectedClassName(ICompilationUnit iCompilationUnit) throws JavaModelException {
-        int cursorOffset = activeJavaEditorOffsetProvider.provideOffsetAtCurrentCursorPosition();
+        int cursorOffset = activeJavaEditorOffsetProvider.provideOffsetOfCurrentCursorPosition();
         Optional<IType> currentlySelectedType = getCurrentlySelectedType(iCompilationUnit, cursorOffset);
         return currentlySelectedType.map(type -> type.getElementName());
     }
