@@ -1,0 +1,51 @@
+package com.helospark;
+
+public class TestClass {
+    private String mainClassField;
+
+    static class NestedStaticClass {
+        private String nestedStringField;
+
+        private NestedStaticClass(Builder builder) {
+            this.nestedStringField = builder.nestedStringField;
+        }
+
+        public static INestedStringFieldStage builder() {
+            return new Builder();
+        }
+
+        public interface INestedStringFieldStage {
+            public IBuildStage withNestedStringField(String nestedStringField);
+        }
+
+        public interface IBuildStage {
+            public NestedStaticClass build();
+        }
+
+        public static final class Builder implements INestedStringFieldStage, IBuildStage {
+            private String nestedStringField;
+
+            private Builder() {
+            }
+
+            @Override
+            public IBuildStage withNestedStringField(String nestedStringField) {
+                this.nestedStringField = nestedStringField;
+                return this;
+            }
+
+            @Override
+            public NestedStaticClass build() {
+                return new NestedStaticClass(this);
+            }
+        }
+    }
+
+    class NestedNonStaticClass {
+        private String NestedNonStaticClassField;
+    }
+}
+
+class SecondaryClass {
+    private String secondaryClassField;
+}

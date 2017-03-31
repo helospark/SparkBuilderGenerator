@@ -2,6 +2,7 @@ package com.helospark.spark.builder.handlers.codegenerator.component.helper;
 
 import org.eclipse.jdt.internal.ui.javaeditor.JavaEditor;
 import org.eclipse.jface.text.ITextSelection;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
@@ -17,8 +18,11 @@ public class ActiveJavaEditorOffsetProvider {
         IEditorPart activeEditor = page.getActiveEditor();
         if (activeEditor instanceof JavaEditor) {
             JavaEditor javaEditor = (JavaEditor) activeEditor;
-            ITextSelection sel = (ITextSelection) javaEditor.getSelectionProvider().getSelection();
-            return sel.getOffset();
+            ISelection selection = javaEditor.getSelectionProvider().getSelection();
+            if (selection instanceof ITextSelection) {
+                ITextSelection iTextSelection = (ITextSelection) selection;
+                return iTextSelection.getOffset();
+            }
         }
         return 0;
     }
