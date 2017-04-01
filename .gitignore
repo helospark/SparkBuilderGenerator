@@ -2,7 +2,7 @@
 .metadata
 */build
 bin/
-SparkBuilderGeneratorPlugin/**/*.jar
+SparkBuilderGeneratorPlugin/SparkBuilderGeneratorUpdateSite/**/*.jar
 */test-output
 */target
 */test-classes

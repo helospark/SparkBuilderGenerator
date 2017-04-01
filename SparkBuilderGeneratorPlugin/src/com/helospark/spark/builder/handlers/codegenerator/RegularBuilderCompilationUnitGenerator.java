@@ -5,9 +5,7 @@ import static com.helospark.spark.builder.handlers.BuilderType.REGULAR;
 import java.util.List;
 
 import org.eclipse.jdt.core.dom.AST;
-import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
-import org.eclipse.jdt.core.dom.rewrite.ASTRewrite;
 import org.eclipse.jdt.core.dom.rewrite.ListRewrite;
 
 import com.helospark.spark.builder.handlers.BuilderType;
@@ -29,27 +27,25 @@ public class RegularBuilderCompilationUnitGenerator implements BuilderCompilatio
     private PrivateInitializingConstructorCreator privateConstructorPopulator;
     private RegularBuilderBuilderMethodCreator builderMethodPopulator;
     private ImportPopulator importPopulator;
-    private BuilderOwnerClassFinder builderOwnerClassFinder;;
 
     public RegularBuilderCompilationUnitGenerator(ApplicableBuilderFieldExtractor applicableBuilderFieldExtractor,
             RegularBuilderClassCreator regularBuilderClassCreator,
             PrivateInitializingConstructorCreator privateInitializingConstructorCreator,
             RegularBuilderBuilderMethodCreator regularBuilderBuilderMethodCreator,
-            ImportPopulator importPopulator, BuilderOwnerClassFinder builderOwnerClassFinder) {
+            ImportPopulator importPopulator) {
         this.applicableBuilderFieldExtractor = applicableBuilderFieldExtractor;
         this.regularBuilderClassCreator = regularBuilderClassCreator;
         this.privateConstructorPopulator = privateInitializingConstructorCreator;
         this.builderMethodPopulator = regularBuilderBuilderMethodCreator;
         this.importPopulator = importPopulator;
-        this.builderOwnerClassFinder = builderOwnerClassFinder;
     }
 
     @Override
-    public void generateBuilder(AST ast, ASTRewrite rewriter, CompilationUnit compilationUnit) {
-        CompilationUnitModificationDomain result = builderOwnerClassFinder.provideBuilderOwnerClass(compilationUnit, ast, rewriter);
+    public void generateBuilder(CompilationUnitModificationDomain compilationUnitModificationDomain) {
         // TODO: replace parameters, where these go separately with compilation modification domain
-        TypeDeclaration originalType = result.getOriginalType();
-        ListRewrite listRewrite = result.getListRewrite();
+        AST ast = compilationUnitModificationDomain.getAst();
+        ListRewrite listRewrite = compilationUnitModificationDomain.getListRewrite();
+        TypeDeclaration originalType = compilationUnitModificationDomain.getOriginalType();
 
         List<NamedVariableDeclarationField> namedVariableDeclarations = applicableBuilderFieldExtractor.findBuilderFields(originalType);
         TypeDeclaration builderType = regularBuilderClassCreator.createBuilderClass(ast, originalType, namedVariableDeclarations);
@@ -57,7 +53,7 @@ public class RegularBuilderCompilationUnitGenerator implements BuilderCompilatio
         builderMethodPopulator.addBuilderMethodToCompilationUnit(ast, listRewrite, originalType, builderType);
 
         listRewrite.insertLast(builderType, null);
-        importPopulator.populateImports(ast, rewriter, compilationUnit);
+        importPopulator.populateImports(compilationUnitModificationDomain);
     }
 
     @Override

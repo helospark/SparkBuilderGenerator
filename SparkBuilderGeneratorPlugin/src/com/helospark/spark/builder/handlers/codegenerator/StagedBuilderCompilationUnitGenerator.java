@@ -6,9 +6,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.eclipse.jdt.core.dom.AST;
-import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
-import org.eclipse.jdt.core.dom.rewrite.ASTRewrite;
 import org.eclipse.jdt.core.dom.rewrite.ListRewrite;
 
 import com.helospark.spark.builder.handlers.BuilderType;
@@ -17,8 +15,8 @@ import com.helospark.spark.builder.handlers.codegenerator.component.PrivateIniti
 import com.helospark.spark.builder.handlers.codegenerator.component.StagedBuilderClassCreator;
 import com.helospark.spark.builder.handlers.codegenerator.component.StagedBuilderStaticBuilderCreatorMethodCreator;
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.builderclass.stagedinterface.StagedBuilderInterfaceCreatorFragment;
-import com.helospark.spark.builder.handlers.codegenerator.component.helper.StagedBuilderStagePropertiesProvider;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.StagedBuilderProperties;
+import com.helospark.spark.builder.handlers.codegenerator.component.helper.StagedBuilderStagePropertiesProvider;
 import com.helospark.spark.builder.handlers.codegenerator.domain.CompilationUnitModificationDomain;
 import com.helospark.spark.builder.handlers.codegenerator.domain.NamedVariableDeclarationField;
 
@@ -33,7 +31,6 @@ public class StagedBuilderCompilationUnitGenerator implements BuilderCompilation
     private PrivateInitializingConstructorCreator privateConstructorPopulator;
     private StagedBuilderStaticBuilderCreatorMethodCreator stagedBuilderStaticBuilderCreatorMethodCreator;
     private ImportPopulator importPopulator;
-    private BuilderOwnerClassFinder builderOwnerClassFinder;
     private StagedBuilderStagePropertiesProvider stagedBuilderStagePropertiesProvider;
     private StagedBuilderInterfaceCreatorFragment stagedBuilderInterfaceCreatorFragment;
 
@@ -41,7 +38,7 @@ public class StagedBuilderCompilationUnitGenerator implements BuilderCompilation
             StagedBuilderClassCreator stagedBuilderClassCreator,
             PrivateInitializingConstructorCreator privateInitializingConstructorCreator,
             StagedBuilderStaticBuilderCreatorMethodCreator stagedBuilderStaticBuilderCreatorMethodCreator,
-            ImportPopulator importPopulator, BuilderOwnerClassFinder builderOwnerClassFinder,
+            ImportPopulator importPopulator,
             StagedBuilderStagePropertiesProvider stagedBuilderStagePropertiesProvider,
             StagedBuilderInterfaceCreatorFragment stagedBuilderInterfaceCreatorFragment) {
         this.applicableBuilderFieldExtractor = applicableBuilderFieldExtractor;
@@ -49,15 +46,13 @@ public class StagedBuilderCompilationUnitGenerator implements BuilderCompilation
         this.privateConstructorPopulator = privateInitializingConstructorCreator;
         this.stagedBuilderStaticBuilderCreatorMethodCreator = stagedBuilderStaticBuilderCreatorMethodCreator;
         this.importPopulator = importPopulator;
-        this.builderOwnerClassFinder = builderOwnerClassFinder;
         this.stagedBuilderStagePropertiesProvider = stagedBuilderStagePropertiesProvider;
         this.stagedBuilderInterfaceCreatorFragment = stagedBuilderInterfaceCreatorFragment;
     }
 
     @Override
-    public void generateBuilder(AST ast, ASTRewrite rewriter, CompilationUnit compilationUnit) {
-        CompilationUnitModificationDomain modificationDomain = builderOwnerClassFinder.provideBuilderOwnerClass(compilationUnit, ast,
-                rewriter);
+    public void generateBuilder(CompilationUnitModificationDomain modificationDomain) {
+        AST ast = modificationDomain.getAst();
         TypeDeclaration originalType = modificationDomain.getOriginalType();
         ListRewrite listRewrite = modificationDomain.getListRewrite();
 
@@ -75,7 +70,7 @@ public class StagedBuilderCompilationUnitGenerator implements BuilderCompilation
             stageInterfaces.stream().forEach(stageInterface -> listRewrite.insertLast(stageInterface, null));
             listRewrite.insertLast(builderType, null);
 
-            importPopulator.populateImports(ast, rewriter, compilationUnit);
+            importPopulator.populateImports(modificationDomain);
         }
     }
 

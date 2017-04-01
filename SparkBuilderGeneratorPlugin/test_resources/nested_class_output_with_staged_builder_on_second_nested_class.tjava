@@ -1,0 +1,45 @@
+public class TestClass {
+    private String field;
+
+    static class FirstNestedClass {
+        String firstNestedClassField;
+
+        static class SecondNestedClass {
+            String secondNestedClassField;
+
+            private SecondNestedClass(Builder builder) {
+                this.secondNestedClassField = builder.secondNestedClassField;
+            }
+
+            public static ISecondNestedClassFieldStage builder() {
+                return new Builder();
+            }
+
+            public interface ISecondNestedClassFieldStage {
+                public IBuildStage withSecondNestedClassField(String secondNestedClassField);
+            }
+
+            public interface IBuildStage {
+                public SecondNestedClass build();
+            }
+
+            public static final class Builder implements ISecondNestedClassFieldStage, IBuildStage {
+                private String secondNestedClassField;
+
+                private Builder() {
+                }
+
+                @Override
+                public IBuildStage withSecondNestedClassField(String secondNestedClassField) {
+                    this.secondNestedClassField = secondNestedClassField;
+                    return this;
+                }
+
+                @Override
+                public SecondNestedClass build() {
+                    return new SecondNestedClass(this);
+                }
+            }
+        }
+    }
+}

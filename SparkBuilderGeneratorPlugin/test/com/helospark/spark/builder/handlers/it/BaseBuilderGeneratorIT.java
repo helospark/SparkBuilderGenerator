@@ -124,6 +124,7 @@ public class BaseBuilderGeneratorIT {
         given(preferenceStore.getBoolean("add_generated_annotation")).willReturn(false);
         given(preferenceStore.getBoolean("org.helospark.builder.removePrefixAndPostfixFromBuilderNames")).willReturn(false);
         given(preferenceStore.getBoolean("org.helospark.builder.includeVisibleFieldsFromSuperclass")).willReturn(false);
+        given(preferenceStore.getBoolean("org.helospark.builder.alwaysGenerateBuilderToFirstClass")).willReturn(true);
 
         // staged builder
         given(preferenceStore.getBoolean("org.helospark.builder.generateJavadocOnStageInterface")).willReturn(false);

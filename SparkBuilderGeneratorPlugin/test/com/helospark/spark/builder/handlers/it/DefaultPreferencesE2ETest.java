@@ -1,11 +1,13 @@
 package com.helospark.spark.builder.handlers.it;
 
+import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.any;
 
 import java.util.List;
 
+import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.JavaModelException;
 import org.mockito.Mock;
 import org.testng.annotations.BeforeMethod;
@@ -16,6 +18,7 @@ import com.helospark.spark.builder.NamedElementWithId;
 import com.helospark.spark.builder.handlers.GenerateDefaultBuilderHandler;
 import com.helospark.spark.builder.handlers.GenerateRegularBuilderHandler;
 import com.helospark.spark.builder.handlers.GenerateStagedBuilderHandler;
+import com.helospark.spark.builder.handlers.codegenerator.component.helper.CurrentlySelectedApplicableClassesClassNameProvider;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.StagedBuilderStagePropertyInputDialogOpener;
 import com.helospark.spark.builder.handlers.it.dummyService.NoDialogOperationPerformedStagedBuilderDialogAnswerProvider;
 import com.helospark.spark.builder.preferences.PluginPreferenceList;
@@ -24,11 +27,14 @@ public class DefaultPreferencesE2ETest extends BaseBuilderGeneratorIT {
     private NoDialogOperationPerformedStagedBuilderDialogAnswerProvider dialogAnswerProvider = new NoDialogOperationPerformedStagedBuilderDialogAnswerProvider();
     @Mock
     private StagedBuilderStagePropertyInputDialogOpener stagedBuilderStagePropertyInputDialogOpener;
+    @Mock
+    protected CurrentlySelectedApplicableClassesClassNameProvider currentlySelectedApplicableClassesClassNameProvider;
 
     @BeforeMethod
     public void beforeMethod() throws JavaModelException {
         super.init();
         given(stagedBuilderStagePropertyInputDialogOpener.open(any(List.class))).willAnswer(invocation -> dialogAnswerProvider.provideAnswer(invocation));
+        given(currentlySelectedApplicableClassesClassNameProvider.provideCurrentlySelectedClassName(any(ICompilationUnit.class))).willReturn(empty());
         setDefaultPreferences();
     }
 
@@ -55,6 +61,7 @@ public class DefaultPreferencesE2ETest extends BaseBuilderGeneratorIT {
     protected void diContainerOverrides() {
         super.diContainerOverrides();
         DiContainer.addDependency(stagedBuilderStagePropertyInputDialogOpener);
+        DiContainer.addDependency(currentlySelectedApplicableClassesClassNameProvider);
     }
 
     @Test

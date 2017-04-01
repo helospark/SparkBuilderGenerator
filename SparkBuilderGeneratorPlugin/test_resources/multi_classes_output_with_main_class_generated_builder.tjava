@@ -1,0 +1,41 @@
+package com.helospark;
+
+public class TestClass {
+    private String mainClassField;
+
+    private TestClass(Builder builder) {
+        this.mainClassField = builder.mainClassField;
+    }
+
+    static class NestedStaticClass {
+        private String nestedStringField;
+    }
+
+    class NestedNonStaticClass {
+        private String NestedNonStaticClassField;
+    }
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public static final class Builder {
+        private String mainClassField;
+
+        private Builder() {
+        }
+
+        public Builder withMainClassField(String mainClassField) {
+            this.mainClassField = mainClassField;
+            return this;
+        }
+
+        public TestClass build() {
+            return new TestClass(this);
+        }
+    }
+}
+
+class SecondaryClass {
+    private String secondaryClassField;
+}

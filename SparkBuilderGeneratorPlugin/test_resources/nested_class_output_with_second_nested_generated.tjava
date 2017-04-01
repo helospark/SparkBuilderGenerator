@@ -1,0 +1,35 @@
+public class TestClass {
+    private String field;
+
+    static class FirstNestedClass {
+        String firstNestedClassField;
+
+        static class SecondNestedClass {
+            String secondNestedClassField;
+
+            private SecondNestedClass(Builder builder) {
+                this.secondNestedClassField = builder.secondNestedClassField;
+            }
+
+            public static Builder builder() {
+                return new Builder();
+            }
+
+            public static final class Builder {
+                private String secondNestedClassField;
+
+                private Builder() {
+                }
+
+                public Builder withSecondNestedClassField(String secondNestedClassField) {
+                    this.secondNestedClassField = secondNestedClassField;
+                    return this;
+                }
+
+                public SecondNestedClass build() {
+                    return new SecondNestedClass(this);
+                }
+            }
+        }
+    }
+}

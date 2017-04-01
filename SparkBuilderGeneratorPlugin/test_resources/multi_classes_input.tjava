@@ -1,0 +1,17 @@
+package com.helospark;
+
+public class TestClass {
+	private String mainClassField;
+	
+	static class NestedStaticClass {
+		private String nestedStringField;
+	}
+	
+	class NestedNonStaticClass {
+		private String NestedNonStaticClassField;
+	}
+}
+
+class SecondaryClass {
+	private String secondaryClassField;
+}

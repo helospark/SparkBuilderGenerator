@@ -50,17 +50,21 @@ import com.helospark.spark.builder.handlers.codegenerator.component.fragment.bui
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.constructor.PrivateConstructorBodyCreationFragment;
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.constructor.PrivateConstructorInsertionFragment;
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.constructor.PrivateConstructorMethodDefinitionCreationFragment;
+import com.helospark.spark.builder.handlers.codegenerator.component.helper.ActiveJavaEditorOffsetProvider;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.ApplicableFieldVisibilityFilter;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.BuilderMethodNameBuilder;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.CamelCaseConverter;
+import com.helospark.spark.builder.handlers.codegenerator.component.helper.CurrentlySelectedApplicableClassesClassNameProvider;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.FieldNameToBuilderFieldNameConverter;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.FieldPrefixSuffixPreferenceProvider;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.GeneratedAnnotationPopulator;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.ITypeExtractor;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.InterfaceSetter;
+import com.helospark.spark.builder.handlers.codegenerator.component.helper.IsTypeApplicableForBuilderGenerationPredicate;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.JavadocAdder;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.JavadocGenerator;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.MarkerAnnotationAttacher;
+import com.helospark.spark.builder.handlers.codegenerator.component.helper.ParentITypeExtractor;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.PreferenceStoreProvider;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.StagedBuilderInterfaceNameProvider;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.StagedBuilderStagePropertiesProvider;
@@ -110,7 +114,8 @@ public class DiContainer {
                 getDependency(GeneratedAnnotationContainingBodyDeclarationFilter.class)));
         addDependency(new BodyDeclarationOfTypeExtractor());
         addDependency(new BuilderClassRemover(getDependency(BodyDeclarationOfTypeExtractor.class),
-                getDependency(GeneratedAnnotationContainingBodyDeclarationFilter.class)));
+                getDependency(GeneratedAnnotationContainingBodyDeclarationFilter.class),
+                getDependency(IsPrivatePredicate.class)));
         addDependency(new StagedBuilderInterfaceRemover(getDependency(BodyDeclarationOfTypeExtractor.class),
                 getDependency(GeneratedAnnotationContainingBodyDeclarationFilter.class)));
         addDependency(new StaticBuilderMethodRemover(getDependency(IsStaticPredicate.class), getDependency(IsPublicPredicate.class),
@@ -182,12 +187,18 @@ public class DiContainer {
         addDependency(new ApplicableBuilderFieldExtractor(getDependency(FieldNameToBuilderFieldNameConverter.class),
                 getDependency(PreferencesManager.class), getDependency(TypeDeclarationFromSuperclassExtractor.class),
                 getDependency(ApplicableFieldVisibilityFilter.class)));
-        addDependency(new BuilderOwnerClassFinder());
+        addDependency(new ActiveJavaEditorOffsetProvider());
+        addDependency(new ParentITypeExtractor());
+        addDependency(new IsTypeApplicableForBuilderGenerationPredicate(getDependency(ParentITypeExtractor.class)));
+        addDependency(new CurrentlySelectedApplicableClassesClassNameProvider(getDependency(ActiveJavaEditorOffsetProvider.class),
+                getDependency(IsTypeApplicableForBuilderGenerationPredicate.class),
+                getDependency(ParentITypeExtractor.class)));
+        addDependency(new BuilderOwnerClassFinder(getDependency(CurrentlySelectedApplicableClassesClassNameProvider.class),
+                getDependency(PreferencesManager.class)));
         addDependency(new RegularBuilderCompilationUnitGenerator(getDependency(ApplicableBuilderFieldExtractor.class),
                 getDependency(RegularBuilderClassCreator.class),
                 getDependency(PrivateInitializingConstructorCreator.class),
-                getDependency(RegularBuilderBuilderMethodCreator.class), getDependency(ImportPopulator.class),
-                getDependency(BuilderOwnerClassFinder.class)));
+                getDependency(RegularBuilderBuilderMethodCreator.class), getDependency(ImportPopulator.class)));
         addDependency(new IsEventOnJavaFilePredicate(getDependency(HandlerUtilWrapper.class)));
 
         // staged builder dependencies
@@ -231,8 +242,9 @@ public class DiContainer {
         addDependency(new StagedBuilderCompilationUnitGenerator(getDependency(ApplicableBuilderFieldExtractor.class),
                 getDependency(StagedBuilderClassCreator.class),
                 getDependency(PrivateInitializingConstructorCreator.class),
-                getDependency(StagedBuilderStaticBuilderCreatorMethodCreator.class), getDependency(ImportPopulator.class),
-                getDependency(BuilderOwnerClassFinder.class), getDependency(StagedBuilderStagePropertiesProvider.class),
+                getDependency(StagedBuilderStaticBuilderCreatorMethodCreator.class),
+                getDependency(ImportPopulator.class),
+                getDependency(StagedBuilderStagePropertiesProvider.class),
                 getDependency(StagedBuilderInterfaceCreatorFragment.class)));
 
         // Generator chain
@@ -241,7 +253,8 @@ public class DiContainer {
                 getDependency(BuilderRemover.class),
                 getDependency(IsEventOnJavaFilePredicate.class), getDependency(WorkingCopyManagerWrapper.class),
                 getDependency(CompilationUnitSourceSetter.class),
-                getDependency(ErrorHandlerHook.class)));
+                getDependency(ErrorHandlerHook.class),
+                getDependency(BuilderOwnerClassFinder.class)));
         addDependency(new GenerateBuilderHandlerErrorHandlerDecorator(getDependency(GenerateBuilderExecutorImpl.class),
                 getDependency(ErrorHandlerHook.class)));
         addDependency(new StatefulBeanHandler(getDependency(PreferenceStoreProvider.class),
