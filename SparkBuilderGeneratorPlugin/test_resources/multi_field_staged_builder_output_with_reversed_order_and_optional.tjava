@@ -5,10 +5,10 @@ public class TestClass {
     private List<String> list;
 
     private TestClass(Builder builder) {
-        this.testField = builder.testField;
-        this.data = builder.data;
-        this.something = builder.something;
-        this.list = builder.list;
+        this.list=builder.list;
+        this.something=builder.something;
+        this.data=builder.data;
+        this.testField=builder.testField;
     }
 
     public static IListStage builder() {

@@ -1,5 +1,6 @@
 package com.helospark.spark.builder.handlers.it;
 
+import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.any;
@@ -52,10 +53,26 @@ public class StagedBuilderWithChangedDialogSettingsE2ETest extends BaseBuilderGe
     @Test
     public void testWithAllOptionalFields() throws Exception {
         // GIVEN
-        ModifiedStagedDialogSettingsAnswerProvider dialogAnswerProvider = new ModifiedStagedDialogSettingsAnswerProvider(Arrays.asList(0, 1, 2, 3), emptyList());
+        ModifiedStagedDialogSettingsAnswerProvider dialogAnswerProvider = new ModifiedStagedDialogSettingsAnswerProvider(asList(0, 1, 2, 3), emptyList());
         given(stagedBuilderStagePropertyInputDialogOpener.open(any(List.class))).willAnswer(invocation -> dialogAnswerProvider.provideAnswer(invocation));
         String input = readClasspathFile("multi_field_input.tjava");
         String expectedResult = readClasspathFile("multi_field_staged_output_with_all_optional_fields.tjava");
+        super.setInput(input);
+
+        // WHEN
+        underTest.execute(dummyExecutionEvent);
+
+        // THEN
+        super.assertEqualsJavaContents(outputCaptor.getValue(), expectedResult);
+    }
+
+    @Test
+    public void testWithRemovedElementsInDialog() throws Exception {
+        // GIVEN
+        ModifiedStagedDialogSettingsAnswerProvider dialogAnswerProvider = new ModifiedStagedDialogSettingsAnswerProvider(asList(0, 1), asList(0, 1));
+        given(stagedBuilderStagePropertyInputDialogOpener.open(any(List.class))).willAnswer(invocation -> dialogAnswerProvider.provideAnswer(invocation));
+        String input = readClasspathFile("multi_field_input.tjava");
+        String expectedResult = readClasspathFile("multi_field_staged_output_with_only_first_two_fields_selected.tjava");
         super.setInput(input);
 
         // WHEN

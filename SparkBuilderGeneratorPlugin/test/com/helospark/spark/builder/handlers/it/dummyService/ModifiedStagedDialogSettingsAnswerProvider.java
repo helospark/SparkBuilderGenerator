@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.mockito.invocation.InvocationOnMock;
 
-import com.helospark.spark.builder.dialogs.StagedBuilderStagePropertiesDialogResult;
+import com.helospark.spark.builder.dialogs.domain.StagedBuilderStagePropertiesDialogResult;
 
 public class ModifiedStagedDialogSettingsAnswerProvider {
     private List<Integer> newOrderIndices;

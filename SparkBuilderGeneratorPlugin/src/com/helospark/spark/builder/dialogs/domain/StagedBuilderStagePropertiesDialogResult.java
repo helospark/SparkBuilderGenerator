@@ -1,4 +1,4 @@
-package com.helospark.spark.builder.dialogs;
+package com.helospark.spark.builder.dialogs.domain;
 
 /**
  * Result of the staged builder property change dialog.

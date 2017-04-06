@@ -4,8 +4,8 @@ import java.util.List;
 
 import org.eclipse.swt.widgets.Shell;
 
-import com.helospark.spark.builder.dialogs.StagedBuilderStagePropertiesDialogResult;
 import com.helospark.spark.builder.dialogs.StagedBuilderStagePropertyInputDialog;
+import com.helospark.spark.builder.dialogs.domain.StagedBuilderStagePropertiesDialogResult;
 import com.helospark.spark.builder.handlers.CurrentShellProvider;
 
 /**
