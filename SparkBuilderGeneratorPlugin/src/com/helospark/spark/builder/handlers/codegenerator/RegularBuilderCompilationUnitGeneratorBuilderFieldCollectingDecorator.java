@@ -13,6 +13,10 @@ import com.helospark.spark.builder.handlers.codegenerator.domain.CompilationUnit
 import com.helospark.spark.builder.handlers.codegenerator.domain.NamedVariableDeclarationField;
 import com.helospark.spark.builder.preferences.PreferencesManager;
 
+/**
+ * Decorator around {@link RegularBuilderCompilationUnitGenerator} that collect the fields to include in the regular builder.
+ * @author helospark
+ */
 public class RegularBuilderCompilationUnitGeneratorBuilderFieldCollectingDecorator implements BuilderCompilationUnitGenerator {
     private ApplicableBuilderFieldExtractor applicableBuilderFieldExtractor;
     private RegularBuilderCompilationUnitGenerator decoratedBuilderGenerator;

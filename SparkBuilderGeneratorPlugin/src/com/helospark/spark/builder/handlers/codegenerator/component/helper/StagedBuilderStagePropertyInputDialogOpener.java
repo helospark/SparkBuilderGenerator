@@ -1,6 +1,9 @@
 package com.helospark.spark.builder.handlers.codegenerator.component.helper;
 
+import static java.util.Optional.ofNullable;
+
 import java.util.List;
+import java.util.Optional;
 
 import org.eclipse.swt.widgets.Shell;
 
@@ -19,9 +22,10 @@ public class StagedBuilderStagePropertyInputDialogOpener {
         this.currentShellProvider = currentShellProvider;
     }
 
-    public List<StagedBuilderStagePropertiesDialogResult> open(List<StagedBuilderStagePropertiesDialogResult> request) {
+    public Optional<List<StagedBuilderStagePropertiesDialogResult>> open(List<StagedBuilderStagePropertiesDialogResult> request) {
         Shell shell = currentShellProvider.provideCurrentShell();
         StagedBuilderStagePropertyInputDialog stagedBuilderStagePropertyInputDialog = new StagedBuilderStagePropertyInputDialog(shell, request);
-        return (List<StagedBuilderStagePropertiesDialogResult>) stagedBuilderStagePropertyInputDialog.open();
+        List<StagedBuilderStagePropertiesDialogResult> result = (List<StagedBuilderStagePropertiesDialogResult>) stagedBuilderStagePropertyInputDialog.open();
+        return ofNullable(result);
     }
 }

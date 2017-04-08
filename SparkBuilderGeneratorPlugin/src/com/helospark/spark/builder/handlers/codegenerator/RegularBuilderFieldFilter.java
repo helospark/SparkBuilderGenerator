@@ -8,6 +8,10 @@ import java.util.stream.Collectors;
 import com.helospark.spark.builder.dialogs.domain.RegularBuilderFieldIncludeFieldIncludeDomain;
 import com.helospark.spark.builder.handlers.codegenerator.domain.NamedVariableDeclarationField;
 
+/**
+ * Filters the fields to include in the builder.
+ * @author helospark
+ */
 public class RegularBuilderFieldFilter {
     private RegularBuilderFieldFilterDialogOpener regularBuilderFieldFilterDialogOpener;
 

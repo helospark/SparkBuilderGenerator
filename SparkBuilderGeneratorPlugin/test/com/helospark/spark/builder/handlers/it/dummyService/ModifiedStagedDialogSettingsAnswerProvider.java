@@ -2,6 +2,7 @@ package com.helospark.spark.builder.handlers.it.dummyService;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.mockito.invocation.InvocationOnMock;
 
@@ -28,7 +29,7 @@ public class ModifiedStagedDialogSettingsAnswerProvider {
         for (int i = 0; i < mandatoryFieldIndices.size(); ++i) {
             result.get(i).setMandatory(true);
         }
-        return result;
+        return Optional.of(result);
     }
 
 }

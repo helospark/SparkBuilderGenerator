@@ -46,8 +46,7 @@ public class StagedBuilderStagePropertiesProvider {
         for (int i = 0; i < namedVariableDeclarations.size(); ++i) {
             dialogRequest.add(new StagedBuilderStagePropertiesDialogResult(true, namedVariableDeclarations.get(i).getOriginalFieldName(), i));
         }
-        List<StagedBuilderStagePropertiesDialogResult> result = dialogOpener.open(dialogRequest);
-        return Optional.ofNullable(result);
+        return dialogOpener.open(dialogRequest);
     }
 
     private List<StagedBuilderProperties> createMandatoryStagedBuilderProperties(List<NamedVariableDeclarationField> namedVariableDeclarations,

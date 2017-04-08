@@ -13,6 +13,11 @@ import com.helospark.spark.builder.handlers.codegenerator.component.helper.Stage
 import com.helospark.spark.builder.handlers.codegenerator.domain.CompilationUnitModificationDomain;
 import com.helospark.spark.builder.handlers.codegenerator.domain.NamedVariableDeclarationField;
 
+/**
+ * Decorator around {@link StagedBuilderCompilationUnitGenerator} that collects the fields and their
+ * properties for staged builder generation.
+ * @author helospark
+ */
 public class StagedBuilderCompilationUnitGeneratorFieldCollectorDecorator implements BuilderCompilationUnitGenerator {
     private StagedBuilderCompilationUnitGenerator decoratedBuilderGenerator;
     private ApplicableBuilderFieldExtractor applicableBuilderFieldExtractor;

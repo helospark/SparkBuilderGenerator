@@ -9,6 +9,10 @@ import com.helospark.spark.builder.dialogs.RegularBuilderFieldFilterDialog;
 import com.helospark.spark.builder.dialogs.domain.RegularBuilderFieldIncludeFieldIncludeDomain;
 import com.helospark.spark.builder.handlers.CurrentShellProvider;
 
+/**
+ * Opens the dialog that filter the fields to include in the builder.
+ * @author helospark
+ */
 public class RegularBuilderFieldFilterDialogOpener {
     private CurrentShellProvider currentShellProvider;
 
