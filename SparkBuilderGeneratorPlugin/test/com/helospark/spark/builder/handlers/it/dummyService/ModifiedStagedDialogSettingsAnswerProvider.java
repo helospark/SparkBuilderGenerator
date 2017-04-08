@@ -2,10 +2,11 @@ package com.helospark.spark.builder.handlers.it.dummyService;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.mockito.invocation.InvocationOnMock;
 
-import com.helospark.spark.builder.dialogs.StagedBuilderStagePropertiesDialogResult;
+import com.helospark.spark.builder.dialogs.domain.StagedBuilderStagePropertiesDialogResult;
 
 public class ModifiedStagedDialogSettingsAnswerProvider {
     private List<Integer> newOrderIndices;
@@ -28,7 +29,7 @@ public class ModifiedStagedDialogSettingsAnswerProvider {
         for (int i = 0; i < mandatoryFieldIndices.size(); ++i) {
             result.get(i).setMandatory(true);
         }
-        return result;
+        return Optional.of(result);
     }
 
 }

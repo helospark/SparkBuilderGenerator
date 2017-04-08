@@ -26,6 +26,7 @@ Most configuration is on the preferences page: Preferences -> Java -> Spark buil
 | Remove prefix and suffix (set in Preferences->Java->Code style)\nfrom builder names | Whether to remove prefixes and suffixes set in code style from builder method names | true | - |
 | Include visible fields from superclass | Whether to also include visible fields from super class. Field is visible if it's public, protected. It's also visible if it has a default scope and it's in the same package. Private fields are never visible, therefore not set. | true | - |
 | Always generate builder to first (top level) class | Always generate builder to first (top level) class, this is the mode used before 0.0.9, in this case it's enough if you execute the command anywhere in the file, the builder will always be generated to the first class (usually the only public class). | false | - |
+| Show dialog to filter which fields are included in the builder | Whether to show a field selection dialog when generating a regular builder | false | - |
 
 ### @Generated annotatation
 
@@ -46,6 +47,10 @@ Most configuration is on the preferences page: Preferences -> Java -> Spark buil
  - 0.0.9
    Generate builder to the class under the cursor (in case of nested classes, or multiple classes in a single file)
    Improvements to Builder class removing logic
+ - 0.0.10
+   Added the option to select which fields are generated in the builder
+   Fixed a small bug that deleted the previous builder when pressing the cancel button on the staging builder generator dialog
+   Added MIT license file to plugin installation license
 
 ## The generated code looks like the following:
 

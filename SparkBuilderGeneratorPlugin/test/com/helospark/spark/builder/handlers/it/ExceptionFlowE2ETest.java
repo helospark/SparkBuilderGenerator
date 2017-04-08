@@ -15,14 +15,15 @@ import org.testng.annotations.Test;
 import com.helospark.spark.builder.DiContainer;
 import com.helospark.spark.builder.handlers.BuilderType;
 import com.helospark.spark.builder.handlers.GenerateRegularBuilderHandler;
-import com.helospark.spark.builder.handlers.codegenerator.RegularBuilderCompilationUnitGenerator;
+import com.helospark.spark.builder.handlers.codegenerator.BuilderRemover;
+import com.helospark.spark.builder.handlers.codegenerator.RegularBuilderCompilationUnitGeneratorBuilderFieldCollectingDecorator;
 import com.helospark.spark.builder.handlers.codegenerator.component.BuilderAstRemover;
 import com.helospark.spark.builder.handlers.codegenerator.domain.CompilationUnitModificationDomain;
 import com.helospark.spark.builder.handlers.exception.PluginException;
 
 public class ExceptionFlowE2ETest extends BaseBuilderGeneratorIT {
     @Mock
-    private RegularBuilderCompilationUnitGenerator regularBuilderCompilationUnitGenerator;
+    private RegularBuilderCompilationUnitGeneratorBuilderFieldCollectingDecorator regularBuilderCompilationUnitGenerator;
     @Mock
     private BuilderAstRemover builderAstRemover;
 
@@ -43,13 +44,15 @@ public class ExceptionFlowE2ETest extends BaseBuilderGeneratorIT {
     @Test
     public void testWhenPreviousBuilderRemovingFailsShouldShowDialog() throws Exception {
         // GIVEN
+        BuilderRemover builderRemover = DiContainer.getDependency(BuilderRemover.class);
         willThrow(new RuntimeException("Cause"))
                 .given(builderAstRemover)
                 .removeBuilder(any(ASTRewrite.class), any(CompilationUnit.class));
         super.setInput("class TestClass {}");
+        CompilationUnitModificationDomain dummyCompilationUnitModificationDomain = CompilationUnitModificationDomain.builder().build();
 
         // WHEN
-        underTest.execute(dummyExecutionEvent);
+        builderRemover.removeExistingBuilderWhenNeeded(dummyCompilationUnitModificationDomain);
 
         // THEN
         verify(dialogWrapper).openInformationDialog("Error", "Error removing previous builder, skipping");

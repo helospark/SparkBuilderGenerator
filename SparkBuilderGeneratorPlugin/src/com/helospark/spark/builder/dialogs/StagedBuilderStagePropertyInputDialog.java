@@ -23,6 +23,8 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 
+import com.helospark.spark.builder.dialogs.domain.StagedBuilderStagePropertiesDialogResult;
+
 /**
  * Dialog to set order and mandatory parameters for stage builder.
  * Generated with WindowBuilder plugin
@@ -77,7 +79,7 @@ public class StagedBuilderStagePropertyInputDialog extends Dialog {
         moveDownButton.setText("Move down");
 
         Label usageLabel = new Label(shell, SWT.NONE);
-        usageLabel.setBounds(10, 10, 449, 29);
+        usageLabel.setBounds(10, 10, 449, 17);
         usageLabel.setText("Check fields that are mandatory, organize field build stage order.");
 
         checkboxTableViewer = CheckboxTableViewer.newCheckList(shell, SWT.BORDER | SWT.FULL_SELECTION);
@@ -150,6 +152,31 @@ public class StagedBuilderStagePropertyInputDialog extends Dialog {
         Button cancelButton = new Button(shell, SWT.NONE);
         cancelButton.setBounds(10, 270, 101, 29);
         cancelButton.setText("Cancel");
+
+        Button removeButton = new Button(shell, SWT.NONE);
+        removeButton.setBounds(358, 122, 101, 29);
+        removeButton.setText("Remove");
+        removeButton.addSelectionListener(new SelectionListener() {
+
+            @Override
+            public void widgetSelected(SelectionEvent paramSelectionEvent) {
+                Table table = checkboxTableViewer.getTable();
+                int selectionIndex = table.getSelectionIndex();
+                if (selectionIndex >= 0 && selectionIndex < table.getItemCount()) {
+                    Object item = table.getItem(selectionIndex).getData();
+                    checkboxTableViewer.remove(item);
+                }
+
+            }
+
+            @Override
+            public void widgetDefaultSelected(SelectionEvent paramSelectionEvent) {
+            }
+        });
+
+        Label lblNewLabel = new Label(shell, SWT.NONE);
+        lblNewLabel.setBounds(10, 29, 459, 17);
+        lblNewLabel.setText("Click on 'Remove' button to leave selected field out of the builder.");
 
         cancelButton.addSelectionListener(new SelectionListener() {
 

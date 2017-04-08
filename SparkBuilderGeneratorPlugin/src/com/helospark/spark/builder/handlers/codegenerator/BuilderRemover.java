@@ -2,12 +2,12 @@ package com.helospark.spark.builder.handlers.codegenerator;
 
 import static com.helospark.spark.builder.preferences.PluginPreferenceList.OVERRIDE_PREVIOUS_BUILDER;
 
-import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.rewrite.ASTRewrite;
 
 import com.helospark.spark.builder.handlers.ErrorHandlerHook;
 import com.helospark.spark.builder.handlers.codegenerator.component.BuilderAstRemover;
+import com.helospark.spark.builder.handlers.codegenerator.domain.CompilationUnitModificationDomain;
 import com.helospark.spark.builder.preferences.PreferencesManager;
 
 /**
@@ -26,8 +26,9 @@ public class BuilderRemover {
         this.builderAstRemover = builderAstRemover;
     }
 
-    @SuppressWarnings("unchecked")
-    public void removeExistingBuilderWhenNeeded(AST ast, ASTRewrite rewriter, CompilationUnit compilationUnit) {
+    public void removeExistingBuilderWhenNeeded(CompilationUnitModificationDomain modificationDomain) {
+        ASTRewrite rewriter = modificationDomain.getAstRewriter();
+        CompilationUnit compilationUnit = modificationDomain.getCompilationUnit();
         if (preferencesManager.getPreferenceValue(OVERRIDE_PREVIOUS_BUILDER)) {
             try {
                 builderAstRemover.removeBuilder(rewriter, compilationUnit);

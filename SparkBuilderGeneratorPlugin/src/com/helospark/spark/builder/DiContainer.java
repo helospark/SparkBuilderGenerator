@@ -22,7 +22,11 @@ import com.helospark.spark.builder.handlers.codegenerator.BuilderOwnerClassFinde
 import com.helospark.spark.builder.handlers.codegenerator.BuilderRemover;
 import com.helospark.spark.builder.handlers.codegenerator.CompilationUnitParser;
 import com.helospark.spark.builder.handlers.codegenerator.RegularBuilderCompilationUnitGenerator;
+import com.helospark.spark.builder.handlers.codegenerator.RegularBuilderCompilationUnitGeneratorBuilderFieldCollectingDecorator;
+import com.helospark.spark.builder.handlers.codegenerator.RegularBuilderFieldFilter;
+import com.helospark.spark.builder.handlers.codegenerator.RegularBuilderFieldFilterDialogOpener;
 import com.helospark.spark.builder.handlers.codegenerator.StagedBuilderCompilationUnitGenerator;
+import com.helospark.spark.builder.handlers.codegenerator.StagedBuilderCompilationUnitGeneratorFieldCollectorDecorator;
 import com.helospark.spark.builder.handlers.codegenerator.component.BuilderAstRemover;
 import com.helospark.spark.builder.handlers.codegenerator.component.ImportPopulator;
 import com.helospark.spark.builder.handlers.codegenerator.component.PrivateInitializingConstructorCreator;
@@ -195,10 +199,16 @@ public class DiContainer {
                 getDependency(ParentITypeExtractor.class)));
         addDependency(new BuilderOwnerClassFinder(getDependency(CurrentlySelectedApplicableClassesClassNameProvider.class),
                 getDependency(PreferencesManager.class)));
-        addDependency(new RegularBuilderCompilationUnitGenerator(getDependency(ApplicableBuilderFieldExtractor.class),
-                getDependency(RegularBuilderClassCreator.class),
+        addDependency(new RegularBuilderCompilationUnitGenerator(getDependency(RegularBuilderClassCreator.class),
                 getDependency(PrivateInitializingConstructorCreator.class),
-                getDependency(RegularBuilderBuilderMethodCreator.class), getDependency(ImportPopulator.class)));
+                getDependency(RegularBuilderBuilderMethodCreator.class), getDependency(ImportPopulator.class),
+                getDependency(BuilderRemover.class)));
+        addDependency(new RegularBuilderFieldFilterDialogOpener(getDependency(CurrentShellProvider.class)));
+        addDependency(new RegularBuilderFieldFilter(getDependency(RegularBuilderFieldFilterDialogOpener.class)));
+        addDependency(new RegularBuilderCompilationUnitGeneratorBuilderFieldCollectingDecorator(getDependency(ApplicableBuilderFieldExtractor.class),
+                getDependency(RegularBuilderCompilationUnitGenerator.class),
+                getDependency(PreferencesManager.class),
+                getDependency(RegularBuilderFieldFilter.class)));
         addDependency(new IsEventOnJavaFilePredicate(getDependency(HandlerUtilWrapper.class)));
 
         // staged builder dependencies
@@ -239,18 +249,20 @@ public class DiContainer {
         addDependency(new StagedBuilderStagePropertyInputDialogOpener(getDependency(CurrentShellProvider.class)));
         addDependency(new StagedBuilderStagePropertiesProvider(getDependency(StagedBuilderInterfaceNameProvider.class),
                 getDependency(StagedBuilderStagePropertyInputDialogOpener.class)));
-        addDependency(new StagedBuilderCompilationUnitGenerator(getDependency(ApplicableBuilderFieldExtractor.class),
-                getDependency(StagedBuilderClassCreator.class),
+        addDependency(new StagedBuilderCompilationUnitGenerator(getDependency(StagedBuilderClassCreator.class),
                 getDependency(PrivateInitializingConstructorCreator.class),
                 getDependency(StagedBuilderStaticBuilderCreatorMethodCreator.class),
                 getDependency(ImportPopulator.class),
-                getDependency(StagedBuilderStagePropertiesProvider.class),
-                getDependency(StagedBuilderInterfaceCreatorFragment.class)));
+                getDependency(StagedBuilderInterfaceCreatorFragment.class),
+                getDependency(BuilderRemover.class)));
+        addDependency(new StagedBuilderCompilationUnitGeneratorFieldCollectorDecorator(
+                getDependency(StagedBuilderCompilationUnitGenerator.class),
+                getDependency(ApplicableBuilderFieldExtractor.class),
+                getDependency(StagedBuilderStagePropertiesProvider.class)));
 
         // Generator chain
         addDependency(new GenerateBuilderExecutorImpl(getDependency(CompilationUnitParser.class),
                 getDependencyList(BuilderCompilationUnitGenerator.class),
-                getDependency(BuilderRemover.class),
                 getDependency(IsEventOnJavaFilePredicate.class), getDependency(WorkingCopyManagerWrapper.class),
                 getDependency(CompilationUnitSourceSetter.class),
                 getDependency(ErrorHandlerHook.class),

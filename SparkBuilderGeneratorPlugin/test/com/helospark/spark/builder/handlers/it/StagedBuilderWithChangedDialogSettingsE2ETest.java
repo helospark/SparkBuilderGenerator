@@ -1,6 +1,8 @@
 package com.helospark.spark.builder.handlers.it;
 
+import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
+import static java.util.Optional.empty;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.any;
 
@@ -10,6 +12,7 @@ import java.util.List;
 import org.eclipse.jdt.core.JavaModelException;
 import org.mockito.Mock;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import com.helospark.spark.builder.DiContainer;
@@ -52,7 +55,7 @@ public class StagedBuilderWithChangedDialogSettingsE2ETest extends BaseBuilderGe
     @Test
     public void testWithAllOptionalFields() throws Exception {
         // GIVEN
-        ModifiedStagedDialogSettingsAnswerProvider dialogAnswerProvider = new ModifiedStagedDialogSettingsAnswerProvider(Arrays.asList(0, 1, 2, 3), emptyList());
+        ModifiedStagedDialogSettingsAnswerProvider dialogAnswerProvider = new ModifiedStagedDialogSettingsAnswerProvider(asList(0, 1, 2, 3), emptyList());
         given(stagedBuilderStagePropertyInputDialogOpener.open(any(List.class))).willAnswer(invocation -> dialogAnswerProvider.provideAnswer(invocation));
         String input = readClasspathFile("multi_field_input.tjava");
         String expectedResult = readClasspathFile("multi_field_staged_output_with_all_optional_fields.tjava");
@@ -66,9 +69,25 @@ public class StagedBuilderWithChangedDialogSettingsE2ETest extends BaseBuilderGe
     }
 
     @Test
-    public void testWithCancelClickedOnDialog() throws Exception {
+    public void testWithRemovedElementsInDialog() throws Exception {
         // GIVEN
-        given(stagedBuilderStagePropertyInputDialogOpener.open(any(List.class))).willReturn(null);
+        ModifiedStagedDialogSettingsAnswerProvider dialogAnswerProvider = new ModifiedStagedDialogSettingsAnswerProvider(asList(0, 1), asList(0, 1));
+        given(stagedBuilderStagePropertyInputDialogOpener.open(any(List.class))).willAnswer(invocation -> dialogAnswerProvider.provideAnswer(invocation));
+        String input = readClasspathFile("multi_field_input.tjava");
+        String expectedResult = readClasspathFile("multi_field_staged_output_with_only_first_two_fields_selected.tjava");
+        super.setInput(input);
+
+        // WHEN
+        underTest.execute(dummyExecutionEvent);
+
+        // THEN
+        super.assertEqualsJavaContents(outputCaptor.getValue(), expectedResult);
+    }
+
+    @Test(dataProvider = "cancelClickedOnDialogDataProvider")
+    public void testWithCancelClickedOnDialogShouldNotCreateOrDeleteBuilder(String inputFile) throws Exception {
+        // GIVEN
+        given(stagedBuilderStagePropertyInputDialogOpener.open(any(List.class))).willReturn(empty());
         String input = readClasspathFile("multi_field_input.tjava");
         String expectedResult = readClasspathFile("multi_field_input.tjava");
         super.setInput(input);
@@ -78,6 +97,18 @@ public class StagedBuilderWithChangedDialogSettingsE2ETest extends BaseBuilderGe
 
         // THEN
         super.assertEqualsJavaContents(outputCaptor.getValue(), expectedResult);
+    }
+
+    @DataProvider(name = "cancelClickedOnDialogDataProvider")
+    public Object[][] cancelClickedOnDialogDataProvider() {
+        return new Object[][] {
+                { "multi_field_input.tjava" },
+                { "multi_field_output.tjava" },
+                { "no_field_input.tjava" },
+                { "no_field_output.tjava" },
+                { "nested_class_output_with_staged_builder_on_second_nested_class.tjava" },
+                { "annotated_fields_output.tjava" }
+        };
     }
 
 }

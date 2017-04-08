@@ -84,8 +84,13 @@ public final class PluginPreferenceList {
             "org.helospark.builder.addGeneratedAnnotationOnStageInterface",
             "Add @Generated annotation on generated interfaces", Boolean.TRUE);
 
+    public static final PluginPreference<Boolean> REGULAR_BUILDER_SHOW_FIELD_FILTERING_DIALOG = new BooleanPluginPreference(
+            "org.helospark.builder.showFieldFilterDialogForRegularBuilder",
+            "Show dialog to filter which fields are included in the builder", Boolean.FALSE);
+
     public static List<PluginPreferenceGroup> getAllPreferences() {
         return Arrays.asList(createGeneralPreferencesGroup(),
+                createRegularBuilderPreferencesGroup(),
                 createStagedPreferencesGroup());
     }
 
@@ -117,5 +122,11 @@ public final class PluginPreferenceList {
         stagedBuilderPreferences.add(STAGED_BUILDER_GENERATE_JAVADOC_ON_STAGE_INTERFACE);
         stagedBuilderPreferences.add(STAGED_BUILDER_ADD_GENERATED_ANNOTATION_ON_STAGE_INTERFACE);
         return new PluginPreferenceGroup("Staged builder settings", stagedBuilderPreferences);
+    }
+
+    private static PluginPreferenceGroup createRegularBuilderPreferencesGroup() {
+        List<PluginPreference<?>> regularBuilderPreferences = new ArrayList<>();
+        regularBuilderPreferences.add(REGULAR_BUILDER_SHOW_FIELD_FILTERING_DIALOG);
+        return new PluginPreferenceGroup("Regular builder settings", regularBuilderPreferences);
     }
 }

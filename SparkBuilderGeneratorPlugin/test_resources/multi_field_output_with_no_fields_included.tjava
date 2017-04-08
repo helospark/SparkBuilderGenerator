@@ -1,0 +1,22 @@
+public class TestClass {
+    private String testField;
+    private Integer data;
+    private long something;
+    private List<String> list;
+
+    private TestClass(Builder builder) {
+    }
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public static final class Builder {
+        private Builder() {
+        }
+
+        public TestClass build() {
+            return new TestClass(this);
+        }
+    }
+}

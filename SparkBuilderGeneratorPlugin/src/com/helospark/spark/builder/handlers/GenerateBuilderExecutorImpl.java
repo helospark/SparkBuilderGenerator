@@ -11,7 +11,6 @@ import org.eclipse.jdt.core.dom.rewrite.ASTRewrite;
 
 import com.helospark.spark.builder.handlers.codegenerator.BuilderCompilationUnitGenerator;
 import com.helospark.spark.builder.handlers.codegenerator.BuilderOwnerClassFinder;
-import com.helospark.spark.builder.handlers.codegenerator.BuilderRemover;
 import com.helospark.spark.builder.handlers.codegenerator.CompilationUnitParser;
 import com.helospark.spark.builder.handlers.codegenerator.domain.CompilationUnitModificationDomain;
 
@@ -23,7 +22,6 @@ import com.helospark.spark.builder.handlers.codegenerator.domain.CompilationUnit
 public class GenerateBuilderExecutorImpl implements GenerateBuilderExecutor {
     private CompilationUnitParser compilationUnitParser;
     private List<BuilderCompilationUnitGenerator> builderGenerators;
-    private BuilderRemover builderRemover;
     private IsEventOnJavaFilePredicate isEventOnJavaFilePredicate;
     private WorkingCopyManagerWrapper workingCopyManagerWrapper;
     private CompilationUnitSourceSetter compilationUnitSourceSetter;
@@ -31,7 +29,7 @@ public class GenerateBuilderExecutorImpl implements GenerateBuilderExecutor {
     private BuilderOwnerClassFinder builderOwnerClassFinder;
 
     public GenerateBuilderExecutorImpl(CompilationUnitParser compilationUnitParser,
-            List<BuilderCompilationUnitGenerator> builderGenerators, BuilderRemover builderRemover,
+            List<BuilderCompilationUnitGenerator> builderGenerators,
             IsEventOnJavaFilePredicate isEventOnJavaFilePredicate,
             WorkingCopyManagerWrapper workingCopyManagerWrapper,
             CompilationUnitSourceSetter compilationUnitSourceSetter,
@@ -39,7 +37,6 @@ public class GenerateBuilderExecutorImpl implements GenerateBuilderExecutor {
             BuilderOwnerClassFinder builderOwnerClassFinder) {
         this.compilationUnitParser = compilationUnitParser;
         this.builderGenerators = builderGenerators;
-        this.builderRemover = builderRemover;
         this.isEventOnJavaFilePredicate = isEventOnJavaFilePredicate;
         this.workingCopyManagerWrapper = workingCopyManagerWrapper;
         this.compilationUnitSourceSetter = compilationUnitSourceSetter;
@@ -62,7 +59,6 @@ public class GenerateBuilderExecutorImpl implements GenerateBuilderExecutor {
         AST ast = compilationUnit.getAST();
         ASTRewrite rewriter = ASTRewrite.create(ast);
 
-        builderRemover.removeExistingBuilderWhenNeeded(ast, rewriter, compilationUnit);
         CompilationUnitModificationDomain compilationUnitModificationDomain = builderOwnerClassFinder.provideBuilderOwnerClass(compilationUnit, ast, rewriter, iCompilationUnit);
 
         builderGenerators.stream()

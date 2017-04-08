@@ -2,7 +2,7 @@
 <feature
       id="com.helospark.SparkBuilderGeneratorFeature"
       label="SparkBuilderGeneratorFeature"
-      version="0.0.9.qualifier">
+      version="0.0.10.qualifier">
 
    <description url="ftp://helospark.com/SparkBuilderGeneratorPlugin/">
       Spark builder generator plugin
@@ -18,7 +18,45 @@ Base builder generator plugin
 Add option to remove prefix and postfix from builder method name
 - 0.0.6
 Added staged builder
+- 0.0.7
+Option to include visible fields from superclass
+- 0.0.8
+Regression bug was observed in 0.0.7 under some Eclipse configurations.
+IllegalArgumentException occured while trying to parse java.lang.Object
+class.
+- 0.0.9
+Generate builder to the class under the cursor (in case of nested
+classes, or multiple classes in a single file)
+Improvements to Builder class removing logic
+- 0.0.10
+Added the option to select which fields are generated in the
+builder
+Fixed a small bug that deleted the previous builder when pressing
+the cancel button on the staging builder generator dialog
+Added MIT license file to plugin installation license
    </description>
+
+   <license url="https://opensource.org/licenses/MIT">
+      MIT License
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the &quot;Software&quot;), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+   </license>
 
    <url>
       <update label="Spark plugin update site" url="ftp://helospark.com/eclipse_plugin/SparkBuilderGeneratorPlugin/"/>
