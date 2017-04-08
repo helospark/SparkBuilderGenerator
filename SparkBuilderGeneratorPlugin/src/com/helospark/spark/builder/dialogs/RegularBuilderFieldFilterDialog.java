@@ -25,6 +25,10 @@ import org.eclipse.swt.widgets.TableColumn;
 
 import com.helospark.spark.builder.dialogs.domain.RegularBuilderFieldIncludeFieldIncludeDomain;
 
+/**
+ * Dialog to select which fields are included in the regular builder.
+ * @author helospark
+ */
 @Generated("WindowBuilder")
 public class RegularBuilderFieldFilterDialog extends Dialog {
 

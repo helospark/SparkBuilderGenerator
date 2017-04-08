@@ -50,6 +50,7 @@ Most configuration is on the preferences page: Preferences -> Java -> Spark buil
  - 0.0.10
    Added the option to select which fields are generated in the builder
    Fixed a small bug that deleted the previous builder when pressing the cancel button on the staging builder generator dialog
+   Added MIT license file to plugin installation license
 
 ## The generated code looks like the following:
 

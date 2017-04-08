@@ -176,7 +176,7 @@ public class StagedBuilderStagePropertyInputDialog extends Dialog {
 
         Label lblNewLabel = new Label(shell, SWT.NONE);
         lblNewLabel.setBounds(10, 29, 459, 17);
-        lblNewLabel.setText("To not generate builder for certain field, click on 'Remove' button");
+        lblNewLabel.setText("Click on 'Remove' button to leave selected field out of the builder.");
 
         cancelButton.addSelectionListener(new SelectionListener() {
 

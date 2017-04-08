@@ -1,5 +1,9 @@
 package com.helospark.spark.builder.dialogs.domain;
 
+/**
+ * Holds the fields and whether they are included in the regular builder.
+ * @author helospark
+ */
 public class RegularBuilderFieldIncludeFieldIncludeDomain {
     private boolean includeField;
     private String fieldName;
