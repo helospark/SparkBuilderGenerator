@@ -1,5 +1,0 @@
-<exampleScripts>
-	<command name="helloworld">
-		<revision index="1" file="helloworld.stt" />
-	</command>
-</exampleScripts>
