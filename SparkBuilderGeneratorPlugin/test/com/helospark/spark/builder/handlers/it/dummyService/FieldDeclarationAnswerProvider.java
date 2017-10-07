@@ -28,7 +28,7 @@ public class FieldDeclarationAnswerProvider {
                 }
             }
         }
-        return Optional.empty();
+        return Optional.of("some.other.value");
     }
 
 }

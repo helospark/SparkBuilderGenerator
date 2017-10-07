@@ -25,7 +25,7 @@ public class OptionalInitializingE2ETest extends BaseBuilderGeneratorIT {
         given(fullyQualifiedNameExtractor.getFullyQualifiedBaseTypeName(any(FieldDeclaration.class))).willAnswer(inv -> FieldDeclarationAnswerProvider.provideAnswer(inv));
     }
 
-    @Test(dataProvider = "testCasesForRegularBulderOptionals")
+    @Test(dataProvider = "testCasesForRegularBuilderOptionals")
     public void testOptionalInitializationForRegularBuilder(String inputFile, String expectedOutputFile) throws Exception {
         // GIVEN
         underTest = new GenerateRegularBuilderHandler();
@@ -40,7 +40,7 @@ public class OptionalInitializingE2ETest extends BaseBuilderGeneratorIT {
         super.assertEqualsJavaContents(outputCaptor.getValue(), expectedResult);
     }
 
-    @DataProvider(name = "testCasesForRegularBulderOptionals")
+    @DataProvider(name = "testCasesForRegularBuilderOptionals")
     public Object[][] regularBuilderExampleFileProvider() {
         return new Object[][] {
                 { "optional_containing_input.tjava", "optional_containing_output.tjava" },
@@ -69,5 +69,23 @@ public class OptionalInitializingE2ETest extends BaseBuilderGeneratorIT {
         return new Object[][] {
                 { "optional_containing_input.tjava", "optional_containing_staging_builder_output.tjava" }
         };
+    }
+
+    @Test
+    public void testOptionalWithDisabledOptionalInitialization() throws Exception {
+        // GIVEN
+        underTest = new GenerateRegularBuilderHandler();
+
+        given(preferenceStore.getBoolean("org.helospark.builder.initializeOptionalFieldsToEmpty")).willReturn(false);
+
+        String input = readClasspathFile("optional_containing_input.tjava");
+        String expectedResult = readClasspathFile("optional_containing_output_with_disabled_optional_initialization.tjava");
+        super.setInput(input);
+
+        // WHEN
+        underTest.execute(dummyExecutionEvent);
+
+        // THEN
+        super.assertEqualsJavaContents(outputCaptor.getValue(), expectedResult);
     }
 }

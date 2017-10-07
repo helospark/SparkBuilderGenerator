@@ -15,8 +15,12 @@ public class FullyQualifiedNameExtractor {
     private static final char GENERIC_PARAMETER_START_CHARACTER = '<';
 
     public Optional<String> getFullyQualifiedBaseTypeName(FieldDeclaration fieldDeclaration) {
-        return getFullyQualifiedParameterizedTypeName(fieldDeclaration)
+        Optional<String> result = getFullyQualifiedParameterizedTypeName(fieldDeclaration)
                 .map(value -> deleteGenericTypeFromString(value));
+        if (!result.isPresent()) {
+            System.out.println("Cannot extract fully qualified name of field declaration '" + String.valueOf(fieldDeclaration) + "', field will not be preinitialized");
+        }
+        return result;
     }
 
     private String deleteGenericTypeFromString(String value) {
