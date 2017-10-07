@@ -56,8 +56,8 @@ public class BuiltInCollectionsInitializerChainitem implements FieldDeclarationP
 
     @Override
     public Expression createExpression(AST ast, String fullyQualifiedName) {
-        String result = fullyQualifiedNameToCollectionsMethodNameMapping.get(fullyQualifiedName);
-        return staticMethodInvocationFragment.createStaticMethodInvocation(ast, COLLECTIONS_CLASS_NAME, result);
+        String initializerMethodName = fullyQualifiedNameToCollectionsMethodNameMapping.get(fullyQualifiedName);
+        return staticMethodInvocationFragment.createStaticMethodInvocation(ast, COLLECTIONS_CLASS_NAME, initializerMethodName);
     }
 
     @Override
