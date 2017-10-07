@@ -1,0 +1,138 @@
+package com.helospark.test;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.SortedMap;
+import java.util.SortedSet;
+import java.util.Collections;
+
+public class ClassWithCollections {
+    private Set<String> set;
+    private List<String> list;
+    private Map<Integer, String> map;
+    private SortedSet<Character> sortedSet;
+    private SortedMap<Object, Object> sortedMap;
+    private Collection<String> collection;
+    private Iterable<String> iterable;
+    private String string;
+
+    private ClassWithCollections(Builder builder) {
+        this.set = builder.set;
+        this.list = builder.list;
+        this.map = builder.map;
+        this.sortedSet = builder.sortedSet;
+        this.sortedMap = builder.sortedMap;
+        this.collection = builder.collection;
+        this.iterable = builder.iterable;
+        this.string = builder.string;
+    }
+
+    public static ISetStage builder() {
+        return new Builder();
+    }
+
+    public interface ISetStage {
+        public IListStage withSet(Set<String> set);
+    }
+
+    public interface IListStage {
+        public IMapStage withList(List<String> list);
+    }
+
+    public interface IMapStage {
+        public ISortedSetStage withMap(Map<Integer, String> map);
+    }
+
+    public interface ISortedSetStage {
+        public ISortedMapStage withSortedSet(SortedSet<Character> sortedSet);
+    }
+
+    public interface ISortedMapStage {
+        public ICollectionStage withSortedMap(SortedMap<Object, Object> sortedMap);
+    }
+
+    public interface ICollectionStage {
+        public IIterableStage withCollection(Collection<String> collection);
+    }
+
+    public interface IIterableStage {
+        public IStringStage withIterable(Iterable<String> iterable);
+    }
+
+    public interface IStringStage {
+        public IBuildStage withString(String string);
+    }
+
+    public interface IBuildStage {
+        public ClassWithCollections build();
+    }
+
+    public static final class Builder implements ISetStage, IListStage, IMapStage, ISortedSetStage, ISortedMapStage, ICollectionStage, IIterableStage, IStringStage, IBuildStage {
+        private Set<String> set = Collections.emptySet();
+        private List<String> list = Collections.emptyList();
+        private Map<Integer, String> map = Collections.emptyMap();
+        private SortedSet<Character> sortedSet = Collections.emptySortedSet();
+        private SortedMap<Object, Object> sortedMap = Collections.emptySortedMap();
+        private Collection<String> collection = Collections.emptyList();
+        private Iterable<String> iterable = Collections.emptyList();
+        private String string;
+
+        private Builder() {
+        }
+
+        @Override
+        public IListStage withSet(Set<String> set) {
+            this.set = set;
+            return this;
+        }
+
+        @Override
+        public IMapStage withList(List<String> list) {
+            this.list = list;
+            return this;
+        }
+
+        @Override
+        public ISortedSetStage withMap(Map<Integer, String> map) {
+            this.map = map;
+            return this;
+        }
+
+        @Override
+        public ISortedMapStage withSortedSet(SortedSet<Character> sortedSet) {
+            this.sortedSet = sortedSet;
+            return this;
+        }
+
+        @Override
+        public ICollectionStage withSortedMap(SortedMap<Object, Object> sortedMap) {
+            this.sortedMap = sortedMap;
+            return this;
+        }
+
+        @Override
+        public IIterableStage withCollection(Collection<String> collection) {
+            this.collection = collection;
+            return this;
+        }
+
+        @Override
+        public IStringStage withIterable(Iterable<String> iterable) {
+            this.iterable = iterable;
+            return this;
+        }
+
+        @Override
+        public IBuildStage withString(String string) {
+            this.string = string;
+            return this;
+        }
+
+        @Override
+        public ClassWithCollections build() {
+            return new ClassWithCollections(this);
+        }
+    }
+}

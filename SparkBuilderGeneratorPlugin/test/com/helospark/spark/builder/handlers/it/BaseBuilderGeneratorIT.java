@@ -136,6 +136,7 @@ public class BaseBuilderGeneratorIT {
         given(preferenceStore.getBoolean("org.helospark.builder.includeVisibleFieldsFromSuperclass")).willReturn(false);
         given(preferenceStore.getBoolean("org.helospark.builder.alwaysGenerateBuilderToFirstClass")).willReturn(true);
         given(preferenceStore.getBoolean("org.helospark.builder.initializeOptionalFieldsToEmpty")).willReturn(true);
+        given(preferenceStore.getBoolean("org.helospark.builder.initializeCollectionToEmptyCollection")).willReturn(true);
 
         // staged builder
         given(preferenceStore.getBoolean("org.helospark.builder.generateJavadocOnStageInterface")).willReturn(false);

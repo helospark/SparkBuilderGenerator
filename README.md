@@ -10,11 +10,8 @@ Features:
  - Compatible with most version of Eclipse
  - Highly configurable, check the plugin's preferences page
  - Capable of generate builder methods for visible fields in superclass
+ - Encourages and supports null-safe programming practices
  - Open source (with very permissible MIT license)
-
-## Other SparkTools plugin
-
-Other plugins have been moved to separate GitHub repository
 
 ## Configuration
 
@@ -70,6 +67,7 @@ Most configuration is on the preferences page: Preferences -> Java -> Spark buil
    Added MIT license file to plugin installation license
  - 0.0.11
    Initialize Optional value to Optional.empty() to follow nullsafe programming practices
+   Initialize Collections with empty collections via java.util.Collections class
 
 ## The generated code looks like the following:
 

@@ -1,18 +1,18 @@
 package com.helospark.spark.builder.handlers.codegenerator.component.fragment.builderclass.field;
 
+import static com.helospark.spark.builder.preferences.PluginPreferenceList.INITIALIZE_COLLECTIONS_TO_EMPTY_COLLECTIONS;
 import static com.helospark.spark.builder.preferences.PluginPreferenceList.INITIALIZE_OPTIONAL_FIELDS_TO_EMPTY;
-import static com.helospark.spark.builder.preferences.StaticPreferences.EMPTY_OPTIONAL_CREATOR_STATIC_METHOD;
-import static com.helospark.spark.builder.preferences.StaticPreferences.OPTIONAL_CLASS_NAME;
-import static com.helospark.spark.builder.preferences.StaticPreferences.OPTIONAL_FULLY_QUALIFIED_NAME;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.eclipse.jdt.core.dom.AST;
+import org.eclipse.jdt.core.dom.Expression;
 import org.eclipse.jdt.core.dom.FieldDeclaration;
-import org.eclipse.jdt.core.dom.MethodInvocation;
 import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
 
 import com.helospark.spark.builder.handlers.ImportRepository;
+import com.helospark.spark.builder.handlers.codegenerator.component.fragment.builderclass.field.chain.FieldDeclarationPostProcessorChainItem;
 import com.helospark.spark.builder.preferences.PreferencesManager;
 
 /**
@@ -23,14 +23,14 @@ import com.helospark.spark.builder.preferences.PreferencesManager;
 public class FieldDeclarationPostProcessor {
     private PreferencesManager preferencesManager;
     private FullyQualifiedNameExtractor fullyQualifiedNameExtractor;
-    private StaticMethodInvocationFragment staticMethodInvocationFragment;
     private ImportRepository importRepository;
+    private List<FieldDeclarationPostProcessorChainItem> fieldPostProcessorChain;
 
     public FieldDeclarationPostProcessor(PreferencesManager preferencesManager, FullyQualifiedNameExtractor fullyQualifiedNameExtractor,
-            StaticMethodInvocationFragment staticMethodInvocationFragment, ImportRepository importRepository) {
+            ImportRepository importRepository, List<FieldDeclarationPostProcessorChainItem> fullyQualifiedNameToExpression) {
         this.preferencesManager = preferencesManager;
         this.fullyQualifiedNameExtractor = fullyQualifiedNameExtractor;
-        this.staticMethodInvocationFragment = staticMethodInvocationFragment;
+        this.fieldPostProcessorChain = fullyQualifiedNameToExpression;
         this.importRepository = importRepository;
     }
 
@@ -45,14 +45,22 @@ public class FieldDeclarationPostProcessor {
     }
 
     private Boolean isPostProcessingRequired() {
-        return preferencesManager.getPreferenceValue(INITIALIZE_OPTIONAL_FIELDS_TO_EMPTY);
+        return preferencesManager.getPreferenceValue(INITIALIZE_OPTIONAL_FIELDS_TO_EMPTY)
+                || preferencesManager.getPreferenceValue(INITIALIZE_COLLECTIONS_TO_EMPTY_COLLECTIONS);
     }
 
     private void postProcessDeclaration(AST ast, VariableDeclarationFragment variableDeclarationFragment, String fullyQualifiedName) {
-        if (fullyQualifiedName.equals(OPTIONAL_FULLY_QUALIFIED_NAME)) {
-            MethodInvocation optionalEmptyCall = staticMethodInvocationFragment.createStaticMethodInvocation(ast, OPTIONAL_CLASS_NAME, EMPTY_OPTIONAL_CREATOR_STATIC_METHOD);
-            variableDeclarationFragment.setInitializer(optionalEmptyCall);
-            importRepository.addImport(OPTIONAL_FULLY_QUALIFIED_NAME);
-        }
+        fieldPostProcessorChain.stream()
+                .filter(chainItem -> chainItem.doesSupport(fullyQualifiedName))
+                .findFirst()
+                .ifPresent(chainItem -> postProcessUsingChainItem(ast, chainItem, variableDeclarationFragment, fullyQualifiedName));
+
+    }
+
+    private void postProcessUsingChainItem(AST ast, FieldDeclarationPostProcessorChainItem chainItemToUse, VariableDeclarationFragment variableDeclarationFragment,
+            String fullyQualifiedName) {
+        Expression expression = chainItemToUse.createExpression(ast, fullyQualifiedName);
+        variableDeclarationFragment.setInitializer(expression);
+        importRepository.addImports(chainItemToUse.getImport(fullyQualifiedName));
     }
 }
