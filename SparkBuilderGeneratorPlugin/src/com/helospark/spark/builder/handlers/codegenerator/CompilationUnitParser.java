@@ -17,6 +17,8 @@ public class CompilationUnitParser {
         parser.setKind(ASTParser.K_COMPILATION_UNIT);
         parser.setSource(unit);
         parser.setResolveBindings(true);
+        parser.setProject(unit.getJavaProject());
+        parser.setUnitName(unit.getPath().toString());
         return (CompilationUnit) parser.createAST(null);
     }
 
@@ -25,6 +27,7 @@ public class CompilationUnitParser {
         parser.setKind(ASTParser.K_COMPILATION_UNIT);
         parser.setSource(classFile);
         parser.setResolveBindings(true);
+        parser.setBindingsRecovery(true);
         return (CompilationUnit) parser.createAST(null);
     }
 

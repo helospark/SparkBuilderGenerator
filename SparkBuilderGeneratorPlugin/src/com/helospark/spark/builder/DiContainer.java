@@ -42,6 +42,9 @@ import com.helospark.spark.builder.handlers.codegenerator.component.fragment.bui
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.builderclass.buildmethod.BuildMethodDeclarationCreatorFragment;
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.builderclass.constructor.PrivateConstructorAdderFragment;
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.builderclass.field.BuilderFieldAdderFragment;
+import com.helospark.spark.builder.handlers.codegenerator.component.fragment.builderclass.field.FieldDeclarationPostProcessor;
+import com.helospark.spark.builder.handlers.codegenerator.component.fragment.builderclass.field.FullyQualifiedNameExtractor;
+import com.helospark.spark.builder.handlers.codegenerator.component.fragment.builderclass.field.StaticMethodInvocationFragment;
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.builderclass.stagedinterface.StagedBuilderInterfaceCreatorFragment;
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.builderclass.stagedinterface.StagedBuilderInterfaceTypeDefinitionCreatorFragment;
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.builderclass.withmethod.RegularBuilderWithMethodAdderFragment;
@@ -97,12 +100,14 @@ public class DiContainer {
     }
 
     // Visible for testing
+    // TODO: Introduce LightDi here
     public static void initializeDiContainer() {
         addDependency(new CamelCaseConverter());
         addDependency(new JavadocGenerator());
         addDependency(new TemplateResolver());
         addDependency(new PreferenceStoreProvider());
         addDependency(new CurrentShellProvider());
+        addDependency(new ITypeExtractor());
         addDependency(new DialogWrapper(getDependency(CurrentShellProvider.class)));
         addDependency(new PreferencesManager(getDependency(PreferenceStoreProvider.class)));
         addDependency(new ErrorHandlerHook(getDependency(DialogWrapper.class)));
@@ -150,7 +155,11 @@ public class DiContainer {
         addDependency(new JavadocAdder(getDependency(JavadocGenerator.class), getDependency(PreferencesManager.class)));
         addDependency(new BuildMethodCreatorFragment(getDependency(BuildMethodDeclarationCreatorFragment.class),
                 getDependency(BuildMethodBodyCreatorFragment.class)));
-        addDependency(new BuilderFieldAdderFragment());
+        addDependency(new FullyQualifiedNameExtractor());
+        addDependency(new StaticMethodInvocationFragment());
+        addDependency(new FieldDeclarationPostProcessor(getDependency(PreferencesManager.class), getDependency(FullyQualifiedNameExtractor.class),
+                getDependency(StaticMethodInvocationFragment.class)));
+        addDependency(new BuilderFieldAdderFragment(getDependency(FieldDeclarationPostProcessor.class)));
         addDependency(new WithMethodParameterCreatorFragment(getDependency(PreferencesManager.class), getDependency(MarkerAnnotationAttacher.class)));
         addDependency(new RegularBuilderWithMethodAdderFragment(getDependency(PreferencesManager.class),
                 getDependency(JavadocAdder.class),
@@ -184,7 +193,6 @@ public class DiContainer {
         addDependency(new FieldNameToBuilderFieldNameConverter(getDependency(PreferencesManager.class),
                 getDependency(FieldPrefixSuffixPreferenceProvider.class),
                 getDependency(CamelCaseConverter.class)));
-        addDependency(new ITypeExtractor());
         addDependency(new TypeDeclarationFromSuperclassExtractor(getDependency(CompilationUnitParser.class),
                 getDependency(ITypeExtractor.class)));
         addDependency(new ApplicableFieldVisibilityFilter());

@@ -25,6 +25,7 @@ import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTParser;
 import org.eclipse.jdt.core.dom.CompilationUnit;
+import org.eclipse.jdt.core.dom.FieldDeclaration;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
@@ -35,6 +36,7 @@ import com.helospark.spark.builder.handlers.DialogWrapper;
 import com.helospark.spark.builder.handlers.HandlerUtilWrapper;
 import com.helospark.spark.builder.handlers.WorkingCopyManagerWrapper;
 import com.helospark.spark.builder.handlers.codegenerator.CompilationUnitParser;
+import com.helospark.spark.builder.handlers.codegenerator.component.fragment.builderclass.field.FullyQualifiedNameExtractor;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.ITypeExtractor;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.PreferenceStoreProvider;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.PreferenceStoreWrapper;
@@ -62,6 +64,8 @@ public class BaseBuilderGeneratorIT {
     protected IBuffer iBuffer;
     @Mock
     protected ITypeExtractor iTypeExtractor;
+    @Mock
+    protected FullyQualifiedNameExtractor fullyQualifiedNameExtractor;
     @Captor
     protected ArgumentCaptor<String> outputCaptor;
 
@@ -83,6 +87,7 @@ public class BaseBuilderGeneratorIT {
         given(preferenceStoreProvider.providePreferenceStore()).willReturn(preferenceStore);
         given(iCompilationUnit.getBuffer()).willReturn(iBuffer);
         given(iTypeExtractor.extract(any(TypeDeclaration.class))).willReturn(empty());
+        given(fullyQualifiedNameExtractor.getFullyQualifiedBaseTypeName(any(FieldDeclaration.class))).willReturn(empty());
         setDefaultPreferenceStoreSettings();
         doNothing().when(iBuffer).setContents(outputCaptor.capture());
 
@@ -96,6 +101,7 @@ public class BaseBuilderGeneratorIT {
         DiContainer.addDependency(preferenceStoreProvider);
         DiContainer.addDependency(dialogWrapper);
         DiContainer.addDependency(iTypeExtractor);
+        DiContainer.addDependency(fullyQualifiedNameExtractor);
     }
 
     protected void setInput(String sourceAsString) throws JavaModelException {
@@ -125,6 +131,7 @@ public class BaseBuilderGeneratorIT {
         given(preferenceStore.getBoolean("org.helospark.builder.removePrefixAndPostfixFromBuilderNames")).willReturn(false);
         given(preferenceStore.getBoolean("org.helospark.builder.includeVisibleFieldsFromSuperclass")).willReturn(false);
         given(preferenceStore.getBoolean("org.helospark.builder.alwaysGenerateBuilderToFirstClass")).willReturn(true);
+        given(preferenceStore.getBoolean("org.helospark.builder.initializeOptionalFieldsToEmpty")).willReturn(true);
 
         // staged builder
         given(preferenceStore.getBoolean("org.helospark.builder.generateJavadocOnStageInterface")).willReturn(false);

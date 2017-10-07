@@ -1,0 +1,47 @@
+package com.helospark.test;
+
+import java.util.Optional;
+
+public class Mail {
+    private String from;
+    private Optional<String> optional;
+    private java.util.Optional<Integer> secondOptional;
+
+    private Mail(Builder builder) {
+        this.from = builder.from;
+        this.optional = builder.optional;
+        this.secondOptional = builder.secondOptional;
+    }
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public static final class Builder {
+        private String from;
+        private Optional<String> optional = Optional.empty();
+        private java.util.Optional<Integer> secondOptional = Optional.empty();
+
+        private Builder() {
+        }
+
+        public Builder withFrom(String from) {
+            this.from = from;
+            return this;
+        }
+
+        public Builder withOptional(Optional<String> optional) {
+            this.optional = optional;
+            return this;
+        }
+
+        public Builder withSecondOptional(java.util.Optional<Integer> secondOptional) {
+            this.secondOptional = secondOptional;
+            return this;
+        }
+
+        public Mail build() {
+            return new Mail(this);
+        }
+    }
+}
