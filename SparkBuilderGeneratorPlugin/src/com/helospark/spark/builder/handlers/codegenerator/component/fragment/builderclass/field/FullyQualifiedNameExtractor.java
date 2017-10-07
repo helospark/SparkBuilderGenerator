@@ -12,6 +12,7 @@ import org.eclipse.jdt.core.dom.ITypeBinding;
  * @author helospark
  */
 public class FullyQualifiedNameExtractor {
+    private static final char GENERIC_PARAMETER_START_CHARACTER = '<';
 
     public Optional<String> getFullyQualifiedBaseTypeName(FieldDeclaration fieldDeclaration) {
         return getFullyQualifiedParameterizedTypeName(fieldDeclaration)
@@ -19,7 +20,7 @@ public class FullyQualifiedNameExtractor {
     }
 
     private String deleteGenericTypeFromString(String value) {
-        int startOfGenericType = value.indexOf("<");
+        int startOfGenericType = value.indexOf(GENERIC_PARAMETER_START_CHARACTER);
         if (startOfGenericType == -1) {
             return value;
         } else {

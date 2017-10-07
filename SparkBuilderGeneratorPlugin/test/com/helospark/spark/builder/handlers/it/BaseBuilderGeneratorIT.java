@@ -40,6 +40,7 @@ import com.helospark.spark.builder.handlers.codegenerator.component.fragment.bui
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.ITypeExtractor;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.PreferenceStoreProvider;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.PreferenceStoreWrapper;
+import com.helospark.spark.builder.handlers.codegenerator.component.helper.StagedBuilderStagePropertyInputDialogOpener;
 
 public class BaseBuilderGeneratorIT {
     protected ExecutionEvent dummyExecutionEvent = new ExecutionEvent();
@@ -68,6 +69,8 @@ public class BaseBuilderGeneratorIT {
     protected FullyQualifiedNameExtractor fullyQualifiedNameExtractor;
     @Captor
     protected ArgumentCaptor<String> outputCaptor;
+    @Mock
+    protected StagedBuilderStagePropertyInputDialogOpener stagedBuilderStagePropertyInputDialogOpener;
 
     protected void init() throws JavaModelException {
         initMocks(this);
@@ -102,6 +105,7 @@ public class BaseBuilderGeneratorIT {
         DiContainer.addDependency(dialogWrapper);
         DiContainer.addDependency(iTypeExtractor);
         DiContainer.addDependency(fullyQualifiedNameExtractor);
+        DiContainer.addDependency(stagedBuilderStagePropertyInputDialogOpener);
     }
 
     protected void setInput(String sourceAsString) throws JavaModelException {

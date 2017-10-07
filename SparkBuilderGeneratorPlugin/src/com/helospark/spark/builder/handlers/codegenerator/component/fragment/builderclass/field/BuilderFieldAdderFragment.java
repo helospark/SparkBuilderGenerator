@@ -30,16 +30,16 @@ public class BuilderFieldAdderFragment {
     }
 
     public void addFieldToBuilder(AST ast, TypeDeclaration builderType, NamedVariableDeclarationField namedVariableDeclarationField) {
-        FieldDeclaration fieldDeclaration = ast.newFieldDeclaration(createFragment(ast, namedVariableDeclarationField));
+        FieldDeclaration fieldDeclaration = ast.newFieldDeclaration(createFieldDeclarationFragment(ast, namedVariableDeclarationField));
         fieldDeclaration.modifiers().add(ast.newModifier(ModifierKeyword.PRIVATE_KEYWORD));
         fieldDeclaration.setType((Type) ASTNode.copySubtree(ast, namedVariableDeclarationField.getFieldDeclaration().getType()));
         builderType.bodyDeclarations().add(findLastFieldIndex(builderType), fieldDeclaration);
     }
 
-    private VariableDeclarationFragment createFragment(AST ast, NamedVariableDeclarationField namedVariableDeclarationField) {
+    private VariableDeclarationFragment createFieldDeclarationFragment(AST ast, NamedVariableDeclarationField namedVariableDeclarationField) {
         VariableDeclarationFragment variableDeclarationFragment = ast.newVariableDeclarationFragment();
         variableDeclarationFragment.setName(ast.newSimpleName(namedVariableDeclarationField.getOriginalFieldName()));
-        return fieldDeclarationPostProcessor.postProcess(ast, namedVariableDeclarationField.getFieldDeclaration(), variableDeclarationFragment);
+        return fieldDeclarationPostProcessor.postProcessFragment(ast, namedVariableDeclarationField.getFieldDeclaration(), variableDeclarationFragment);
     }
 
     private int findLastFieldIndex(TypeDeclaration newType) {

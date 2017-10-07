@@ -11,13 +11,14 @@ import org.eclipse.ui.preferences.ScopedPreferenceStore;
 import org.eclipse.ui.texteditor.ChainedPreferenceStore;
 
 import com.helospark.spark.builder.Activator;
+import com.helospark.spark.builder.handlers.StatefulBean;
 
 /**
  * Provides this plugin's necessary preference stores.
  *
  * @author helospark
  */
-public class PreferenceStoreProvider {
+public class PreferenceStoreProvider implements StatefulBean {
     // TODO: stateful beans are evil. This state should be moved out and recieved via the provide method
     private Optional<IJavaProject> currentJavaProject = Optional.empty();
 

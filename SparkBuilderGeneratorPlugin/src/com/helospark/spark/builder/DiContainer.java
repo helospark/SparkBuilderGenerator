@@ -12,6 +12,7 @@ import com.helospark.spark.builder.handlers.ErrorHandlerHook;
 import com.helospark.spark.builder.handlers.GenerateBuilderExecutorImpl;
 import com.helospark.spark.builder.handlers.GenerateBuilderHandlerErrorHandlerDecorator;
 import com.helospark.spark.builder.handlers.HandlerUtilWrapper;
+import com.helospark.spark.builder.handlers.ImportRepository;
 import com.helospark.spark.builder.handlers.IsEventOnJavaFilePredicate;
 import com.helospark.spark.builder.handlers.StateInitializerGenerateBuilderExecutorDecorator;
 import com.helospark.spark.builder.handlers.StatefulBeanHandler;
@@ -140,7 +141,8 @@ public class DiContainer {
         addDependency(new CompilationUnitParser());
         addDependency(new GeneratedAnnotationPopulator(getDependency(PreferencesManager.class)));
         addDependency(new MarkerAnnotationAttacher());
-        addDependency(new ImportPopulator(getDependency(PreferencesManager.class)));
+        addDependency(new ImportRepository());
+        addDependency(new ImportPopulator(getDependency(PreferencesManager.class), getDependency(ImportRepository.class)));
         addDependency(new BuilderMethodNameBuilder(getDependency(CamelCaseConverter.class),
                 getDependency(PreferencesManager.class),
                 getDependency(TemplateResolver.class)));
@@ -158,7 +160,7 @@ public class DiContainer {
         addDependency(new FullyQualifiedNameExtractor());
         addDependency(new StaticMethodInvocationFragment());
         addDependency(new FieldDeclarationPostProcessor(getDependency(PreferencesManager.class), getDependency(FullyQualifiedNameExtractor.class),
-                getDependency(StaticMethodInvocationFragment.class)));
+                getDependency(StaticMethodInvocationFragment.class), getDependency(ImportRepository.class)));
         addDependency(new BuilderFieldAdderFragment(getDependency(FieldDeclarationPostProcessor.class)));
         addDependency(new WithMethodParameterCreatorFragment(getDependency(PreferencesManager.class), getDependency(MarkerAnnotationAttacher.class)));
         addDependency(new RegularBuilderWithMethodAdderFragment(getDependency(PreferencesManager.class),
@@ -278,7 +280,7 @@ public class DiContainer {
         addDependency(new GenerateBuilderHandlerErrorHandlerDecorator(getDependency(GenerateBuilderExecutorImpl.class),
                 getDependency(ErrorHandlerHook.class)));
         addDependency(new StatefulBeanHandler(getDependency(PreferenceStoreProvider.class),
-                getDependency(WorkingCopyManagerWrapper.class)));
+                getDependency(WorkingCopyManagerWrapper.class), getDependency(ImportRepository.class)));
         addDependency(
                 new StateInitializerGenerateBuilderExecutorDecorator(
                         getDependency(GenerateBuilderHandlerErrorHandlerDecorator.class),

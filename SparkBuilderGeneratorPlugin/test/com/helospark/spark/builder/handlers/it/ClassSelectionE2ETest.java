@@ -19,7 +19,6 @@ import com.helospark.spark.builder.DiContainer;
 import com.helospark.spark.builder.handlers.GenerateRegularBuilderHandler;
 import com.helospark.spark.builder.handlers.GenerateStagedBuilderHandler;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.CurrentlySelectedApplicableClassesClassNameProvider;
-import com.helospark.spark.builder.handlers.codegenerator.component.helper.StagedBuilderStagePropertyInputDialogOpener;
 import com.helospark.spark.builder.handlers.it.dummyService.NoDialogOperationPerformedStagedBuilderDialogAnswerProvider;
 
 public class ClassSelectionE2ETest extends BaseBuilderGeneratorIT {
@@ -27,8 +26,6 @@ public class ClassSelectionE2ETest extends BaseBuilderGeneratorIT {
     protected CurrentlySelectedApplicableClassesClassNameProvider currentlySelectedApplicableClassesClassNameProvider;
 
     private NoDialogOperationPerformedStagedBuilderDialogAnswerProvider dialogAnswerProvider = new NoDialogOperationPerformedStagedBuilderDialogAnswerProvider();
-    @Mock
-    private StagedBuilderStagePropertyInputDialogOpener stagedBuilderStagePropertyInputDialogOpener;
 
     @BeforeMethod
     public void beforeMethod() throws JavaModelException {
@@ -41,7 +38,6 @@ public class ClassSelectionE2ETest extends BaseBuilderGeneratorIT {
     protected void diContainerOverrides() {
         super.diContainerOverrides();
         DiContainer.addDependency(currentlySelectedApplicableClassesClassNameProvider);
-        DiContainer.addDependency(stagedBuilderStagePropertyInputDialogOpener);
     }
 
     @Test(dataProvider = "multiClassTestFileNameProvider")

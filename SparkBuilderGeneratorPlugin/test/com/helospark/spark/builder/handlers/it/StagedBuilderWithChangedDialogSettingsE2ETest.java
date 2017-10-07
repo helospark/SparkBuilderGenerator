@@ -10,30 +10,19 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.jdt.core.JavaModelException;
-import org.mockito.Mock;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-import com.helospark.spark.builder.DiContainer;
 import com.helospark.spark.builder.handlers.GenerateStagedBuilderHandler;
-import com.helospark.spark.builder.handlers.codegenerator.component.helper.StagedBuilderStagePropertyInputDialogOpener;
 import com.helospark.spark.builder.handlers.it.dummyService.ModifiedStagedDialogSettingsAnswerProvider;
 
 public class StagedBuilderWithChangedDialogSettingsE2ETest extends BaseBuilderGeneratorIT {
-    @Mock
-    private StagedBuilderStagePropertyInputDialogOpener stagedBuilderStagePropertyInputDialogOpener;
 
     @BeforeMethod
     public void beforeMethod() throws JavaModelException {
         super.init();
         underTest = new GenerateStagedBuilderHandler();
-    }
-
-    @Override
-    protected void diContainerOverrides() {
-        super.diContainerOverrides();
-        DiContainer.addDependency(stagedBuilderStagePropertyInputDialogOpener);
     }
 
     @Test

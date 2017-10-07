@@ -6,6 +6,7 @@ import org.eclipse.jdt.core.dom.SimpleName;
 
 /**
  * Creates a static method invocation.
+ * Note that import is not added by this fragment.
  * @author helospark
  */
 public class StaticMethodInvocationFragment {

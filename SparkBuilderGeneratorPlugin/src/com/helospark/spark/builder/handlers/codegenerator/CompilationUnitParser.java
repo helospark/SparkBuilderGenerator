@@ -25,9 +25,8 @@ public class CompilationUnitParser {
     public CompilationUnit parse(IClassFile classFile) {
         ASTParser parser = ASTParser.newParser(AST.JLS8);
         parser.setKind(ASTParser.K_COMPILATION_UNIT);
-        parser.setSource(classFile);
         parser.setResolveBindings(true);
-        parser.setBindingsRecovery(true);
+        parser.setSource(classFile);
         return (CompilationUnit) parser.createAST(null);
     }
 
