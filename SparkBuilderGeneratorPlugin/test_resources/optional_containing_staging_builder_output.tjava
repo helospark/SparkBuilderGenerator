@@ -1,0 +1,67 @@
+package com.helospark.test;
+
+import java.util.Optional;
+
+public class Mail {
+    private String from;
+    private Optional<String> optional;
+    private java.util.Optional<Integer> secondOptional;
+
+    private Mail(Builder builder) {
+        this.from = builder.from;
+        this.optional = builder.optional;
+        this.secondOptional = builder.secondOptional;
+    }
+
+    public static IFromStage builder() {
+        return new Builder();
+    }
+
+    public interface IFromStage {
+        public IOptionalStage withFrom(String from);
+    }
+
+    public interface IOptionalStage {
+        public ISecondOptionalStage withOptional(Optional<String> optional);
+    }
+
+    public interface ISecondOptionalStage {
+        public IBuildStage withSecondOptional(java.util.Optional<Integer> secondOptional);
+    }
+
+    public interface IBuildStage {
+        public Mail build();
+    }
+
+    public static final class Builder implements IFromStage, IOptionalStage, ISecondOptionalStage, IBuildStage {
+        private String from;
+        private Optional<String> optional = Optional.empty();
+        private java.util.Optional<Integer> secondOptional = Optional.empty();
+
+        private Builder() {
+        }
+
+        @Override
+        public IOptionalStage withFrom(String from) {
+            this.from = from;
+            return this;
+        }
+
+        @Override
+        public ISecondOptionalStage withOptional(Optional<String> optional) {
+            this.optional = optional;
+            return this;
+        }
+
+        @Override
+        public IBuildStage withSecondOptional(java.util.Optional<Integer> secondOptional) {
+            this.secondOptional = secondOptional;
+            return this;
+        }
+
+        @Override
+        public Mail build() {
+            return new Mail(this);
+        }
+    }
+}

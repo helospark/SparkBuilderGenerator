@@ -16,16 +16,12 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-import com.helospark.spark.builder.DiContainer;
 import com.helospark.spark.builder.handlers.GenerateRegularBuilderHandler;
 import com.helospark.spark.builder.handlers.GenerateStagedBuilderHandler;
-import com.helospark.spark.builder.handlers.codegenerator.component.helper.StagedBuilderStagePropertyInputDialogOpener;
 import com.helospark.spark.builder.handlers.it.dummyService.NoDialogOperationPerformedStagedBuilderDialogAnswerProvider;
 
 public class BuilderWithSuperClassFieldsE2ETest extends BaseBuilderGeneratorIT {
     private NoDialogOperationPerformedStagedBuilderDialogAnswerProvider dialogAnswerProvider = new NoDialogOperationPerformedStagedBuilderDialogAnswerProvider();
-    @Mock
-    private StagedBuilderStagePropertyInputDialogOpener stagedBuilderStagePropertyInputDialogOpener;
 
     @Mock
     private IType firstSuperClassType;
@@ -51,12 +47,6 @@ public class BuilderWithSuperClassFieldsE2ETest extends BaseBuilderGeneratorIT {
         given(secondSuperClassType.getElementName()).willReturn("TestSuperSuperClass");
 
         given(preferenceStore.getBoolean("org.helospark.builder.includeVisibleFieldsFromSuperclass")).willReturn(true);
-    }
-
-    @Override
-    protected void diContainerOverrides() {
-        super.diContainerOverrides();
-        DiContainer.addDependency(stagedBuilderStagePropertyInputDialogOpener);
     }
 
     @Test(dataProvider = "simpleExtendsDataProvider")

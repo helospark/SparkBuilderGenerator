@@ -31,6 +31,7 @@ Most configuration is on the preferences page: Preferences -> Java -> Spark buil
 | Generate Javadoc on each builder's method | Generate Javadoc on `with...()` methods. Generated text is not configurable at the moment. | true | - |
 | Add Nonnull to parameters | Add @Nonnull annotation to method parameters. | true | - |
 | Add Nonnull to returns | Add @Nonnull annotation to returns. | false | - |
+| Initialize optional fields to Optional.empty() value | For all Optionals, adds Optional.empty() initial value in builder, see issue #20 | true | - |
 | Override previous builder | Whether to automatically override previous builder, or always create new. See @Generated section below. | true | - |
 | Add @Generated annotation | Whether to add @Generated annotation to generated Builder class, builder method and constructor. The value is `SparkTools` and not configurable. | true | - |
 | Add @Generated annotation on generated interfaces | Whether to add @Generated annotation to generated staged builder interfaces, builder method and constructor. The value is `SparkTools` and not configurable. | true | - |
@@ -67,6 +68,8 @@ Most configuration is on the preferences page: Preferences -> Java -> Spark buil
    Added the option to select which fields are generated in the builder
    Fixed a small bug that deleted the previous builder when pressing the cancel button on the staging builder generator dialog
    Added MIT license file to plugin installation license
+ - 0.0.11
+   Initialize Optional value to Optional.empty() to follow nullsafe programming practices
 
 ## The generated code looks like the following:
 

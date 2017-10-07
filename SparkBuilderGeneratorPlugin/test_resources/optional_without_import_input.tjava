@@ -1,0 +1,6 @@
+package com.helospark.test;
+
+public class Mail {
+	private String from;
+	private java.util.Optional<Integer> optional;
+}

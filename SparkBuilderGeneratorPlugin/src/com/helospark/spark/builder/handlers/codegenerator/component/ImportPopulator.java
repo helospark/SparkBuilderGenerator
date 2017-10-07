@@ -12,6 +12,7 @@ import org.eclipse.jdt.core.dom.ImportDeclaration;
 import org.eclipse.jdt.core.dom.rewrite.ASTRewrite;
 import org.eclipse.jdt.core.dom.rewrite.ListRewrite;
 
+import com.helospark.spark.builder.handlers.ImportRepository;
 import com.helospark.spark.builder.handlers.codegenerator.domain.CompilationUnitModificationDomain;
 import com.helospark.spark.builder.preferences.PreferencesManager;
 
@@ -24,9 +25,11 @@ public class ImportPopulator {
     private static final String GENERATED_FULLY_QUALIFIED_NAME = "javax.annotation.Generated";
     private static final String NON_NULL_FULLY_QUALIFIED_NAME = "javax.annotation.Nonnull";
     private PreferencesManager preferencesManager;
+    private ImportRepository importRepository;
 
-    public ImportPopulator(PreferencesManager preferencesManager) {
+    public ImportPopulator(PreferencesManager preferencesManager, ImportRepository importRepository) {
         this.preferencesManager = preferencesManager;
+        this.importRepository = importRepository;
     }
 
     public void populateImports(CompilationUnitModificationDomain compilationUnitModificationDomain) {
@@ -41,6 +44,7 @@ public class ImportPopulator {
         if (shouldAddGeneratedAnnotation(compilationUnit)) {
             addImport(ast, importRewrite, GENERATED_FULLY_QUALIFIED_NAME);
         }
+        addImportsFromRepository(ast, importRewrite, compilationUnit);
     }
 
     private boolean shouldAddNonnullAnnotation(CompilationUnit compilationUnit) {
@@ -50,6 +54,13 @@ public class ImportPopulator {
 
     private boolean shouldAddGeneratedAnnotation(CompilationUnit compilationUnit) {
         return !isImportExists(compilationUnit, GENERATED_FULLY_QUALIFIED_NAME) && preferencesManager.getPreferenceValue(ADD_GENERATED_ANNOTATION);
+    }
+
+    private void addImportsFromRepository(AST ast, ListRewrite importRewrite, CompilationUnit compilationUnit) {
+        importRepository.queryImports()
+                .stream()
+                .filter(importName -> !isImportExists(compilationUnit, importName))
+                .forEach(importName -> addImport(ast, importRewrite, importName));
     }
 
     private boolean isImportExists(CompilationUnit compilationUnit, String generatedFullyQualifiedName) {

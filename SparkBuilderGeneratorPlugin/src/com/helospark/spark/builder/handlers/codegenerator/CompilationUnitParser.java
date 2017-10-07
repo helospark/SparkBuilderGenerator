@@ -17,13 +17,15 @@ public class CompilationUnitParser {
         parser.setKind(ASTParser.K_COMPILATION_UNIT);
         parser.setSource(unit);
         parser.setResolveBindings(true);
+        parser.setProject(unit.getJavaProject());
+        parser.setUnitName(unit.getPath().toString());
         return (CompilationUnit) parser.createAST(null);
     }
 
     public CompilationUnit parse(IClassFile classFile) {
         ASTParser parser = ASTParser.newParser(AST.JLS8);
-        parser.setKind(ASTParser.K_COMPILATION_UNIT);
         parser.setSource(classFile);
+        parser.setKind(ASTParser.K_COMPILATION_UNIT);
         parser.setResolveBindings(true);
         return (CompilationUnit) parser.createAST(null);
     }

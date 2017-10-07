@@ -23,14 +23,23 @@ import com.helospark.spark.builder.handlers.codegenerator.domain.NamedVariableDe
  * @author helospark
  */
 public class BuilderFieldAdderFragment {
+    private FieldDeclarationPostProcessor fieldDeclarationPostProcessor;
+
+    public BuilderFieldAdderFragment(FieldDeclarationPostProcessor fieldDeclarationPostProcessor) {
+        this.fieldDeclarationPostProcessor = fieldDeclarationPostProcessor;
+    }
 
     public void addFieldToBuilder(AST ast, TypeDeclaration builderType, NamedVariableDeclarationField namedVariableDeclarationField) {
-        VariableDeclarationFragment variableDeclarationFragment = ast.newVariableDeclarationFragment();
-        variableDeclarationFragment.setName(ast.newSimpleName(namedVariableDeclarationField.getOriginalFieldName()));
-        FieldDeclaration fieldDeclaration = ast.newFieldDeclaration(variableDeclarationFragment);
+        FieldDeclaration fieldDeclaration = ast.newFieldDeclaration(createFieldDeclarationFragment(ast, namedVariableDeclarationField));
         fieldDeclaration.modifiers().add(ast.newModifier(ModifierKeyword.PRIVATE_KEYWORD));
         fieldDeclaration.setType((Type) ASTNode.copySubtree(ast, namedVariableDeclarationField.getFieldDeclaration().getType()));
         builderType.bodyDeclarations().add(findLastFieldIndex(builderType), fieldDeclaration);
+    }
+
+    private VariableDeclarationFragment createFieldDeclarationFragment(AST ast, NamedVariableDeclarationField namedVariableDeclarationField) {
+        VariableDeclarationFragment variableDeclarationFragment = ast.newVariableDeclarationFragment();
+        variableDeclarationFragment.setName(ast.newSimpleName(namedVariableDeclarationField.getOriginalFieldName()));
+        return fieldDeclarationPostProcessor.postProcessFragment(ast, namedVariableDeclarationField.getFieldDeclaration(), variableDeclarationFragment);
     }
 
     private int findLastFieldIndex(TypeDeclaration newType) {

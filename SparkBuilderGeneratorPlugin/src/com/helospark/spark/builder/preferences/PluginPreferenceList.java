@@ -49,9 +49,6 @@ public final class PluginPreferenceList {
     public static final PluginPreference<Boolean> ADD_GENERATED_ANNOTATION = new BooleanPluginPreference("add_generated_annotation",
             "Add @Generated annotation", Boolean.TRUE);
 
-    public static final PluginPreference<Boolean> INITIALIZE_OPTIONAL = new BooleanPluginPreference("initialize_optional",
-            "Initialize Optional in method", Boolean.FALSE);
-
     public static final PluginPreference<Boolean> OVERRIDE_PREVIOUS_BUILDER = new BooleanPluginPreference("override_previous_builder",
             "Override previous builder", Boolean.TRUE);
 
@@ -62,6 +59,10 @@ public final class PluginPreferenceList {
     public static final PluginPreference<Boolean> INCLUDE_VISIBLE_FIELDS_FROM_SUPERCLASS = new BooleanPluginPreference(
             "org.helospark.builder.includeVisibleFieldsFromSuperclass",
             "Include visible fields from superclass", Boolean.TRUE);
+
+    public static final PluginPreference<Boolean> INITIALIZE_OPTIONAL_FIELDS_TO_EMPTY = new BooleanPluginPreference(
+            "org.helospark.builder.initializeOptionalFieldsToEmpty",
+            "Initialize optional fields to Optional.empty() value", Boolean.TRUE);
 
     public static final PluginPreference<Boolean> ALWAYS_GENERATE_BUILDER_TO_FIRST_CLASS = new BooleanPluginPreference(
             "org.helospark.builder.alwaysGenerateBuilderToFirstClass",
@@ -106,6 +107,7 @@ public final class PluginPreferenceList {
         generalPreferences.add(GENERATE_JAVADOC_ON_EACH_BUILDER_METHOD);
         generalPreferences.add(ADD_NONNULL_ON_RETURN);
         generalPreferences.add(ADD_NONNULL_ON_PARAMETERS);
+        generalPreferences.add(INITIALIZE_OPTIONAL_FIELDS_TO_EMPTY);
         generalPreferences.add(ADD_GENERATED_ANNOTATION);
         generalPreferences.add(OVERRIDE_PREVIOUS_BUILDER);
         generalPreferences.add(REMOVE_PREFIX_AND_SUFFIX_FROM_BUILDER_NAMES);
