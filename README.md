@@ -70,6 +70,7 @@ Most configuration is on the preferences page: Preferences -> Java -> Spark buil
    Initialize Optional value to Optional.empty() to follow nullsafe programming practices
    Initialize Collections with empty collections via java.util.Collections class
    Various bugfixes related to overriding previous builder
+   Logging improvement
 
 ## The generated code looks like the following:
 
