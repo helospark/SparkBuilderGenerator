@@ -213,7 +213,7 @@ public class DiContainer {
                 getDependency(IsTypeApplicableForBuilderGenerationPredicate.class),
                 getDependency(ParentITypeExtractor.class)));
         addDependency(new BuilderOwnerClassFinder(getDependency(CurrentlySelectedApplicableClassesClassNameProvider.class),
-                getDependency(PreferencesManager.class)));
+                getDependency(PreferencesManager.class), getDependency(GeneratedAnnotationPredicate.class)));
         addDependency(new RegularBuilderCompilationUnitGenerator(getDependency(RegularBuilderClassCreator.class),
                 getDependency(PrivateInitializingConstructorCreator.class),
                 getDependency(RegularBuilderBuilderMethodCreator.class), getDependency(ImportPopulator.class),

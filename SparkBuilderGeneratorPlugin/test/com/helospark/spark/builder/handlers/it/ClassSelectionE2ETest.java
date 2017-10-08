@@ -121,4 +121,21 @@ public class ClassSelectionE2ETest extends BaseBuilderGeneratorIT {
         };
     }
 
+    @Test
+    public void testBuilderClassSelected() throws Exception {
+        // GIVEN
+        given(preferenceStore.getBoolean("add_generated_annotation")).willReturn(true); // only works with @Generated
+        given(currentlySelectedApplicableClassesClassNameProvider.provideCurrentlySelectedClassName(any(ICompilationUnit.class)))
+                .willReturn(of("Builder"));
+        String input = readClasspathFile("class_with_already_generated_builder.tjava");
+        String expectedResult = readClasspathFile("class_with_already_generated_builder.tjava");
+        super.setInput(input);
+
+        // WHEN
+        underTest.execute(dummyExecutionEvent);
+
+        // THEN
+        super.assertEqualsJavaContents(outputCaptor.getValue(), expectedResult);
+    }
+
 }
