@@ -1,6 +1,7 @@
 package com.helospark.spark.builder.handlers.codegenerator;
 
 import static com.helospark.spark.builder.preferences.PluginPreferenceList.ALWAYS_GENERATE_BUILDER_TO_FIRST_CLASS;
+import static java.util.Optional.ofNullable;
 
 import java.util.List;
 import java.util.Objects;
@@ -8,6 +9,7 @@ import java.util.Optional;
 
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.dom.AST;
+import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.jdt.core.dom.rewrite.ASTRewrite;
@@ -15,6 +17,7 @@ import org.eclipse.jdt.core.dom.rewrite.ListRewrite;
 
 import com.helospark.spark.builder.PluginLogger;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.CurrentlySelectedApplicableClassesClassNameProvider;
+import com.helospark.spark.builder.handlers.codegenerator.component.remover.helper.GeneratedAnnotationPredicate;
 import com.helospark.spark.builder.handlers.codegenerator.domain.CompilationUnitModificationDomain;
 import com.helospark.spark.builder.handlers.exception.PluginException;
 import com.helospark.spark.builder.preferences.PreferencesManager;
@@ -26,11 +29,14 @@ import com.helospark.spark.builder.preferences.PreferencesManager;
 public class BuilderOwnerClassFinder {
     private CurrentlySelectedApplicableClassesClassNameProvider currentlySelectedApplicableClassesClassNameProvider;
     private PreferencesManager preferencesManager;
+    private GeneratedAnnotationPredicate generatedAnnotationPredicate;
     private PluginLogger pluginLogger;
 
-    public BuilderOwnerClassFinder(CurrentlySelectedApplicableClassesClassNameProvider currentlySelectedApplicableClassesClassNameProvider, PreferencesManager preferencesManager) {
+    public BuilderOwnerClassFinder(CurrentlySelectedApplicableClassesClassNameProvider currentlySelectedApplicableClassesClassNameProvider, PreferencesManager preferencesManager,
+            GeneratedAnnotationPredicate generatedAnnotationPredicate) {
         this.currentlySelectedApplicableClassesClassNameProvider = currentlySelectedApplicableClassesClassNameProvider;
         this.preferencesManager = preferencesManager;
+        this.generatedAnnotationPredicate = generatedAnnotationPredicate;
         this.pluginLogger = new PluginLogger();
     }
 
@@ -60,11 +66,35 @@ public class BuilderOwnerClassFinder {
     private Optional<TypeDeclaration> getTypeAtCurrentSelection(ICompilationUnit iCompilationUnit, CompilationUnit compilationUnit) {
         try {
             Optional<String> className = currentlySelectedApplicableClassesClassNameProvider.provideCurrentlySelectedClassName(iCompilationUnit);
-            return className.flatMap(internalClassName -> findClassWithClassName(compilationUnit, internalClassName));
+            Optional<TypeDeclaration> foundType = className.flatMap(internalClassName -> findClassWithClassName(compilationUnit, internalClassName));
+            if (foundType.isPresent()) {
+                foundType = ofNullable(postProcessFoundType(foundType.get()));
+            }
+            return foundType;
         } catch (Exception e) {
             pluginLogger.warn("Cannot extract currently selected class based on offset", e);
             return Optional.empty();
         }
+    }
+
+    private TypeDeclaration postProcessFoundType(TypeDeclaration currentTypeDeclaration) {
+        if (doesTypeHasGeneratedAnnotation(currentTypeDeclaration)) {
+            return extractParentTypeDeclarationOrNull(currentTypeDeclaration);
+        } else {
+            return currentTypeDeclaration;
+        }
+    }
+
+    private TypeDeclaration extractParentTypeDeclarationOrNull(TypeDeclaration typeDeclaration) {
+        ASTNode result = typeDeclaration.getParent();
+        while (result != null && !(result instanceof TypeDeclaration)) {
+            result = result.getParent();
+        }
+        return (TypeDeclaration) result;
+    }
+
+    private boolean doesTypeHasGeneratedAnnotation(TypeDeclaration typeDeclaration) {
+        return generatedAnnotationPredicate.test(typeDeclaration);
     }
 
     private Optional<TypeDeclaration> findClassWithClassName(CompilationUnit compilationUnit, String className) {
