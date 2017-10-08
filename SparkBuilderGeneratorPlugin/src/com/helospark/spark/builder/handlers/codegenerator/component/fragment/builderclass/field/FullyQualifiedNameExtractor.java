@@ -40,9 +40,7 @@ public class FullyQualifiedNameExtractor {
         Optional<String> result = Optional.ofNullable(resolvedBinding)
                 .map(value -> value.getQualifiedName());
         if (!result.isPresent()) {
-            if (!result.isPresent()) {
-                pluginLogger.warn("Cannot extract fully qualified name of field declaration '" + String.valueOf(fieldDeclaration) + "', builder field will not be preinitialized");
-            }
+            pluginLogger.warn("Cannot extract fully qualified name of field declaration '" + String.valueOf(fieldDeclaration) + "'");
         }
         return result;
     }
