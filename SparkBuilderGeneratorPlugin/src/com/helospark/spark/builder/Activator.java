@@ -11,6 +11,7 @@ public class Activator extends AbstractUIPlugin {
     public static final String PLUGIN_ID = "com.helospark.SparkBuilderGenerator";
 
     private static Activator plugin;
+    private static PluginLogger pluginLogger = new PluginLogger();
 
     public Activator() {
     }
@@ -19,11 +20,14 @@ public class Activator extends AbstractUIPlugin {
     public void start(BundleContext context) throws Exception {
         super.start(context);
         plugin = this;
+        // Have a log at the very first place in the lifecycle, where this plugin can log
+        pluginLogger.info(PLUGIN_ID + " plugin has been started");
         DiContainer.initializeDiContainer();
     }
 
     @Override
     public void stop(BundleContext context) throws Exception {
+        pluginLogger.info(PLUGIN_ID + " plugin has been stopped");
         plugin = null;
         super.stop(context);
     }

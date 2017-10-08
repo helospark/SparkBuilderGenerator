@@ -5,6 +5,8 @@ import java.util.Optional;
 import org.eclipse.jdt.core.dom.FieldDeclaration;
 import org.eclipse.jdt.core.dom.ITypeBinding;
 
+import com.helospark.spark.builder.PluginLogger;
+
 /**
  * Extracts the fully qualified name for the given declaration.
  * Implicit assumption of this class, that the AST was created with enabled binding.
@@ -13,14 +15,15 @@ import org.eclipse.jdt.core.dom.ITypeBinding;
  */
 public class FullyQualifiedNameExtractor {
     private static final char GENERIC_PARAMETER_START_CHARACTER = '<';
+    private PluginLogger pluginLogger;
+
+    public FullyQualifiedNameExtractor() {
+        pluginLogger = new PluginLogger();
+    }
 
     public Optional<String> getFullyQualifiedBaseTypeName(FieldDeclaration fieldDeclaration) {
-        Optional<String> result = getFullyQualifiedParameterizedTypeName(fieldDeclaration)
+        return getFullyQualifiedParameterizedTypeName(fieldDeclaration)
                 .map(value -> deleteGenericTypeFromString(value));
-        if (!result.isPresent()) {
-            System.out.println("Cannot extract fully qualified name of field declaration '" + String.valueOf(fieldDeclaration) + "', field will not be preinitialized");
-        }
-        return result;
     }
 
     private String deleteGenericTypeFromString(String value) {
@@ -34,7 +37,13 @@ public class FullyQualifiedNameExtractor {
 
     public Optional<String> getFullyQualifiedParameterizedTypeName(FieldDeclaration fieldDeclaration) {
         ITypeBinding resolvedBinding = fieldDeclaration.getType().resolveBinding();
-        return Optional.ofNullable(resolvedBinding)
+        Optional<String> result = Optional.ofNullable(resolvedBinding)
                 .map(value -> value.getQualifiedName());
+        if (!result.isPresent()) {
+            if (!result.isPresent()) {
+                pluginLogger.warn("Cannot extract fully qualified name of field declaration '" + String.valueOf(fieldDeclaration) + "', builder field will not be preinitialized");
+            }
+        }
+        return result;
     }
 }
