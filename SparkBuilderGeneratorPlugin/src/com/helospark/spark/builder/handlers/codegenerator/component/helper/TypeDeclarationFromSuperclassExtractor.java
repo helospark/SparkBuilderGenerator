@@ -11,6 +11,7 @@ import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 
+import com.helospark.spark.builder.PluginLogger;
 import com.helospark.spark.builder.handlers.codegenerator.CompilationUnitParser;
 
 /**
@@ -20,10 +21,12 @@ import com.helospark.spark.builder.handlers.codegenerator.CompilationUnitParser;
 public class TypeDeclarationFromSuperclassExtractor {
     private CompilationUnitParser compilationUnitParser;
     private ITypeExtractor iTypeExtractor;
+    private PluginLogger pluginLogger;
 
     public TypeDeclarationFromSuperclassExtractor(CompilationUnitParser compilationUnitParser, ITypeExtractor iTypeExtractor) {
         this.compilationUnitParser = compilationUnitParser;
         this.iTypeExtractor = iTypeExtractor;
+        this.pluginLogger = new PluginLogger();
     }
 
     public Optional<TypeDeclaration> extractTypeDeclarationFromSuperClass(TypeDeclaration typeDeclaration) {
@@ -31,8 +34,7 @@ public class TypeDeclarationFromSuperclassExtractor {
             return iTypeExtractor.extract(typeDeclaration)
                     .flatMap(type -> extractTypeDeclaration(type));
         } catch (Exception e) {
-            System.out.println("[ERROR] while extracting parent type");
-            e.printStackTrace();
+            pluginLogger.warn("Unable to extracting parent type", e);
             return Optional.empty();
         }
     }

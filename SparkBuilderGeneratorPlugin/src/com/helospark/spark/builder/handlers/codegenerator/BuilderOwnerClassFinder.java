@@ -13,6 +13,7 @@ import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.jdt.core.dom.rewrite.ASTRewrite;
 import org.eclipse.jdt.core.dom.rewrite.ListRewrite;
 
+import com.helospark.spark.builder.PluginLogger;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.CurrentlySelectedApplicableClassesClassNameProvider;
 import com.helospark.spark.builder.handlers.codegenerator.domain.CompilationUnitModificationDomain;
 import com.helospark.spark.builder.handlers.exception.PluginException;
@@ -25,10 +26,12 @@ import com.helospark.spark.builder.preferences.PreferencesManager;
 public class BuilderOwnerClassFinder {
     private CurrentlySelectedApplicableClassesClassNameProvider currentlySelectedApplicableClassesClassNameProvider;
     private PreferencesManager preferencesManager;
+    private PluginLogger pluginLogger;
 
     public BuilderOwnerClassFinder(CurrentlySelectedApplicableClassesClassNameProvider currentlySelectedApplicableClassesClassNameProvider, PreferencesManager preferencesManager) {
         this.currentlySelectedApplicableClassesClassNameProvider = currentlySelectedApplicableClassesClassNameProvider;
         this.preferencesManager = preferencesManager;
+        this.pluginLogger = new PluginLogger();
     }
 
     public CompilationUnitModificationDomain provideBuilderOwnerClass(CompilationUnit compilationUnit, AST ast, ASTRewrite rewriter, ICompilationUnit iCompilationUnit) {
@@ -59,8 +62,7 @@ public class BuilderOwnerClassFinder {
             Optional<String> className = currentlySelectedApplicableClassesClassNameProvider.provideCurrentlySelectedClassName(iCompilationUnit);
             return className.flatMap(internalClassName -> findClassWithClassName(compilationUnit, internalClassName));
         } catch (Exception e) {
-            System.out.println("[WARNING] Cannot extract currently selected class based on offset");
-            e.printStackTrace();
+            pluginLogger.warn("Cannot extract currently selected class based on offset", e);
             return Optional.empty();
         }
     }

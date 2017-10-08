@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.helospark.spark.builder.PluginLogger;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.domain.PrefixSuffixHolder;
 
 /**
@@ -18,9 +19,11 @@ public class FieldPrefixSuffixPreferenceProvider {
     private static final String FIELD_PREFIX_PROPERTY = "org.eclipse.jdt.core.codeComplete.fieldPrefixes";
     private static final String FIELD_SUFFIX_PROPERTY = "org.eclipse.jdt.core.codeComplete.fieldSuffixes";
     private PreferenceStoreProvider preferenceStoreProvider;
+    private PluginLogger pluginLogger;
 
     public FieldPrefixSuffixPreferenceProvider(PreferenceStoreProvider preferenceStoreProvider) {
         this.preferenceStoreProvider = preferenceStoreProvider;
+        this.pluginLogger = new PluginLogger();
     }
 
     public PrefixSuffixHolder provideFieldPrefixAndSuffixPreference() {
@@ -30,8 +33,7 @@ public class FieldPrefixSuffixPreferenceProvider {
             prefixes = getPreferenceList(FIELD_PREFIX_PROPERTY);
             suffixes = getPreferenceList(FIELD_SUFFIX_PROPERTY);
         } catch (Exception e) {
-            System.out.println("[ERROR] while extracting prefix and suffix preferences");
-            e.printStackTrace();
+            pluginLogger.warn("Unable to extracting prefix and suffix preferences", e);
         }
         return PrefixSuffixHolder.builder()
                 .withSuffixes(suffixes)
