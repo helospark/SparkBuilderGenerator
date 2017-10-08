@@ -64,6 +64,10 @@ public final class PluginPreferenceList {
             "org.helospark.builder.initializeOptionalFieldsToEmpty",
             "Initialize optional fields to Optional.empty() value", Boolean.TRUE);
 
+    public static final PluginPreference<Boolean> INITIALIZE_COLLECTIONS_TO_EMPTY_COLLECTIONS = new BooleanPluginPreference(
+            "org.helospark.builder.initializeCollectionToEmptyCollection",
+            "Initialize collections to empty collections", Boolean.TRUE);
+
     public static final PluginPreference<Boolean> ALWAYS_GENERATE_BUILDER_TO_FIRST_CLASS = new BooleanPluginPreference(
             "org.helospark.builder.alwaysGenerateBuilderToFirstClass",
             "Always generate builder to first (top level) class", Boolean.FALSE);
@@ -108,6 +112,7 @@ public final class PluginPreferenceList {
         generalPreferences.add(ADD_NONNULL_ON_RETURN);
         generalPreferences.add(ADD_NONNULL_ON_PARAMETERS);
         generalPreferences.add(INITIALIZE_OPTIONAL_FIELDS_TO_EMPTY);
+        generalPreferences.add(INITIALIZE_COLLECTIONS_TO_EMPTY_COLLECTIONS);
         generalPreferences.add(ADD_GENERATED_ANNOTATION);
         generalPreferences.add(OVERRIDE_PREVIOUS_BUILDER);
         generalPreferences.add(REMOVE_PREFIX_AND_SUFFIX_FROM_BUILDER_NAMES);

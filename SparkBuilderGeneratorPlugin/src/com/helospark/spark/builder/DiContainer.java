@@ -46,6 +46,9 @@ import com.helospark.spark.builder.handlers.codegenerator.component.fragment.bui
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.builderclass.field.FieldDeclarationPostProcessor;
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.builderclass.field.FullyQualifiedNameExtractor;
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.builderclass.field.StaticMethodInvocationFragment;
+import com.helospark.spark.builder.handlers.codegenerator.component.fragment.builderclass.field.chain.BuiltInCollectionsInitializerChainitem;
+import com.helospark.spark.builder.handlers.codegenerator.component.fragment.builderclass.field.chain.FieldDeclarationPostProcessorChainItem;
+import com.helospark.spark.builder.handlers.codegenerator.component.fragment.builderclass.field.chain.OptionalInitializerChainItem;
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.builderclass.stagedinterface.StagedBuilderInterfaceCreatorFragment;
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.builderclass.stagedinterface.StagedBuilderInterfaceTypeDefinitionCreatorFragment;
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.builderclass.withmethod.RegularBuilderWithMethodAdderFragment;
@@ -159,8 +162,10 @@ public class DiContainer {
                 getDependency(BuildMethodBodyCreatorFragment.class)));
         addDependency(new FullyQualifiedNameExtractor());
         addDependency(new StaticMethodInvocationFragment());
+        addDependency(new OptionalInitializerChainItem(getDependency(StaticMethodInvocationFragment.class), getDependency(PreferencesManager.class)));
+        addDependency(new BuiltInCollectionsInitializerChainitem(getDependency(StaticMethodInvocationFragment.class), getDependency(PreferencesManager.class)));
         addDependency(new FieldDeclarationPostProcessor(getDependency(PreferencesManager.class), getDependency(FullyQualifiedNameExtractor.class),
-                getDependency(StaticMethodInvocationFragment.class), getDependency(ImportRepository.class)));
+                getDependency(ImportRepository.class), getDependencyList(FieldDeclarationPostProcessorChainItem.class)));
         addDependency(new BuilderFieldAdderFragment(getDependency(FieldDeclarationPostProcessor.class)));
         addDependency(new WithMethodParameterCreatorFragment(getDependency(PreferencesManager.class), getDependency(MarkerAnnotationAttacher.class)));
         addDependency(new RegularBuilderWithMethodAdderFragment(getDependency(PreferencesManager.class),

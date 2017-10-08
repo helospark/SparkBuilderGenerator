@@ -1,5 +1,6 @@
 package com.helospark.spark.builder.handlers;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.ConcurrentSkipListSet;
@@ -19,6 +20,10 @@ public class ImportRepository implements StatefulBean {
 
     public void addImport(String importToAdd) {
         imports.add(importToAdd);
+    }
+
+    public void addImports(Collection<String> importsToAdd) {
+        imports.addAll(importsToAdd);
     }
 
     public Set<String> queryImports() {

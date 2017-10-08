@@ -1,0 +1,93 @@
+package com.helospark.test;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.SortedMap;
+import java.util.SortedSet;
+import java.util.Collections;
+
+public class ClassWithCollections {
+    private Set<String> set;
+    private List<String> list;
+    private Map<Integer, String> map;
+    private SortedSet<Character> sortedSet;
+    private SortedMap<Object, Object> sortedMap;
+    private Collection<String> collection;
+    private Iterable<String> iterable;
+    private String string;
+
+    private ClassWithCollections(Builder builder) {
+        this.set = builder.set;
+        this.list = builder.list;
+        this.map = builder.map;
+        this.sortedSet = builder.sortedSet;
+        this.sortedMap = builder.sortedMap;
+        this.collection = builder.collection;
+        this.iterable = builder.iterable;
+        this.string = builder.string;
+    }
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public static final class Builder {
+        private Set<String> set = Collections.emptySet();
+        private List<String> list = Collections.emptyList();
+        private Map<Integer, String> map = Collections.emptyMap();
+        private SortedSet<Character> sortedSet = Collections.emptySortedSet();
+        private SortedMap<Object, Object> sortedMap = Collections.emptySortedMap();
+        private Collection<String> collection = Collections.emptyList();
+        private Iterable<String> iterable = Collections.emptyList();
+        private String string;
+
+        private Builder() {
+        }
+
+        public Builder withSet(Set<String> set) {
+            this.set = set;
+            return this;
+        }
+
+        public Builder withList(List<String> list) {
+            this.list = list;
+            return this;
+        }
+
+        public Builder withMap(Map<Integer, String> map) {
+            this.map = map;
+            return this;
+        }
+
+        public Builder withSortedSet(SortedSet<Character> sortedSet) {
+            this.sortedSet = sortedSet;
+            return this;
+        }
+
+        public Builder withSortedMap(SortedMap<Object, Object> sortedMap) {
+            this.sortedMap = sortedMap;
+            return this;
+        }
+
+        public Builder withCollection(Collection<String> collection) {
+            this.collection = collection;
+            return this;
+        }
+
+        public Builder withIterable(Iterable<String> iterable) {
+            this.iterable = iterable;
+            return this;
+        }
+
+        public Builder withString(String string) {
+            this.string = string;
+            return this;
+        }
+
+        public ClassWithCollections build() {
+            return new ClassWithCollections(this);
+        }
+    }
+}

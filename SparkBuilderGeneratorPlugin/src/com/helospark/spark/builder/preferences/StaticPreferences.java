@@ -6,4 +6,6 @@ public class StaticPreferences {
     public static final String OPTIONAL_CLASS_NAME = "Optional";
     public static final String OPTIONAL_FULLY_QUALIFIED_NAME = "java.util." + OPTIONAL_CLASS_NAME;
     public static final String EMPTY_OPTIONAL_CREATOR_STATIC_METHOD = "empty";
+    public static final String COLLECTIONS_CLASS_NAME = "Collections";
+    public static final String COLLECTIONS_CLASS_FULLY_QUALIFIED_NAME = "java.util." + COLLECTIONS_CLASS_NAME;
 }
