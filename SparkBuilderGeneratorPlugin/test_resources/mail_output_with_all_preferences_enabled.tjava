@@ -33,7 +33,7 @@ public class EmailMessage {
     public interface IFromStage {
         /** 
         * Builder method for from parameter.
-        * @param from to set
+        * @param from field to set
         * @return builder
         */
         @Nonnull
@@ -47,7 +47,7 @@ public class EmailMessage {
     public interface IToStage {
         /** 
         * Builder method for to parameter.
-        * @param to to set
+        * @param to field to set
         * @return builder
         */
         @Nonnull
@@ -61,7 +61,7 @@ public class EmailMessage {
     public interface ISubjectStage {
         /** 
         * Builder method for subject parameter.
-        * @param subject to set
+        * @param subject field to set
         * @return builder
         */
         @Nonnull
@@ -75,7 +75,7 @@ public class EmailMessage {
     public interface IContentStage {
         /** 
         * Builder method for content parameter.
-        * @param content to set
+        * @param content field to set
         * @return builder
         */
         @Nonnull
@@ -89,7 +89,7 @@ public class EmailMessage {
     public interface IMimeTypeStage {
         /** 
         * Builder method for mimeType parameter.
-        * @param mimeType to set
+        * @param mimeType field to set
         * @return builder
         */
         @Nonnull

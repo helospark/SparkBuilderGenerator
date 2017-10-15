@@ -17,7 +17,6 @@ import org.eclipse.jdt.core.dom.TypeDeclaration;
 
 import com.helospark.spark.builder.preferences.PluginPreferenceList;
 import com.helospark.spark.builder.preferences.PreferencesManager;
-import com.helospark.spark.builder.preferences.StaticPreferences;
 
 /**
  * Decides whether javadoc is needed, and if needed adds them.
@@ -36,7 +35,7 @@ public class JavadocAdder {
         if (preferencesManager.getPreferenceValue(GENERATE_JAVADOC_ON_EACH_BUILDER_METHOD)) {
             Map<String, String> javadocTags = new HashMap<>();
             javadocTags.put(RETURN_JAVADOC_TAG_NAME, "builder");
-            javadocTags.put(PARAM_JAVADOC_TAG_NAME, String.format(Locale.ENGLISH, "%s to set", fieldName));
+            javadocTags.put(PARAM_JAVADOC_TAG_NAME, String.format(Locale.ENGLISH, "%s field to set", fieldName));
             Javadoc javadoc = javadocGenerator.generateJavadoc(ast,
                     String.format(Locale.ENGLISH, "Builder method for %s parameter.", fieldName),
                     javadocTags);

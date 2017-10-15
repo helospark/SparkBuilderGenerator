@@ -107,7 +107,7 @@ Most configuration is on the preferences page: Preferences -> Java -> Spark buil
 
 				/**
 				* Builder method for firstField parameter.
-				* @param firstField to set
+				* @param firstField field to set
 				* @return builder
 				*/
 				@Nonnull
@@ -118,7 +118,7 @@ Most configuration is on the preferences page: Preferences -> Java -> Spark buil
 
 				/**
 				* Builder method for secondField parameter.
-				* @param secondField to set
+				* @param secondField field to set
 				* @return builder
 				*/
 				@Nonnull
