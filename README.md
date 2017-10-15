@@ -71,6 +71,8 @@ Most configuration is on the preferences page: Preferences -> Java -> Spark buil
    Initialize Collections with empty collections via java.util.Collections class
    Various bugfixes related to overriding previous builder
    Logging improvement
+ - 0.0.12
+   Generate @param tag to the builder's "with" methods
 
 ## The generated code looks like the following:
 
@@ -105,6 +107,7 @@ Most configuration is on the preferences page: Preferences -> Java -> Spark buil
 
 				/**
 				* Builder method for firstField parameter.
+				* @param firstField to set
 				* @return builder
 				*/
 				@Nonnull
@@ -115,6 +118,7 @@ Most configuration is on the preferences page: Preferences -> Java -> Spark buil
 
 				/**
 				* Builder method for secondField parameter.
+				* @param secondField to set
 				* @return builder
 				*/
 				@Nonnull
