@@ -26,6 +26,7 @@ public class TestClass {
 
         /** 
         * Builder method for testField parameter.
+        * @param testField field to set
         * @return builder
         */
         public Builder withTestField(String testField) {
@@ -35,6 +36,7 @@ public class TestClass {
 
         /** 
         * Builder method for data parameter.
+        * @param data field to set
         * @return builder
         */
         public Builder withData(Integer data) {
@@ -44,6 +46,7 @@ public class TestClass {
 
         /** 
         * Builder method for something parameter.
+        * @param something field to set
         * @return builder
         */
         public Builder withSomething(long something) {
@@ -53,6 +56,7 @@ public class TestClass {
 
         /** 
         * Builder method for list parameter.
+        * @param list field to set
         * @return builder
         */
         public Builder withList(List<String> list) {

@@ -2,10 +2,13 @@ package com.helospark.spark.builder.handlers.codegenerator.component.helper;
 
 import static com.helospark.spark.builder.preferences.PluginPreferenceList.GENERATE_JAVADOC_ON_EACH_BUILDER_METHOD;
 import static com.helospark.spark.builder.preferences.PluginPreferenceList.STAGED_BUILDER_GENERATE_JAVADOC_ON_STAGE_INTERFACE;
+import static com.helospark.spark.builder.preferences.StaticPreferences.PARAM_JAVADOC_TAG_NAME;
 import static com.helospark.spark.builder.preferences.StaticPreferences.RETURN_JAVADOC_TAG_NAME;
 
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.Locale;
+import java.util.Map;
 
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.Javadoc;
@@ -30,9 +33,12 @@ public class JavadocAdder {
 
     public void addJavadocForWithMethod(AST ast, String fieldName, MethodDeclaration builderMethod) {
         if (preferencesManager.getPreferenceValue(GENERATE_JAVADOC_ON_EACH_BUILDER_METHOD)) {
+            Map<String, String> javadocTags = new LinkedHashMap<>();
+            javadocTags.put(PARAM_JAVADOC_TAG_NAME, String.format(Locale.ENGLISH, "%s field to set", fieldName));
+            javadocTags.put(RETURN_JAVADOC_TAG_NAME, "builder");
             Javadoc javadoc = javadocGenerator.generateJavadoc(ast,
                     String.format(Locale.ENGLISH, "Builder method for %s parameter.", fieldName),
-                    Collections.singletonMap(RETURN_JAVADOC_TAG_NAME, "builder"));
+                    javadocTags);
             builderMethod.setJavadoc(javadoc);
         }
     }

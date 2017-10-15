@@ -39,6 +39,7 @@ public class TestClass {
 
         /** 
         * Builder method for testField parameter.
+        * @param testField field to set
         * @return builder
         */
         @Nonnull
@@ -49,6 +50,7 @@ public class TestClass {
 
         /** 
         * Builder method for data parameter.
+        * @param data field to set
         * @return builder
         */
         @Nonnull
@@ -59,6 +61,7 @@ public class TestClass {
 
         /** 
         * Builder method for something parameter.
+        * @param something field to set
         * @return builder
         */
         @Nonnull
@@ -69,6 +72,7 @@ public class TestClass {
 
         /** 
         * Builder method for list parameter.
+        * @param list field to set
         * @return builder
         */
         @Nonnull
