@@ -6,7 +6,7 @@ import static com.helospark.spark.builder.preferences.StaticPreferences.PARAM_JA
 import static com.helospark.spark.builder.preferences.StaticPreferences.RETURN_JAVADOC_TAG_NAME;
 
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
 
@@ -33,9 +33,9 @@ public class JavadocAdder {
 
     public void addJavadocForWithMethod(AST ast, String fieldName, MethodDeclaration builderMethod) {
         if (preferencesManager.getPreferenceValue(GENERATE_JAVADOC_ON_EACH_BUILDER_METHOD)) {
-            Map<String, String> javadocTags = new HashMap<>();
-            javadocTags.put(RETURN_JAVADOC_TAG_NAME, "builder");
+            Map<String, String> javadocTags = new LinkedHashMap<>();
             javadocTags.put(PARAM_JAVADOC_TAG_NAME, String.format(Locale.ENGLISH, "%s field to set", fieldName));
+            javadocTags.put(RETURN_JAVADOC_TAG_NAME, "builder");
             Javadoc javadoc = javadocGenerator.generateJavadoc(ast,
                     String.format(Locale.ENGLISH, "Builder method for %s parameter.", fieldName),
                     javadocTags);
