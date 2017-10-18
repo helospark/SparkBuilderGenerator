@@ -2,7 +2,7 @@
 <feature
       id="com.helospark.SparkBuilderGeneratorFeature"
       label="SparkBuilderGeneratorFeature"
-      version="0.0.11.qualifier">
+      version="0.0.12.qualifier">
 
    <description url="ftp://helospark.com/SparkBuilderGeneratorPlugin/">
       Spark builder generator plugin
@@ -35,9 +35,13 @@ Fixed a small bug that deleted the previous builder when pressing
 the cancel button on the staging builder generator dialog
 Added MIT license file to plugin installation license
 - 0.0.11
-Initialize Optional value to Optional.empty() to follow nullsafe programming practices
-Initialize Collections with empty collections via java.util.Collections class
+Initialize Optional value to Optional.empty() to follow nullsafe
+programming practices
+Initialize Collections with empty collections via java.util.Collections
+class
 Various bugfixes related to overriding previous builder
+- 0.0.12
+Generate @param tag to the builder&apos;s &quot;with&quot; methods
 Logging improvement
    </description>
 
