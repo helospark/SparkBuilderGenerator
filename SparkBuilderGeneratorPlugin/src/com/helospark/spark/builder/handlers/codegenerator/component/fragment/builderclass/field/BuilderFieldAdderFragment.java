@@ -12,7 +12,7 @@ import org.eclipse.jdt.core.dom.Type;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
 
-import com.helospark.spark.builder.handlers.codegenerator.domain.NamedVariableDeclarationField;
+import com.helospark.spark.builder.handlers.codegenerator.domain.BuilderField;
 
 /**
  * Fragment to add private field to the builder. Field is added after the last field declaration.
@@ -29,17 +29,17 @@ public class BuilderFieldAdderFragment {
         this.fieldDeclarationPostProcessor = fieldDeclarationPostProcessor;
     }
 
-    public void addFieldToBuilder(AST ast, TypeDeclaration builderType, NamedVariableDeclarationField namedVariableDeclarationField) {
-        FieldDeclaration fieldDeclaration = ast.newFieldDeclaration(createFieldDeclarationFragment(ast, namedVariableDeclarationField));
+    public void addFieldToBuilder(AST ast, TypeDeclaration builderType, BuilderField builderField) {
+        FieldDeclaration fieldDeclaration = ast.newFieldDeclaration(createFieldDeclarationFragment(ast, builderField));
         fieldDeclaration.modifiers().add(ast.newModifier(ModifierKeyword.PRIVATE_KEYWORD));
-        fieldDeclaration.setType((Type) ASTNode.copySubtree(ast, namedVariableDeclarationField.getFieldDeclaration().getType()));
+        fieldDeclaration.setType((Type) ASTNode.copySubtree(ast, builderField.getFieldType()));
         builderType.bodyDeclarations().add(findLastFieldIndex(builderType), fieldDeclaration);
     }
 
-    private VariableDeclarationFragment createFieldDeclarationFragment(AST ast, NamedVariableDeclarationField namedVariableDeclarationField) {
+    private VariableDeclarationFragment createFieldDeclarationFragment(AST ast, BuilderField builderField) {
         VariableDeclarationFragment variableDeclarationFragment = ast.newVariableDeclarationFragment();
-        variableDeclarationFragment.setName(ast.newSimpleName(namedVariableDeclarationField.getOriginalFieldName()));
-        return fieldDeclarationPostProcessor.postProcessFragment(ast, namedVariableDeclarationField.getFieldDeclaration(), variableDeclarationFragment);
+        variableDeclarationFragment.setName(ast.newSimpleName(builderField.getOriginalFieldName()));
+        return fieldDeclarationPostProcessor.postProcessFragment(ast, builderField, variableDeclarationFragment);
     }
 
     private int findLastFieldIndex(TypeDeclaration newType) {

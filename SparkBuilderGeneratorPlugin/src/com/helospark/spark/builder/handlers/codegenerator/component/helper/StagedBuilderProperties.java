@@ -5,27 +5,27 @@ import java.util.Optional;
 
 import javax.annotation.Generated;
 
-import com.helospark.spark.builder.handlers.codegenerator.domain.NamedVariableDeclarationField;
+import com.helospark.spark.builder.handlers.codegenerator.domain.BuilderField;
 
 /**
  * Encapsulates the properties of a stage in the stage builder.
  * @author helospark
  */
 public class StagedBuilderProperties {
-    private List<NamedVariableDeclarationField> namedVariableDeclarationField;
+    private List<BuilderField> builderField;
     private String interfaceName;
     private boolean isBuildStage;
     private Optional<StagedBuilderProperties> nextStage = Optional.empty();
 
     @Generated("SparkTools")
     private StagedBuilderProperties(Builder builder) {
-        this.namedVariableDeclarationField = builder.namedVariableDeclarationField;
+        this.builderField = builder.builderField;
         this.interfaceName = builder.interfaceName;
         this.isBuildStage = builder.isBuildStage;
     }
 
-    public List<NamedVariableDeclarationField> getNamedVariableDeclarationField() {
-        return namedVariableDeclarationField;
+    public List<BuilderField> getNamedVariableDeclarationField() {
+        return builderField;
     }
 
     public String getInterfaceName() {
@@ -51,7 +51,7 @@ public class StagedBuilderProperties {
 
     @Generated("SparkTools")
     public static final class Builder {
-        private List<NamedVariableDeclarationField> namedVariableDeclarationField;
+        private List<BuilderField> builderField;
         private String interfaceName;
         private boolean isBuildStage;
 
@@ -59,8 +59,8 @@ public class StagedBuilderProperties {
         }
 
         public Builder withNamedVariableDeclarationField(
-                List<NamedVariableDeclarationField> namedVariableDeclarationField) {
-            this.namedVariableDeclarationField = namedVariableDeclarationField;
+                List<BuilderField> builderField) {
+            this.builderField = builderField;
             return this;
         }
 

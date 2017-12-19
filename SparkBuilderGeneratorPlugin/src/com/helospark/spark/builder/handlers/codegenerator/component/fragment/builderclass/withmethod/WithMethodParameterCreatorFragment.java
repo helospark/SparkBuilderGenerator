@@ -2,7 +2,6 @@ package com.helospark.spark.builder.handlers.codegenerator.component.fragment.bu
 
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTNode;
-import org.eclipse.jdt.core.dom.FieldDeclaration;
 import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
 import org.eclipse.jdt.core.dom.Type;
 
@@ -23,9 +22,9 @@ public class WithMethodParameterCreatorFragment {
         this.markerAnnotationAttacher = markerAnnotationAttacher;
     }
 
-    public SingleVariableDeclaration createWithMethodParameter(AST ast, FieldDeclaration originalField, String fieldName) {
+    public SingleVariableDeclaration createWithMethodParameter(AST ast, Type type, String fieldName) {
         SingleVariableDeclaration methodParameterDeclaration = ast.newSingleVariableDeclaration();
-        methodParameterDeclaration.setType((Type) ASTNode.copySubtree(ast, originalField.getType()));
+        methodParameterDeclaration.setType((Type) ASTNode.copySubtree(ast, type));
         methodParameterDeclaration.setName(ast.newSimpleName(fieldName));
         if (preferencesManager.getPreferenceValue(PluginPreferenceList.ADD_NONNULL_ON_PARAMETERS)) {
             markerAnnotationAttacher.attachNonNull(ast, methodParameterDeclaration);

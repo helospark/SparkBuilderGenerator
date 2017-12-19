@@ -7,7 +7,7 @@ import static java.util.Collections.emptyMap;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.helospark.spark.builder.handlers.codegenerator.domain.NamedVariableDeclarationField;
+import com.helospark.spark.builder.handlers.codegenerator.domain.BuilderField;
 import com.helospark.spark.builder.preferences.PreferencesManager;
 
 /**
@@ -25,11 +25,11 @@ public class StagedBuilderInterfaceNameProvider {
         this.templateResolver = templateResolver;
     }
 
-    public String provideInterfaceNameFrom(NamedVariableDeclarationField namedVariableDeclarationField) {
+    public String provideInterfaceNameFrom(BuilderField builderField) {
         String stageBuilderInterfaceNameTemplate = preferencesManager.getPreferenceValue(STAGED_BUILDER_STAGE_INTERFACE_NAME);
         Map<String, String> templates = new HashMap<>();
-        templates.put("fieldName", namedVariableDeclarationField.getOriginalFieldName());
-        templates.put("FieldName", camelCaseConverter.toUpperCamelCase(namedVariableDeclarationField.getOriginalFieldName()));
+        templates.put("fieldName", builderField.getOriginalFieldName());
+        templates.put("FieldName", camelCaseConverter.toUpperCamelCase(builderField.getOriginalFieldName()));
         return templateResolver.resolveTemplate(stageBuilderInterfaceNameTemplate, templates);
     }
 

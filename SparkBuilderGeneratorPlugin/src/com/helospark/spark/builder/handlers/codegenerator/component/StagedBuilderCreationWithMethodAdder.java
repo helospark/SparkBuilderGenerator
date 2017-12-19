@@ -12,7 +12,7 @@ import com.helospark.spark.builder.handlers.codegenerator.component.fragment.bui
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.JavadocAdder;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.StagedBuilderProperties;
 import com.helospark.spark.builder.handlers.codegenerator.domain.CompilationUnitModificationDomain;
-import com.helospark.spark.builder.handlers.codegenerator.domain.NamedVariableDeclarationField;
+import com.helospark.spark.builder.handlers.codegenerator.domain.BuilderField;
 
 /**
  * Creates a method to instantiate staged builder, without using the builder() method, like:
@@ -39,7 +39,7 @@ public class StagedBuilderCreationWithMethodAdder {
             StagedBuilderProperties currentStage) {
         AST ast = modificationDomain.getAst();
         ListRewrite listRewrite = modificationDomain.getListRewrite();
-        NamedVariableDeclarationField firstField = currentStage.getNamedVariableDeclarationField().get(0);
+        BuilderField firstField = currentStage.getNamedVariableDeclarationField().get(0);
 
         StagedBuilderProperties nextStage = currentStage.getNextStage().orElse(currentStage);
         MethodDeclaration staticWithMethod = stagedBuilderWithMethodDefiniationCreatorFragment.createNewWithMethod(ast, firstField, nextStage);

@@ -12,7 +12,7 @@ import org.eclipse.jdt.core.dom.TypeDeclaration;
 
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.MarkerAnnotationAttacher;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.StagedBuilderProperties;
-import com.helospark.spark.builder.handlers.codegenerator.domain.NamedVariableDeclarationField;
+import com.helospark.spark.builder.handlers.codegenerator.domain.BuilderField;
 
 /**
  * Adds a with method for staged builder.
@@ -37,19 +37,19 @@ public class StagedBuilderWithMethodAdderFragment {
     }
 
     public void addWithMethodToBuilder(AST ast, TypeDeclaration stagedBuilderType,
-            NamedVariableDeclarationField namedVariableDeclarationField,
+            BuilderField builderField,
             StagedBuilderProperties nextStage) {
-        Block newBlock = createWithMethodBody(ast, namedVariableDeclarationField);
+        Block newBlock = createWithMethodBody(ast, builderField);
         MethodDeclaration newWithMethod = stagedBuilderWithMethodDefiniationCreatorFragment.createNewWithMethod(ast,
-                namedVariableDeclarationField, nextStage);
+                builderField, nextStage);
         newWithMethod.setBody(newBlock);
         markerAnnotationAttacher.attachAnnotation(ast, newWithMethod, OVERRIDE_ANNOTATION);
         stagedBuilderType.bodyDeclarations().add(newWithMethod);
     }
 
-    private Block createWithMethodBody(AST ast, NamedVariableDeclarationField namedVariableDeclarationField) {
-        String originalFieldName = namedVariableDeclarationField.getOriginalFieldName();
-        String builderFieldName = namedVariableDeclarationField.getBuilderFieldName();
+    private Block createWithMethodBody(AST ast, BuilderField builderField) {
+        String originalFieldName = builderField.getOriginalFieldName();
+        String builderFieldName = builderField.getBuilderFieldName();
 
         Block newBlock = ast.newBlock();
         ReturnStatement builderReturnStatement = ast.newReturnStatement();

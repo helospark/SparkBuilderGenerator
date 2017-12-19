@@ -11,7 +11,7 @@ import com.helospark.spark.builder.handlers.BuilderType;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.StagedBuilderProperties;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.StagedBuilderStagePropertiesProvider;
 import com.helospark.spark.builder.handlers.codegenerator.domain.CompilationUnitModificationDomain;
-import com.helospark.spark.builder.handlers.codegenerator.domain.NamedVariableDeclarationField;
+import com.helospark.spark.builder.handlers.codegenerator.domain.BuilderField;
 
 /**
  * Decorator around {@link StagedBuilderCompilationUnitGenerator} that collects the fields and their
@@ -33,7 +33,7 @@ public class StagedBuilderCompilationUnitGeneratorFieldCollectorDecorator implem
     @Override
     public void generateBuilder(CompilationUnitModificationDomain compilationUnitModificationDomain) {
         TypeDeclaration originalType = compilationUnitModificationDomain.getOriginalType();
-        List<NamedVariableDeclarationField> fieldToIncludeInBuilder = applicableBuilderFieldExtractor.findBuilderFields(originalType);
+        List<BuilderField> fieldToIncludeInBuilder = applicableBuilderFieldExtractor.findBuilderFields(originalType);
         Optional<List<StagedBuilderProperties>> stagedBuilderStages = stagedBuilderStagePropertiesProvider.build(fieldToIncludeInBuilder);
 
         if (stagedBuilderStages.isPresent()) {

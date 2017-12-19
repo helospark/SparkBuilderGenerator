@@ -10,7 +10,7 @@ import com.helospark.spark.builder.handlers.codegenerator.component.helper.Gener
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.JavadocAdder;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.StagedBuilderProperties;
 import com.helospark.spark.builder.handlers.codegenerator.domain.CompilationUnitModificationDomain;
-import com.helospark.spark.builder.handlers.codegenerator.domain.NamedVariableDeclarationField;
+import com.helospark.spark.builder.handlers.codegenerator.domain.BuilderField;
 
 /**
  * Creates an interface for the given stage with javadoc.
@@ -67,7 +67,7 @@ public class StagedBuilderInterfaceCreatorFragment {
 
     private void addWithMethods(AST ast, StagedBuilderProperties stagedBuilderProperties, TypeDeclaration addedInterface) {
         StagedBuilderProperties nextStage = getNextStage(stagedBuilderProperties);
-        for (NamedVariableDeclarationField field : stagedBuilderProperties.getNamedVariableDeclarationField()) {
+        for (BuilderField field : stagedBuilderProperties.getNamedVariableDeclarationField()) {
             MethodDeclaration withMethodDeclaration = stagedBuilderWithMethodDefiniationCreatorFragment.createNewWithMethod(
                     ast, field, nextStage);
             javadocAdder.addJavadocForWithMethod(ast, field.getBuilderFieldName(), withMethodDeclaration);

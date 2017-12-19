@@ -7,7 +7,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.helospark.spark.builder.dialogs.domain.StagedBuilderStagePropertiesDialogResult;
-import com.helospark.spark.builder.handlers.codegenerator.domain.NamedVariableDeclarationField;
+import com.helospark.spark.builder.handlers.codegenerator.domain.BuilderField;
 
 /**
  * Provides stage properties (field order and mandatory setting).
@@ -24,43 +24,43 @@ public class StagedBuilderStagePropertiesProvider {
         this.dialogOpener = dialogOpener;
     }
 
-    public Optional<List<StagedBuilderProperties>> build(List<NamedVariableDeclarationField> namedVariableDeclarations) {
-        Optional<List<StagedBuilderStagePropertiesDialogResult>> stagePropertiesFromDialog = getStagePropertiesFromUser(namedVariableDeclarations);
+    public Optional<List<StagedBuilderProperties>> build(List<BuilderField> builderFields) {
+        Optional<List<StagedBuilderStagePropertiesDialogResult>> stagePropertiesFromDialog = getStagePropertiesFromUser(builderFields);
 
         return stagePropertiesFromDialog
-                .map(output -> createStages(namedVariableDeclarations, output));
+                .map(output -> createStages(builderFields, output));
     }
 
-    private List<StagedBuilderProperties> createStages(List<NamedVariableDeclarationField> namedVariableDeclarations,
+    private List<StagedBuilderProperties> createStages(List<BuilderField> builderFields,
             List<StagedBuilderStagePropertiesDialogResult> stagePropertiesFromDialog) {
-        List<StagedBuilderProperties> result = createMandatoryStagedBuilderProperties(namedVariableDeclarations, stagePropertiesFromDialog);
-        StagedBuilderProperties buildStageWithOptionalParameters = createBuildStageWithOptionalParameters(namedVariableDeclarations, stagePropertiesFromDialog);
+        List<StagedBuilderProperties> result = createMandatoryStagedBuilderProperties(builderFields, stagePropertiesFromDialog);
+        StagedBuilderProperties buildStageWithOptionalParameters = createBuildStageWithOptionalParameters(builderFields, stagePropertiesFromDialog);
         result.add(buildStageWithOptionalParameters);
         setNextNextElementReferences(result);
 
         return result;
     }
 
-    private Optional<List<StagedBuilderStagePropertiesDialogResult>> getStagePropertiesFromUser(List<NamedVariableDeclarationField> namedVariableDeclarations) {
+    private Optional<List<StagedBuilderStagePropertiesDialogResult>> getStagePropertiesFromUser(List<BuilderField> builderFields) {
         List<StagedBuilderStagePropertiesDialogResult> dialogRequest = new ArrayList<>();
-        for (int i = 0; i < namedVariableDeclarations.size(); ++i) {
-            dialogRequest.add(new StagedBuilderStagePropertiesDialogResult(true, namedVariableDeclarations.get(i).getOriginalFieldName(), i));
+        for (int i = 0; i < builderFields.size(); ++i) {
+            dialogRequest.add(new StagedBuilderStagePropertiesDialogResult(true, builderFields.get(i).getOriginalFieldName(), i));
         }
         return dialogOpener.open(dialogRequest);
     }
 
-    private List<StagedBuilderProperties> createMandatoryStagedBuilderProperties(List<NamedVariableDeclarationField> namedVariableDeclarations,
+    private List<StagedBuilderProperties> createMandatoryStagedBuilderProperties(List<BuilderField> builderFields,
             List<StagedBuilderStagePropertiesDialogResult> list) {
         return list.stream()
                 .filter(a -> a.isMandatory())
-                .map(i -> namedVariableDeclarations.get(i.getOriginalIndex()))
+                .map(i -> builderFields.get(i.getOriginalIndex()))
                 .map(a -> createStagedBuilderProperties(a))
                 .collect(Collectors.toList());
     }
 
-    private StagedBuilderProperties createBuildStageWithOptionalParameters(List<NamedVariableDeclarationField> namedVariableDeclarations,
+    private StagedBuilderProperties createBuildStageWithOptionalParameters(List<BuilderField> builderFields,
             List<StagedBuilderStagePropertiesDialogResult> list) {
-        List<NamedVariableDeclarationField> optionalParameters = getOptionalNamedVariableDeclarations(namedVariableDeclarations, list);
+        List<BuilderField> optionalParameters = getOptionalNamedVariableDeclarations(builderFields, list);
         return StagedBuilderProperties.builder()
                 .withInterfaceName(stagedBuilderInterfaceNameProvider.provideBuildStageInterfaceName())
                 .withIsBuildStage(true)
@@ -68,20 +68,20 @@ public class StagedBuilderStagePropertiesProvider {
                 .build();
     }
 
-    private List<NamedVariableDeclarationField> getOptionalNamedVariableDeclarations(List<NamedVariableDeclarationField> namedVariableDeclarations,
+    private List<BuilderField> getOptionalNamedVariableDeclarations(List<BuilderField> builderFields,
             List<StagedBuilderStagePropertiesDialogResult> list) {
         return list.stream()
                 .filter(a -> !a.isMandatory())
-                .map(i -> namedVariableDeclarations.get(i.getOriginalIndex()))
+                .map(i -> builderFields.get(i.getOriginalIndex()))
                 .collect(Collectors.toList());
     }
 
-    private StagedBuilderProperties createStagedBuilderProperties(NamedVariableDeclarationField namedVariableDeclarationField) {
-        String interfaceName = stagedBuilderInterfaceNameProvider.provideInterfaceNameFrom(namedVariableDeclarationField);
+    private StagedBuilderProperties createStagedBuilderProperties(BuilderField builderField) {
+        String interfaceName = stagedBuilderInterfaceNameProvider.provideInterfaceNameFrom(builderField);
         return StagedBuilderProperties.builder()
                 .withInterfaceName(interfaceName)
                 .withIsBuildStage(false)
-                .withNamedVariableDeclarationField(Collections.singletonList(namedVariableDeclarationField))
+                .withNamedVariableDeclarationField(Collections.singletonList(builderField))
                 .build();
     }
 

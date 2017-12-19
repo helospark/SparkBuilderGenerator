@@ -15,7 +15,7 @@ import org.eclipse.jdt.core.dom.TypeDeclaration;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.BuilderMethodNameBuilder;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.JavadocAdder;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.MarkerAnnotationAttacher;
-import com.helospark.spark.builder.handlers.codegenerator.domain.NamedVariableDeclarationField;
+import com.helospark.spark.builder.handlers.codegenerator.domain.BuilderField;
 import com.helospark.spark.builder.preferences.PreferencesManager;
 
 /**
@@ -47,14 +47,14 @@ public class RegularBuilderWithMethodAdderFragment {
     }
 
     public void addWithMethodToBuilder(AST ast, TypeDeclaration newType,
-            NamedVariableDeclarationField namedVariableDeclarationField) {
-        String originalFieldName = namedVariableDeclarationField.getOriginalFieldName();
-        String builderFieldName = namedVariableDeclarationField.getBuilderFieldName();
+            BuilderField builderField) {
+        String originalFieldName = builderField.getOriginalFieldName();
+        String builderFieldName = builderField.getBuilderFieldName();
         Block newBlock = createWithMethodBody(ast, originalFieldName, builderFieldName);
         SingleVariableDeclaration methodParameterDeclaration = withMethodParameterCreatorFragment.createWithMethodParameter(ast,
-                namedVariableDeclarationField.getFieldDeclaration(), builderFieldName);
+                builderField.getFieldType(), builderFieldName);
         MethodDeclaration newMethod = createNewWithMethod(ast, builderFieldName, newBlock, methodParameterDeclaration,
-                newType, namedVariableDeclarationField);
+                newType, builderField);
         newType.bodyDeclarations().add(newMethod);
     }
 
@@ -78,7 +78,7 @@ public class RegularBuilderWithMethodAdderFragment {
 
     private MethodDeclaration createNewWithMethod(AST ast, String fieldName, Block newBlock,
             SingleVariableDeclaration methodParameterDeclaration, TypeDeclaration builderType,
-            NamedVariableDeclarationField namedVariableDeclarationField) {
+            BuilderField builderField) {
         MethodDeclaration builderMethod = ast.newMethodDeclaration();
         builderMethod.setName(ast.newSimpleName(builderClassMethodNameGeneratorService.build(fieldName)));
         builderMethod.setReturnType2(ast.newSimpleType(

@@ -28,6 +28,8 @@ import com.helospark.spark.builder.handlers.codegenerator.RegularBuilderFieldFil
 import com.helospark.spark.builder.handlers.codegenerator.RegularBuilderFieldFilterDialogOpener;
 import com.helospark.spark.builder.handlers.codegenerator.StagedBuilderCompilationUnitGenerator;
 import com.helospark.spark.builder.handlers.codegenerator.StagedBuilderCompilationUnitGeneratorFieldCollectorDecorator;
+import com.helospark.spark.builder.handlers.codegenerator.builderfieldcollector.ClassFieldCollector;
+import com.helospark.spark.builder.handlers.codegenerator.builderfieldcollector.SuperConstructorParameterCollector;
 import com.helospark.spark.builder.handlers.codegenerator.component.BuilderAstRemover;
 import com.helospark.spark.builder.handlers.codegenerator.component.ImportPopulator;
 import com.helospark.spark.builder.handlers.codegenerator.component.PrivateInitializingConstructorCreator;
@@ -203,9 +205,13 @@ public class DiContainer {
         addDependency(new TypeDeclarationFromSuperclassExtractor(getDependency(CompilationUnitParser.class),
                 getDependency(ITypeExtractor.class)));
         addDependency(new ApplicableFieldVisibilityFilter());
-        addDependency(new ApplicableBuilderFieldExtractor(getDependency(FieldNameToBuilderFieldNameConverter.class),
+        addDependency(new ClassFieldCollector(getDependency(FieldNameToBuilderFieldNameConverter.class),
                 getDependency(PreferencesManager.class), getDependency(TypeDeclarationFromSuperclassExtractor.class),
                 getDependency(ApplicableFieldVisibilityFilter.class)));
+        addDependency(new SuperConstructorParameterCollector(getDependency(FieldNameToBuilderFieldNameConverter.class),
+                getDependency(PreferencesManager.class), getDependency(TypeDeclarationFromSuperclassExtractor.class),
+                getDependency(ApplicableFieldVisibilityFilter.class)));
+        addDependency(new ApplicableBuilderFieldExtractor(getDependency(ClassFieldCollector.class), getDependency(SuperConstructorParameterCollector.class)));
         addDependency(new ActiveJavaEditorOffsetProvider());
         addDependency(new ParentITypeExtractor());
         addDependency(new IsTypeApplicableForBuilderGenerationPredicate(getDependency(ParentITypeExtractor.class)));

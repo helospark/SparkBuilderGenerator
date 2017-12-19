@@ -2,10 +2,10 @@ package com.helospark.spark.builder.handlers.codegenerator.component.fragment.bu
 
 import java.util.Optional;
 
-import org.eclipse.jdt.core.dom.FieldDeclaration;
 import org.eclipse.jdt.core.dom.ITypeBinding;
 
 import com.helospark.spark.builder.PluginLogger;
+import com.helospark.spark.builder.handlers.codegenerator.domain.BuilderField;
 
 /**
  * Extracts the fully qualified name for the given declaration.
@@ -21,8 +21,8 @@ public class FullyQualifiedNameExtractor {
         pluginLogger = new PluginLogger();
     }
 
-    public Optional<String> getFullyQualifiedBaseTypeName(FieldDeclaration fieldDeclaration) {
-        return getFullyQualifiedParameterizedTypeName(fieldDeclaration)
+    public Optional<String> getFullyQualifiedBaseTypeName(BuilderField builderField) {
+        return getFullyQualifiedParameterizedTypeName(builderField)
                 .map(value -> deleteGenericTypeFromString(value));
     }
 
@@ -35,12 +35,12 @@ public class FullyQualifiedNameExtractor {
         }
     }
 
-    public Optional<String> getFullyQualifiedParameterizedTypeName(FieldDeclaration fieldDeclaration) {
-        ITypeBinding resolvedBinding = fieldDeclaration.getType().resolveBinding();
+    public Optional<String> getFullyQualifiedParameterizedTypeName(BuilderField builderField) {
+        ITypeBinding resolvedBinding = builderField.getFieldType().resolveBinding();
         Optional<String> result = Optional.ofNullable(resolvedBinding)
                 .map(value -> value.getQualifiedName());
         if (!result.isPresent()) {
-            pluginLogger.warn("Cannot extract fully qualified name of field declaration '" + String.valueOf(fieldDeclaration) + "'");
+            pluginLogger.warn("Cannot extract fully qualified name of field declaration '" + String.valueOf(builderField) + "'");
         }
         return result;
     }
