@@ -1,0 +1,20 @@
+/**
+ * test class to show builder issue
+ *
+ * @author tr
+ */
+public class TestSuperClass {
+
+  private final int a;
+
+  public TestSuperClass(int a) {
+    this.a = a;
+  }
+
+  /**
+   * @return the a
+   */
+  public int getA() {
+    return a;
+  }
+}

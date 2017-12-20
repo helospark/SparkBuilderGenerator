@@ -5,6 +5,10 @@ import javax.annotation.Generated;
 import org.eclipse.jdt.core.dom.FieldDeclaration;
 import org.eclipse.jdt.core.dom.Type;
 
+/**
+ * Domain object representing a field in the builder that is setting a class field.
+ * @author helospark
+ */
 public class ClassFieldSetterBuilderField extends BuilderField {
     private FieldDeclaration fieldDeclaration;
 

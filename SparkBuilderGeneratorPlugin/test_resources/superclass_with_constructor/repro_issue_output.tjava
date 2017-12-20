@@ -1,0 +1,43 @@
+
+
+/**
+ * test class inheriting from TestBase
+ *
+ * @author tr
+ *
+ */
+public class TestClass extends TestSuperClass {
+
+  public final int b;
+
+  private TestClass(Builder builder) {
+    super(builder.a);
+    this.b = builder.b;
+  }
+
+  public static Builder builder() {
+    return new Builder();
+  }
+
+  public static final class Builder {
+    private int a;
+    private int b;
+
+    private Builder() {
+    }
+
+    public Builder witha(int a) {
+      this.a = a;
+      return this;
+    }
+
+    public Builder withb(int b) {
+      this.b = b;
+      return this;
+    }
+
+    public TestClass build() {
+      return new TestClass(this);
+    }
+  }
+}

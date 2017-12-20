@@ -4,6 +4,10 @@ import javax.annotation.Generated;
 
 import org.eclipse.jdt.core.dom.Type;
 
+/**
+ * Domain object representing a field in the builder that is a parameter in the super() call.
+ * @author helospark
+ */
 public class ConstructorParameterSetterBuilderField extends BuilderField {
     private Integer index;
 

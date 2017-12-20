@@ -54,7 +54,7 @@ public final class PluginPreferenceList {
 
     public static final PluginPreference<Boolean> REMOVE_PREFIX_AND_SUFFIX_FROM_BUILDER_NAMES = new BooleanPluginPreference(
             "org.helospark.builder.removePrefixAndPostfixFromBuilderNames",
-            "Remove prefix and suffix (set in Preferences->Java->Code style)\nfrom builder names", Boolean.TRUE);
+            "Remove prefix and suffix (set in Preferences->Java->Code style)\n from builder names", Boolean.TRUE);
 
     public static final PluginPreference<Boolean> INCLUDE_VISIBLE_FIELDS_FROM_SUPERCLASS = new BooleanPluginPreference(
             "org.helospark.builder.includeVisibleFieldsFromSuperclass",

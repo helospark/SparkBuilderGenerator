@@ -1,0 +1,24 @@
+package com.helospark.testpackage;
+
+public class TestSuperClass {
+	public String publicSuperClassField;
+	String defaultSuperClassField;
+	protected String protectedSuperClassField;
+	private String privateSuperClassField;
+
+	public TestSuperClass() {
+	}
+	
+	public TestSuperClass(String publicSuperClassField) {
+		this.publicSuperClassField = publicSuperClassField;
+	}
+
+	public TestSuperClass(String publicSuperClassField, String defaultSuperClassField, String protectedSuperClassField,
+			String privateSuperClassField) {
+		this.publicSuperClassField = publicSuperClassField;
+		this.defaultSuperClassField = defaultSuperClassField;
+		this.protectedSuperClassField = protectedSuperClassField;
+		this.privateSuperClassField = privateSuperClassField;
+	}
+
+}

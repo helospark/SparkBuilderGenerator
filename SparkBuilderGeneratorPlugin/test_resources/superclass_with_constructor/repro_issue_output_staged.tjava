@@ -1,0 +1,53 @@
+/** 
+ * test class inheriting from TestBase
+ * @author tr
+ */
+public class TestClass extends TestSuperClass {
+    public final int b;
+
+    private TestClass(Builder builder) {
+        super(builder.a);
+        this.b = builder.b;
+    }
+
+    public static IaStage builder() {
+        return new Builder();
+    }
+
+    public interface IaStage {
+        public IbStage witha(int a);
+    }
+
+    public interface IbStage {
+        public IBuildStage withb(int b);
+    }
+
+    public interface IBuildStage {
+        public TestClass build();
+    }
+
+    public static final class Builder implements IaStage, IbStage, IBuildStage {
+        private int a;
+        private int b;
+
+        private Builder() {
+        }
+
+        @Override
+        public IbStage witha(int a) {
+            this.a = a;
+            return this;
+        }
+
+        @Override
+        public IBuildStage withb(int b) {
+            this.b = b;
+            return this;
+        }
+
+        @Override
+        public TestClass build() {
+            return new TestClass(this);
+        }
+    }
+}
