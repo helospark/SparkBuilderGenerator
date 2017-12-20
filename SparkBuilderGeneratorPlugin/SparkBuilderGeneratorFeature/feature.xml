@@ -2,7 +2,7 @@
 <feature
       id="com.helospark.SparkBuilderGeneratorFeature"
       label="SparkBuilderGeneratorFeature"
-      version="0.0.12.qualifier">
+      version="0.0.13.qualifier">
 
    <description url="ftp://helospark.com/SparkBuilderGeneratorPlugin/">
       Spark builder generator plugin
@@ -43,6 +43,8 @@ Various bugfixes related to overriding previous builder
 - 0.0.12
 Generate @param tag to the builder&apos;s &quot;with&quot; methods
 Logging improvement
+- 0.0.13
+Add fields from superclass' constructor to the builder
    </description>
 
    <license url="https://opensource.org/licenses/MIT">
