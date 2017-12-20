@@ -1,0 +1,85 @@
+package com.helospark.testpackage;
+
+public class TestClass extends TestSuperClass {
+    private String childField;
+
+    private TestClass(Builder builder) {
+        super(builder.publicSuperClassField, builder.defaultSuperClassField, builder.protectedSuperClassField, builder.privateSuperClassField);
+        this.childField = builder.childField;
+    }
+
+    public static IPublicSuperClassFieldStage builder() {
+        return new Builder();
+    }
+
+    public interface IPublicSuperClassFieldStage {
+        public IDefaultSuperClassFieldStage withPublicSuperClassField(String publicSuperClassField);
+    }
+
+    public interface IDefaultSuperClassFieldStage {
+        public IProtectedSuperClassFieldStage withDefaultSuperClassField(String defaultSuperClassField);
+    }
+
+    public interface IProtectedSuperClassFieldStage {
+        public IPrivateSuperClassFieldStage withProtectedSuperClassField(String protectedSuperClassField);
+    }
+
+    public interface IPrivateSuperClassFieldStage {
+        public IChildFieldStage withPrivateSuperClassField(String privateSuperClassField);
+    }
+
+    public interface IChildFieldStage {
+        public IBuildStage withChildField(String childField);
+    }
+
+    public interface IBuildStage {
+        public TestClass build();
+    }
+
+    public static final class Builder
+            implements IPublicSuperClassFieldStage, IDefaultSuperClassFieldStage, IProtectedSuperClassFieldStage, IPrivateSuperClassFieldStage, IChildFieldStage, IBuildStage {
+        private String publicSuperClassField;
+        private String defaultSuperClassField;
+        private String protectedSuperClassField;
+        private String privateSuperClassField;
+        private String childField;
+
+        private Builder() {
+        }
+
+        @Override
+        public IDefaultSuperClassFieldStage withPublicSuperClassField(String publicSuperClassField) {
+            this.publicSuperClassField = publicSuperClassField;
+            return this;
+        }
+
+        @Override
+        public IProtectedSuperClassFieldStage withDefaultSuperClassField(String defaultSuperClassField) {
+            this.defaultSuperClassField = defaultSuperClassField;
+            return this;
+        }
+
+        @Override
+        public IPrivateSuperClassFieldStage withProtectedSuperClassField(String protectedSuperClassField) {
+            this.protectedSuperClassField = protectedSuperClassField;
+            return this;
+        }
+
+        @Override
+        public IChildFieldStage withPrivateSuperClassField(String privateSuperClassField) {
+            this.privateSuperClassField = privateSuperClassField;
+            return this;
+        }
+
+        @Override
+        public IBuildStage withChildField(String childField) {
+            this.childField = childField;
+            return this;
+        }
+
+        @Override
+        public TestClass build() {
+            return new TestClass(this);
+        }
+    }
+}

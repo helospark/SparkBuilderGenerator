@@ -132,6 +132,7 @@ public class BuilderWithSuperClassFieldsE2ETest extends BaseBuilderGeneratorIT {
     public void testSimpleExtendsShouldNotIncludeSuperclassesWhenPreferencesIsTurnedOff() throws Exception {
         // GIVEN
         given(preferenceStore.getBoolean("org.helospark.builder.includeVisibleFieldsFromSuperclass")).willReturn(false);
+
         given(iTypeExtractor.extract(any(TypeDeclaration.class)))
                 .willReturn(of(firstSuperClassType))
                 .willReturn(empty());
@@ -148,4 +149,5 @@ public class BuilderWithSuperClassFieldsE2ETest extends BaseBuilderGeneratorIT {
         // THEN
         super.assertEqualsJavaContents(outputCaptor.getValue(), expectedResult);
     }
+
 }

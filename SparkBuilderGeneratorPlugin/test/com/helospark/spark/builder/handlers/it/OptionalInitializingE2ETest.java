@@ -6,13 +6,13 @@ import static org.mockito.Matchers.any;
 import java.util.List;
 
 import org.eclipse.jdt.core.JavaModelException;
-import org.eclipse.jdt.core.dom.FieldDeclaration;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import com.helospark.spark.builder.handlers.GenerateRegularBuilderHandler;
 import com.helospark.spark.builder.handlers.GenerateStagedBuilderHandler;
+import com.helospark.spark.builder.handlers.codegenerator.domain.BuilderField;
 import com.helospark.spark.builder.handlers.it.dummyService.FieldDeclarationAnswerProvider;
 import com.helospark.spark.builder.handlers.it.dummyService.NoDialogOperationPerformedStagedBuilderDialogAnswerProvider;
 
@@ -22,7 +22,7 @@ public class OptionalInitializingE2ETest extends BaseBuilderGeneratorIT {
     @BeforeMethod
     public void beforeMethod() throws JavaModelException {
         super.init();
-        given(fullyQualifiedNameExtractor.getFullyQualifiedBaseTypeName(any(FieldDeclaration.class))).willAnswer(inv -> FieldDeclarationAnswerProvider.provideAnswer(inv));
+        given(fullyQualifiedNameExtractor.getFullyQualifiedBaseTypeName(any(BuilderField.class))).willAnswer(inv -> FieldDeclarationAnswerProvider.provideAnswer(inv));
     }
 
     @Test(dataProvider = "testCasesForRegularBuilderOptionals")

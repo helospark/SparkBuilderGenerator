@@ -12,7 +12,7 @@ import com.helospark.spark.builder.handlers.codegenerator.component.fragment.bui
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.builderclass.field.BuilderFieldAdderFragment;
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.builderclass.withmethod.RegularBuilderWithMethodAdderFragment;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.JavadocAdder;
-import com.helospark.spark.builder.handlers.codegenerator.domain.NamedVariableDeclarationField;
+import com.helospark.spark.builder.handlers.codegenerator.domain.BuilderField;
 
 /**
  * Generates the builder class.
@@ -38,12 +38,12 @@ public class RegularBuilderClassCreator {
         this.javadocAdder = javadocAdder;
     }
 
-    public TypeDeclaration createBuilderClass(AST ast, TypeDeclaration originalName, List<NamedVariableDeclarationField> namedVariableDeclarations) {
+    public TypeDeclaration createBuilderClass(AST ast, TypeDeclaration originalName, List<BuilderField> builderFields) {
         TypeDeclaration builderType = emptyBuilderClassGeneratorFragment.createBuilderClass(ast, originalName);
         privateConstructorAdderFragment.addEmptyPrivateConstructor(ast, builderType);
-        for (NamedVariableDeclarationField namedVariableDeclarationField : namedVariableDeclarations) {
-            builderFieldAdderFragment.addFieldToBuilder(ast, builderType, namedVariableDeclarationField);
-            regularBuilderWithMethodAdderFragment.addWithMethodToBuilder(ast, builderType, namedVariableDeclarationField);
+        for (BuilderField builderField : builderFields) {
+            builderFieldAdderFragment.addFieldToBuilder(ast, builderType, builderField);
+            regularBuilderWithMethodAdderFragment.addWithMethodToBuilder(ast, builderType, builderField);
         }
         MethodDeclaration method = buildMethodCreatorFragment.addBuildMethodToBuilder(ast, originalName);
         javadocAdder.addJavadocForBuildMethod(ast, method);

@@ -28,6 +28,8 @@ import com.helospark.spark.builder.handlers.codegenerator.RegularBuilderFieldFil
 import com.helospark.spark.builder.handlers.codegenerator.RegularBuilderFieldFilterDialogOpener;
 import com.helospark.spark.builder.handlers.codegenerator.StagedBuilderCompilationUnitGenerator;
 import com.helospark.spark.builder.handlers.codegenerator.StagedBuilderCompilationUnitGeneratorFieldCollectorDecorator;
+import com.helospark.spark.builder.handlers.codegenerator.builderfieldcollector.ClassFieldCollector;
+import com.helospark.spark.builder.handlers.codegenerator.builderfieldcollector.SuperConstructorParameterCollector;
 import com.helospark.spark.builder.handlers.codegenerator.component.BuilderAstRemover;
 import com.helospark.spark.builder.handlers.codegenerator.component.ImportPopulator;
 import com.helospark.spark.builder.handlers.codegenerator.component.PrivateInitializingConstructorCreator;
@@ -82,6 +84,7 @@ import com.helospark.spark.builder.handlers.codegenerator.component.helper.Stage
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.StagedBuilderStagePropertyInputDialogOpener;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.TemplateResolver;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.TypeDeclarationFromSuperclassExtractor;
+import com.helospark.spark.builder.handlers.codegenerator.component.helper.domain.BodyDeclarationVisibleFromPredicate;
 import com.helospark.spark.builder.handlers.codegenerator.component.remover.BuilderClassRemover;
 import com.helospark.spark.builder.handlers.codegenerator.component.remover.BuilderRemoverChainItem;
 import com.helospark.spark.builder.handlers.codegenerator.component.remover.PrivateConstructorRemover;
@@ -202,10 +205,15 @@ public class DiContainer {
                 getDependency(CamelCaseConverter.class)));
         addDependency(new TypeDeclarationFromSuperclassExtractor(getDependency(CompilationUnitParser.class),
                 getDependency(ITypeExtractor.class)));
-        addDependency(new ApplicableFieldVisibilityFilter());
-        addDependency(new ApplicableBuilderFieldExtractor(getDependency(FieldNameToBuilderFieldNameConverter.class),
+        addDependency(new BodyDeclarationVisibleFromPredicate());
+        addDependency(new ApplicableFieldVisibilityFilter(getDependency(BodyDeclarationVisibleFromPredicate.class)));
+        addDependency(new ClassFieldCollector(getDependency(FieldNameToBuilderFieldNameConverter.class),
                 getDependency(PreferencesManager.class), getDependency(TypeDeclarationFromSuperclassExtractor.class),
                 getDependency(ApplicableFieldVisibilityFilter.class)));
+        addDependency(new SuperConstructorParameterCollector(getDependency(FieldNameToBuilderFieldNameConverter.class),
+                getDependency(PreferencesManager.class), getDependency(TypeDeclarationFromSuperclassExtractor.class),
+                getDependency(BodyDeclarationVisibleFromPredicate.class)));
+        addDependency(new ApplicableBuilderFieldExtractor(getDependency(ClassFieldCollector.class), getDependency(SuperConstructorParameterCollector.class)));
         addDependency(new ActiveJavaEditorOffsetProvider());
         addDependency(new ParentITypeExtractor());
         addDependency(new IsTypeApplicableForBuilderGenerationPredicate(getDependency(ParentITypeExtractor.class)));

@@ -17,7 +17,7 @@ import com.helospark.spark.builder.handlers.codegenerator.component.helper.Inter
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.MarkerAnnotationAttacher;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.StagedBuilderProperties;
 import com.helospark.spark.builder.handlers.codegenerator.domain.CompilationUnitModificationDomain;
-import com.helospark.spark.builder.handlers.codegenerator.domain.NamedVariableDeclarationField;
+import com.helospark.spark.builder.handlers.codegenerator.domain.BuilderField;
 
 /**
  * Generates the builder class.
@@ -57,10 +57,10 @@ public class StagedBuilderClassCreator {
         // add all with method of all stages to the builder class
         for (StagedBuilderProperties stagedBuilderProperty : stagedBuilderProperties) {
             StagedBuilderProperties nextStage = stagedBuilderProperty.getNextStage().orElse(stagedBuilderProperty);
-            for (NamedVariableDeclarationField namedVariableDeclarationField : stagedBuilderProperty.getNamedVariableDeclarationField()) {
-                builderFieldAdderFragment.addFieldToBuilder(ast, builderType, namedVariableDeclarationField);
+            for (BuilderField builderField : stagedBuilderProperty.getNamedVariableDeclarationField()) {
+                builderFieldAdderFragment.addFieldToBuilder(ast, builderType, builderField);
                 stagedBuilderWithMethodAdderFragment.addWithMethodToBuilder(ast, builderType,
-                        namedVariableDeclarationField, nextStage);
+                        builderField, nextStage);
             }
         }
         MethodDeclaration method = buildMethodCreatorFragment.addBuildMethodToBuilder(ast, originalType);

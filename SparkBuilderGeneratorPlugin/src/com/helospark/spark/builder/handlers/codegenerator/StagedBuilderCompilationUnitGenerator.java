@@ -14,7 +14,7 @@ import com.helospark.spark.builder.handlers.codegenerator.component.StagedBuilde
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.builderclass.stagedinterface.StagedBuilderInterfaceCreatorFragment;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.StagedBuilderProperties;
 import com.helospark.spark.builder.handlers.codegenerator.domain.CompilationUnitModificationDomain;
-import com.helospark.spark.builder.handlers.codegenerator.domain.NamedVariableDeclarationField;
+import com.helospark.spark.builder.handlers.codegenerator.domain.BuilderField;
 
 /**
  * Generates staged builder to the given compilation unit.
@@ -63,7 +63,7 @@ public class StagedBuilderCompilationUnitGenerator {
         importPopulator.populateImports(modificationDomain);
     }
 
-    private List<NamedVariableDeclarationField> collectAllFieldsFromAllStages(List<StagedBuilderProperties> stagedBuilderStages) {
+    private List<BuilderField> collectAllFieldsFromAllStages(List<StagedBuilderProperties> stagedBuilderStages) {
         return stagedBuilderStages.stream()
                 .flatMap(stage -> stage.getNamedVariableDeclarationField().stream())
                 .collect(Collectors.toList());

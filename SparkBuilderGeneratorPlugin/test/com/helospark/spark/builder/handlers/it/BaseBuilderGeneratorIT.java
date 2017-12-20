@@ -25,7 +25,6 @@ import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTParser;
 import org.eclipse.jdt.core.dom.CompilationUnit;
-import org.eclipse.jdt.core.dom.FieldDeclaration;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
@@ -41,6 +40,7 @@ import com.helospark.spark.builder.handlers.codegenerator.component.helper.IType
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.PreferenceStoreProvider;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.PreferenceStoreWrapper;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.StagedBuilderStagePropertyInputDialogOpener;
+import com.helospark.spark.builder.handlers.codegenerator.domain.BuilderField;
 
 public class BaseBuilderGeneratorIT {
     protected ExecutionEvent dummyExecutionEvent = new ExecutionEvent();
@@ -90,7 +90,7 @@ public class BaseBuilderGeneratorIT {
         given(preferenceStoreProvider.providePreferenceStore()).willReturn(preferenceStore);
         given(iCompilationUnit.getBuffer()).willReturn(iBuffer);
         given(iTypeExtractor.extract(any(TypeDeclaration.class))).willReturn(empty());
-        given(fullyQualifiedNameExtractor.getFullyQualifiedBaseTypeName(any(FieldDeclaration.class))).willReturn(empty());
+        given(fullyQualifiedNameExtractor.getFullyQualifiedBaseTypeName(any(BuilderField.class))).willReturn(empty());
         setDefaultPreferenceStoreSettings();
         doNothing().when(iBuffer).setContents(outputCaptor.capture());
 

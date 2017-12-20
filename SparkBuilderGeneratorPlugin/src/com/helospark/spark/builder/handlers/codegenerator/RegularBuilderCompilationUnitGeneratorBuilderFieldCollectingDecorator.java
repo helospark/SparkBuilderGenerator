@@ -10,7 +10,7 @@ import org.eclipse.jdt.core.dom.TypeDeclaration;
 
 import com.helospark.spark.builder.handlers.BuilderType;
 import com.helospark.spark.builder.handlers.codegenerator.domain.CompilationUnitModificationDomain;
-import com.helospark.spark.builder.handlers.codegenerator.domain.NamedVariableDeclarationField;
+import com.helospark.spark.builder.handlers.codegenerator.domain.BuilderField;
 import com.helospark.spark.builder.preferences.PreferencesManager;
 
 /**
@@ -34,14 +34,14 @@ public class RegularBuilderCompilationUnitGeneratorBuilderFieldCollectingDecorat
     @Override
     public void generateBuilder(CompilationUnitModificationDomain compilationUnitModificationDomain) {
         TypeDeclaration originalType = compilationUnitModificationDomain.getOriginalType();
-        List<NamedVariableDeclarationField> namedVariableDeclarations = applicableBuilderFieldExtractor.findBuilderFields(originalType);
+        List<BuilderField> builderFields = applicableBuilderFieldExtractor.findBuilderFields(originalType);
         if (preferencesManager.getPreferenceValue(REGULAR_BUILDER_SHOW_FIELD_FILTERING_DIALOG)) {
-            Optional<List<NamedVariableDeclarationField>> filteredFields = regularBuilderFieldFilter.filterFields(namedVariableDeclarations);
+            Optional<List<BuilderField>> filteredFields = regularBuilderFieldFilter.filterFields(builderFields);
             if (filteredFields.isPresent()) {
                 decoratedBuilderGenerator.generateBuilder(compilationUnitModificationDomain, filteredFields.get());
             }
         } else {
-            decoratedBuilderGenerator.generateBuilder(compilationUnitModificationDomain, namedVariableDeclarations);
+            decoratedBuilderGenerator.generateBuilder(compilationUnitModificationDomain, builderFields);
         }
     }
 

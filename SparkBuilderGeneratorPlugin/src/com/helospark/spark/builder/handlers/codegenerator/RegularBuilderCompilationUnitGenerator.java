@@ -11,7 +11,7 @@ import com.helospark.spark.builder.handlers.codegenerator.component.PrivateIniti
 import com.helospark.spark.builder.handlers.codegenerator.component.RegularBuilderBuilderMethodCreator;
 import com.helospark.spark.builder.handlers.codegenerator.component.RegularBuilderClassCreator;
 import com.helospark.spark.builder.handlers.codegenerator.domain.CompilationUnitModificationDomain;
-import com.helospark.spark.builder.handlers.codegenerator.domain.NamedVariableDeclarationField;
+import com.helospark.spark.builder.handlers.codegenerator.domain.BuilderField;
 
 /**
  * Generates a regular builder to the given compilation unit.
@@ -37,7 +37,7 @@ public class RegularBuilderCompilationUnitGenerator {
         this.builderRemover = builderRemover;
     }
 
-    public void generateBuilder(CompilationUnitModificationDomain compilationUnitModificationDomain, List<NamedVariableDeclarationField> namedVariableDeclarations) {
+    public void generateBuilder(CompilationUnitModificationDomain compilationUnitModificationDomain, List<BuilderField> builderFields) {
         // TODO: replace parameters, where these go separately with compilation modification domain
         AST ast = compilationUnitModificationDomain.getAst();
         ListRewrite listRewrite = compilationUnitModificationDomain.getListRewrite();
@@ -45,8 +45,8 @@ public class RegularBuilderCompilationUnitGenerator {
 
         builderRemover.removeExistingBuilderWhenNeeded(compilationUnitModificationDomain);
 
-        TypeDeclaration builderType = regularBuilderClassCreator.createBuilderClass(ast, originalType, namedVariableDeclarations);
-        privateConstructorPopulator.addPrivateConstructorToCompilationUnit(ast, originalType, builderType, listRewrite, namedVariableDeclarations);
+        TypeDeclaration builderType = regularBuilderClassCreator.createBuilderClass(ast, originalType, builderFields);
+        privateConstructorPopulator.addPrivateConstructorToCompilationUnit(ast, originalType, builderType, listRewrite, builderFields);
         builderMethodPopulator.addBuilderMethodToCompilationUnit(ast, listRewrite, originalType, builderType);
 
         listRewrite.insertLast(builderType, null);

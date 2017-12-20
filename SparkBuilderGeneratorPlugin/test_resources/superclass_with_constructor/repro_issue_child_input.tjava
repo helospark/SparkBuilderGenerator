@@ -1,0 +1,10 @@
+/**
+ * test class inheriting from TestBase
+ *
+ * @author tr
+ *
+ */
+public class TestClass extends TestSuperClass {
+  public final int b;
+
+}

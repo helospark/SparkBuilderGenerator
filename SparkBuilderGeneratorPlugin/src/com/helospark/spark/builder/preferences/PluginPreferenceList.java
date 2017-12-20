@@ -54,7 +54,7 @@ public final class PluginPreferenceList {
 
     public static final PluginPreference<Boolean> REMOVE_PREFIX_AND_SUFFIX_FROM_BUILDER_NAMES = new BooleanPluginPreference(
             "org.helospark.builder.removePrefixAndPostfixFromBuilderNames",
-            "Remove prefix and suffix (set in Preferences->Java->Code style)\nfrom builder names", Boolean.TRUE);
+            "Remove prefix and suffix (set in Preferences->Java->Code style) \nfrom builder names", Boolean.TRUE);
 
     public static final PluginPreference<Boolean> INCLUDE_VISIBLE_FIELDS_FROM_SUPERCLASS = new BooleanPluginPreference(
             "org.helospark.builder.includeVisibleFieldsFromSuperclass",
@@ -93,6 +93,14 @@ public final class PluginPreferenceList {
             "org.helospark.builder.showFieldFilterDialogForRegularBuilder",
             "Show dialog to filter which fields are included in the builder", Boolean.FALSE);
 
+    public static final PluginPreference<Boolean> INCLUDE_PARAMETERS_FROM_SUPERCLASS_CONSTRUCTOR = new BooleanPluginPreference(
+            "org.helospark.builder.includeParametersFromSuperclassConstructor",
+            "Include parameters as fields from superclass constructor", Boolean.TRUE);
+
+    public static final PluginPreference<Boolean> PREFER_TO_USE_EMPTY_SUPERCLASS_CONSTRUCTOR = new BooleanPluginPreference(
+            "org.helospark.builder.preferToUseEmptySuperclassConstructor",
+            "Prefer to use empty superclass constructor", Boolean.TRUE);
+
     public static List<PluginPreferenceGroup> getAllPreferences() {
         return Arrays.asList(createGeneralPreferencesGroup(),
                 createRegularBuilderPreferencesGroup(),
@@ -117,6 +125,8 @@ public final class PluginPreferenceList {
         generalPreferences.add(OVERRIDE_PREVIOUS_BUILDER);
         generalPreferences.add(REMOVE_PREFIX_AND_SUFFIX_FROM_BUILDER_NAMES);
         generalPreferences.add(INCLUDE_VISIBLE_FIELDS_FROM_SUPERCLASS);
+        generalPreferences.add(INCLUDE_PARAMETERS_FROM_SUPERCLASS_CONSTRUCTOR);
+        generalPreferences.add(PREFER_TO_USE_EMPTY_SUPERCLASS_CONSTRUCTOR);
         generalPreferences.add(ALWAYS_GENERATE_BUILDER_TO_FIRST_CLASS);
         return new PluginPreferenceGroup("General settings", generalPreferences);
     }

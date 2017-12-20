@@ -8,11 +8,11 @@ import java.util.Optional;
 
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.Expression;
-import org.eclipse.jdt.core.dom.FieldDeclaration;
 import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
 
 import com.helospark.spark.builder.handlers.ImportRepository;
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.builderclass.field.chain.FieldDeclarationPostProcessorChainItem;
+import com.helospark.spark.builder.handlers.codegenerator.domain.BuilderField;
 import com.helospark.spark.builder.preferences.PreferencesManager;
 
 /**
@@ -34,9 +34,9 @@ public class FieldDeclarationPostProcessor {
         this.importRepository = importRepository;
     }
 
-    public VariableDeclarationFragment postProcessFragment(AST ast, FieldDeclaration originalFieldDeclaration, VariableDeclarationFragment variableDeclarationFragment) {
+    public VariableDeclarationFragment postProcessFragment(AST ast, BuilderField builderField, VariableDeclarationFragment variableDeclarationFragment) {
         if (isPostProcessingRequired()) {
-            Optional<String> result = fullyQualifiedNameExtractor.getFullyQualifiedBaseTypeName(originalFieldDeclaration);
+            Optional<String> result = fullyQualifiedNameExtractor.getFullyQualifiedBaseTypeName(builderField);
             if (result.isPresent()) {
                 postProcessDeclaration(ast, variableDeclarationFragment, result.get());
             }

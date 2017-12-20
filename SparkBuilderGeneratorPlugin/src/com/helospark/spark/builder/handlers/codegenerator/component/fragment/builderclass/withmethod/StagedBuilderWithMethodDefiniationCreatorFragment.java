@@ -10,7 +10,7 @@ import com.helospark.spark.builder.handlers.codegenerator.component.helper.Build
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.MarkerAnnotationAttacher;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.StagedBuilderInterfaceNameProvider;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.StagedBuilderProperties;
-import com.helospark.spark.builder.handlers.codegenerator.domain.NamedVariableDeclarationField;
+import com.helospark.spark.builder.handlers.codegenerator.domain.BuilderField;
 import com.helospark.spark.builder.preferences.PreferencesManager;
 
 /**
@@ -37,14 +37,14 @@ public class StagedBuilderWithMethodDefiniationCreatorFragment {
         this.withMethodParameterCreatorFragment = withMethodParameterCreatorFragment;
     }
 
-    public MethodDeclaration createNewWithMethod(AST ast, NamedVariableDeclarationField namedVariableDeclarationField,
+    public MethodDeclaration createNewWithMethod(AST ast, BuilderField builderField,
             StagedBuilderProperties nextStage) {
-        String fieldName = namedVariableDeclarationField.getBuilderFieldName();
+        String fieldName = builderField.getBuilderFieldName();
         MethodDeclaration builderMethod = ast.newMethodDeclaration();
         builderMethod.setName(ast.newSimpleName(builderClassMethodNameGeneratorService.build(fieldName)));
         builderMethod.setReturnType2(ast.newSimpleType(ast.newName(nextStage.getInterfaceName())));
         builderMethod.parameters()
-                .add(withMethodParameterCreatorFragment.createWithMethodParameter(ast, namedVariableDeclarationField.getFieldDeclaration(), fieldName));
+                .add(withMethodParameterCreatorFragment.createWithMethodParameter(ast, builderField.getFieldType(), fieldName));
 
         if (preferencesManager.getPreferenceValue(ADD_NONNULL_ON_RETURN)) {
             markerAnnotationAttacher.attachNonNull(ast, builderMethod);

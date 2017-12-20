@@ -11,7 +11,7 @@ import org.eclipse.jdt.core.dom.rewrite.ListRewrite;
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.constructor.PrivateConstructorBodyCreationFragment;
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.constructor.PrivateConstructorInsertionFragment;
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.constructor.PrivateConstructorMethodDefinitionCreationFragment;
-import com.helospark.spark.builder.handlers.codegenerator.domain.NamedVariableDeclarationField;
+import com.helospark.spark.builder.handlers.codegenerator.domain.BuilderField;
 
 /**
  * Generates a private constructor that initializes fields.
@@ -37,10 +37,10 @@ public class PrivateInitializingConstructorCreator {
     }
 
     public void addPrivateConstructorToCompilationUnit(AST ast, TypeDeclaration originalType, TypeDeclaration builderType, ListRewrite listRewrite,
-            List<NamedVariableDeclarationField> namedVariableDeclarations) {
-        Block body = privateConstructorBodyCreationFragment.createBody(ast, builderType, namedVariableDeclarations);
+            List<BuilderField> builderFields) {
+        Block body = privateConstructorBodyCreationFragment.createBody(ast, builderType, builderFields);
         MethodDeclaration privateConstructorDefinition = privateConstructorMethodDefinitionCreationFragment.createPrivateConstructorDefinition(ast, originalType, builderType,
-                namedVariableDeclarations);
+                builderFields);
         privateConstructorDefinition.setBody(body);
         privateConstructorInsertionFragment.insertMethodToFirstPlace(originalType, listRewrite, privateConstructorDefinition);
     }

@@ -6,7 +6,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.helospark.spark.builder.dialogs.domain.RegularBuilderFieldIncludeFieldIncludeDomain;
-import com.helospark.spark.builder.handlers.codegenerator.domain.NamedVariableDeclarationField;
+import com.helospark.spark.builder.handlers.codegenerator.domain.BuilderField;
 
 /**
  * Filters the fields to include in the builder.
@@ -19,32 +19,32 @@ public class RegularBuilderFieldFilter {
         this.regularBuilderFieldFilterDialogOpener = regularBuilderFieldFilterDialogOpener;
     }
 
-    public Optional<List<NamedVariableDeclarationField>> filterFields(List<NamedVariableDeclarationField> namedVariableDeclarations) {
-        List<RegularBuilderFieldIncludeFieldIncludeDomain> dialogInput = convert(namedVariableDeclarations);
+    public Optional<List<BuilderField>> filterFields(List<BuilderField> builderFields) {
+        List<RegularBuilderFieldIncludeFieldIncludeDomain> dialogInput = convert(builderFields);
         Optional<List<RegularBuilderFieldIncludeFieldIncludeDomain>> dialogOutput = regularBuilderFieldFilterDialogOpener.open(dialogInput);
         return dialogOutput
-                .map(result -> filterFieldsBasedOnDialogOutput(namedVariableDeclarations, result));
+                .map(result -> filterFieldsBasedOnDialogOutput(builderFields, result));
     }
 
-    private List<RegularBuilderFieldIncludeFieldIncludeDomain> convert(List<NamedVariableDeclarationField> namedVariableDeclarations) {
-        return namedVariableDeclarations.stream()
+    private List<RegularBuilderFieldIncludeFieldIncludeDomain> convert(List<BuilderField> builderFields) {
+        return builderFields.stream()
                 .map(field -> convert(field))
                 .collect(Collectors.toList());
     }
 
-    private RegularBuilderFieldIncludeFieldIncludeDomain convert(NamedVariableDeclarationField namedField) {
+    private RegularBuilderFieldIncludeFieldIncludeDomain convert(BuilderField namedField) {
         return new RegularBuilderFieldIncludeFieldIncludeDomain(true, namedField.getBuilderFieldName());
     }
 
-    private List<NamedVariableDeclarationField> filterFieldsBasedOnDialogOutput(List<NamedVariableDeclarationField> namedVariableDeclarations,
+    private List<BuilderField> filterFieldsBasedOnDialogOutput(List<BuilderField> builderFields,
             List<RegularBuilderFieldIncludeFieldIncludeDomain> dialogOutput) {
-        if (dialogOutput.size() != namedVariableDeclarations.size()) {
+        if (dialogOutput.size() != builderFields.size()) {
             throw new IllegalStateException("Dialog should not change the number of elements in the list");
         }
-        List<NamedVariableDeclarationField> result = new ArrayList<>();
+        List<BuilderField> result = new ArrayList<>();
         for (int i = 0; i < dialogOutput.size(); ++i) {
             if (dialogOutput.get(i).isIncludeField()) {
-                result.add(namedVariableDeclarations.get(i));
+                result.add(builderFields.get(i));
             }
         }
         return result;

@@ -4,11 +4,12 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
-import org.eclipse.jdt.core.dom.FieldDeclaration;
 import org.eclipse.jdt.core.dom.ParameterizedType;
 import org.eclipse.jdt.core.dom.SimpleType;
 import org.eclipse.jdt.core.dom.Type;
 import org.mockito.invocation.InvocationOnMock;
+
+import com.helospark.spark.builder.handlers.codegenerator.domain.BuilderField;
 
 /**
  * An answer provider for FullyQualifiedNameExtractor, that return the fully qualified name for some well known classes for testing purposes.
@@ -30,8 +31,7 @@ public class FieldDeclarationAnswerProvider {
     }
 
     public static Object provideAnswer(InvocationOnMock inv) {
-        FieldDeclaration fieldDeclaration = (FieldDeclaration) inv.getArguments()[0];
-        Type type = fieldDeclaration.getType();
+        Type type = ((BuilderField) inv.getArguments()[0]).getFieldType();
         if (type instanceof ParameterizedType) {
             Type baseType = ((ParameterizedType) type).getType();
             if (baseType instanceof SimpleType) {

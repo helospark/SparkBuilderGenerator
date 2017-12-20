@@ -40,6 +40,8 @@ Most configuration is on the preferences page: Preferences -> Java -> Spark buil
 | Stage interface pattern for staged builder | Pattern of the stage interface names | I[FieldName]Stage | `[fieldName]`, `[FieldName]` |
 | Remove prefix and suffix (set in Preferences->Java->Code style)\nfrom builder names | Whether to remove prefixes and suffixes set in code style from builder method names | true | - |
 | Include visible fields from superclass | Whether to also include visible fields from super class. Field is visible if it's public, protected. It's also visible if it has a default scope and it's in the same package. Private fields are never visible, therefore not set. | true | - |
+| Prefer to use empty superclass constructor | If the superclass has a visible empty constructor use that one, otherwise use the constructor with the most parameters. This settings only take into account if `Include parameters as fields from superclass constructor` is set. | true | - |
+| Include parameters as fields from superclass constructor | If set the superclass' constructor parameters will be used to added as fields to the builder and `super(...)` will be called in the constructor. If not set it could cause compilation errors in the generated code. Note: parameters are matched by arguments and not fields in the superclass. | true | - |
 | Always generate builder to first (top level) class | Always generate builder to first (top level) class, this is the mode used before 0.0.9, in this case it's enough if you execute the command anywhere in the file, the builder will always be generated to the first class (usually the only public class). | false | - |
 | Show dialog to filter which fields are included in the builder | Whether to show a field selection dialog when generating a regular builder | false | - |
 
@@ -73,6 +75,8 @@ Most configuration is on the preferences page: Preferences -> Java -> Spark buil
    Logging improvement
  - 0.0.12
    Generate @param tag to the builder's "with" methods
+ - 0.0.13
+   Add fields from superclass' constructor to the builder
 
 ## The generated code looks like the following:
 
