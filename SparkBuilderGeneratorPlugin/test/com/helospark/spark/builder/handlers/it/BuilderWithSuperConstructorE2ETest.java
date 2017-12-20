@@ -73,7 +73,10 @@ public class BuilderWithSuperConstructorE2ETest extends BaseBuilderGeneratorIT {
                         "superclass_with_constructor/repro_issue_output.tjava" },
                 { "superclass_with_constructor/base_child_input.tjava", "superclass_with_constructor/multi_constructor_super_input.tjava",
                         "superclass_with_constructor/multi_constructor_output_with_not_prefer_empty_constructor.tjava" },
-
+                { "superclass_with_constructor/base_child_input.tjava", "superclass_with_constructor/private_constructor_super_input.tjava",
+                        "superclass_with_constructor/private_constructor_output.tjava" },
+                { "superclass_with_constructor/base_child_input.tjava", "superclass_with_constructor/no_visible_constructor_super_input.tjava",
+                        "superclass_with_constructor/no_visible_constructor_output.tjava" },
         };
     }
 
@@ -124,7 +127,20 @@ public class BuilderWithSuperConstructorE2ETest extends BaseBuilderGeneratorIT {
                         "superclass_with_constructor/base_output_staged.tjava" },
                 { "superclass_with_constructor/repro_issue_child_input.tjava", "superclass_with_constructor/repro_issue_super_input.tjava",
                         "superclass_with_constructor/repro_issue_output_staged.tjava" },
-
         };
+    }
+
+    @Test
+    public void testClassWithoutSuperclass() throws Exception {
+        // GIVEN
+        String input = readClasspathFile("superclass_with_constructor/class_without_parent_input.tjava");
+        String expectedResult = readClasspathFile("superclass_with_constructor/class_without_parent_output.tjava");
+        super.setInput(input);
+
+        // WHEN
+        underTest.execute(dummyExecutionEvent);
+
+        // THEN
+        super.assertEqualsJavaContents(outputCaptor.getValue(), expectedResult);
     }
 }

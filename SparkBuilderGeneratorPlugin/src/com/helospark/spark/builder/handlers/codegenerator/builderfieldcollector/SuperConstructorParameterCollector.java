@@ -15,9 +15,9 @@ import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 
-import com.helospark.spark.builder.handlers.codegenerator.component.helper.ApplicableFieldVisibilityFilter;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.FieldNameToBuilderFieldNameConverter;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.TypeDeclarationFromSuperclassExtractor;
+import com.helospark.spark.builder.handlers.codegenerator.component.helper.domain.BodyDeclarationVisibleFromPredicate;
 import com.helospark.spark.builder.handlers.codegenerator.domain.BuilderField;
 import com.helospark.spark.builder.handlers.codegenerator.domain.ConstructorParameterSetterBuilderField;
 import com.helospark.spark.builder.preferences.PreferencesManager;
@@ -30,14 +30,14 @@ public class SuperConstructorParameterCollector {
     private FieldNameToBuilderFieldNameConverter fieldNameToBuilderFieldNameConverter;
     private PreferencesManager preferencesManager;
     private TypeDeclarationFromSuperclassExtractor typeDeclarationFromSuperclassExtractor;
-    private ApplicableFieldVisibilityFilter applicableFieldVisibilityFilter;
+    private BodyDeclarationVisibleFromPredicate bodyDeclarationVisibleFromPredicate;
 
     public SuperConstructorParameterCollector(FieldNameToBuilderFieldNameConverter fieldNameToBuilderFieldNameConverter, PreferencesManager preferencesManager,
-            TypeDeclarationFromSuperclassExtractor typeDeclarationFromSuperclassExtractor, ApplicableFieldVisibilityFilter applicableFieldVisibilityFilter) {
+            TypeDeclarationFromSuperclassExtractor typeDeclarationFromSuperclassExtractor, BodyDeclarationVisibleFromPredicate bodyDeclarationVisibleFromPredicate) {
         this.fieldNameToBuilderFieldNameConverter = fieldNameToBuilderFieldNameConverter;
         this.preferencesManager = preferencesManager;
         this.typeDeclarationFromSuperclassExtractor = typeDeclarationFromSuperclassExtractor;
-        this.applicableFieldVisibilityFilter = applicableFieldVisibilityFilter;
+        this.bodyDeclarationVisibleFromPredicate = bodyDeclarationVisibleFromPredicate;
     }
 
     public List<? extends BuilderField> findSuperclassConstructorDeclaration(TypeDeclaration typeDeclaration) {
@@ -75,7 +75,7 @@ public class SuperConstructorParameterCollector {
     private MethodDeclaration findConstructorToUse(TypeDeclaration currentType, TypeDeclaration parentTypeDeclaration) {
         List<MethodDeclaration> applicableConstructors = Arrays.stream(parentTypeDeclaration.getMethods())
                 .filter(method -> method.isConstructor())
-                .filter(constructor -> applicableFieldVisibilityFilter.isAstNodeVisibleFrom(constructor, currentType))
+                .filter(constructor -> bodyDeclarationVisibleFromPredicate.isDeclarationVisibleFrom(constructor, currentType))
                 .collect(Collectors.toList());
 
         if (preferencesManager.getPreferenceValue(PREFER_TO_USE_EMPTY_SUPERCLASS_CONSTRUCTOR)) {

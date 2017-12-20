@@ -41,7 +41,7 @@ public class PrivateConstructorBodyCreationFragment {
         return body;
     }
 
-    private <T> List<T> getFieldsOfClass(List<BuilderField> builderFields, Class<T> classToGet) {
+    private <T extends BuilderField> List<T> getFieldsOfClass(List<BuilderField> builderFields, Class<T> classToGet) {
         return builderFields.stream()
                 .filter(field -> field.getClass().equals(classToGet))
                 .map(field -> classToGet.cast(field))
