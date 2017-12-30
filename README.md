@@ -1,5 +1,7 @@
-# SparkBuilderGenerator
-Eclipse plugin to generate builders
+# Spark Builder Generator
+Eclipse plugin to generate builders.
+
+You can find it on [Eclipse marketplace here](https://marketplace.eclipse.org/content/spark-builder-generator#group-details)
 
 ## Builder generator
 
@@ -12,6 +14,12 @@ Features:
  - Capable of generate builder methods for visible fields in superclass
  - Encourages and supports null-safe programming practices
  - Open source (with very permissible MIT license)
+
+## Contribution
+
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
+
+Please check [CONTRIBUTING.md](CONTRIBUTING.md)
 
 ## Configuration
 
