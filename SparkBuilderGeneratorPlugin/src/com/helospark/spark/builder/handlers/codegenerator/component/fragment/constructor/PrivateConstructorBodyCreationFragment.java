@@ -4,13 +4,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.eclipse.jdt.core.dom.AST;
-import org.eclipse.jdt.core.dom.Assignment;
 import org.eclipse.jdt.core.dom.Block;
 import org.eclipse.jdt.core.dom.FieldAccess;
 import org.eclipse.jdt.core.dom.SuperConstructorInvocation;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 
-import com.helospark.spark.builder.handlers.codegenerator.component.helper.CamelCaseConverter;
+import com.helospark.spark.builder.handlers.codegenerator.component.helper.TypeDeclarationToVariableNameConverter;
 import com.helospark.spark.builder.handlers.codegenerator.domain.BuilderField;
 import com.helospark.spark.builder.handlers.codegenerator.domain.ClassFieldSetterBuilderField;
 import com.helospark.spark.builder.handlers.codegenerator.domain.ConstructorParameterSetterBuilderField;
@@ -28,16 +27,22 @@ import com.helospark.spark.builder.handlers.codegenerator.domain.ConstructorPara
  * @author helospark
  */
 public class PrivateConstructorBodyCreationFragment {
-    private CamelCaseConverter camelCaseConverter;
+    private TypeDeclarationToVariableNameConverter typeDeclarationToVariableNameConverter;
+    private FieldSetterAdderFragment fieldSetterAdderFragment;
+    private BuilderFieldAccessCreatorFragment builderFieldAccessCreatorFragment;
 
-    public PrivateConstructorBodyCreationFragment(CamelCaseConverter camelCaseConverter) {
-        this.camelCaseConverter = camelCaseConverter;
+    public PrivateConstructorBodyCreationFragment(TypeDeclarationToVariableNameConverter typeDeclarationToVariableNameConverter, FieldSetterAdderFragment fieldSetterAdderFragment,
+            BuilderFieldAccessCreatorFragment builderFieldAccessCreatorFragment) {
+        this.typeDeclarationToVariableNameConverter = typeDeclarationToVariableNameConverter;
+        this.fieldSetterAdderFragment = fieldSetterAdderFragment;
+        this.builderFieldAccessCreatorFragment = builderFieldAccessCreatorFragment;
     }
 
     public Block createBody(AST ast, TypeDeclaration builderType, List<BuilderField> builderFields) {
         Block body = ast.newBlock();
         populateBodyWithSuperConstructorCall(ast, builderType, body, getFieldsOfClass(builderFields, ConstructorParameterSetterBuilderField.class));
-        populateBodyWithFieldSetCalls(ast, builderType, body, getFieldsOfClass(builderFields, ClassFieldSetterBuilderField.class));
+        fieldSetterAdderFragment.populateBodyWithFieldSetCalls(ast, typeDeclarationToVariableNameConverter.convert(builderType), body,
+                getFieldsOfClass(builderFields, ClassFieldSetterBuilderField.class));
         return body;
     }
 
@@ -61,36 +66,8 @@ public class PrivateConstructorBodyCreationFragment {
 
     private void addConstructorParameter(AST ast, TypeDeclaration builderType, SuperConstructorInvocation superInvocation,
             ConstructorParameterSetterBuilderField constructorParameter) {
-        FieldAccess fieldAccess = createBuilderFieldAccess(ast, builderType, constructorParameter);
+        FieldAccess fieldAccess = builderFieldAccessCreatorFragment.createBuilderFieldAccess(ast, typeDeclarationToVariableNameConverter.convert(builderType),
+                constructorParameter);
         superInvocation.arguments().add(fieldAccess);
     }
-
-    private void populateBodyWithFieldSetCalls(AST ast, TypeDeclaration builderType, Block body, List<ClassFieldSetterBuilderField> builderFields) {
-        for (BuilderField field : builderFields) {
-            Assignment assignment = ast.newAssignment();
-
-            FieldAccess fieldAccess = createThisFieldAccess(ast, field);
-            assignment.setLeftHandSide(fieldAccess);
-
-            FieldAccess builderFieldAccess = createBuilderFieldAccess(ast, builderType, field);
-            assignment.setRightHandSide(builderFieldAccess);
-
-            body.statements().add(ast.newExpressionStatement(assignment));
-        }
-    }
-
-    private FieldAccess createThisFieldAccess(AST ast, BuilderField field) {
-        FieldAccess fieldAccess = ast.newFieldAccess();
-        fieldAccess.setExpression(ast.newThisExpression());
-        fieldAccess.setName(ast.newSimpleName(field.getOriginalFieldName()));
-        return fieldAccess;
-    }
-
-    private FieldAccess createBuilderFieldAccess(AST ast, TypeDeclaration builderType, BuilderField field) {
-        FieldAccess builderFieldAccess = ast.newFieldAccess();
-        builderFieldAccess.setExpression(ast.newSimpleName(camelCaseConverter.toLowerCamelCase(builderType.getName().toString())));
-        builderFieldAccess.setName(ast.newSimpleName(field.getOriginalFieldName()));
-        return builderFieldAccess;
-    }
-
 }

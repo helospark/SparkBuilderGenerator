@@ -101,6 +101,13 @@ public final class PluginPreferenceList {
             "org.helospark.builder.preferToUseEmptySuperclassConstructor",
             "Prefer to use empty superclass constructor", Boolean.TRUE);
 
+    public static final PluginPreference<Boolean> CREATE_BUILDER_COPY_METHOD = new BooleanPluginPreference(
+            "org.helospark.builder.createBuilderCopyMethod",
+            "Create a copy method in the builder", Boolean.FALSE);
+    public static final PluginPreference<String> BUILDER_COPY_METHOD_PATTERN = new StringPluginPreference(
+            "org.helospark.builder.builderCopyMethodName",
+            "Copy builder method pattern", "from");
+
     public static List<PluginPreferenceGroup> getAllPreferences() {
         return Arrays.asList(createGeneralPreferencesGroup(),
                 createRegularBuilderPreferencesGroup(),
@@ -144,6 +151,8 @@ public final class PluginPreferenceList {
     private static PluginPreferenceGroup createRegularBuilderPreferencesGroup() {
         List<PluginPreference<?>> regularBuilderPreferences = new ArrayList<>();
         regularBuilderPreferences.add(REGULAR_BUILDER_SHOW_FIELD_FILTERING_DIALOG);
+        regularBuilderPreferences.add(CREATE_BUILDER_COPY_METHOD);
+        regularBuilderPreferences.add(BUILDER_COPY_METHOD_PATTERN);
         return new PluginPreferenceGroup("Regular builder settings", regularBuilderPreferences);
     }
 }

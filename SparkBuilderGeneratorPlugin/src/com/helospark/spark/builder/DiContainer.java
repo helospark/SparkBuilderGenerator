@@ -44,6 +44,7 @@ import com.helospark.spark.builder.handlers.codegenerator.component.fragment.bui
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.builderclass.buildmethod.BuildMethodCreatorFragment;
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.builderclass.buildmethod.BuildMethodDeclarationCreatorFragment;
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.builderclass.constructor.PrivateConstructorAdderFragment;
+import com.helospark.spark.builder.handlers.codegenerator.component.fragment.builderclass.constructor.RegularBuilderCopyMethodAdderFragment;
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.builderclass.field.BuilderFieldAdderFragment;
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.builderclass.field.FieldDeclarationPostProcessor;
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.builderclass.field.FullyQualifiedNameExtractor;
@@ -60,6 +61,8 @@ import com.helospark.spark.builder.handlers.codegenerator.component.fragment.bui
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.buildermethod.BlockWithNewBuilderCreationFragment;
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.buildermethod.BuilderMethodDefinitionCreatorFragment;
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.buildermethod.NewBuilderAndWithMethodCallCreationFragment;
+import com.helospark.spark.builder.handlers.codegenerator.component.fragment.constructor.BuilderFieldAccessCreatorFragment;
+import com.helospark.spark.builder.handlers.codegenerator.component.fragment.constructor.FieldSetterAdderFragment;
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.constructor.PrivateConstructorBodyCreationFragment;
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.constructor.PrivateConstructorInsertionFragment;
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.constructor.PrivateConstructorMethodDefinitionCreationFragment;
@@ -84,6 +87,7 @@ import com.helospark.spark.builder.handlers.codegenerator.component.helper.Stage
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.StagedBuilderStagePropertyInputDialogOpener;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.TemplateResolver;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.TypeDeclarationFromSuperclassExtractor;
+import com.helospark.spark.builder.handlers.codegenerator.component.helper.TypeDeclarationToVariableNameConverter;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.domain.BodyDeclarationVisibleFromPredicate;
 import com.helospark.spark.builder.handlers.codegenerator.component.remover.BuilderClassRemover;
 import com.helospark.spark.builder.handlers.codegenerator.component.remover.BuilderRemoverChainItem;
@@ -176,12 +180,18 @@ public class DiContainer {
                 getDependency(MarkerAnnotationAttacher.class),
                 getDependency(BuilderMethodNameBuilder.class),
                 getDependency(WithMethodParameterCreatorFragment.class)));
+        addDependency(new BuilderFieldAccessCreatorFragment());
+        addDependency(new TypeDeclarationToVariableNameConverter(getDependency(CamelCaseConverter.class)));
+        addDependency(new FieldSetterAdderFragment(getDependency(BuilderFieldAccessCreatorFragment.class)));
+        addDependency(new RegularBuilderCopyMethodAdderFragment(getDependency(FieldSetterAdderFragment.class), getDependency(TypeDeclarationToVariableNameConverter.class),
+                getDependency(PreferencesManager.class), getDependency(TemplateResolver.class)));
         addDependency(new RegularBuilderClassCreator(getDependency(PrivateConstructorAdderFragment.class),
                 getDependency(EmptyBuilderClassGeneratorFragment.class),
                 getDependency(BuildMethodCreatorFragment.class),
                 getDependency(BuilderFieldAdderFragment.class),
                 getDependency(RegularBuilderWithMethodAdderFragment.class),
-                getDependency(JavadocAdder.class)));
+                getDependency(JavadocAdder.class),
+                getDependency(RegularBuilderCopyMethodAdderFragment.class)));
         addDependency(new BuilderMethodDefinitionCreatorFragment(getDependency(TemplateResolver.class),
                 getDependency(PreferencesManager.class),
                 getDependency(JavadocAdder.class), getDependency(GeneratedAnnotationPopulator.class),
@@ -193,7 +203,9 @@ public class DiContainer {
         addDependency(new PrivateConstructorMethodDefinitionCreationFragment(getDependency(PreferencesManager.class),
                 getDependency(GeneratedAnnotationPopulator.class),
                 getDependency(CamelCaseConverter.class)));
-        addDependency(new PrivateConstructorBodyCreationFragment(getDependency(CamelCaseConverter.class)));
+        addDependency(new PrivateConstructorBodyCreationFragment(getDependency(TypeDeclarationToVariableNameConverter.class),
+                getDependency(FieldSetterAdderFragment.class),
+                getDependency(BuilderFieldAccessCreatorFragment.class)));
         addDependency(new PrivateConstructorInsertionFragment());
         addDependency(new PrivateInitializingConstructorCreator(
                 getDependency(PrivateConstructorMethodDefinitionCreationFragment.class),
