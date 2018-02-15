@@ -8,7 +8,7 @@ import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.jdt.core.dom.rewrite.ListRewrite;
 
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.builderclass.withmethod.StagedBuilderWithMethodDefiniationCreatorFragment;
-import com.helospark.spark.builder.handlers.codegenerator.component.fragment.buildermethod.NewBuilderAndWithMethodCallCreationFragment;
+import com.helospark.spark.builder.handlers.codegenerator.component.fragment.buildermethod.empty.NewBuilderAndWithMethodCallCreationFragment;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.JavadocAdder;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.StagedBuilderProperties;
 import com.helospark.spark.builder.handlers.codegenerator.domain.CompilationUnitModificationDomain;

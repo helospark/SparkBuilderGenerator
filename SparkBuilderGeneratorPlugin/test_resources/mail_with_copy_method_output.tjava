@@ -17,6 +17,10 @@ public class EmailMessage {
         return new Builder();
     }
 
+    public static Builder builderFrom(EmailMessage emailMessage) {
+        return new Builder(emailMessage);
+    }
+
     public static final class Builder {
         private String from;
         private String to;
@@ -27,13 +31,12 @@ public class EmailMessage {
         private Builder() {
         }
 
-        public Builder from(EmailMessage emailMessage) {
+        private Builder(EmailMessage emailMessage) {
             this.from = emailMessage.from;
             this.to = emailMessage.to;
             this.subject = emailMessage.subject;
             this.content = emailMessage.content;
             this.mimeType = emailMessage.mimeType;
-            return this;
         }
 
         public Builder withFrom(String from) {

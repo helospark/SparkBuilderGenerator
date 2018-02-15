@@ -16,7 +16,7 @@ public class BuilderCopyMethodIT extends BaseBuilderGeneratorIT {
     public void beforeMethod() throws JavaModelException {
         super.init();
         given(preferenceStore.getBoolean("org.helospark.builder.createBuilderCopyMethod")).willReturn(true);
-        given(preferenceStore.getString("org.helospark.builder.builderCopyMethodName")).willReturn(of("from"));
+        given(preferenceStore.getString("org.helospark.builder.copyBuilderMethodName")).willReturn(of("builderFrom"));
     }
 
     @Test(dataProvider = "testCasesForRegularBuilderCopyMethod")

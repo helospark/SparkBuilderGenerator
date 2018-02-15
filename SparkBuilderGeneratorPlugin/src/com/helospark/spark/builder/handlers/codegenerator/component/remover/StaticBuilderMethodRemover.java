@@ -15,7 +15,7 @@ import com.helospark.spark.builder.handlers.codegenerator.component.remover.help
 import com.helospark.spark.builder.handlers.codegenerator.component.remover.helper.IsStaticPredicate;
 
 /**
- * Removes the previously generated static builder creation method.
+ * Removes the previously generated static builder creation method and copy builder methods.
  * @author helospark
  */
 public class StaticBuilderMethodRemover implements BuilderRemoverChainItem {
@@ -23,7 +23,8 @@ public class StaticBuilderMethodRemover implements BuilderRemoverChainItem {
     private IsPublicPredicate isPublicPredicate;
     private GeneratedAnnotationContainingBodyDeclarationFilter generatedAnnotationContainingBodyDeclarationFilter;
 
-    public StaticBuilderMethodRemover(IsStaticPredicate isStaticPredicate, IsPublicPredicate isPublicPredicate, GeneratedAnnotationContainingBodyDeclarationFilter generatedAnnotationContainingBodyDeclarationFilter) {
+    public StaticBuilderMethodRemover(IsStaticPredicate isStaticPredicate, IsPublicPredicate isPublicPredicate,
+            GeneratedAnnotationContainingBodyDeclarationFilter generatedAnnotationContainingBodyDeclarationFilter) {
         this.isStaticPredicate = isStaticPredicate;
         this.isPublicPredicate = isPublicPredicate;
         this.generatedAnnotationContainingBodyDeclarationFilter = generatedAnnotationContainingBodyDeclarationFilter;

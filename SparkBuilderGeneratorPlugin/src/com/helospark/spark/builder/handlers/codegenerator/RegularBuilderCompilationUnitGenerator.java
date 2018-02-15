@@ -10,8 +10,9 @@ import com.helospark.spark.builder.handlers.codegenerator.component.ImportPopula
 import com.helospark.spark.builder.handlers.codegenerator.component.PrivateInitializingConstructorCreator;
 import com.helospark.spark.builder.handlers.codegenerator.component.RegularBuilderBuilderMethodCreator;
 import com.helospark.spark.builder.handlers.codegenerator.component.RegularBuilderClassCreator;
-import com.helospark.spark.builder.handlers.codegenerator.domain.CompilationUnitModificationDomain;
+import com.helospark.spark.builder.handlers.codegenerator.component.RegularBuilderCopyBuilderMethodCreator;
 import com.helospark.spark.builder.handlers.codegenerator.domain.BuilderField;
+import com.helospark.spark.builder.handlers.codegenerator.domain.CompilationUnitModificationDomain;
 
 /**
  * Generates a regular builder to the given compilation unit.
@@ -22,15 +23,18 @@ public class RegularBuilderCompilationUnitGenerator {
     private RegularBuilderClassCreator regularBuilderClassCreator;
     private PrivateInitializingConstructorCreator privateConstructorPopulator;
     private RegularBuilderBuilderMethodCreator builderMethodPopulator;
+    private RegularBuilderCopyBuilderMethodCreator copyBuilderMethodPopulator;
     private ImportPopulator importPopulator;
     private BuilderRemover builderRemover;
 
     public RegularBuilderCompilationUnitGenerator(RegularBuilderClassCreator regularBuilderClassCreator,
+            RegularBuilderCopyBuilderMethodCreator copyBuilderMethodPopulator,
             PrivateInitializingConstructorCreator privateInitializingConstructorCreator,
             RegularBuilderBuilderMethodCreator regularBuilderBuilderMethodCreator,
             ImportPopulator importPopulator,
             BuilderRemover builderRemover) {
         this.regularBuilderClassCreator = regularBuilderClassCreator;
+        this.copyBuilderMethodPopulator = copyBuilderMethodPopulator;
         this.privateConstructorPopulator = privateInitializingConstructorCreator;
         this.builderMethodPopulator = regularBuilderBuilderMethodCreator;
         this.importPopulator = importPopulator;
@@ -48,6 +52,7 @@ public class RegularBuilderCompilationUnitGenerator {
         TypeDeclaration builderType = regularBuilderClassCreator.createBuilderClass(ast, originalType, builderFields);
         privateConstructorPopulator.addPrivateConstructorToCompilationUnit(ast, originalType, builderType, listRewrite, builderFields);
         builderMethodPopulator.addBuilderMethodToCompilationUnit(ast, listRewrite, originalType, builderType);
+        copyBuilderMethodPopulator.addCopyBuilderMethodToCompilationUnitIfNeeded(ast, listRewrite, originalType, builderType);
 
         listRewrite.insertLast(builderType, null);
         importPopulator.populateImports(compilationUnitModificationDomain);
