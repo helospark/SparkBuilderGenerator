@@ -18,10 +18,10 @@ import com.helospark.spark.builder.handlers.codegenerator.component.remover.help
  * @author helospark
  */
 public class StaticBuilderMethodRemover implements BuilderRemoverChainItem {
+    private final PluginLogger pluginLogger = new PluginLogger();
     private IsStaticPredicate isStaticPredicate;
     private IsPublicPredicate isPublicPredicate;
     private GeneratedAnnotationContainingBodyDeclarationFilter generatedAnnotationContainingBodyDeclarationFilter;
-    private PluginLogger pluginLogger;
 
     public StaticBuilderMethodRemover(IsStaticPredicate isStaticPredicate, IsPublicPredicate isPublicPredicate,
             GeneratedAnnotationContainingBodyDeclarationFilter generatedAnnotationContainingBodyDeclarationFilter) {

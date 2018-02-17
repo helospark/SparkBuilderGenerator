@@ -26,19 +26,19 @@ import com.helospark.spark.builder.preferences.PreferencesManager;
  * </pre>
  * @author helospark
  */
-public class RegularBuilderCopyMethodAdderFragment {
+public class RegularBuilderCopyConstructorAdderFragment {
     private FieldSetterAdderFragment fieldSetterAdderFragment;
     private TypeDeclarationToVariableNameConverter typeDeclarationToVariableNameConverter;
     private PreferencesManager preferencesManager;
 
-    public RegularBuilderCopyMethodAdderFragment(FieldSetterAdderFragment fieldSetterAdderFragment,
+    public RegularBuilderCopyConstructorAdderFragment(FieldSetterAdderFragment fieldSetterAdderFragment,
             TypeDeclarationToVariableNameConverter typeDeclarationToVariableNameConverter, PreferencesManager preferencesManager) {
         this.fieldSetterAdderFragment = fieldSetterAdderFragment;
         this.typeDeclarationToVariableNameConverter = typeDeclarationToVariableNameConverter;
         this.preferencesManager = preferencesManager;
     }
 
-    public void addCopyMethodIfNeeded(AST ast, TypeDeclaration builderType, TypeDeclaration originalType, List<BuilderField> builderFields) {
+    public void addCopyConstructorIfNeeded(AST ast, TypeDeclaration builderType, TypeDeclaration originalType, List<BuilderField> builderFields) {
         if (preferencesManager.getPreferenceValue(CREATE_BUILDER_COPY_METHOD)) {
             createCopyConstructor(ast, builderType, originalType, builderFields);
         }

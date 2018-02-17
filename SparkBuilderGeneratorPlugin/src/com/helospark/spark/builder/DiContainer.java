@@ -45,7 +45,7 @@ import com.helospark.spark.builder.handlers.codegenerator.component.fragment.bui
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.builderclass.buildmethod.BuildMethodCreatorFragment;
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.builderclass.buildmethod.BuildMethodDeclarationCreatorFragment;
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.builderclass.constructor.PrivateConstructorAdderFragment;
-import com.helospark.spark.builder.handlers.codegenerator.component.fragment.builderclass.constructor.RegularBuilderCopyMethodAdderFragment;
+import com.helospark.spark.builder.handlers.codegenerator.component.fragment.builderclass.constructor.RegularBuilderCopyConstructorAdderFragment;
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.builderclass.field.BuilderFieldAdderFragment;
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.builderclass.field.FieldDeclarationPostProcessor;
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.builderclass.field.FullyQualifiedNameExtractor;
@@ -187,7 +187,7 @@ public class DiContainer {
         addDependency(new BuilderFieldAccessCreatorFragment());
         addDependency(new TypeDeclarationToVariableNameConverter(getDependency(CamelCaseConverter.class)));
         addDependency(new FieldSetterAdderFragment(getDependency(BuilderFieldAccessCreatorFragment.class)));
-        addDependency(new RegularBuilderCopyMethodAdderFragment(getDependency(FieldSetterAdderFragment.class), getDependency(TypeDeclarationToVariableNameConverter.class),
+        addDependency(new RegularBuilderCopyConstructorAdderFragment(getDependency(FieldSetterAdderFragment.class), getDependency(TypeDeclarationToVariableNameConverter.class),
                 getDependency(PreferencesManager.class)));
         addDependency(new RegularBuilderClassCreator(getDependency(PrivateConstructorAdderFragment.class),
                 getDependency(EmptyBuilderClassGeneratorFragment.class),
@@ -195,7 +195,7 @@ public class DiContainer {
                 getDependency(BuilderFieldAdderFragment.class),
                 getDependency(RegularBuilderWithMethodAdderFragment.class),
                 getDependency(JavadocAdder.class),
-                getDependency(RegularBuilderCopyMethodAdderFragment.class)));
+                getDependency(RegularBuilderCopyConstructorAdderFragment.class)));
         addDependency(new StaticBuilderMethodSignatureGeneratorFragment(getDependency(GeneratedAnnotationPopulator.class), getDependency(PreferencesManager.class)));
         addDependency(new BuilderMethodDefinitionCreatorFragment(getDependency(TemplateResolver.class),
                 getDependency(PreferencesManager.class),

@@ -1,6 +1,8 @@
 package com.helospark.spark.builder.handlers.codegenerator.component.fragment.buildermethod.copy;
 
-import java.util.HashMap;
+import static com.helospark.spark.builder.preferences.PluginPreferenceList.COPY_BUILDER_METHOD_PATTERN;
+
+import java.util.Collections;
 import java.util.Map;
 
 import org.eclipse.jdt.core.dom.AST;
@@ -12,7 +14,6 @@ import com.helospark.spark.builder.handlers.codegenerator.component.fragment.bui
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.JavadocAdder;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.TemplateResolver;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.TypeDeclarationToVariableNameConverter;
-import com.helospark.spark.builder.preferences.PluginPreferenceList;
 import com.helospark.spark.builder.preferences.PreferencesManager;
 
 /**
@@ -53,14 +54,13 @@ public class CopyBuilderMethodDefinitionCreatorFragment {
     private SingleVariableDeclaration createParameter(AST ast, TypeDeclaration originalType, String methodParameterName) {
         SingleVariableDeclaration methodParameterDeclaration = ast.newSingleVariableDeclaration();
         methodParameterDeclaration.setType(ast.newSimpleType(ast.newName(originalType.getName().toString())));
-        methodParameterDeclaration.setName(ast.newSimpleName(typeDeclarationToVariableNameConverter.convert(originalType)));
+        methodParameterDeclaration.setName(ast.newSimpleName(methodParameterName));
         return methodParameterDeclaration;
     }
 
     private String getBuilderMethodName(TypeDeclaration originalType) {
-        Map<String, String> replacements = new HashMap<>();
-        replacements.put("className", originalType.getName().toString());
-        return templateResolver.resolveTemplate(preferenceManager.getPreferenceValue(PluginPreferenceList.COPY_BUILDER_METHOD_PATTERN), replacements);
+        Map<String, String> replacements = Collections.singletonMap("className", originalType.getName().toString());
+        return templateResolver.resolveTemplate(preferenceManager.getPreferenceValue(COPY_BUILDER_METHOD_PATTERN), replacements);
     }
 
 }

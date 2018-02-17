@@ -10,7 +10,9 @@ import org.eclipse.jdt.core.dom.TypeDeclaration;
 /**
  * Creates a block which creates a builder using the copy constructor, generated code is something like:
  * <pre>
- * return new Builder(parameterName);
+ * {
+ *     return new Builder(parameterName);
+ * }
  * </pre>
  * @author helospark
  */
