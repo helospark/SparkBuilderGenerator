@@ -1,0 +1,86 @@
+import javax.annotation.Generated;
+
+public class EmailMessage {
+    private String from;
+    private String to;
+    private String subject;
+    private String content;
+    private String mimeType;
+
+    @Generated("SparkTools")
+    private EmailMessage(Builder builder) {
+        this.from = builder.from;
+        this.to = builder.to;
+        this.subject = builder.subject;
+        this.content = builder.content;
+        this.mimeType = builder.mimeType;
+    }
+
+    /** 
+    * Creates builder to build {@link EmailMessage}.
+    * @return created builder
+    */
+    @Generated("SparkTools")
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    /** 
+    * Creates a builder to build {@link EmailMessage} by preinitializing the builder using the given object.
+    * @param emailMessage to initialize the builder with
+    * @return created builder
+    */
+    @Generated("SparkTools")
+    public static Builder builderFrom(EmailMessage emailMessage) {
+        return new Builder(emailMessage);
+    }
+
+    @Generated("SparkTools")
+    public static final class Builder {
+        private String from;
+        private String to;
+        private String subject;
+        private String content;
+        private String mimeType;
+
+        private Builder() {
+        }
+
+        private Builder(EmailMessage emailMessage) {
+            this.from = emailMessage.from;
+            this.to = emailMessage.to;
+            this.subject = emailMessage.subject;
+            this.content = emailMessage.content;
+            this.mimeType = emailMessage.mimeType;
+        }
+
+        public Builder withFrom(String from) {
+            this.from = from;
+            return this;
+        }
+
+        public Builder withTo(String to) {
+            this.to = to;
+            return this;
+        }
+
+        public Builder withSubject(String subject) {
+            this.subject = subject;
+            return this;
+        }
+
+        public Builder withContent(String content) {
+            this.content = content;
+            return this;
+        }
+
+        public Builder withMimeType(String mimeType) {
+            this.mimeType = mimeType;
+            return this;
+        }
+
+        public EmailMessage build() {
+            return new EmailMessage(this);
+        }
+    }
+}

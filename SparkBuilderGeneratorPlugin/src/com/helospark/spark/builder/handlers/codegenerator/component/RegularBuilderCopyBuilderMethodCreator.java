@@ -1,15 +1,16 @@
 package com.helospark.spark.builder.handlers.codegenerator.component;
 
+import static com.helospark.spark.builder.preferences.PluginPreferenceList.CREATE_BUILDER_COPY_METHOD;
+
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.Block;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
-import org.eclipse.jdt.core.dom.rewrite.ListRewrite;
 
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.buildermethod.copy.BlockWithNewCopyBuilderCreationFragment;
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.buildermethod.copy.CopyBuilderMethodDefinitionCreatorFragment;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.TypeDeclarationToVariableNameConverter;
-import com.helospark.spark.builder.preferences.PluginPreferenceList;
+import com.helospark.spark.builder.handlers.codegenerator.domain.CompilationUnitModificationDomain;
 import com.helospark.spark.builder.preferences.PreferencesManager;
 
 /**
@@ -38,18 +39,23 @@ public class RegularBuilderCopyBuilderMethodCreator {
         this.preferencesManager = preferencesManager;
     }
 
-    public void addCopyBuilderMethodToCompilationUnitIfNeeded(AST ast, ListRewrite listRewrite, TypeDeclaration typeDeclaration, TypeDeclaration builderType) {
-        if (preferencesManager.getPreferenceValue(PluginPreferenceList.CREATE_BUILDER_COPY_METHOD)) {
-            addCopyBuilderMethod(ast, listRewrite, typeDeclaration, builderType);
+    public void addCopyBuilderMethodToCompilationUnitIfNeeded(CompilationUnitModificationDomain compilationUnitModificationDomain, TypeDeclaration builderType) {
+        if (preferencesManager.getPreferenceValue(CREATE_BUILDER_COPY_METHOD)) {
+            addCopyBuilderMethod(compilationUnitModificationDomain, builderType);
         }
     }
 
-    private void addCopyBuilderMethod(AST ast, ListRewrite listRewrite, TypeDeclaration typeDeclaration, TypeDeclaration builderType) {
-        String parameterName = typeDeclarationToVariableNameConverter.convert(typeDeclaration);
-        Block builderMethodBlock = blockWithNewCopyBuilderCreationFragment.createReturnBlock(ast, builderType, parameterName);
-        MethodDeclaration builderMethod = copyBuilderMethodDefinitionCreatorFragment.createBuilderMethod(ast, typeDeclaration, builderType.getName().toString(), parameterName);
-        builderMethod.setBody(builderMethodBlock);
-        listRewrite.insertLast(builderMethod, null);
+    private void addCopyBuilderMethod(CompilationUnitModificationDomain compilationUnitModificationDomain, TypeDeclaration builderType) {
+        TypeDeclaration originalType = compilationUnitModificationDomain.getOriginalType();
+        AST ast = compilationUnitModificationDomain.getAst();
+        String parameterName = typeDeclarationToVariableNameConverter.convert(originalType);
+
+        MethodDeclaration builderMethod = copyBuilderMethodDefinitionCreatorFragment.createBuilderMethod(ast, originalType, builderType.getName().toString(), parameterName);
+
+        Block methodBody = blockWithNewCopyBuilderCreationFragment.createReturnBlock(ast, builderType, parameterName);
+        builderMethod.setBody(methodBody);
+
+        compilationUnitModificationDomain.getListRewrite().insertLast(builderMethod, null);
     }
 
 }

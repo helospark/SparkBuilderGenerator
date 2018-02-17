@@ -52,7 +52,7 @@ public class RegularBuilderCompilationUnitGenerator {
         TypeDeclaration builderType = regularBuilderClassCreator.createBuilderClass(ast, originalType, builderFields);
         privateConstructorPopulator.addPrivateConstructorToCompilationUnit(ast, originalType, builderType, listRewrite, builderFields);
         builderMethodPopulator.addBuilderMethodToCompilationUnit(ast, listRewrite, originalType, builderType);
-        copyBuilderMethodPopulator.addCopyBuilderMethodToCompilationUnitIfNeeded(ast, listRewrite, originalType, builderType);
+        copyBuilderMethodPopulator.addCopyBuilderMethodToCompilationUnitIfNeeded(compilationUnitModificationDomain, builderType);
 
         listRewrite.insertLast(builderType, null);
         importPopulator.populateImports(compilationUnitModificationDomain);

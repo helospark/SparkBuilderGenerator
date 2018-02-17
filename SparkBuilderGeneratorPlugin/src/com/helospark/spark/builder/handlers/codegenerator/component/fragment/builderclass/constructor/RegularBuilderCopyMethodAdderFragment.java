@@ -19,9 +19,9 @@ import com.helospark.spark.builder.preferences.PreferencesManager;
 /**
  * Creates a private constructor that copies all fields from the given class.
  * <pre>
- * private Builder(OriginalType original) {
- *   this.field1 = original.field1;
- *   this.field2 = original.field2;
+ * private Builder(OriginalType originalType) {
+ *   this.field1 = originalType.field1;
+ *   this.field2 = originalType.field2;
  * }
  * </pre>
  * @author helospark
@@ -45,21 +45,28 @@ public class RegularBuilderCopyMethodAdderFragment {
     }
 
     private void createCopyConstructor(AST ast, TypeDeclaration builderType, TypeDeclaration originalType, List<BuilderField> builderFields) {
-        String parameterName = typeDeclarationToVariableNameConverter.convert(originalType);
-        Block body = ast.newBlock();
-        fieldSetterAdderFragment.populateBodyWithFieldSetCalls(ast, parameterName, body, builderFields);
-        builderType.bodyDeclarations().add(createPrivateConstructor(ast, builderType, originalType, parameterName, body));
+        String originalTypeParameterName = typeDeclarationToVariableNameConverter.convert(originalType);
+
+        Block methodBody = createMethodBody(ast, builderFields, originalTypeParameterName);
+        MethodDeclaration copyConstructor = createCopyConstructorWithBody(ast, builderType, originalType, originalTypeParameterName, methodBody);
+        builderType.bodyDeclarations().add(copyConstructor);
     }
 
-    private MethodDeclaration createPrivateConstructor(AST ast, TypeDeclaration builderType, TypeDeclaration originalType, String parameterName,
+    private Block createMethodBody(AST ast, List<BuilderField> builderFields, String originalTypeParameterName) {
+        Block methodBody = ast.newBlock();
+        fieldSetterAdderFragment.populateBodyWithFieldSetCalls(ast, originalTypeParameterName, methodBody, builderFields);
+        return methodBody;
+    }
+
+    private MethodDeclaration createCopyConstructorWithBody(AST ast, TypeDeclaration builderType, TypeDeclaration originalType, String parameterName,
             Block body) {
-        MethodDeclaration copyMethod = ast.newMethodDeclaration();
-        copyMethod.setBody(body);
-        copyMethod.setConstructor(true);
-        copyMethod.setName(ast.newSimpleName(builderType.getName().toString()));
-        copyMethod.modifiers().add(ast.newModifier(PRIVATE_KEYWORD));
-        copyMethod.parameters().add(createParameter(ast, originalType, parameterName));
-        return copyMethod;
+        MethodDeclaration copyConstructor = ast.newMethodDeclaration();
+        copyConstructor.setBody(body);
+        copyConstructor.setConstructor(true);
+        copyConstructor.setName(ast.newSimpleName(builderType.getName().toString()));
+        copyConstructor.modifiers().add(ast.newModifier(PRIVATE_KEYWORD));
+        copyConstructor.parameters().add(createParameter(ast, originalType, parameterName));
+        return copyConstructor;
     }
 
     private SingleVariableDeclaration createParameter(AST ast, TypeDeclaration originalType, String parameterName) {

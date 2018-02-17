@@ -70,7 +70,7 @@ public class JavadocAdder {
     public void addJavadocForCopyBuilderMethod(AST ast, String typeName, String parameterName, MethodDeclaration builderMethod) {
         if (preferencesManager.getPreferenceValue(PluginPreferenceList.GENERATE_JAVADOC_ON_BUILDER_METHOD)) {
             Map<String, String> javadocTags = new LinkedHashMap<>();
-            javadocTags.put(PARAM_JAVADOC_TAG_NAME, String.format(Locale.ENGLISH, "%s field to set", parameterName));
+            javadocTags.put(PARAM_JAVADOC_TAG_NAME, String.format(Locale.ENGLISH, "%s to initialize the builder with", parameterName));
             javadocTags.put(RETURN_JAVADOC_TAG_NAME, "created builder");
 
             Javadoc javadoc = javadocGenerator.generateJavadoc(ast,
