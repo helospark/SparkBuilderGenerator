@@ -103,10 +103,10 @@ public final class PluginPreferenceList {
 
     public static final PluginPreference<Boolean> CREATE_BUILDER_COPY_METHOD = new BooleanPluginPreference(
             "org.helospark.builder.createBuilderCopyMethod",
-            "Create a copy method in the builder", Boolean.FALSE);
+            "Add method to create a builder based on an instance", Boolean.FALSE);
     public static final PluginPreference<String> COPY_BUILDER_METHOD_PATTERN = new StringPluginPreference(
             "org.helospark.builder.copyBuilderMethodName",
-            "Pattern of static builder that copies the given domain object", "builderFrom");
+            "Pattern of static builder method that copies the given domain object", "builderFrom");
 
     public static List<PluginPreferenceGroup> getAllPreferences() {
         return Arrays.asList(createGeneralPreferencesGroup(),

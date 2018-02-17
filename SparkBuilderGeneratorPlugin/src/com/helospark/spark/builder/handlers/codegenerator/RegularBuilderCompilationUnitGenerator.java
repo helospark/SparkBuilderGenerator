@@ -1,7 +1,5 @@
 package com.helospark.spark.builder.handlers.codegenerator;
 
-import java.util.List;
-
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.jdt.core.dom.rewrite.ListRewrite;
@@ -11,8 +9,8 @@ import com.helospark.spark.builder.handlers.codegenerator.component.PrivateIniti
 import com.helospark.spark.builder.handlers.codegenerator.component.RegularBuilderBuilderMethodCreator;
 import com.helospark.spark.builder.handlers.codegenerator.component.RegularBuilderClassCreator;
 import com.helospark.spark.builder.handlers.codegenerator.component.RegularBuilderCopyBuilderMethodCreator;
-import com.helospark.spark.builder.handlers.codegenerator.domain.BuilderField;
 import com.helospark.spark.builder.handlers.codegenerator.domain.CompilationUnitModificationDomain;
+import com.helospark.spark.builder.handlers.codegenerator.domain.RegularBuilderUserPreference;
 
 /**
  * Generates a regular builder to the given compilation unit.
@@ -41,7 +39,7 @@ public class RegularBuilderCompilationUnitGenerator {
         this.builderRemover = builderRemover;
     }
 
-    public void generateBuilder(CompilationUnitModificationDomain compilationUnitModificationDomain, List<BuilderField> builderFields) {
+    public void generateBuilder(CompilationUnitModificationDomain compilationUnitModificationDomain, RegularBuilderUserPreference preference) {
         // TODO: replace parameters, where these go separately with compilation modification domain
         AST ast = compilationUnitModificationDomain.getAst();
         ListRewrite listRewrite = compilationUnitModificationDomain.getListRewrite();
@@ -49,10 +47,10 @@ public class RegularBuilderCompilationUnitGenerator {
 
         builderRemover.removeExistingBuilderWhenNeeded(compilationUnitModificationDomain);
 
-        TypeDeclaration builderType = regularBuilderClassCreator.createBuilderClass(ast, originalType, builderFields);
-        privateConstructorPopulator.addPrivateConstructorToCompilationUnit(ast, originalType, builderType, listRewrite, builderFields);
+        TypeDeclaration builderType = regularBuilderClassCreator.createBuilderClass(ast, originalType, preference);
+        privateConstructorPopulator.addPrivateConstructorToCompilationUnit(ast, originalType, builderType, listRewrite, preference.getBuilderFields());
         builderMethodPopulator.addBuilderMethodToCompilationUnit(ast, listRewrite, originalType, builderType);
-        copyBuilderMethodPopulator.addCopyBuilderMethodToCompilationUnitIfNeeded(compilationUnitModificationDomain, builderType);
+        copyBuilderMethodPopulator.addCopyBuilderMethodToCompilationUnitIfNeeded(compilationUnitModificationDomain, builderType, preference);
 
         listRewrite.insertLast(builderType, null);
         importPopulator.populateImports(compilationUnitModificationDomain);

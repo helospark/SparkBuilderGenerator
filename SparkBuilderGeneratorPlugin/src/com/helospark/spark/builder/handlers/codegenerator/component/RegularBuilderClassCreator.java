@@ -14,6 +14,7 @@ import com.helospark.spark.builder.handlers.codegenerator.component.fragment.bui
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.builderclass.withmethod.RegularBuilderWithMethodAdderFragment;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.JavadocAdder;
 import com.helospark.spark.builder.handlers.codegenerator.domain.BuilderField;
+import com.helospark.spark.builder.handlers.codegenerator.domain.RegularBuilderUserPreference;
 
 /**
  * Generates the builder class.
@@ -42,10 +43,12 @@ public class RegularBuilderClassCreator {
         this.javadocAdder = javadocAdder;
     }
 
-    public TypeDeclaration createBuilderClass(AST ast, TypeDeclaration originalType, List<BuilderField> builderFields) {
+    public TypeDeclaration createBuilderClass(AST ast, TypeDeclaration originalType, RegularBuilderUserPreference preference) {
+        List<BuilderField> builderFields = preference.getBuilderFields();
+
         TypeDeclaration builderType = emptyBuilderClassGeneratorFragment.createBuilderClass(ast, originalType);
         privateConstructorAdderFragment.addEmptyPrivateConstructor(ast, builderType);
-        privateCopyConstructorAdderFragment.addCopyConstructorIfNeeded(ast, builderType, originalType, builderFields);
+        privateCopyConstructorAdderFragment.addCopyConstructorIfNeeded(ast, builderType, originalType, preference);
         for (BuilderField builderField : builderFields) {
             builderFieldAdderFragment.addFieldToBuilder(ast, builderType, builderField);
             regularBuilderWithMethodAdderFragment.addWithMethodToBuilder(ast, builderType, builderField);

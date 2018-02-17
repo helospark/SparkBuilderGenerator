@@ -1,7 +1,6 @@
 package com.helospark.spark.builder.handlers.codegenerator;
 
 import static com.helospark.spark.builder.handlers.BuilderType.REGULAR;
-import static com.helospark.spark.builder.preferences.PluginPreferenceList.REGULAR_BUILDER_SHOW_FIELD_FILTERING_DIALOG;
 
 import java.util.List;
 import java.util.Optional;
@@ -9,9 +8,9 @@ import java.util.Optional;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 
 import com.helospark.spark.builder.handlers.BuilderType;
-import com.helospark.spark.builder.handlers.codegenerator.domain.CompilationUnitModificationDomain;
 import com.helospark.spark.builder.handlers.codegenerator.domain.BuilderField;
-import com.helospark.spark.builder.preferences.PreferencesManager;
+import com.helospark.spark.builder.handlers.codegenerator.domain.CompilationUnitModificationDomain;
+import com.helospark.spark.builder.handlers.codegenerator.domain.RegularBuilderUserPreference;
 
 /**
  * Decorator around {@link RegularBuilderCompilationUnitGenerator} that collect the fields to include in the regular builder.
@@ -20,29 +19,22 @@ import com.helospark.spark.builder.preferences.PreferencesManager;
 public class RegularBuilderCompilationUnitGeneratorBuilderFieldCollectingDecorator implements BuilderCompilationUnitGenerator {
     private ApplicableBuilderFieldExtractor applicableBuilderFieldExtractor;
     private RegularBuilderCompilationUnitGenerator decoratedBuilderGenerator;
-    private PreferencesManager preferencesManager;
-    private RegularBuilderFieldFilter regularBuilderFieldFilter;
+    private RegularBuilderUserPreferenceProvider preferenceProvider;
 
     public RegularBuilderCompilationUnitGeneratorBuilderFieldCollectingDecorator(ApplicableBuilderFieldExtractor applicableBuilderFieldExtractor,
-            RegularBuilderCompilationUnitGenerator decoratedBuilderGenerator, PreferencesManager preferencesManager, RegularBuilderFieldFilter regularBuilderFieldFilter) {
+            RegularBuilderCompilationUnitGenerator decoratedBuilderGenerator,
+            RegularBuilderUserPreferenceProvider regularBuilderUserPreferenceProvider) {
         this.applicableBuilderFieldExtractor = applicableBuilderFieldExtractor;
         this.decoratedBuilderGenerator = decoratedBuilderGenerator;
-        this.preferencesManager = preferencesManager;
-        this.regularBuilderFieldFilter = regularBuilderFieldFilter;
+        this.preferenceProvider = regularBuilderUserPreferenceProvider;
     }
 
     @Override
     public void generateBuilder(CompilationUnitModificationDomain compilationUnitModificationDomain) {
         TypeDeclaration originalType = compilationUnitModificationDomain.getOriginalType();
         List<BuilderField> builderFields = applicableBuilderFieldExtractor.findBuilderFields(originalType);
-        if (preferencesManager.getPreferenceValue(REGULAR_BUILDER_SHOW_FIELD_FILTERING_DIALOG)) {
-            Optional<List<BuilderField>> filteredFields = regularBuilderFieldFilter.filterFields(builderFields);
-            if (filteredFields.isPresent()) {
-                decoratedBuilderGenerator.generateBuilder(compilationUnitModificationDomain, filteredFields.get());
-            }
-        } else {
-            decoratedBuilderGenerator.generateBuilder(compilationUnitModificationDomain, builderFields);
-        }
+        Optional<RegularBuilderUserPreference> userPreference = preferenceProvider.getPreference(builderFields);
+        userPreference.ifPresent(preference -> decoratedBuilderGenerator.generateBuilder(compilationUnitModificationDomain, preference));
     }
 
     @Override

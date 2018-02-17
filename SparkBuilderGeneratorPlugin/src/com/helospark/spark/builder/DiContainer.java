@@ -24,8 +24,8 @@ import com.helospark.spark.builder.handlers.codegenerator.BuilderRemover;
 import com.helospark.spark.builder.handlers.codegenerator.CompilationUnitParser;
 import com.helospark.spark.builder.handlers.codegenerator.RegularBuilderCompilationUnitGenerator;
 import com.helospark.spark.builder.handlers.codegenerator.RegularBuilderCompilationUnitGeneratorBuilderFieldCollectingDecorator;
-import com.helospark.spark.builder.handlers.codegenerator.RegularBuilderFieldFilter;
-import com.helospark.spark.builder.handlers.codegenerator.RegularBuilderFieldFilterDialogOpener;
+import com.helospark.spark.builder.handlers.codegenerator.RegularBuilderUserPreferenceDialogOpener;
+import com.helospark.spark.builder.handlers.codegenerator.RegularBuilderUserPreferenceProvider;
 import com.helospark.spark.builder.handlers.codegenerator.StagedBuilderCompilationUnitGenerator;
 import com.helospark.spark.builder.handlers.codegenerator.StagedBuilderCompilationUnitGeneratorFieldCollectorDecorator;
 import com.helospark.spark.builder.handlers.codegenerator.builderfieldcollector.ClassFieldCollector;
@@ -80,6 +80,7 @@ import com.helospark.spark.builder.handlers.codegenerator.component.helper.Field
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.GeneratedAnnotationPopulator;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.ITypeExtractor;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.InterfaceSetter;
+import com.helospark.spark.builder.handlers.codegenerator.component.helper.IsRegularBuilderCopyMethodEnabledPredicate;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.IsTypeApplicableForBuilderGenerationPredicate;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.JavadocAdder;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.JavadocGenerator;
@@ -105,6 +106,8 @@ import com.helospark.spark.builder.handlers.codegenerator.component.remover.help
 import com.helospark.spark.builder.handlers.codegenerator.component.remover.helper.IsPrivatePredicate;
 import com.helospark.spark.builder.handlers.codegenerator.component.remover.helper.IsPublicPredicate;
 import com.helospark.spark.builder.handlers.codegenerator.component.remover.helper.IsStaticPredicate;
+import com.helospark.spark.builder.handlers.codegenerator.converter.RegularBuilderDialogDataConverter;
+import com.helospark.spark.builder.handlers.codegenerator.converter.RegularBuilderUserPreferenceConverter;
 import com.helospark.spark.builder.preferences.PreferencesManager;
 
 public class DiContainer {
@@ -187,8 +190,9 @@ public class DiContainer {
         addDependency(new BuilderFieldAccessCreatorFragment());
         addDependency(new TypeDeclarationToVariableNameConverter(getDependency(CamelCaseConverter.class)));
         addDependency(new FieldSetterAdderFragment(getDependency(BuilderFieldAccessCreatorFragment.class)));
+        addDependency(new IsRegularBuilderCopyMethodEnabledPredicate());
         addDependency(new RegularBuilderCopyConstructorAdderFragment(getDependency(FieldSetterAdderFragment.class), getDependency(TypeDeclarationToVariableNameConverter.class),
-                getDependency(PreferencesManager.class)));
+                getDependency(IsRegularBuilderCopyMethodEnabledPredicate.class)));
         addDependency(new RegularBuilderClassCreator(getDependency(PrivateConstructorAdderFragment.class),
                 getDependency(EmptyBuilderClassGeneratorFragment.class),
                 getDependency(BuildMethodCreatorFragment.class),
@@ -246,18 +250,22 @@ public class DiContainer {
         addDependency(new RegularBuilderCopyBuilderMethodCreator(getDependency(BlockWithNewCopyBuilderCreationFragment.class),
                 getDependency(CopyBuilderMethodDefinitionCreatorFragment.class),
                 getDependency(TypeDeclarationToVariableNameConverter.class),
-                getDependency(PreferencesManager.class)));
+                getDependency(IsRegularBuilderCopyMethodEnabledPredicate.class)));
         addDependency(new RegularBuilderCompilationUnitGenerator(getDependency(RegularBuilderClassCreator.class),
                 getDependency(RegularBuilderCopyBuilderMethodCreator.class),
                 getDependency(PrivateInitializingConstructorCreator.class),
                 getDependency(RegularBuilderBuilderMethodCreator.class), getDependency(ImportPopulator.class),
                 getDependency(BuilderRemover.class)));
-        addDependency(new RegularBuilderFieldFilterDialogOpener(getDependency(CurrentShellProvider.class)));
-        addDependency(new RegularBuilderFieldFilter(getDependency(RegularBuilderFieldFilterDialogOpener.class)));
+        addDependency(new RegularBuilderUserPreferenceDialogOpener(getDependency(CurrentShellProvider.class)));
+        addDependency(new RegularBuilderDialogDataConverter());
+        addDependency(new RegularBuilderUserPreferenceConverter());
+        addDependency(new RegularBuilderUserPreferenceProvider(getDependency(RegularBuilderUserPreferenceDialogOpener.class),
+                getDependency(PreferencesManager.class),
+                getDependency(RegularBuilderDialogDataConverter.class),
+                getDependency(RegularBuilderUserPreferenceConverter.class)));
         addDependency(new RegularBuilderCompilationUnitGeneratorBuilderFieldCollectingDecorator(getDependency(ApplicableBuilderFieldExtractor.class),
                 getDependency(RegularBuilderCompilationUnitGenerator.class),
-                getDependency(PreferencesManager.class),
-                getDependency(RegularBuilderFieldFilter.class)));
+                getDependency(RegularBuilderUserPreferenceProvider.class)));
         addDependency(new IsEventOnJavaFilePredicate(getDependency(HandlerUtilWrapper.class)));
 
         // staged builder dependencies

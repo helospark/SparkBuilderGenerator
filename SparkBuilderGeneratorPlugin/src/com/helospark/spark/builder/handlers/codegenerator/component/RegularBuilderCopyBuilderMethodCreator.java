@@ -1,7 +1,5 @@
 package com.helospark.spark.builder.handlers.codegenerator.component;
 
-import static com.helospark.spark.builder.preferences.PluginPreferenceList.CREATE_BUILDER_COPY_METHOD;
-
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.Block;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
@@ -9,9 +7,10 @@ import org.eclipse.jdt.core.dom.TypeDeclaration;
 
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.buildermethod.copy.BlockWithNewCopyBuilderCreationFragment;
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.buildermethod.copy.CopyBuilderMethodDefinitionCreatorFragment;
+import com.helospark.spark.builder.handlers.codegenerator.component.helper.IsRegularBuilderCopyMethodEnabledPredicate;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.TypeDeclarationToVariableNameConverter;
 import com.helospark.spark.builder.handlers.codegenerator.domain.CompilationUnitModificationDomain;
-import com.helospark.spark.builder.preferences.PreferencesManager;
+import com.helospark.spark.builder.handlers.codegenerator.domain.RegularBuilderUserPreference;
 
 /**
  * Adds the builder() method for a regular builder when copying a domain object.
@@ -27,20 +26,21 @@ public class RegularBuilderCopyBuilderMethodCreator {
     private BlockWithNewCopyBuilderCreationFragment blockWithNewCopyBuilderCreationFragment;
     private CopyBuilderMethodDefinitionCreatorFragment copyBuilderMethodDefinitionCreatorFragment;
     private TypeDeclarationToVariableNameConverter typeDeclarationToVariableNameConverter;
-    private PreferencesManager preferencesManager;
+    private IsRegularBuilderCopyMethodEnabledPredicate isRegularBuilderCopyMethodEnabledPredicate;
 
     public RegularBuilderCopyBuilderMethodCreator(BlockWithNewCopyBuilderCreationFragment blockWithNewCopyBuilderCreationFragment,
             CopyBuilderMethodDefinitionCreatorFragment copyBuilderMethodDefinitionCreatorFragment,
             TypeDeclarationToVariableNameConverter typeDeclarationToVariableNameConverter,
-            PreferencesManager preferencesManager) {
+            IsRegularBuilderCopyMethodEnabledPredicate isRegularBuilderCopyMethodEnabledPredicate) {
         this.blockWithNewCopyBuilderCreationFragment = blockWithNewCopyBuilderCreationFragment;
         this.copyBuilderMethodDefinitionCreatorFragment = copyBuilderMethodDefinitionCreatorFragment;
         this.typeDeclarationToVariableNameConverter = typeDeclarationToVariableNameConverter;
-        this.preferencesManager = preferencesManager;
+        this.isRegularBuilderCopyMethodEnabledPredicate = isRegularBuilderCopyMethodEnabledPredicate;
     }
 
-    public void addCopyBuilderMethodToCompilationUnitIfNeeded(CompilationUnitModificationDomain compilationUnitModificationDomain, TypeDeclaration builderType) {
-        if (preferencesManager.getPreferenceValue(CREATE_BUILDER_COPY_METHOD)) {
+    public void addCopyBuilderMethodToCompilationUnitIfNeeded(CompilationUnitModificationDomain compilationUnitModificationDomain, TypeDeclaration builderType,
+            RegularBuilderUserPreference preference) {
+        if (isRegularBuilderCopyMethodEnabledPredicate.test(preference)) {
             addCopyBuilderMethod(compilationUnitModificationDomain, builderType);
         }
     }

@@ -15,13 +15,14 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import com.helospark.spark.builder.DiContainer;
+import com.helospark.spark.builder.dialogs.domain.RegularBuilderDialogData;
 import com.helospark.spark.builder.handlers.GenerateRegularBuilderHandler;
-import com.helospark.spark.builder.handlers.codegenerator.RegularBuilderFieldFilterDialogOpener;
+import com.helospark.spark.builder.handlers.codegenerator.RegularBuilderUserPreferenceDialogOpener;
 import com.helospark.spark.builder.handlers.it.dummyService.RegularBuilderFilterDialogAnswerProvider;
 
 public class RegularBuilderWithUserSelectedFieldsIT extends BaseBuilderGeneratorIT {
     @Mock
-    private RegularBuilderFieldFilterDialogOpener regularBuilderFieldFilterDialogOpener;
+    private RegularBuilderUserPreferenceDialogOpener regularBuilderUserPreferenceDialogOpener;
 
     @BeforeMethod
     public void beforeMethod() throws JavaModelException {
@@ -33,14 +34,14 @@ public class RegularBuilderWithUserSelectedFieldsIT extends BaseBuilderGenerator
     @Override
     protected void diContainerOverrides() {
         super.diContainerOverrides();
-        DiContainer.addDependency(regularBuilderFieldFilterDialogOpener);
+        DiContainer.addDependency(regularBuilderUserPreferenceDialogOpener);
     }
 
     @Test(dataProvider = "filteredDialogDataProvider")
     public void testFilteringDialog(String inputFile, String expectedOutputFile, List<Integer> includedFields) throws Exception {
         // GIVEN
-        RegularBuilderFilterDialogAnswerProvider regularBuilderFilterDialogAnswerProvider = new RegularBuilderFilterDialogAnswerProvider(includedFields);
-        given(regularBuilderFieldFilterDialogOpener.open(any(List.class))).willAnswer(regularBuilderFilterDialogAnswerProvider::provideAnswer);
+        RegularBuilderFilterDialogAnswerProvider regularBuilderFilterDialogAnswerProvider = new RegularBuilderFilterDialogAnswerProvider(includedFields, false);
+        given(regularBuilderUserPreferenceDialogOpener.open(any(RegularBuilderDialogData.class))).willAnswer(regularBuilderFilterDialogAnswerProvider::provideAnswer);
 
         String input = readClasspathFile(inputFile);
         String expectedResult = readClasspathFile(expectedOutputFile);
@@ -66,7 +67,7 @@ public class RegularBuilderWithUserSelectedFieldsIT extends BaseBuilderGenerator
     @Test(dataProvider = "cancelPressedOnDialogGeneratorDataProvider")
     public void testFilteringDialogWhenCancelPressedShouldNotGenerateOrDeleteBuilder(String inputFile) throws Exception {
         // GIVEN
-        given(regularBuilderFieldFilterDialogOpener.open(any(List.class))).willReturn(empty());
+        given(regularBuilderUserPreferenceDialogOpener.open(any(RegularBuilderDialogData.class))).willReturn(empty());
 
         String input = readClasspathFile(inputFile);
         String expectedResult = readClasspathFile(inputFile);
