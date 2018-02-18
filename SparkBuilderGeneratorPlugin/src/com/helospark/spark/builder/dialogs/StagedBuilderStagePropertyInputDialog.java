@@ -66,7 +66,7 @@ public class StagedBuilderStagePropertyInputDialog extends Dialog {
      * Create contents of the dialog.
      */
     private void createContents() {
-        shell = new Shell(getParent(), SWT.SHELL_TRIM | SWT.BORDER | SWT.PRIMARY_MODAL);
+        shell = new Shell(getParent(), SWT.SHELL_TRIM | SWT.BORDER | SWT.PRIMARY_MODAL | SWT.SHEET);
         shell.setSize(474, 338);
         shell.setText(getText());
 
@@ -235,6 +235,8 @@ public class StagedBuilderStagePropertyInputDialog extends Dialog {
         });
 
         initializeContents();
+
+        shell.setDefaultButton(generateButton);
     }
 
     private void initializeContents() {

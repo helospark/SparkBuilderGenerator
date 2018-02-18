@@ -1,4 +1,4 @@
-package com.helospark.spark.builder.handlers.codegenerator.component.fragment.buildermethod;
+package com.helospark.spark.builder.handlers.codegenerator.component.fragment.buildermethod.empty;
 
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.Block;

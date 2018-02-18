@@ -24,8 +24,8 @@ import com.helospark.spark.builder.handlers.codegenerator.BuilderRemover;
 import com.helospark.spark.builder.handlers.codegenerator.CompilationUnitParser;
 import com.helospark.spark.builder.handlers.codegenerator.RegularBuilderCompilationUnitGenerator;
 import com.helospark.spark.builder.handlers.codegenerator.RegularBuilderCompilationUnitGeneratorBuilderFieldCollectingDecorator;
-import com.helospark.spark.builder.handlers.codegenerator.RegularBuilderFieldFilter;
-import com.helospark.spark.builder.handlers.codegenerator.RegularBuilderFieldFilterDialogOpener;
+import com.helospark.spark.builder.handlers.codegenerator.RegularBuilderUserPreferenceDialogOpener;
+import com.helospark.spark.builder.handlers.codegenerator.RegularBuilderUserPreferenceProvider;
 import com.helospark.spark.builder.handlers.codegenerator.StagedBuilderCompilationUnitGenerator;
 import com.helospark.spark.builder.handlers.codegenerator.StagedBuilderCompilationUnitGeneratorFieldCollectorDecorator;
 import com.helospark.spark.builder.handlers.codegenerator.builderfieldcollector.ClassFieldCollector;
@@ -35,6 +35,7 @@ import com.helospark.spark.builder.handlers.codegenerator.component.ImportPopula
 import com.helospark.spark.builder.handlers.codegenerator.component.PrivateInitializingConstructorCreator;
 import com.helospark.spark.builder.handlers.codegenerator.component.RegularBuilderBuilderMethodCreator;
 import com.helospark.spark.builder.handlers.codegenerator.component.RegularBuilderClassCreator;
+import com.helospark.spark.builder.handlers.codegenerator.component.RegularBuilderCopyInstanceBuilderMethodCreator;
 import com.helospark.spark.builder.handlers.codegenerator.component.StagedBuilderClassCreator;
 import com.helospark.spark.builder.handlers.codegenerator.component.StagedBuilderCreationBuilderMethodAdder;
 import com.helospark.spark.builder.handlers.codegenerator.component.StagedBuilderCreationWithMethodAdder;
@@ -44,6 +45,7 @@ import com.helospark.spark.builder.handlers.codegenerator.component.fragment.bui
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.builderclass.buildmethod.BuildMethodCreatorFragment;
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.builderclass.buildmethod.BuildMethodDeclarationCreatorFragment;
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.builderclass.constructor.PrivateConstructorAdderFragment;
+import com.helospark.spark.builder.handlers.codegenerator.component.fragment.builderclass.constructor.RegularBuilderCopyInstanceConstructorAdderFragment;
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.builderclass.field.BuilderFieldAdderFragment;
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.builderclass.field.FieldDeclarationPostProcessor;
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.builderclass.field.FullyQualifiedNameExtractor;
@@ -57,9 +59,14 @@ import com.helospark.spark.builder.handlers.codegenerator.component.fragment.bui
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.builderclass.withmethod.StagedBuilderWithMethodAdderFragment;
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.builderclass.withmethod.StagedBuilderWithMethodDefiniationCreatorFragment;
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.builderclass.withmethod.WithMethodParameterCreatorFragment;
-import com.helospark.spark.builder.handlers.codegenerator.component.fragment.buildermethod.BlockWithNewBuilderCreationFragment;
-import com.helospark.spark.builder.handlers.codegenerator.component.fragment.buildermethod.BuilderMethodDefinitionCreatorFragment;
-import com.helospark.spark.builder.handlers.codegenerator.component.fragment.buildermethod.NewBuilderAndWithMethodCallCreationFragment;
+import com.helospark.spark.builder.handlers.codegenerator.component.fragment.buildermethod.StaticBuilderMethodSignatureGeneratorFragment;
+import com.helospark.spark.builder.handlers.codegenerator.component.fragment.buildermethod.copy.BlockWithNewCopyInstanceConstructorCreationFragment;
+import com.helospark.spark.builder.handlers.codegenerator.component.fragment.buildermethod.copy.CopyInstanceBuilderMethodDefinitionCreatorFragment;
+import com.helospark.spark.builder.handlers.codegenerator.component.fragment.buildermethod.empty.BlockWithNewBuilderCreationFragment;
+import com.helospark.spark.builder.handlers.codegenerator.component.fragment.buildermethod.empty.BuilderMethodDefinitionCreatorFragment;
+import com.helospark.spark.builder.handlers.codegenerator.component.fragment.buildermethod.empty.NewBuilderAndWithMethodCallCreationFragment;
+import com.helospark.spark.builder.handlers.codegenerator.component.fragment.constructor.BuilderFieldAccessCreatorFragment;
+import com.helospark.spark.builder.handlers.codegenerator.component.fragment.constructor.FieldSetterAdderFragment;
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.constructor.PrivateConstructorBodyCreationFragment;
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.constructor.PrivateConstructorInsertionFragment;
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.constructor.PrivateConstructorMethodDefinitionCreationFragment;
@@ -73,6 +80,7 @@ import com.helospark.spark.builder.handlers.codegenerator.component.helper.Field
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.GeneratedAnnotationPopulator;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.ITypeExtractor;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.InterfaceSetter;
+import com.helospark.spark.builder.handlers.codegenerator.component.helper.IsRegularBuilderInstanceCopyEnabledPredicate;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.IsTypeApplicableForBuilderGenerationPredicate;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.JavadocAdder;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.JavadocGenerator;
@@ -84,6 +92,7 @@ import com.helospark.spark.builder.handlers.codegenerator.component.helper.Stage
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.StagedBuilderStagePropertyInputDialogOpener;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.TemplateResolver;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.TypeDeclarationFromSuperclassExtractor;
+import com.helospark.spark.builder.handlers.codegenerator.component.helper.TypeDeclarationToVariableNameConverter;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.domain.BodyDeclarationVisibleFromPredicate;
 import com.helospark.spark.builder.handlers.codegenerator.component.remover.BuilderClassRemover;
 import com.helospark.spark.builder.handlers.codegenerator.component.remover.BuilderRemoverChainItem;
@@ -97,6 +106,8 @@ import com.helospark.spark.builder.handlers.codegenerator.component.remover.help
 import com.helospark.spark.builder.handlers.codegenerator.component.remover.helper.IsPrivatePredicate;
 import com.helospark.spark.builder.handlers.codegenerator.component.remover.helper.IsPublicPredicate;
 import com.helospark.spark.builder.handlers.codegenerator.component.remover.helper.IsStaticPredicate;
+import com.helospark.spark.builder.handlers.codegenerator.converter.RegularBuilderDialogDataConverter;
+import com.helospark.spark.builder.handlers.codegenerator.converter.RegularBuilderUserPreferenceConverter;
 import com.helospark.spark.builder.preferences.PreferencesManager;
 
 public class DiContainer {
@@ -176,16 +187,24 @@ public class DiContainer {
                 getDependency(MarkerAnnotationAttacher.class),
                 getDependency(BuilderMethodNameBuilder.class),
                 getDependency(WithMethodParameterCreatorFragment.class)));
+        addDependency(new BuilderFieldAccessCreatorFragment());
+        addDependency(new TypeDeclarationToVariableNameConverter(getDependency(CamelCaseConverter.class)));
+        addDependency(new FieldSetterAdderFragment(getDependency(BuilderFieldAccessCreatorFragment.class)));
+        addDependency(new IsRegularBuilderInstanceCopyEnabledPredicate());
+        addDependency(
+                new RegularBuilderCopyInstanceConstructorAdderFragment(getDependency(FieldSetterAdderFragment.class), getDependency(TypeDeclarationToVariableNameConverter.class),
+                        getDependency(IsRegularBuilderInstanceCopyEnabledPredicate.class)));
         addDependency(new RegularBuilderClassCreator(getDependency(PrivateConstructorAdderFragment.class),
                 getDependency(EmptyBuilderClassGeneratorFragment.class),
                 getDependency(BuildMethodCreatorFragment.class),
                 getDependency(BuilderFieldAdderFragment.class),
                 getDependency(RegularBuilderWithMethodAdderFragment.class),
-                getDependency(JavadocAdder.class)));
+                getDependency(JavadocAdder.class),
+                getDependency(RegularBuilderCopyInstanceConstructorAdderFragment.class)));
+        addDependency(new StaticBuilderMethodSignatureGeneratorFragment(getDependency(GeneratedAnnotationPopulator.class), getDependency(PreferencesManager.class)));
         addDependency(new BuilderMethodDefinitionCreatorFragment(getDependency(TemplateResolver.class),
                 getDependency(PreferencesManager.class),
-                getDependency(JavadocAdder.class), getDependency(GeneratedAnnotationPopulator.class),
-                getDependency(PreferencesManager.class)));
+                getDependency(JavadocAdder.class), getDependency(StaticBuilderMethodSignatureGeneratorFragment.class)));
         addDependency(new BlockWithNewBuilderCreationFragment());
         addDependency(
                 new RegularBuilderBuilderMethodCreator(getDependency(BlockWithNewBuilderCreationFragment.class),
@@ -193,7 +212,9 @@ public class DiContainer {
         addDependency(new PrivateConstructorMethodDefinitionCreationFragment(getDependency(PreferencesManager.class),
                 getDependency(GeneratedAnnotationPopulator.class),
                 getDependency(CamelCaseConverter.class)));
-        addDependency(new PrivateConstructorBodyCreationFragment(getDependency(CamelCaseConverter.class)));
+        addDependency(new PrivateConstructorBodyCreationFragment(getDependency(TypeDeclarationToVariableNameConverter.class),
+                getDependency(FieldSetterAdderFragment.class),
+                getDependency(BuilderFieldAccessCreatorFragment.class)));
         addDependency(new PrivateConstructorInsertionFragment());
         addDependency(new PrivateInitializingConstructorCreator(
                 getDependency(PrivateConstructorMethodDefinitionCreationFragment.class),
@@ -222,16 +243,29 @@ public class DiContainer {
                 getDependency(ParentITypeExtractor.class)));
         addDependency(new BuilderOwnerClassFinder(getDependency(CurrentlySelectedApplicableClassesClassNameProvider.class),
                 getDependency(PreferencesManager.class), getDependency(GeneratedAnnotationPredicate.class)));
+        addDependency(new BlockWithNewCopyInstanceConstructorCreationFragment());
+        addDependency(new CopyInstanceBuilderMethodDefinitionCreatorFragment(getDependency(TemplateResolver.class),
+                getDependency(PreferencesManager.class),
+                getDependency(JavadocAdder.class), getDependency(StaticBuilderMethodSignatureGeneratorFragment.class)));
+        addDependency(new RegularBuilderCopyInstanceBuilderMethodCreator(getDependency(BlockWithNewCopyInstanceConstructorCreationFragment.class),
+                getDependency(CopyInstanceBuilderMethodDefinitionCreatorFragment.class),
+                getDependency(TypeDeclarationToVariableNameConverter.class),
+                getDependency(IsRegularBuilderInstanceCopyEnabledPredicate.class)));
         addDependency(new RegularBuilderCompilationUnitGenerator(getDependency(RegularBuilderClassCreator.class),
+                getDependency(RegularBuilderCopyInstanceBuilderMethodCreator.class),
                 getDependency(PrivateInitializingConstructorCreator.class),
                 getDependency(RegularBuilderBuilderMethodCreator.class), getDependency(ImportPopulator.class),
                 getDependency(BuilderRemover.class)));
-        addDependency(new RegularBuilderFieldFilterDialogOpener(getDependency(CurrentShellProvider.class)));
-        addDependency(new RegularBuilderFieldFilter(getDependency(RegularBuilderFieldFilterDialogOpener.class)));
+        addDependency(new RegularBuilderUserPreferenceDialogOpener(getDependency(CurrentShellProvider.class)));
+        addDependency(new RegularBuilderDialogDataConverter());
+        addDependency(new RegularBuilderUserPreferenceConverter());
+        addDependency(new RegularBuilderUserPreferenceProvider(getDependency(RegularBuilderUserPreferenceDialogOpener.class),
+                getDependency(PreferencesManager.class),
+                getDependency(RegularBuilderDialogDataConverter.class),
+                getDependency(RegularBuilderUserPreferenceConverter.class)));
         addDependency(new RegularBuilderCompilationUnitGeneratorBuilderFieldCollectingDecorator(getDependency(ApplicableBuilderFieldExtractor.class),
                 getDependency(RegularBuilderCompilationUnitGenerator.class),
-                getDependency(PreferencesManager.class),
-                getDependency(RegularBuilderFieldFilter.class)));
+                getDependency(RegularBuilderUserPreferenceProvider.class)));
         addDependency(new IsEventOnJavaFilePredicate(getDependency(HandlerUtilWrapper.class)));
 
         // staged builder dependencies

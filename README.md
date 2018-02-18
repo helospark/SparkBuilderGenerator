@@ -12,6 +12,7 @@ Features:
  - Compatible with most version of Eclipse
  - Highly configurable, check the plugin's preferences page
  - Capable of generate builder methods for visible fields in superclass
+ - Can generate a builder that can initialize a builder based on an already existing instance
  - Encourages and supports null-safe programming practices
  - Open source (with very permissible MIT license)
 
@@ -52,6 +53,8 @@ Most configuration is on the preferences page: Preferences -> Java -> Spark buil
 | Include parameters as fields from superclass constructor | If set the superclass' constructor parameters will be used to added as fields to the builder and `super(...)` will be called in the constructor. If not set it could cause compilation errors in the generated code. Note: parameters are matched by arguments and not fields in the superclass. | true | - |
 | Always generate builder to first (top level) class | Always generate builder to first (top level) class, this is the mode used before 0.0.9, in this case it's enough if you execute the command anywhere in the file, the builder will always be generated to the first class (usually the only public class). | false | - |
 | Show dialog to filter which fields are included in the builder | Whether to show a field selection dialog when generating a regular builder | false | - |
+| Add method to create a builder based on an instance | Creates a method like `public static Builder builderFrom(Clazz instance)` to initialize the state of the builder based on an already existing instance | false | - |
+| Pattern of static builder method that copies the given domain object | Name of the above method | builderFrom | `[className]` |
 
 ### @Generated annotatation
 
@@ -85,6 +88,9 @@ Most configuration is on the preferences page: Preferences -> Java -> Spark buil
    Generate @param tag to the builder's "with" methods
  - 0.0.13
    Add fields from superclass' constructor to the builder
+ - 0.0.14
+   Add the ability to create a builder based on an already existing instance
+   Dialog UX update
 
 ## The generated code looks like the following:
 

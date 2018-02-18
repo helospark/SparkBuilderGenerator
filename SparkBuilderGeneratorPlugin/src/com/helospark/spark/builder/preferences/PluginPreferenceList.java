@@ -89,9 +89,9 @@ public final class PluginPreferenceList {
             "org.helospark.builder.addGeneratedAnnotationOnStageInterface",
             "Add @Generated annotation on generated interfaces", Boolean.TRUE);
 
-    public static final PluginPreference<Boolean> REGULAR_BUILDER_SHOW_FIELD_FILTERING_DIALOG = new BooleanPluginPreference(
+    public static final PluginPreference<Boolean> REGULAR_BUILDER_SHOW_DIALOG = new BooleanPluginPreference(
             "org.helospark.builder.showFieldFilterDialogForRegularBuilder",
-            "Show dialog to filter which fields are included in the builder", Boolean.FALSE);
+            "Show options dialog before every builder generation", Boolean.FALSE);
 
     public static final PluginPreference<Boolean> INCLUDE_PARAMETERS_FROM_SUPERCLASS_CONSTRUCTOR = new BooleanPluginPreference(
             "org.helospark.builder.includeParametersFromSuperclassConstructor",
@@ -100,6 +100,14 @@ public final class PluginPreferenceList {
     public static final PluginPreference<Boolean> PREFER_TO_USE_EMPTY_SUPERCLASS_CONSTRUCTOR = new BooleanPluginPreference(
             "org.helospark.builder.preferToUseEmptySuperclassConstructor",
             "Prefer to use empty superclass constructor", Boolean.TRUE);
+
+    public static final PluginPreference<Boolean> CREATE_METHOD_TO_INSTANTIATE_BUILDER_BASED_ON_INSTANCE = new BooleanPluginPreference(
+            "org.helospark.builder.createBuilderCopyInstance",
+            "Add method to create a builder based on an instance", Boolean.FALSE);
+
+    public static final PluginPreference<String> COPY_INSTANCE_BUILDER_METHOD_PATTERN = new StringPluginPreference(
+            "org.helospark.builder.copyBuilderInstanceMethodName",
+            "Pattern of static builder method that copies the given domain object", "builderFrom");
 
     public static List<PluginPreferenceGroup> getAllPreferences() {
         return Arrays.asList(createGeneralPreferencesGroup(),
@@ -143,7 +151,9 @@ public final class PluginPreferenceList {
 
     private static PluginPreferenceGroup createRegularBuilderPreferencesGroup() {
         List<PluginPreference<?>> regularBuilderPreferences = new ArrayList<>();
-        regularBuilderPreferences.add(REGULAR_BUILDER_SHOW_FIELD_FILTERING_DIALOG);
+        regularBuilderPreferences.add(REGULAR_BUILDER_SHOW_DIALOG);
+        regularBuilderPreferences.add(CREATE_METHOD_TO_INSTANTIATE_BUILDER_BASED_ON_INSTANCE);
+        regularBuilderPreferences.add(COPY_INSTANCE_BUILDER_METHOD_PATTERN);
         return new PluginPreferenceGroup("Regular builder settings", regularBuilderPreferences);
     }
 }
