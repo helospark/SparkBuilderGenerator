@@ -10,6 +10,7 @@ import org.eclipse.jdt.core.dom.FieldAccess;
 import com.helospark.spark.builder.handlers.codegenerator.domain.BuilderField;
 
 /**
+ * Attaches field copy to the given body. Generated code is something like:
  * <pre>
  * this.firstField = rhsName.firstField;
  * this.secondField = rhsName.secondField;

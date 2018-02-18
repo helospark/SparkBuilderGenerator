@@ -5,22 +5,26 @@ import java.util.List;
 
 import javax.annotation.Generated;
 
+/**
+ * Data for the dialog.
+ * @author helospark
+ */
 public class RegularBuilderDialogData {
     private List<RegularBuilderFieldIncludeFieldIncludeDomain> regularBuilderFieldIncludeFieldIncludeDomains;
-    private boolean shouldCreateCopyMethod;
+    private boolean shouldCreateInstanceCopy;
 
     public List<RegularBuilderFieldIncludeFieldIncludeDomain> getRegularBuilderFieldIncludeFieldIncludeDomains() {
         return regularBuilderFieldIncludeFieldIncludeDomains;
     }
 
-    public boolean isShouldCreateCopyMethod() {
-        return shouldCreateCopyMethod;
+    public boolean isShouldCreateInstanceCopy() {
+        return shouldCreateInstanceCopy;
     }
 
     @Generated("SparkTools")
     private RegularBuilderDialogData(Builder builder) {
         this.regularBuilderFieldIncludeFieldIncludeDomains = builder.regularBuilderFieldIncludeFieldIncludeDomains;
-        this.shouldCreateCopyMethod = builder.shouldCreateCopyMethod;
+        this.shouldCreateInstanceCopy = builder.shouldCreateCopyMethod;
     }
 
     @Generated("SparkTools")

@@ -23,7 +23,7 @@ import com.helospark.spark.builder.handlers.codegenerator.RegularBuilderUserPref
 import com.helospark.spark.builder.handlers.it.dummyService.RegularBuilderFilterDialogAnswerProvider;
 import com.helospark.spark.builder.handlers.it.dummyService.TypeExtractorAnswerProvider;
 
-public class BuilderCopyMethodIT extends BaseBuilderGeneratorIT {
+public class BuilderInstanceCopyIT extends BaseBuilderGeneratorIT {
     @Mock
     private RegularBuilderUserPreferenceDialogOpener regularBuilderUserPreferenceDialogOpener;
     @Mock
@@ -34,8 +34,8 @@ public class BuilderCopyMethodIT extends BaseBuilderGeneratorIT {
     @BeforeMethod
     public void beforeMethod() throws JavaModelException {
         super.init();
-        given(preferenceStore.getBoolean("org.helospark.builder.createBuilderCopyMethod")).willReturn(true);
-        given(preferenceStore.getString("org.helospark.builder.copyBuilderMethodName")).willReturn(of("builderFrom"));
+        given(preferenceStore.getBoolean("org.helospark.builder.createBuilderCopyInstance")).willReturn(true);
+        given(preferenceStore.getString("org.helospark.builder.copyBuilderInstanceMethodName")).willReturn(of("builderFrom"));
 
         underTest = new GenerateRegularBuilderHandler();
     }
@@ -46,7 +46,7 @@ public class BuilderCopyMethodIT extends BaseBuilderGeneratorIT {
         DiContainer.addDependency(regularBuilderUserPreferenceDialogOpener);
     }
 
-    @Test(dataProvider = "testCasesForRegularBuilderCopyMethod")
+    @Test(dataProvider = "testCasesForRegularBuilderCopyInstance")
     public void testCopyMethodForRegularBuilder(String inputFile, String expectedOutputFile) throws Exception {
         // GIVEN
         String input = readClasspathFile(inputFile);
@@ -60,7 +60,7 @@ public class BuilderCopyMethodIT extends BaseBuilderGeneratorIT {
         super.assertEqualsJavaContents(outputCaptor.getValue(), expectedResult);
     }
 
-    @DataProvider(name = "testCasesForRegularBuilderCopyMethod")
+    @DataProvider(name = "testCasesForRegularBuilderCopyInstance")
     public Object[][] regularBuilderExampleFileProvider() {
         return new Object[][] {
                 { "mail_input.tjava", "mail_with_copy_method_output.tjava" },
@@ -94,7 +94,7 @@ public class BuilderCopyMethodIT extends BaseBuilderGeneratorIT {
         };
     }
 
-    @Test(dataProvider = "testCasesForRegularBuilderCopyMethodWithUserChangedDialog")
+    @Test(dataProvider = "testCasesForRegularBuilderCopyInstanceWithUserChangedDialog")
     public void testCopyMethodForRegularBuilderWhenChangingDialogSetting(String inputFile, String expectedOutputFile, boolean dialogPreference) throws Exception {
         // GIVEN
         given(preferenceStore.getBoolean("org.helospark.builder.showFieldFilterDialogForRegularBuilder")).willReturn(true);
@@ -112,8 +112,8 @@ public class BuilderCopyMethodIT extends BaseBuilderGeneratorIT {
         super.assertEqualsJavaContents(outputCaptor.getValue(), expectedResult);
     }
 
-    @DataProvider(name = "testCasesForRegularBuilderCopyMethodWithUserChangedDialog")
-    public Object[][] testCasesForRegularBuilderCopyMethodWithUserChangedDialog() {
+    @DataProvider(name = "testCasesForRegularBuilderCopyInstanceWithUserChangedDialog")
+    public Object[][] testCasesForRegularBuilderCopyInstanceWithUserChangedDialog() {
         return new Object[][] {
                 { "mail_input.tjava", "mail_with_copy_method_output.tjava", true },
                 { "mail_input.tjava", "mail_without_copy_method_output.tjava", false },

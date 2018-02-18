@@ -12,7 +12,7 @@ import com.helospark.spark.builder.preferences.PreferencesManager;
 /**
  * Creates the signature of the builder method.
  * <pre>
- * public static void builder(_not_yet_filled);
+ * public static void builder(_not_yet_filled_);
  * </pre>
  * @author helospark
  */

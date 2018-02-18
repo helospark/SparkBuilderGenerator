@@ -14,7 +14,7 @@ import com.helospark.spark.builder.handlers.codegenerator.component.remover.help
 import com.helospark.spark.builder.handlers.codegenerator.component.remover.helper.IsStaticPredicate;
 
 /**
- * Removes the previously generated static builder creation method and copy builder methods.
+ * Removes the previously generated static builder creation method and copy instance builder methods.
  * @author helospark
  */
 public class StaticBuilderMethodRemover implements BuilderRemoverChainItem {
@@ -52,10 +52,9 @@ public class StaticBuilderMethodRemover implements BuilderRemoverChainItem {
                 .filter(method -> !method.getReturnType2().isPrimitiveType())
                 .collect(Collectors.toList());
         if (foundMethods.size() > 2) {
-            pluginLogger.info("More than 2 methods matching static builder creator found, removing first two. Consider enable @Generated annotation creation for better matching");
+            pluginLogger.warn("More than 2 methods matching static builder creator found, removing first two. Consider enable @Generated annotation creation for better matching");
         }
-        foundMethods
-                .stream()
+        foundMethods.stream()
                 .limit(2)
                 .forEach(method -> rewriter.remove(method, null));
     }

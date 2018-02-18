@@ -2,7 +2,7 @@
 <feature
       id="com.helospark.SparkBuilderGeneratorFeature"
       label="SparkBuilderGeneratorFeature"
-      version="0.0.13.qualifier">
+      version="0.0.14.qualifier">
 
    <description url="ftp://helospark.com/SparkBuilderGeneratorPlugin/">
       Spark builder generator plugin
@@ -44,7 +44,11 @@ Various bugfixes related to overriding previous builder
 Generate @param tag to the builder&apos;s &quot;with&quot; methods
 Logging improvement
 - 0.0.13
-Add fields from superclass' constructor to the builder
+Add fields from superclass&apos; constructor to the builder
+- 0.0.14
+Add the ability to create a builder based on an already existing instance
+Dialog UX update
+
    </description>
 
    <license url="https://opensource.org/licenses/MIT">

@@ -11,7 +11,7 @@ import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.constructor.FieldSetterAdderFragment;
-import com.helospark.spark.builder.handlers.codegenerator.component.helper.IsRegularBuilderCopyMethodEnabledPredicate;
+import com.helospark.spark.builder.handlers.codegenerator.component.helper.IsRegularBuilderInstanceCopyEnabledPredicate;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.TypeDeclarationToVariableNameConverter;
 import com.helospark.spark.builder.handlers.codegenerator.domain.BuilderField;
 import com.helospark.spark.builder.handlers.codegenerator.domain.RegularBuilderUserPreference;
@@ -26,21 +26,21 @@ import com.helospark.spark.builder.handlers.codegenerator.domain.RegularBuilderU
  * </pre>
  * @author helospark
  */
-public class RegularBuilderCopyConstructorAdderFragment {
+public class RegularBuilderCopyInstanceConstructorAdderFragment {
     private FieldSetterAdderFragment fieldSetterAdderFragment;
     private TypeDeclarationToVariableNameConverter typeDeclarationToVariableNameConverter;
-    private IsRegularBuilderCopyMethodEnabledPredicate isRegularBuilderCopyMethodEnabledPredicate;
+    private IsRegularBuilderInstanceCopyEnabledPredicate isRegularBuilderInstanceCopyEnabledPredicate;
 
-    public RegularBuilderCopyConstructorAdderFragment(FieldSetterAdderFragment fieldSetterAdderFragment,
+    public RegularBuilderCopyInstanceConstructorAdderFragment(FieldSetterAdderFragment fieldSetterAdderFragment,
             TypeDeclarationToVariableNameConverter typeDeclarationToVariableNameConverter,
-            IsRegularBuilderCopyMethodEnabledPredicate isRegularBuilderCopyMethodEnabledPredicate) {
+            IsRegularBuilderInstanceCopyEnabledPredicate isRegularBuilderInstanceCopyEnabledPredicate) {
         this.fieldSetterAdderFragment = fieldSetterAdderFragment;
         this.typeDeclarationToVariableNameConverter = typeDeclarationToVariableNameConverter;
-        this.isRegularBuilderCopyMethodEnabledPredicate = isRegularBuilderCopyMethodEnabledPredicate;
+        this.isRegularBuilderInstanceCopyEnabledPredicate = isRegularBuilderInstanceCopyEnabledPredicate;
     }
 
     public void addCopyConstructorIfNeeded(AST ast, TypeDeclaration builderType, TypeDeclaration originalType, RegularBuilderUserPreference preference) {
-        if (isRegularBuilderCopyMethodEnabledPredicate.test(preference)) {
+        if (isRegularBuilderInstanceCopyEnabledPredicate.test(preference)) {
             createCopyConstructor(ast, builderType, originalType, preference.getBuilderFields());
         }
     }
@@ -48,12 +48,12 @@ public class RegularBuilderCopyConstructorAdderFragment {
     private void createCopyConstructor(AST ast, TypeDeclaration builderType, TypeDeclaration originalType, List<BuilderField> builderFields) {
         String originalTypeParameterName = typeDeclarationToVariableNameConverter.convert(originalType);
 
-        Block methodBody = createMethodBody(ast, builderFields, originalTypeParameterName);
+        Block methodBody = createCopyConstructorBody(ast, builderFields, originalTypeParameterName);
         MethodDeclaration copyConstructor = createCopyConstructorWithBody(ast, builderType, originalType, originalTypeParameterName, methodBody);
         builderType.bodyDeclarations().add(copyConstructor);
     }
 
-    private Block createMethodBody(AST ast, List<BuilderField> builderFields, String originalTypeParameterName) {
+    private Block createCopyConstructorBody(AST ast, List<BuilderField> builderFields, String originalTypeParameterName) {
         Block methodBody = ast.newBlock();
         fieldSetterAdderFragment.populateBodyWithFieldSetCalls(ast, originalTypeParameterName, methodBody, builderFields);
         return methodBody;

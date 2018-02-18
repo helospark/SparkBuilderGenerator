@@ -14,7 +14,7 @@ import org.testng.annotations.Test;
 import com.helospark.spark.builder.handlers.GenerateStagedBuilderHandler;
 import com.helospark.spark.builder.handlers.it.dummyService.NoDialogOperationPerformedStagedBuilderDialogAnswerProvider;
 
-public class BuilderCopyMethodForStagedBuilderIT extends BaseBuilderGeneratorIT {
+public class BuilderInstanceCopyForStagedBuilderIT extends BaseBuilderGeneratorIT {
     private NoDialogOperationPerformedStagedBuilderDialogAnswerProvider dialogAnswerProvider = new NoDialogOperationPerformedStagedBuilderDialogAnswerProvider();
 
     @BeforeMethod
@@ -23,8 +23,8 @@ public class BuilderCopyMethodForStagedBuilderIT extends BaseBuilderGeneratorIT 
         underTest = new GenerateStagedBuilderHandler();
         given(stagedBuilderStagePropertyInputDialogOpener.open(any(List.class))).willAnswer(invocation -> dialogAnswerProvider.provideAnswer(invocation));
 
-        given(preferenceStore.getBoolean("org.helospark.builder.createBuilderCopyMethod")).willReturn(true);
-        given(preferenceStore.getString("org.helospark.builder.copyBuilderMethodName")).willReturn(of("builderFrom"));
+        given(preferenceStore.getBoolean("org.helospark.builder.createBuilderCopyInstance")).willReturn(true);
+        given(preferenceStore.getString("org.helospark.builder.copyBuilderInstanceMethodName")).willReturn(of("builderFrom"));
     }
 
     @Test(dataProvider = "baseTestCasesProvider")

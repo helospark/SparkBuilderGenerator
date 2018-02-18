@@ -16,21 +16,35 @@ import org.eclipse.jdt.core.dom.TypeDeclaration;
  * </pre>
  * @author helospark
  */
-public class BlockWithNewCopyBuilderCreationFragment {
+public class BlockWithNewCopyInstanceConstructorCreationFragment {
 
     public Block createReturnBlock(AST ast, TypeDeclaration builderType, String parameterName) {
-        Block builderMethodBlock = ast.newBlock();
-        ReturnStatement returnStatement = ast.newReturnStatement();
+        ClassInstanceCreation builderIntantiation = createClassInstantiation(ast, builderType, parameterName);
+        ReturnStatement returnStatement = createReturnStatementWithInstantiation(ast, builderIntantiation);
+        return createBlockWithReturnStatement(ast, returnStatement);
+    }
+
+    private ClassInstanceCreation createClassInstantiation(AST ast, TypeDeclaration builderType, String parameterName) {
         ClassInstanceCreation newClassInstanceCreation = ast.newClassInstanceCreation();
         newClassInstanceCreation.setType(ast.newSimpleType(ast.newName(builderType.getName().toString())));
         newClassInstanceCreation.arguments().add(createArgument(ast, parameterName));
-        returnStatement.setExpression(newClassInstanceCreation);
-        builderMethodBlock.statements().add(returnStatement);
-        return builderMethodBlock;
+        return newClassInstanceCreation;
     }
 
     private Expression createArgument(AST ast, String parameterName) {
         return ast.newSimpleName(parameterName);
+    }
+
+    private ReturnStatement createReturnStatementWithInstantiation(AST ast, ClassInstanceCreation builderIntantiation) {
+        ReturnStatement returnStatement = ast.newReturnStatement();
+        returnStatement.setExpression(builderIntantiation);
+        return returnStatement;
+    }
+
+    private Block createBlockWithReturnStatement(AST ast, ReturnStatement returnStatement) {
+        Block builderMethodBlock = ast.newBlock();
+        builderMethodBlock.statements().add(returnStatement);
+        return builderMethodBlock;
     }
 
 }

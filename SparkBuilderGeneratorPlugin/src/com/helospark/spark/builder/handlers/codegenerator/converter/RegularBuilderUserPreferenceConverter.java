@@ -17,7 +17,7 @@ public class RegularBuilderUserPreferenceConverter {
     public RegularBuilderUserPreference convertOutput(List<BuilderField> builderFields, RegularBuilderDialogData result) {
         return RegularBuilderUserPreference.builder()
                 .withBuilderFields(filterFieldsBasedOnDialogOutput(builderFields, result.getRegularBuilderFieldIncludeFieldIncludeDomains()))
-                .withGenerateCopyMethod(result.isShouldCreateCopyMethod())
+                .withGenerateCopyMethod(result.isShouldCreateInstanceCopy())
                 .build();
     }
 

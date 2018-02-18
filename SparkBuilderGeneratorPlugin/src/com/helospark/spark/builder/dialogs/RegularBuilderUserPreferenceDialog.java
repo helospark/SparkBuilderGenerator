@@ -73,16 +73,16 @@ public class RegularBuilderUserPreferenceDialog extends Dialog {
      */
     private void createContents() {
         shell = new Shell(getParent(), SWT.SHELL_TRIM | SWT.BORDER | SWT.PRIMARY_MODAL | SWT.SHEET);
-        shell.setSize(338, 376);
+        shell.setSize(418, 376);
         shell.setText("Select fields for builder");
 
         Label lblNewLabel = new Label(shell, SWT.WRAP);
-        lblNewLabel.setBounds(10, 10, 315, 54);
+        lblNewLabel.setBounds(10, 10, 396, 54);
         lblNewLabel.setText("Uncheck fields you do not wish to include in the builder");
 
         checkboxTableViewer = CheckboxTableViewer.newCheckList(shell, SWT.BORDER | SWT.FULL_SELECTION);
         table = checkboxTableViewer.getTable();
-        table.setBounds(10, 47, 315, 214);
+        table.setBounds(10, 33, 396, 228);
         table.setHeaderVisible(true);
         table.setLinesVisible(true);
         checkboxTableViewer.setCheckStateProvider(new ICheckStateProvider() {
@@ -128,7 +128,7 @@ public class RegularBuilderUserPreferenceDialog extends Dialog {
             }
         });
         Button generateButton = new Button(shell, SWT.NONE);
-        generateButton.setBounds(224, 308, 101, 29);
+        generateButton.setBounds(305, 308, 101, 29);
         generateButton.setText("Generate");
         generateButton.addSelectionListener(new SelectionListener() {
 
@@ -150,7 +150,7 @@ public class RegularBuilderUserPreferenceDialog extends Dialog {
         cancelButton.setText("Cancel");
 
         copyBuilderMethodGenerateButton = new Button(shell, SWT.CHECK);
-        copyBuilderMethodGenerateButton.setBounds(10, 277, 316, 22);
+        copyBuilderMethodGenerateButton.setBounds(10, 277, 396, 22);
         copyBuilderMethodGenerateButton.setText("Add method to create a builder based on an instance");
 
         cancelButton.addSelectionListener(new SelectionListener() {
@@ -176,7 +176,7 @@ public class RegularBuilderUserPreferenceDialog extends Dialog {
         dialogData.getRegularBuilderFieldIncludeFieldIncludeDomains()
                 .stream()
                 .forEach(checkboxTableViewer::add);
-        copyBuilderMethodGenerateButton.setSelection(dialogData.isShouldCreateCopyMethod());
+        copyBuilderMethodGenerateButton.setSelection(dialogData.isShouldCreateInstanceCopy());
     }
 
     private RegularBuilderDialogData getResult() {

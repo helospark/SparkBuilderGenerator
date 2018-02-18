@@ -5,6 +5,10 @@ import java.util.List;
 
 import javax.annotation.Generated;
 
+/**
+ * One-time user preference that has to be entered by the user on every builder generation.
+ * @author helospark
+ */
 public class RegularBuilderUserPreference {
     private boolean generateCopyMethod;
     private List<BuilderField> builderFields;

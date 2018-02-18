@@ -1,7 +1,7 @@
 package com.helospark.spark.builder.handlers.codegenerator;
 
-import static com.helospark.spark.builder.preferences.PluginPreferenceList.CREATE_BUILDER_COPY_METHOD;
-import static com.helospark.spark.builder.preferences.PluginPreferenceList.REGULAR_BUILDER_SHOW_FIELD_FILTERING_DIALOG;
+import static com.helospark.spark.builder.preferences.PluginPreferenceList.CREATE_METHOD_TO_INSTANTIATE_BUILDER_BASED_ON_INSTANCE;
+import static com.helospark.spark.builder.preferences.PluginPreferenceList.REGULAR_BUILDER_SHOW_DIALOG;
 
 import java.util.List;
 import java.util.Optional;
@@ -34,20 +34,20 @@ public class RegularBuilderUserPreferenceProvider {
     }
 
     public Optional<RegularBuilderUserPreference> getPreference(List<BuilderField> builderFields) {
-        RegularBuilderUserPreference defaultRregularBuilderUserPreference = createDefaultPreference(builderFields);
-        if (preferencesManager.getPreferenceValue(REGULAR_BUILDER_SHOW_FIELD_FILTERING_DIALOG)) {
-            RegularBuilderDialogData regularBuilderDialogData = regularBuilderDialogDataConverter.convertInput(defaultRregularBuilderUserPreference);
+        RegularBuilderUserPreference defaultBuilderUserPreference = createDefaultPreference(builderFields);
+        if (preferencesManager.getPreferenceValue(REGULAR_BUILDER_SHOW_DIALOG)) {
+            RegularBuilderDialogData regularBuilderDialogData = regularBuilderDialogDataConverter.convertInput(defaultBuilderUserPreference);
             Optional<RegularBuilderDialogData> dialogOutput = regularBuilderUserPreferenceDialogOpener.open(regularBuilderDialogData);
             return dialogOutput.map(result -> regularBuilderUserPreferenceConverter.convertOutput(builderFields, result));
         } else {
-            return Optional.of(defaultRregularBuilderUserPreference);
+            return Optional.of(defaultBuilderUserPreference);
         }
     }
 
     private RegularBuilderUserPreference createDefaultPreference(List<BuilderField> builderFields) {
         return RegularBuilderUserPreference.builder()
                 .withBuilderFields(builderFields)
-                .withGenerateCopyMethod(preferencesManager.getPreferenceValue(CREATE_BUILDER_COPY_METHOD))
+                .withGenerateCopyMethod(preferencesManager.getPreferenceValue(CREATE_METHOD_TO_INSTANTIATE_BUILDER_BASED_ON_INSTANCE))
                 .build();
     }
 

@@ -26,7 +26,7 @@ public class EmailMessage {
     }
 
     /** 
-    * Creates a builder to build {@link EmailMessage} by preinitializing the builder using the given object.
+    * Creates a builder to build {@link EmailMessage} and initialize it with the given object.
     * @param emailMessage to initialize the builder with
     * @return created builder
     */

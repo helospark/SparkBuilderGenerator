@@ -8,7 +8,11 @@ import com.helospark.spark.builder.handlers.codegenerator.domain.BuilderField;
 import com.helospark.spark.builder.handlers.codegenerator.domain.ConstructorParameterSetterBuilderField;
 import com.helospark.spark.builder.handlers.codegenerator.domain.RegularBuilderUserPreference;
 
-public class IsRegularBuilderCopyMethodEnabledPredicate implements Predicate<RegularBuilderUserPreference> {
+/**
+ * Returns whether instance copying is enabled and possible.
+ * @author helospark
+ */
+public class IsRegularBuilderInstanceCopyEnabledPredicate implements Predicate<RegularBuilderUserPreference> {
     private final PluginLogger pluginLogger = new PluginLogger();
 
     @Override
