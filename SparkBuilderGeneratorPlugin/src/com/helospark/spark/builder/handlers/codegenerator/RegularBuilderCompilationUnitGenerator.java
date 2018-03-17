@@ -54,6 +54,7 @@ public class RegularBuilderCompilationUnitGenerator {
 
         listRewrite.insertLast(builderType, null);
         importPopulator.populateImports(compilationUnitModificationDomain);
+
     }
 
 }

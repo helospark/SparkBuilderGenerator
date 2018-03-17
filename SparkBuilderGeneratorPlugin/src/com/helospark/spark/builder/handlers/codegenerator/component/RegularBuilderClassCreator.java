@@ -45,7 +45,6 @@ public class RegularBuilderClassCreator {
 
     public TypeDeclaration createBuilderClass(AST ast, TypeDeclaration originalType, RegularBuilderUserPreference preference) {
         List<BuilderField> builderFields = preference.getBuilderFields();
-
         TypeDeclaration builderType = emptyBuilderClassGeneratorFragment.createBuilderClass(ast, originalType);
         privateConstructorAdderFragment.addEmptyPrivateConstructor(ast, builderType);
         privateCopyInstanceConstructorAdderFragment.addCopyConstructorIfNeeded(ast, builderType, originalType, preference);

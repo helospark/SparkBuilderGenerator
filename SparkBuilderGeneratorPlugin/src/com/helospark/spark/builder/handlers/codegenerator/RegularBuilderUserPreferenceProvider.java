@@ -1,5 +1,6 @@
 package com.helospark.spark.builder.handlers.codegenerator;
 
+import static com.helospark.spark.builder.preferences.PluginPreferenceList.ADD_JACKSON_DESERIALIZE_ANNOTATION;
 import static com.helospark.spark.builder.preferences.PluginPreferenceList.CREATE_METHOD_TO_INSTANTIATE_BUILDER_BASED_ON_INSTANCE;
 import static com.helospark.spark.builder.preferences.PluginPreferenceList.REGULAR_BUILDER_SHOW_DIALOG;
 
@@ -48,6 +49,7 @@ public class RegularBuilderUserPreferenceProvider {
         return RegularBuilderUserPreference.builder()
                 .withBuilderFields(builderFields)
                 .withGenerateCopyMethod(preferencesManager.getPreferenceValue(CREATE_METHOD_TO_INSTANTIATE_BUILDER_BASED_ON_INSTANCE))
+                .withAddJacksonDeserializer(preferencesManager.getPreferenceValue(ADD_JACKSON_DESERIALIZE_ANNOTATION))
                 .build();
     }
 

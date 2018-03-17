@@ -109,6 +109,10 @@ public final class PluginPreferenceList {
             "org.helospark.builder.copyBuilderInstanceMethodName",
             "Pattern of static builder method that copies the given domain object", "builderFrom");
 
+    public static final PluginPreference<Boolean> ADD_JACKSON_DESERIALIZE_ANNOTATION = new BooleanPluginPreference(
+            "org.helospark.builder.addJacksonDeserializeAnnotation",
+            "Add Jackson deserialize (@JsonDeserialize, @JsonPOJOBuilder) annotation", Boolean.FALSE);
+
     public static List<PluginPreferenceGroup> getAllPreferences() {
         return Arrays.asList(createGeneralPreferencesGroup(),
                 createRegularBuilderPreferencesGroup(),
@@ -154,6 +158,7 @@ public final class PluginPreferenceList {
         regularBuilderPreferences.add(REGULAR_BUILDER_SHOW_DIALOG);
         regularBuilderPreferences.add(CREATE_METHOD_TO_INSTANTIATE_BUILDER_BASED_ON_INSTANCE);
         regularBuilderPreferences.add(COPY_INSTANCE_BUILDER_METHOD_PATTERN);
+        regularBuilderPreferences.add(ADD_JACKSON_DESERIALIZE_ANNOTATION);
         return new PluginPreferenceGroup("Regular builder settings", regularBuilderPreferences);
     }
 }
