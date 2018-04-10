@@ -6,6 +6,7 @@ import java.util.List;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 
 import com.helospark.spark.builder.handlers.codegenerator.builderfieldcollector.ClassFieldCollector;
+import com.helospark.spark.builder.handlers.codegenerator.builderfieldcollector.SuperClassSetterFieldCollector;
 import com.helospark.spark.builder.handlers.codegenerator.builderfieldcollector.SuperConstructorParameterCollector;
 import com.helospark.spark.builder.handlers.codegenerator.domain.BuilderField;
 import com.helospark.spark.builder.handlers.codegenerator.domain.ConstructorParameterSetterBuilderField;
@@ -18,20 +19,29 @@ import com.helospark.spark.builder.handlers.codegenerator.domain.ConstructorPara
 public class ApplicableBuilderFieldExtractor {
     private ClassFieldCollector classFieldCollector;
     private SuperConstructorParameterCollector superConstructorParameterCollector;
+    private SuperClassSetterFieldCollector superClassSetterFieldCollector;
 
-    public ApplicableBuilderFieldExtractor(ClassFieldCollector classFieldCollector, SuperConstructorParameterCollector superConstructorParameterCollector) {
+    public ApplicableBuilderFieldExtractor(ClassFieldCollector classFieldCollector, SuperConstructorParameterCollector superConstructorParameterCollector,
+            SuperClassSetterFieldCollector superClassSetterFieldCollector) {
         this.classFieldCollector = classFieldCollector;
         this.superConstructorParameterCollector = superConstructorParameterCollector;
+        this.superClassSetterFieldCollector = superClassSetterFieldCollector;
     }
 
     public List<BuilderField> findBuilderFields(TypeDeclaration typeDeclaration) {
-        List<? extends BuilderField> superConstructorFields = superConstructorParameterCollector.findSuperclassConstructorDeclaration(typeDeclaration);
-        List<? extends BuilderField> classFields = filterFieldsNotAlreadyInList(superConstructorFields,
-                classFieldCollector.findBuilderFieldsRecursively(typeDeclaration, typeDeclaration));
-
         List<BuilderField> applicableFieldDeclarations = new ArrayList<>();
+
+        // TODO: replace with chain:
+        List<? extends BuilderField> superConstructorFields = superConstructorParameterCollector.findSuperclassConstructorDeclaration(typeDeclaration);
         applicableFieldDeclarations.addAll(superConstructorFields);
+
+        List<? extends BuilderField> classFields = filterFieldsNotAlreadyInList(applicableFieldDeclarations,
+                classFieldCollector.findBuilderFieldsRecursively(typeDeclaration, typeDeclaration));
         applicableFieldDeclarations.addAll(classFields);
+
+        List<? extends BuilderField> setterFields = filterFieldsNotAlreadyInList(applicableFieldDeclarations, superClassSetterFieldCollector.collectFields(typeDeclaration));
+        applicableFieldDeclarations.addAll(setterFields);
+
         return applicableFieldDeclarations;
     }
 

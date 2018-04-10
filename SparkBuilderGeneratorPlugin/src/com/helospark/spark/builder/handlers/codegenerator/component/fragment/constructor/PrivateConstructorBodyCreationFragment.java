@@ -13,6 +13,7 @@ import com.helospark.spark.builder.handlers.codegenerator.component.helper.TypeD
 import com.helospark.spark.builder.handlers.codegenerator.domain.BuilderField;
 import com.helospark.spark.builder.handlers.codegenerator.domain.ClassFieldSetterBuilderField;
 import com.helospark.spark.builder.handlers.codegenerator.domain.ConstructorParameterSetterBuilderField;
+import com.helospark.spark.builder.handlers.codegenerator.domain.SuperSetterBasedBuilderField;
 
 /**
  * Creates the body of the private constructor that initializes the class.
@@ -30,19 +31,23 @@ public class PrivateConstructorBodyCreationFragment {
     private TypeDeclarationToVariableNameConverter typeDeclarationToVariableNameConverter;
     private FieldSetterAdderFragment fieldSetterAdderFragment;
     private BuilderFieldAccessCreatorFragment builderFieldAccessCreatorFragment;
+    private SuperSetterMethodAdderFragment superSetterMethodAdderFragment;
 
     public PrivateConstructorBodyCreationFragment(TypeDeclarationToVariableNameConverter typeDeclarationToVariableNameConverter, FieldSetterAdderFragment fieldSetterAdderFragment,
-            BuilderFieldAccessCreatorFragment builderFieldAccessCreatorFragment) {
+            BuilderFieldAccessCreatorFragment builderFieldAccessCreatorFragment, SuperSetterMethodAdderFragment superSetterMethodAdderFragment) {
         this.typeDeclarationToVariableNameConverter = typeDeclarationToVariableNameConverter;
         this.fieldSetterAdderFragment = fieldSetterAdderFragment;
         this.builderFieldAccessCreatorFragment = builderFieldAccessCreatorFragment;
+        this.superSetterMethodAdderFragment = superSetterMethodAdderFragment;
     }
 
     public Block createBody(AST ast, TypeDeclaration builderType, List<BuilderField> builderFields) {
         Block body = ast.newBlock();
+        String builderName = typeDeclarationToVariableNameConverter.convert(builderType);
         populateBodyWithSuperConstructorCall(ast, builderType, body, getFieldsOfClass(builderFields, ConstructorParameterSetterBuilderField.class));
-        fieldSetterAdderFragment.populateBodyWithFieldSetCalls(ast, typeDeclarationToVariableNameConverter.convert(builderType), body,
+        fieldSetterAdderFragment.populateBodyWithFieldSetCalls(ast, builderName, body,
                 getFieldsOfClass(builderFields, ClassFieldSetterBuilderField.class));
+        superSetterMethodAdderFragment.populateBodyWithSuperSetterCalls(ast, builderName, body, getFieldsOfClass(builderFields, SuperSetterBasedBuilderField.class));
         return body;
     }
 

@@ -29,6 +29,7 @@ import com.helospark.spark.builder.handlers.codegenerator.RegularBuilderUserPref
 import com.helospark.spark.builder.handlers.codegenerator.StagedBuilderCompilationUnitGenerator;
 import com.helospark.spark.builder.handlers.codegenerator.StagedBuilderCompilationUnitGeneratorFieldCollectorDecorator;
 import com.helospark.spark.builder.handlers.codegenerator.builderfieldcollector.ClassFieldCollector;
+import com.helospark.spark.builder.handlers.codegenerator.builderfieldcollector.SuperClassSetterFieldCollector;
 import com.helospark.spark.builder.handlers.codegenerator.builderfieldcollector.SuperConstructorParameterCollector;
 import com.helospark.spark.builder.handlers.codegenerator.component.BuilderAstRemover;
 import com.helospark.spark.builder.handlers.codegenerator.component.ImportPopulator;
@@ -70,6 +71,7 @@ import com.helospark.spark.builder.handlers.codegenerator.component.fragment.con
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.constructor.PrivateConstructorBodyCreationFragment;
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.constructor.PrivateConstructorInsertionFragment;
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.constructor.PrivateConstructorMethodDefinitionCreationFragment;
+import com.helospark.spark.builder.handlers.codegenerator.component.fragment.constructor.SuperSetterMethodAdderFragment;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.ActiveJavaEditorOffsetProvider;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.ApplicableFieldVisibilityFilter;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.BuilderMethodNameBuilder;
@@ -212,9 +214,11 @@ public class DiContainer {
         addDependency(new PrivateConstructorMethodDefinitionCreationFragment(getDependency(PreferencesManager.class),
                 getDependency(GeneratedAnnotationPopulator.class),
                 getDependency(CamelCaseConverter.class)));
+        addDependency(new SuperSetterMethodAdderFragment(getDependency(BuilderFieldAccessCreatorFragment.class)));
         addDependency(new PrivateConstructorBodyCreationFragment(getDependency(TypeDeclarationToVariableNameConverter.class),
                 getDependency(FieldSetterAdderFragment.class),
-                getDependency(BuilderFieldAccessCreatorFragment.class)));
+                getDependency(BuilderFieldAccessCreatorFragment.class),
+                getDependency(SuperSetterMethodAdderFragment.class)));
         addDependency(new PrivateConstructorInsertionFragment());
         addDependency(new PrivateInitializingConstructorCreator(
                 getDependency(PrivateConstructorMethodDefinitionCreationFragment.class),
@@ -234,7 +238,11 @@ public class DiContainer {
         addDependency(new SuperConstructorParameterCollector(getDependency(FieldNameToBuilderFieldNameConverter.class),
                 getDependency(PreferencesManager.class), getDependency(TypeDeclarationFromSuperclassExtractor.class),
                 getDependency(BodyDeclarationVisibleFromPredicate.class)));
-        addDependency(new ApplicableBuilderFieldExtractor(getDependency(ClassFieldCollector.class), getDependency(SuperConstructorParameterCollector.class)));
+        addDependency(new SuperClassSetterFieldCollector(getDependency(PreferencesManager.class),
+                getDependency(TypeDeclarationFromSuperclassExtractor.class),
+                getDependency(CamelCaseConverter.class)));
+        addDependency(new ApplicableBuilderFieldExtractor(getDependency(ClassFieldCollector.class), getDependency(SuperConstructorParameterCollector.class),
+                getDependency(SuperClassSetterFieldCollector.class)));
         addDependency(new ActiveJavaEditorOffsetProvider());
         addDependency(new ParentITypeExtractor());
         addDependency(new IsTypeApplicableForBuilderGenerationPredicate(getDependency(ParentITypeExtractor.class)));
