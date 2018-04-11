@@ -5,11 +5,8 @@ import java.util.List;
 
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 
-import com.helospark.spark.builder.handlers.codegenerator.builderfieldcollector.ClassFieldCollector;
-import com.helospark.spark.builder.handlers.codegenerator.builderfieldcollector.SuperClassSetterFieldCollector;
-import com.helospark.spark.builder.handlers.codegenerator.builderfieldcollector.SuperConstructorParameterCollector;
+import com.helospark.spark.builder.handlers.codegenerator.builderfieldcollector.FieldCollectorChainItem;
 import com.helospark.spark.builder.handlers.codegenerator.domain.BuilderField;
-import com.helospark.spark.builder.handlers.codegenerator.domain.ConstructorParameterSetterBuilderField;
 
 /**
  * Filters and converts given fields to {@link BuilderField}.
@@ -17,30 +14,21 @@ import com.helospark.spark.builder.handlers.codegenerator.domain.ConstructorPara
  * @author helospark
  */
 public class ApplicableBuilderFieldExtractor {
-    private ClassFieldCollector classFieldCollector;
-    private SuperConstructorParameterCollector superConstructorParameterCollector;
-    private SuperClassSetterFieldCollector superClassSetterFieldCollector;
+    private List<FieldCollectorChainItem> fieldCollectorChain;
 
-    public ApplicableBuilderFieldExtractor(ClassFieldCollector classFieldCollector, SuperConstructorParameterCollector superConstructorParameterCollector,
-            SuperClassSetterFieldCollector superClassSetterFieldCollector) {
-        this.classFieldCollector = classFieldCollector;
-        this.superConstructorParameterCollector = superConstructorParameterCollector;
-        this.superClassSetterFieldCollector = superClassSetterFieldCollector;
+    public ApplicableBuilderFieldExtractor(List<FieldCollectorChainItem> fieldCollectorChain) {
+        this.fieldCollectorChain = fieldCollectorChain;
     }
 
     public List<BuilderField> findBuilderFields(TypeDeclaration typeDeclaration) {
         List<BuilderField> applicableFieldDeclarations = new ArrayList<>();
 
-        // TODO: replace with chain:
-        List<? extends BuilderField> superConstructorFields = superConstructorParameterCollector.findSuperclassConstructorDeclaration(typeDeclaration);
-        applicableFieldDeclarations.addAll(superConstructorFields);
-
-        List<? extends BuilderField> classFields = filterFieldsNotAlreadyInList(applicableFieldDeclarations,
-                classFieldCollector.findBuilderFieldsRecursively(typeDeclaration, typeDeclaration));
-        applicableFieldDeclarations.addAll(classFields);
-
-        List<? extends BuilderField> setterFields = filterFieldsNotAlreadyInList(applicableFieldDeclarations, superClassSetterFieldCollector.collectFields(typeDeclaration));
-        applicableFieldDeclarations.addAll(setterFields);
+        fieldCollectorChain.stream()
+                .forEach(chainItem -> {
+                    List<? extends BuilderField> newFields = chainItem.collectFields(typeDeclaration);
+                    List<? extends BuilderField> deduplicatedFields = filterFieldsNotAlreadyInList(applicableFieldDeclarations, newFields);
+                    applicableFieldDeclarations.addAll(deduplicatedFields);
+                });
 
         return applicableFieldDeclarations;
     }
@@ -57,7 +45,7 @@ public class ApplicableBuilderFieldExtractor {
 
     private boolean fieldDeclarationsContainConstructorField(List<? extends BuilderField> applicableFields, BuilderField field) {
         for (BuilderField currentField : applicableFields) {
-            if (currentField instanceof ConstructorParameterSetterBuilderField && currentField.getBuilderFieldName().equals(field.getBuilderFieldName())) {
+            if (currentField.getBuilderFieldName().equals(field.getBuilderFieldName())) {
                 return true;
             }
         }

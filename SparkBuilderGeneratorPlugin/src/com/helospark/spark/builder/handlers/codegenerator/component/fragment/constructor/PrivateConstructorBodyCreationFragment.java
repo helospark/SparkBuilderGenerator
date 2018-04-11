@@ -23,6 +23,8 @@ import com.helospark.spark.builder.handlers.codegenerator.domain.SuperSetterBase
  *   super(superField, superField2);
  *   this.firstField = builder.firstField;
  *   this.secondField = builder.secondField;
+ *   setSetterField(builder.setterField);
+ *   setSetterField2(builder.setterField2);
  * }
  * </pre>
  * @author helospark
@@ -44,10 +46,12 @@ public class PrivateConstructorBodyCreationFragment {
     public Block createBody(AST ast, TypeDeclaration builderType, List<BuilderField> builderFields) {
         Block body = ast.newBlock();
         String builderName = typeDeclarationToVariableNameConverter.convert(builderType);
+
         populateBodyWithSuperConstructorCall(ast, builderType, body, getFieldsOfClass(builderFields, ConstructorParameterSetterBuilderField.class));
         fieldSetterAdderFragment.populateBodyWithFieldSetCalls(ast, builderName, body,
                 getFieldsOfClass(builderFields, ClassFieldSetterBuilderField.class));
         superSetterMethodAdderFragment.populateBodyWithSuperSetterCalls(ast, builderName, body, getFieldsOfClass(builderFields, SuperSetterBasedBuilderField.class));
+
         return body;
     }
 

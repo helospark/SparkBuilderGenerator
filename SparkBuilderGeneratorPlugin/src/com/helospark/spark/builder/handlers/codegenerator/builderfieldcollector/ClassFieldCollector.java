@@ -25,7 +25,7 @@ import com.helospark.spark.builder.preferences.PreferencesManager;
  * Collects the field parameters.
  * @author helospark
  */
-public class ClassFieldCollector {
+public class ClassFieldCollector implements FieldCollectorChainItem {
     private FieldNameToBuilderFieldNameConverter fieldNameToBuilderFieldNameConverter;
     private PreferencesManager preferencesManager;
     private TypeDeclarationFromSuperclassExtractor typeDeclarationFromSuperclassExtractor;
@@ -39,7 +39,12 @@ public class ClassFieldCollector {
         this.applicableFieldVisibilityFilter = applicableFieldVisibilityFilter;
     }
 
-    public List<? extends BuilderField> findBuilderFieldsRecursively(TypeDeclaration originalOwnerClasss, TypeDeclaration currentOwnerClass) {
+    @Override
+    public List<? extends BuilderField> collectFields(TypeDeclaration typeDeclaration) {
+        return findBuilderFieldsRecursively(typeDeclaration, typeDeclaration);
+    }
+
+    private List<? extends BuilderField> findBuilderFieldsRecursively(TypeDeclaration originalOwnerClasss, TypeDeclaration currentOwnerClass) {
         List<BuilderField> builderFields = new ArrayList<>();
 
         if (preferencesManager.getPreferenceValue(INCLUDE_VISIBLE_FIELDS_FROM_SUPERCLASS)) {
@@ -87,4 +92,5 @@ public class ClassFieldCollector {
                 .findFirst()
                 .isPresent();
     }
+
 }

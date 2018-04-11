@@ -1,0 +1,10 @@
+package com.helospark.testpackage;
+
+public class TestSuperSuperClass {
+	private String superSuperData;
+
+	public String setSuperSuperData(String superSuperData) {
+		this.superSuperData = superSuperData;
+	}
+
+}

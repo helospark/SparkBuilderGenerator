@@ -1,6 +1,7 @@
 package com.helospark.spark.builder;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.ui.preferences.WorkingCopyManager;
@@ -241,8 +242,10 @@ public class DiContainer {
         addDependency(new SuperClassSetterFieldCollector(getDependency(PreferencesManager.class),
                 getDependency(TypeDeclarationFromSuperclassExtractor.class),
                 getDependency(CamelCaseConverter.class)));
-        addDependency(new ApplicableBuilderFieldExtractor(getDependency(ClassFieldCollector.class), getDependency(SuperConstructorParameterCollector.class),
-                getDependency(SuperClassSetterFieldCollector.class)));
+        addDependency(new ApplicableBuilderFieldExtractor(Arrays.asList(
+                getDependency(SuperConstructorParameterCollector.class),
+                getDependency(ClassFieldCollector.class),
+                getDependency(SuperClassSetterFieldCollector.class))));
         addDependency(new ActiveJavaEditorOffsetProvider());
         addDependency(new ParentITypeExtractor());
         addDependency(new IsTypeApplicableForBuilderGenerationPredicate(getDependency(ParentITypeExtractor.class)));

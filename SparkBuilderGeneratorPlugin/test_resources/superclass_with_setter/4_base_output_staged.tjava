@@ -1,0 +1,51 @@
+package com.helospark.testpackage;
+
+public class TestClass extends TestSuperClass {
+    private String childField;
+
+    private TestClass(Builder builder) {
+        this.childField = builder.childField;
+        super.setData(builder.data);
+    }
+
+    public static IChildFieldStage builder() {
+        return new Builder();
+    }
+
+    public interface IChildFieldStage {
+        public IDataStage withChildField(String childField);
+    }
+
+    public interface IDataStage {
+        public IBuildStage withData(String data);
+    }
+
+    public interface IBuildStage {
+        public TestClass build();
+    }
+
+    public static final class Builder implements IChildFieldStage, IDataStage, IBuildStage {
+        private String childField;
+        private String data;
+
+        private Builder() {
+        }
+
+        @Override
+        public IDataStage withChildField(String childField) {
+            this.childField = childField;
+            return this;
+        }
+
+        @Override
+        public IBuildStage withData(String data) {
+            this.data = data;
+            return this;
+        }
+
+        @Override
+        public TestClass build() {
+            return new TestClass(this);
+        }
+    }
+}

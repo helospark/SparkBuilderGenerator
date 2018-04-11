@@ -62,7 +62,7 @@ public final class PluginPreferenceList {
 
     public static final PluginPreference<Boolean> INCLUDE_SETTER_FIELD_FROM_SUPERCLASS = new BooleanPluginPreference(
             "org.helospark.builder.includeSetterFieldsFromSuperclass",
-            "Include fields with setter from superclass", Boolean.TRUE);
+            "Include fields with setter from superclass", Boolean.FALSE);
 
     public static final PluginPreference<Boolean> INITIALIZE_OPTIONAL_FIELDS_TO_EMPTY = new BooleanPluginPreference(
             "org.helospark.builder.initializeOptionalFieldsToEmpty",
