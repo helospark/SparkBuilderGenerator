@@ -40,7 +40,8 @@ public class SuperClassSetterFieldCollector implements FieldCollectorChainItem {
     @Override
     public List<? extends BuilderField> collect(TypeDeclaration typeDeclaration) {
         if (preferencesManager.getPreferenceValue(INCLUDE_SETTER_FIELDS_FROM_SUPERCLASS)) {
-            return collectFieldsRecursively(typeDeclaration);
+            List<SuperSetterBasedBuilderField> foundFields = collectFieldsRecursively(typeDeclaration);
+            return deduplicateByName(foundFields);
         } else {
             return emptyList();
         }
@@ -90,5 +91,23 @@ public class SuperClassSetterFieldCollector implements FieldCollectorChainItem {
                 .withFieldType(parameter.getType())
                 .withSetterName(methodName)
                 .build();
+    }
+
+    // deduplication is required for overridden setters
+    private List<SuperSetterBasedBuilderField> deduplicateByName(List<SuperSetterBasedBuilderField> fields) {
+        List<SuperSetterBasedBuilderField> result = new ArrayList<>();
+        for (SuperSetterBasedBuilderField field : fields) {
+            if (!alreadyContainsField(result, field)) {
+                result.add(field);
+            }
+        }
+        return result;
+    }
+
+    private boolean alreadyContainsField(List<SuperSetterBasedBuilderField> result, SuperSetterBasedBuilderField field) {
+        return result.stream()
+                .filter(element -> element.getBuilderFieldName().equals(field.getBuilderFieldName()))
+                .findFirst()
+                .isPresent();
     }
 }

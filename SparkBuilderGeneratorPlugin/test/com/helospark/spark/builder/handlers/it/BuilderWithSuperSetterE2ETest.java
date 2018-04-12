@@ -107,17 +107,17 @@ public class BuilderWithSuperSetterE2ETest extends BaseBuilderGeneratorIT {
         super.assertEqualsJavaContents(outputCaptor.getValue(), expectedResult);
     }
 
-    @Test
-    public void testSuperClassWithSetterAndTwoSuperClasses() throws Exception {
+    @Test(dataProvider = "testClassWithTwoSuperclasses")
+    public void testSuperClassWithSetterAndTwoSuperClasses(String inputFileName, String superClass, String superSuperClass, String output) throws Exception {
         // GIVEN
-        String superClassInput = readClasspathFile("superclass_with_setter/3_super_class.tjava");
+        String superClassInput = readClasspathFile(superClass);
         super.setCompilationUnitInput(firstSuperClassICompilationUnit, superClassInput);
 
-        String superSuperClassInput = readClasspathFile("superclass_with_setter/3_super_super_class.tjava");
+        String superSuperClassInput = readClasspathFile(superSuperClass);
         super.setCompilationUnitInput(secondSuperClassICompilationUnit, superSuperClassInput);
 
-        String input = readClasspathFile("superclass_with_setter/1_base_child_input.tjava");
-        String expectedResult = readClasspathFile("superclass_with_setter/3_base_output_with_two_superclass.tjava");
+        String input = readClasspathFile(inputFileName);
+        String expectedResult = readClasspathFile(output);
         super.setInput(input);
 
         // WHEN
@@ -125,6 +125,17 @@ public class BuilderWithSuperSetterE2ETest extends BaseBuilderGeneratorIT {
 
         // THEN
         super.assertEqualsJavaContents(outputCaptor.getValue(), expectedResult);
+    }
+
+    @DataProvider(name = "testClassWithTwoSuperclasses")
+    public Object[][] testClassWithTwoSuperclasses() {
+        return new Object[][] {deduplicateName
+                { "superclass_with_setter/1_base_child_input.tjava", "superclass_with_setter/3_super_class.tjava",
+                        "superclass_with_setter/3_super_super_class.tjava", "superclass_with_setter/3_base_output_with_two_superclass.tjava" },
+                { "superclass_with_setter/1_base_child_input.tjava", "superclass_with_setter/10_super_class_with_overridden_setter.tjava",
+                        "superclass_with_setter/10_super_super_class_with_overridden_setter.tjava", "superclass_with_setter/10_base_output_with_overridden_setter_output.tjava" }
+
+        };
     }
 
     @Test(dataProvider = "superClassWithSuperSetterStagedSettingDataProvider")
