@@ -14,7 +14,7 @@ public class TestClass extends TestSuperClass {
     }
 
     public static final class Builder {
-    	private String constructorData;
+        private String constructorData;
         private String childField;
         private String data;
 

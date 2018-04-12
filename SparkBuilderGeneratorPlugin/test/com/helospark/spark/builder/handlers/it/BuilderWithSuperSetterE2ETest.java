@@ -62,7 +62,6 @@ public class BuilderWithSuperSetterE2ETest extends BaseBuilderGeneratorIT {
     @Test(dataProvider = "superClassWithSetterDataProvider")
     public void testSuperClassWithSetters(String inputFile, String superClassFile, String expectedOutputFile) throws Exception {
         // GIVEN
-
         String superClassInput = readClasspathFile(superClassFile);
         super.setCompilationUnitInput(firstSuperClassICompilationUnit, superClassInput);
 
