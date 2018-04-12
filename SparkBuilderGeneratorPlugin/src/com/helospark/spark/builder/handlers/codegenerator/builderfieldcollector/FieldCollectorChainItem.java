@@ -13,10 +13,10 @@ import com.helospark.spark.builder.handlers.codegenerator.domain.BuilderField;
 public interface FieldCollectorChainItem {
 
     /**
-     * Collect field for tyoe.
+     * Collect field for type.
      * @param typeDeclaration to collect fields from
      * @return collected fields
      */
-    public List<? extends BuilderField> collectFields(TypeDeclaration typeDeclaration);
+    public List<? extends BuilderField> collect(TypeDeclaration typeDeclaration);
 
 }

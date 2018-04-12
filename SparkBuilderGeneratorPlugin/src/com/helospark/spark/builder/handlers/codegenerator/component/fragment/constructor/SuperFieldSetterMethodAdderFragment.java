@@ -17,10 +17,10 @@ import com.helospark.spark.builder.handlers.codegenerator.domain.SuperSetterBase
  * </pre>
  * @author helospark
  */
-public class SuperSetterMethodAdderFragment {
+public class SuperFieldSetterMethodAdderFragment {
     private BuilderFieldAccessCreatorFragment builderFieldAccessCreatorFragment;
 
-    public SuperSetterMethodAdderFragment(BuilderFieldAccessCreatorFragment builderFieldAccessCreatorFragment) {
+    public SuperFieldSetterMethodAdderFragment(BuilderFieldAccessCreatorFragment builderFieldAccessCreatorFragment) {
         this.builderFieldAccessCreatorFragment = builderFieldAccessCreatorFragment;
     }
 

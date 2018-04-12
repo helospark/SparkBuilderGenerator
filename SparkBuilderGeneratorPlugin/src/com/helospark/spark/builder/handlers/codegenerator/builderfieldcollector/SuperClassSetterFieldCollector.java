@@ -38,7 +38,7 @@ public class SuperClassSetterFieldCollector implements FieldCollectorChainItem {
     }
 
     @Override
-    public List<? extends BuilderField> collectFields(TypeDeclaration typeDeclaration) {
+    public List<? extends BuilderField> collect(TypeDeclaration typeDeclaration) {
         if (preferencesManager.getPreferenceValue(INCLUDE_SETTER_FIELDS_FROM_SUPERCLASS)) {
             return collectFieldsRecursively(typeDeclaration);
         } else {
@@ -50,8 +50,10 @@ public class SuperClassSetterFieldCollector implements FieldCollectorChainItem {
         List<SuperSetterBasedBuilderField> result = new ArrayList<>();
         Optional<TypeDeclaration> superClassType = typeDeclarationFromSuperclassExtractor.extractTypeDeclarationFromSuperClass(typeDeclaration);
 
-        superClassType.ifPresent(type -> result.addAll(findParametersWithSettersInType(type)));
-        superClassType.ifPresent(type -> result.addAll(collectFieldsRecursively(type)));
+        superClassType.ifPresent(type -> {
+            result.addAll(findParametersWithSettersInType(type));
+            result.addAll(collectFieldsRecursively(type));
+        });
 
         return result;
     }

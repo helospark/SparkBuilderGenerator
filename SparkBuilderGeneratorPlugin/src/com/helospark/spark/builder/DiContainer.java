@@ -72,7 +72,7 @@ import com.helospark.spark.builder.handlers.codegenerator.component.fragment.con
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.constructor.PrivateConstructorBodyCreationFragment;
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.constructor.PrivateConstructorInsertionFragment;
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.constructor.PrivateConstructorMethodDefinitionCreationFragment;
-import com.helospark.spark.builder.handlers.codegenerator.component.fragment.constructor.SuperSetterMethodAdderFragment;
+import com.helospark.spark.builder.handlers.codegenerator.component.fragment.constructor.SuperFieldSetterMethodAdderFragment;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.ActiveJavaEditorOffsetProvider;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.ApplicableFieldVisibilityFilter;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.BuilderMethodNameBuilder;
@@ -215,11 +215,11 @@ public class DiContainer {
         addDependency(new PrivateConstructorMethodDefinitionCreationFragment(getDependency(PreferencesManager.class),
                 getDependency(GeneratedAnnotationPopulator.class),
                 getDependency(CamelCaseConverter.class)));
-        addDependency(new SuperSetterMethodAdderFragment(getDependency(BuilderFieldAccessCreatorFragment.class)));
+        addDependency(new SuperFieldSetterMethodAdderFragment(getDependency(BuilderFieldAccessCreatorFragment.class)));
         addDependency(new PrivateConstructorBodyCreationFragment(getDependency(TypeDeclarationToVariableNameConverter.class),
                 getDependency(FieldSetterAdderFragment.class),
                 getDependency(BuilderFieldAccessCreatorFragment.class),
-                getDependency(SuperSetterMethodAdderFragment.class)));
+                getDependency(SuperFieldSetterMethodAdderFragment.class)));
         addDependency(new PrivateConstructorInsertionFragment());
         addDependency(new PrivateInitializingConstructorCreator(
                 getDependency(PrivateConstructorMethodDefinitionCreationFragment.class),

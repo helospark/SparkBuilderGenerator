@@ -33,14 +33,14 @@ public class PrivateConstructorBodyCreationFragment {
     private TypeDeclarationToVariableNameConverter typeDeclarationToVariableNameConverter;
     private FieldSetterAdderFragment fieldSetterAdderFragment;
     private BuilderFieldAccessCreatorFragment builderFieldAccessCreatorFragment;
-    private SuperSetterMethodAdderFragment superSetterMethodAdderFragment;
+    private SuperFieldSetterMethodAdderFragment superFieldSetterMethodAdderFragment;
 
     public PrivateConstructorBodyCreationFragment(TypeDeclarationToVariableNameConverter typeDeclarationToVariableNameConverter, FieldSetterAdderFragment fieldSetterAdderFragment,
-            BuilderFieldAccessCreatorFragment builderFieldAccessCreatorFragment, SuperSetterMethodAdderFragment superSetterMethodAdderFragment) {
+            BuilderFieldAccessCreatorFragment builderFieldAccessCreatorFragment, SuperFieldSetterMethodAdderFragment superFieldSetterMethodAdderFragment) {
         this.typeDeclarationToVariableNameConverter = typeDeclarationToVariableNameConverter;
         this.fieldSetterAdderFragment = fieldSetterAdderFragment;
         this.builderFieldAccessCreatorFragment = builderFieldAccessCreatorFragment;
-        this.superSetterMethodAdderFragment = superSetterMethodAdderFragment;
+        this.superFieldSetterMethodAdderFragment = superFieldSetterMethodAdderFragment;
     }
 
     public Block createBody(AST ast, TypeDeclaration builderType, List<BuilderField> builderFields) {
@@ -50,7 +50,7 @@ public class PrivateConstructorBodyCreationFragment {
         populateBodyWithSuperConstructorCall(ast, builderType, body, getFieldsOfClass(builderFields, ConstructorParameterSetterBuilderField.class));
         fieldSetterAdderFragment.populateBodyWithFieldSetCalls(ast, builderName, body,
                 getFieldsOfClass(builderFields, ClassFieldSetterBuilderField.class));
-        superSetterMethodAdderFragment.populateBodyWithSuperSetterCalls(ast, builderName, body, getFieldsOfClass(builderFields, SuperSetterBasedBuilderField.class));
+        superFieldSetterMethodAdderFragment.populateBodyWithSuperSetterCalls(ast, builderName, body, getFieldsOfClass(builderFields, SuperSetterBasedBuilderField.class));
 
         return body;
     }

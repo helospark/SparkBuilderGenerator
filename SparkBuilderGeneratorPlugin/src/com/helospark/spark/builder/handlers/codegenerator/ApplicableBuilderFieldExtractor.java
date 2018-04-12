@@ -24,8 +24,8 @@ public class ApplicableBuilderFieldExtractor {
         List<BuilderField> applicableFieldDeclarations = new ArrayList<>();
 
         fieldCollectorChain.stream()
-                .forEach(chainItem -> {
-                    List<? extends BuilderField> newFields = chainItem.collectFields(typeDeclaration);
+                .forEach(fieldCollector -> {
+                    List<? extends BuilderField> newFields = fieldCollector.collect(typeDeclaration);
                     List<? extends BuilderField> deduplicatedFields = filterFieldsNotAlreadyInList(applicableFieldDeclarations, newFields);
                     applicableFieldDeclarations.addAll(deduplicatedFields);
                 });
@@ -36,14 +36,14 @@ public class ApplicableBuilderFieldExtractor {
     private List<? extends BuilderField> filterFieldsNotAlreadyInList(List<? extends BuilderField> applicableFields, List<? extends BuilderField> toFilter) {
         List<BuilderField> result = new ArrayList<>();
         for (BuilderField field : toFilter) {
-            if (!fieldDeclarationsContainConstructorField(applicableFields, field)) {
+            if (!fieldDeclarationsAlreadyContainedField(applicableFields, field)) {
                 result.add(field);
             }
         }
         return result;
     }
 
-    private boolean fieldDeclarationsContainConstructorField(List<? extends BuilderField> applicableFields, BuilderField field) {
+    private boolean fieldDeclarationsAlreadyContainedField(List<? extends BuilderField> applicableFields, BuilderField field) {
         for (BuilderField currentField : applicableFields) {
             if (currentField.getBuilderFieldName().equals(field.getBuilderFieldName())) {
                 return true;

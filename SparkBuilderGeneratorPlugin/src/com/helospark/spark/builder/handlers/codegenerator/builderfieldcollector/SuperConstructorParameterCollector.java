@@ -41,7 +41,7 @@ public class SuperConstructorParameterCollector implements FieldCollectorChainIt
     }
 
     @Override
-    public List<? extends BuilderField> collectFields(TypeDeclaration typeDeclaration) {
+    public List<? extends BuilderField> collect(TypeDeclaration typeDeclaration) {
         if (preferencesManager.getPreferenceValue(INCLUDE_PARAMETERS_FROM_SUPERCLASS_CONSTRUCTOR)) {
             return typeDeclarationFromSuperclassExtractor.extractTypeDeclarationFromSuperClass(typeDeclaration)
                     .map(parentTypeDeclaration -> findConstructorToUse(typeDeclaration, parentTypeDeclaration))
