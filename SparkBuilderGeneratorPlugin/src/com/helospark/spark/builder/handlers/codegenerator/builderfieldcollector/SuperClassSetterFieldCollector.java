@@ -1,6 +1,6 @@
 package com.helospark.spark.builder.handlers.codegenerator.builderfieldcollector;
 
-import static com.helospark.spark.builder.preferences.PluginPreferenceList.INCLUDE_SETTER_FIELD_FROM_SUPERCLASS;
+import static com.helospark.spark.builder.preferences.PluginPreferenceList.INCLUDE_SETTER_FIELDS_FROM_SUPERCLASS;
 import static java.util.Collections.emptyList;
 
 import java.util.ArrayList;
@@ -39,7 +39,7 @@ public class SuperClassSetterFieldCollector implements FieldCollectorChainItem {
 
     @Override
     public List<? extends BuilderField> collectFields(TypeDeclaration typeDeclaration) {
-        if (preferencesManager.getPreferenceValue(INCLUDE_SETTER_FIELD_FROM_SUPERCLASS)) {
+        if (preferencesManager.getPreferenceValue(INCLUDE_SETTER_FIELDS_FROM_SUPERCLASS)) {
             return collectFieldsRecursively(typeDeclaration);
         } else {
             return emptyList();
@@ -66,21 +66,6 @@ public class SuperClassSetterFieldCollector implements FieldCollectorChainItem {
                 .collect(Collectors.toList());
     }
 
-    private SuperSetterBasedBuilderField createBuilderField(MethodDeclaration method) {
-        String methodName = method.getName().toString();
-        String upperCamelCaseName = methodName.replaceFirst(SETTER_METHOD_PREFIX, "");
-        String fieldName = camelCaseConverter.toLowerCamelCase(upperCamelCaseName);
-
-        SingleVariableDeclaration parameter = (SingleVariableDeclaration) method.parameters().get(0);
-
-        return SuperSetterBasedBuilderField.builder()
-                .withBuilderFieldName(fieldName)
-                .withOriginalFieldName(fieldName)
-                .withFieldType(parameter.getType())
-                .withSetterName(method.getName().toString())
-                .build();
-    }
-
     private boolean isMethod(BodyDeclaration declaration) {
         return declaration instanceof MethodDeclaration;
     }
@@ -88,5 +73,20 @@ public class SuperClassSetterFieldCollector implements FieldCollectorChainItem {
     private boolean isSetter(MethodDeclaration method) {
         String methodName = method.getName().toString();
         return method.parameters().size() == 1 && methodName.startsWith(SETTER_METHOD_PREFIX);
+    }
+
+    private SuperSetterBasedBuilderField createBuilderField(MethodDeclaration method) {
+        String methodName = method.getName().toString();
+        String upperCamelCaseFieldName = methodName.replaceFirst(SETTER_METHOD_PREFIX, "");
+        String fieldName = camelCaseConverter.toLowerCamelCase(upperCamelCaseFieldName);
+
+        SingleVariableDeclaration parameter = (SingleVariableDeclaration) method.parameters().get(0);
+
+        return SuperSetterBasedBuilderField.builder()
+                .withBuilderFieldName(fieldName)
+                .withOriginalFieldName(fieldName)
+                .withFieldType(parameter.getType())
+                .withSetterName(methodName)
+                .build();
     }
 }

@@ -60,7 +60,7 @@ public final class PluginPreferenceList {
             "org.helospark.builder.includeVisibleFieldsFromSuperclass",
             "Include visible fields from superclass", Boolean.TRUE);
 
-    public static final PluginPreference<Boolean> INCLUDE_SETTER_FIELD_FROM_SUPERCLASS = new BooleanPluginPreference(
+    public static final PluginPreference<Boolean> INCLUDE_SETTER_FIELDS_FROM_SUPERCLASS = new BooleanPluginPreference(
             "org.helospark.builder.includeSetterFieldsFromSuperclass",
             "Include fields with setter from superclass", Boolean.FALSE);
 
@@ -137,7 +137,7 @@ public final class PluginPreferenceList {
         generalPreferences.add(OVERRIDE_PREVIOUS_BUILDER);
         generalPreferences.add(REMOVE_PREFIX_AND_SUFFIX_FROM_BUILDER_NAMES);
         generalPreferences.add(INCLUDE_VISIBLE_FIELDS_FROM_SUPERCLASS);
-        generalPreferences.add(INCLUDE_SETTER_FIELD_FROM_SUPERCLASS);
+        generalPreferences.add(INCLUDE_SETTER_FIELDS_FROM_SUPERCLASS);
         generalPreferences.add(INCLUDE_PARAMETERS_FROM_SUPERCLASS_CONSTRUCTOR);
         generalPreferences.add(PREFER_TO_USE_EMPTY_SUPERCLASS_CONSTRUCTOR);
         generalPreferences.add(ALWAYS_GENERATE_BUILDER_TO_FIRST_CLASS);

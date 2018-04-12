@@ -1,0 +1,15 @@
+package com.helospark.testpackage;
+
+public class TestSuperClass {
+    private String constructorData;
+    private String data;
+
+    public TestSuperClass(String constructorData) {
+        this.constructorData = constructorData;
+    }
+
+    public String setData(String data) {
+        this.data = data;
+    }
+
+}

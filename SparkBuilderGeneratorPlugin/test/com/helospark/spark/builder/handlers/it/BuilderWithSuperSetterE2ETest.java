@@ -86,8 +86,26 @@ public class BuilderWithSuperSetterE2ETest extends BaseBuilderGeneratorIT {
                         "superclass_with_setter/2_base_output_with_duplicated_field.tjava" },
                 { "superclass_with_setter/1_base_child_input.tjava", "superclass_with_setter/6_base_super_input_with_wrong_setter.tjava",
                         "superclass_with_setter/6_base_output_with_wrong_setter.tjava" }
-
         };
+    }
+
+    @Test
+    public void testSuperClassWithSettersWhenSettingIsTurnedOff() throws Exception {
+        // GIVEN
+        given(preferenceStore.getBoolean("org.helospark.builder.includeSetterFieldsFromSuperclass")).willReturn(false);
+
+        String superClassInput = readClasspathFile("superclass_with_setter/1_base_super_input.tjava");
+        super.setCompilationUnitInput(firstSuperClassICompilationUnit, superClassInput);
+
+        String input = readClasspathFile("superclass_with_setter/1_base_child_input.tjava");
+        String expectedResult = readClasspathFile("superclass_with_setter/9_turned_off_setting_output.tjava");
+        super.setInput(input);
+
+        // WHEN
+        underTest.execute(dummyExecutionEvent);
+
+        // THEN
+        super.assertEqualsJavaContents(outputCaptor.getValue(), expectedResult);
     }
 
     @Test
@@ -111,7 +129,7 @@ public class BuilderWithSuperSetterE2ETest extends BaseBuilderGeneratorIT {
     }
 
     @Test(dataProvider = "superClassWithSuperSetterStagedSettingDataProvider")
-    public void testSuperClassWithConstructorStagedTest(String inputFile, String superClassFile, String expectedOutputFile) throws Exception {
+    public void testSuperClassWithSetterGenerationForStagedBuilder(String inputFile, String superClassFile, String expectedOutputFile) throws Exception {
         // GIVEN
         // set staged builder
         underTest = new GenerateStagedBuilderHandler();
@@ -140,7 +158,7 @@ public class BuilderWithSuperSetterE2ETest extends BaseBuilderGeneratorIT {
     }
 
     @Test
-    public void testClassWithoutSuperclass() throws Exception {
+    public void testSetterGenerationWithoutSuperclass() throws Exception {
         // GIVEN
         String input = readClasspathFile("superclass_with_setter/5_base_child_input_without_superclass.tjava");
         String expectedResult = readClasspathFile("superclass_with_setter/5_base_output_without_superclass.tjava");
@@ -151,5 +169,34 @@ public class BuilderWithSuperSetterE2ETest extends BaseBuilderGeneratorIT {
 
         // THEN
         super.assertEqualsJavaContents(outputCaptor.getValue(), expectedResult);
+    }
+
+    @Test(dataProvider = "superClassWithSetterAndDataProviderDataProvider")
+    public void testSuperClassWithBothSettersAndConstructor(String inputFile, String superClassFile, String expectedOutputFile) throws Exception {
+        // GIVEN
+        given(preferenceStore.getBoolean("org.helospark.builder.includeParametersFromSuperclassConstructor")).willReturn(true);
+
+        String superClassInput = readClasspathFile(superClassFile);
+        super.setCompilationUnitInput(firstSuperClassICompilationUnit, superClassInput);
+
+        String input = readClasspathFile(inputFile);
+        String expectedResult = readClasspathFile(expectedOutputFile);
+        super.setInput(input);
+
+        // WHEN
+        underTest.execute(dummyExecutionEvent);
+
+        // THEN
+        super.assertEqualsJavaContents(outputCaptor.getValue(), expectedResult);
+    }
+
+    @DataProvider(name = "superClassWithSetterAndDataProviderDataProvider")
+    public Object[][] superClassWithSetterAndDataProviderDataProvider() {
+        return new Object[][] {
+                { "superclass_with_setter/1_base_child_input.tjava", "superclass_with_setter/7_base_super_input_with_constructor.tjava",
+                        "superclass_with_setter/7_base_output_with_constructor.tjava" },
+                { "superclass_with_setter/1_base_child_input.tjava", "superclass_with_setter/8_base_super_input_with_constructor_and_setter.tjava",
+                        "superclass_with_setter/8_base_output_with_deduplicated_field.tjava" },
+        };
     }
 }
