@@ -1,0 +1,5 @@
+package com.helospark.testpackage;
+
+public class TestClass {
+	private String childField;
+}

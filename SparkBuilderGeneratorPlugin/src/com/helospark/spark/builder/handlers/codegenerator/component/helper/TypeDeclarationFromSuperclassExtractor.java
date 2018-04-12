@@ -2,7 +2,7 @@ package com.helospark.spark.builder.handlers.codegenerator.component.helper;
 
 import static java.util.Collections.emptyList;
 import static java.util.Optional.empty;
-import static java.util.Optional.of;
+import static java.util.Optional.ofNullable;
 
 import java.util.List;
 import java.util.Optional;
@@ -51,9 +51,9 @@ public class TypeDeclarationFromSuperclassExtractor {
     private Optional<CompilationUnit> getCompilationUnit(IType superClassType) {
         Optional<CompilationUnit> result = empty();
         if (superClassType.getCompilationUnit() != null) {
-            result = of(compilationUnitParser.parse(superClassType.getCompilationUnit()));
+            result = ofNullable(compilationUnitParser.parse(superClassType.getCompilationUnit()));
         } else if (superClassType.getClassFile() != null) {
-            result = of(compilationUnitParser.parse(superClassType.getClassFile()));
+            result = ofNullable(compilationUnitParser.parse(superClassType.getClassFile()));
         }
         return result;
     }
