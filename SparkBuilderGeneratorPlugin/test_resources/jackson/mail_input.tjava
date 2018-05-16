@@ -1,0 +1,4 @@
+public class EmailMessage {
+    private String from;
+    private String to;
+}

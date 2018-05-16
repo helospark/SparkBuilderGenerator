@@ -13,6 +13,12 @@ import com.helospark.spark.builder.handlers.ImportRepository;
 import com.helospark.spark.builder.handlers.codegenerator.domain.CompilationUnitModificationDomain;
 import com.helospark.spark.builder.preferences.StaticPreferences;
 
+/**
+ * Adds {@literal @}JsonDeserialize annotation to the class where the builder is generated.
+ * <p>
+ * Note, that the same ListRewriter cannot be used to add the builder class and to change the modifier on the main type.
+ * @author helospark
+ */
 public class JsonDeserializeAdder {
     private ImportRepository importRepository;
 

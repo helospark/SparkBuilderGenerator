@@ -14,6 +14,10 @@ import org.eclipse.jdt.core.dom.rewrite.ListRewrite;
 import com.helospark.spark.builder.preferences.PluginPreferenceList;
 import com.helospark.spark.builder.preferences.PreferencesManager;
 
+/**
+ * Removes the {@literal @}JsonDeserialize from the previous class.
+ * @author helospark
+ */
 public class JsonDeserializeRemover implements BuilderRemoverChainItem {
     private PreferencesManager preferencesManager;
 

@@ -18,6 +18,10 @@ import com.helospark.spark.builder.handlers.ImportRepository;
 import com.helospark.spark.builder.preferences.PreferencesManager;
 import com.helospark.spark.builder.preferences.StaticPreferences;
 
+/**
+ * Adds {@literal @}JsonPOJOBuulder annotation to the given builder type.
+ * @author helospark
+ */
 public class JsonPOJOBuilderAdderFragment {
     private static final String WITH_METHOD_PREFIX_DEFAULT_VALUE = "with";
     private static final String BUILD_METHOD_NAME_DEFAULT_VALUE = "build";
