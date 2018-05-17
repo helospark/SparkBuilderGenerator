@@ -1,5 +1,6 @@
 package com.helospark.spark.builder.handlers.codegenerator.component.remover;
 
+import static com.helospark.spark.builder.preferences.PluginPreferenceList.ADD_JACKSON_DESERIALIZE_ANNOTATION;
 import static com.helospark.spark.builder.preferences.StaticPreferences.JSON_DESERIALIZE_CLASS_NAME;
 
 import java.util.List;
@@ -11,7 +12,6 @@ import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.jdt.core.dom.rewrite.ASTRewrite;
 import org.eclipse.jdt.core.dom.rewrite.ListRewrite;
 
-import com.helospark.spark.builder.preferences.PluginPreferenceList;
 import com.helospark.spark.builder.preferences.PreferencesManager;
 
 /**
@@ -27,7 +27,7 @@ public class JsonDeserializeRemover implements BuilderRemoverChainItem {
 
     @Override
     public void remove(ASTRewrite rewriter, TypeDeclaration mainType) {
-        if (preferencesManager.getPreferenceValue(PluginPreferenceList.ADD_JACKSON_DESERIALIZE_ANNOTATION)) {
+        if (preferencesManager.getPreferenceValue(ADD_JACKSON_DESERIALIZE_ANNOTATION)) {
             ((List<IExtendedModifier>) mainType.modifiers())
                     .stream()
                     .filter(modifier -> modifier instanceof NormalAnnotation)

@@ -2,6 +2,7 @@ package com.helospark.spark.builder.handlers.codegenerator.component.fragment.bu
 
 import static com.helospark.spark.builder.preferences.PluginPreferenceList.BUILDERS_METHOD_NAME_PATTERN;
 import static com.helospark.spark.builder.preferences.PluginPreferenceList.BUILD_METHOD_NAME_PATTERN;
+import static com.helospark.spark.builder.preferences.StaticPreferences.JSON_POJO_BUILDER_CLASS_NAME;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -9,6 +10,7 @@ import java.util.regex.Pattern;
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.Annotation;
 import org.eclipse.jdt.core.dom.Expression;
+import org.eclipse.jdt.core.dom.MarkerAnnotation;
 import org.eclipse.jdt.core.dom.MemberValuePair;
 import org.eclipse.jdt.core.dom.NormalAnnotation;
 import org.eclipse.jdt.core.dom.StringLiteral;
@@ -23,8 +25,8 @@ import com.helospark.spark.builder.preferences.StaticPreferences;
  * @author helospark
  */
 public class JsonPOJOBuilderAdderFragment {
-    private static final String WITH_METHOD_PREFIX_DEFAULT_VALUE = "with";
-    private static final String BUILD_METHOD_NAME_DEFAULT_VALUE = "build";
+    private static final String DEFAULT_WITH_METHOD_ATTRIBUTE_VALUE = "with";
+    private static final String DEFAULT_BUILDER_METHOD_NAME_ATTRIBUTE_VALUE = "build";
     private static final Pattern PREFIX_PATTERN = Pattern.compile("(.*?)\\[.*");
     private PreferencesManager preferencesManager;
     private ImportRepository importRepository;
@@ -41,50 +43,60 @@ public class JsonPOJOBuilderAdderFragment {
     }
 
     private Annotation createJsonPojoBuilderAnnotation(AST ast) {
+        String buildMethodName = getBuilderMethodName();
+        String withMethodPrefix = getWithMethodPrefix();
+
         Annotation result;
-
-        String buildMethodName = preferencesManager.getPreferenceValue(BUILD_METHOD_NAME_PATTERN);
-        String prefixName = getPrefixName();
-
-        if (buildMethodName.equals(BUILD_METHOD_NAME_DEFAULT_VALUE) && prefixName.equals(WITH_METHOD_PREFIX_DEFAULT_VALUE)) {
-            result = ast.newMarkerAnnotation();
+        if (buildMethodName.equals(DEFAULT_BUILDER_METHOD_NAME_ATTRIBUTE_VALUE) && withMethodPrefix.equals(DEFAULT_WITH_METHOD_ATTRIBUTE_VALUE)) {
+            result = createEmptyJsonPojoBuilderAnnotation(ast);
         } else {
-            NormalAnnotation ann = ast.newNormalAnnotation();
-
-            MemberValuePair buildMethodNameAttribute = ast.newMemberValuePair();
-            buildMethodNameAttribute.setName(ast.newSimpleName("buildMethodName"));
-            buildMethodNameAttribute.setValue(createStringLitereal(ast, buildMethodName));
-
-            MemberValuePair withPrefixAttribute = ast.newMemberValuePair();
-            withPrefixAttribute.setName(ast.newSimpleName("withPrefix"));
-            withPrefixAttribute.setValue(createStringLitereal(ast, prefixName));
-
-            ann.values().add(buildMethodNameAttribute);
-            ann.values().add(withPrefixAttribute);
-
-            result = ann;
+            result = createJsonPojoBuilderAnnotationWithAttributes(ast, buildMethodName, withMethodPrefix);
         }
-        result.setTypeName(ast.newSimpleName(StaticPreferences.JSON_POJO_BUILDER_CLASS_NAME));
+        result.setTypeName(ast.newSimpleName(JSON_POJO_BUILDER_CLASS_NAME));
 
         return result;
+    }
+
+    private String getBuilderMethodName() {
+        return preferencesManager.getPreferenceValue(BUILD_METHOD_NAME_PATTERN);
+    }
+
+    private String getWithMethodPrefix() {
+        String builderMethodNamePattern = preferencesManager.getPreferenceValue(BUILDERS_METHOD_NAME_PATTERN);
+
+        Matcher matcher = PREFIX_PATTERN.matcher(builderMethodNamePattern);
+
+        if (matcher.matches()) {
+            return matcher.group(1);
+        } else {
+            return "";
+        }
+    }
+
+    private MarkerAnnotation createEmptyJsonPojoBuilderAnnotation(AST ast) {
+        return ast.newMarkerAnnotation();
+    }
+
+    private NormalAnnotation createJsonPojoBuilderAnnotationWithAttributes(AST ast, String buildMethodName, String withMethodPrefix) {
+        NormalAnnotation annotation = ast.newNormalAnnotation();
+
+        annotation.values().add(createAnnotationAttribute(ast, "buildMethodName", buildMethodName));
+        annotation.values().add(createAnnotationAttribute(ast, "withPrefix", withMethodPrefix));
+
+        return annotation;
+    }
+
+    private MemberValuePair createAnnotationAttribute(AST ast, String attributeName, String attributeValue) {
+        MemberValuePair buildMethodNameAttribute = ast.newMemberValuePair();
+        buildMethodNameAttribute.setName(ast.newSimpleName(attributeName));
+        buildMethodNameAttribute.setValue(createStringLitereal(ast, attributeValue));
+        return buildMethodNameAttribute;
     }
 
     private Expression createStringLitereal(AST ast, String literalValue) {
         StringLiteral stringLiteral = ast.newStringLiteral();
         stringLiteral.setLiteralValue(literalValue);
         return stringLiteral;
-    }
-
-    private String getPrefixName() {
-        String value = preferencesManager.getPreferenceValue(BUILDERS_METHOD_NAME_PATTERN);
-
-        Matcher result = PREFIX_PATTERN.matcher(value);
-
-        if (result.matches()) {
-            return result.group(1);
-        }
-
-        return "";
     }
 
 }

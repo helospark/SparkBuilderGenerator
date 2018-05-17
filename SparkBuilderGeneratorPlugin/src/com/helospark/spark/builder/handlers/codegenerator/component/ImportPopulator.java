@@ -9,8 +9,6 @@ import java.util.List;
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.ImportDeclaration;
-import org.eclipse.jdt.core.dom.SingleMemberAnnotation;
-import org.eclipse.jdt.core.dom.StringLiteral;
 import org.eclipse.jdt.core.dom.rewrite.ASTRewrite;
 import org.eclipse.jdt.core.dom.rewrite.ListRewrite;
 
@@ -47,17 +45,6 @@ public class ImportPopulator {
             addImport(ast, importRewrite, GENERATED_FULLY_QUALIFIED_NAME);
         }
         addImportsFromRepository(ast, importRewrite, compilationUnit);
-
-        ListRewrite classRewriter = rewriter.getListRewrite(compilationUnit, CompilationUnit.TYPES_PROPERTY);
-
-        SingleMemberAnnotation generatedAnnotation = ast.newSingleMemberAnnotation();
-        generatedAnnotation.setTypeName(ast.newSimpleName("Generated"));
-        StringLiteral annotationValue = ast.newStringLiteral();
-        annotationValue.setLiteralValue("asd");
-        generatedAnnotation.setValue(annotationValue);
-        compilationUnitModificationDomain.getOriginalType().modifiers().add(generatedAnnotation);
-        classRewriter.replace(compilationUnitModificationDomain.getOriginalType(), compilationUnitModificationDomain.getOriginalType(), null);
-
     }
 
     private boolean shouldAddNonnullAnnotation(CompilationUnit compilationUnit) {

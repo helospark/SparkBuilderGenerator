@@ -85,46 +85,4 @@ public class JacksonAnnotationWithRegularBuilderIT extends BaseBuilderGeneratorI
                 { "jackson/mail_input.tjava", "jackson/mail_with_changed_with_changed_method_output.tjava", "customBuild", "asd[FieldName]" },
         };
     }
-
-    //
-    //    @Test(dataProvider = "testCasesForStagedBuilderOptionals")
-    //    public void testOptionalInitializationForStagedBuilder(String inputFile, String expectedOutputFile) throws Exception {
-    //        // GIVEN
-    //        underTest = new GenerateStagedBuilderHandler();
-    //        given(stagedBuilderStagePropertyInputDialogOpener.open(any(List.class))).willAnswer(invocation -> dialogAnswerProvider.provideAnswer(invocation));
-    //        String input = readClasspathFile(inputFile);
-    //        String expectedResult = readClasspathFile(expectedOutputFile);
-    //        super.setInput(input);
-    //
-    //        // WHEN
-    //        underTest.execute(dummyExecutionEvent);
-    //
-    //        // THEN
-    //        super.assertEqualsJavaContents(outputCaptor.getValue(), expectedResult);
-    //    }
-    //
-    //    @DataProvider(name = "testCasesForStagedBuilderOptionals")
-    //    public Object[][] stagedBuilderExampleFileProvider() {
-    //        return new Object[][] {
-    //                { "optional_containing_input.tjava", "optional_containing_staging_builder_output.tjava" }
-    //        };
-    //    }
-    //
-    //    @Test
-    //    public void testOptionalWithDisabledOptionalInitialization() throws Exception {
-    //        // GIVEN
-    //        underTest = new GenerateRegularBuilderHandler();
-    //
-    //        given(preferenceStore.getBoolean("org.helospark.builder.initializeOptionalFieldsToEmpty")).willReturn(false);
-    //
-    //        String input = readClasspathFile("optional_containing_input.tjava");
-    //        String expectedResult = readClasspathFile("optional_containing_output_with_disabled_optional_initialization.tjava");
-    //        super.setInput(input);
-    //
-    //        // WHEN
-    //        underTest.execute(dummyExecutionEvent);
-    //
-    //        // THEN
-    //        super.assertEqualsJavaContents(outputCaptor.getValue(), expectedResult);
-    //    }
 }

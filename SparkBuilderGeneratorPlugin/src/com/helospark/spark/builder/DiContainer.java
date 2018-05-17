@@ -198,7 +198,7 @@ public class DiContainer {
         addDependency(new BuilderFieldAccessCreatorFragment());
         addDependency(new TypeDeclarationToVariableNameConverter(getDependency(CamelCaseConverter.class)));
         addDependency(new FieldSetterAdderFragment(getDependency(BuilderFieldAccessCreatorFragment.class)));
-        addDependency(new IsRegularBuilderInstanceCopyEnabledPredicate());
+        addDependency(new IsRegularBuilderInstanceCopyEnabledPredicate(getDependency(PreferencesManager.class)));
         addDependency(
                 new RegularBuilderCopyInstanceConstructorAdderFragment(getDependency(FieldSetterAdderFragment.class), getDependency(TypeDeclarationToVariableNameConverter.class),
                         getDependency(IsRegularBuilderInstanceCopyEnabledPredicate.class)));
@@ -269,7 +269,7 @@ public class DiContainer {
                 getDependency(GlobalBuilderPostProcessor.class)));
         addDependency(new RegularBuilderUserPreferenceDialogOpener(getDependency(CurrentShellProvider.class)));
         addDependency(new RegularBuilderDialogDataConverter());
-        addDependency(new RegularBuilderUserPreferenceConverter());
+        addDependency(new RegularBuilderUserPreferenceConverter(getDependency(PreferencesManager.class)));
         addDependency(new RegularBuilderUserPreferenceProvider(getDependency(RegularBuilderUserPreferenceDialogOpener.class),
                 getDependency(PreferencesManager.class),
                 getDependency(RegularBuilderDialogDataConverter.class),

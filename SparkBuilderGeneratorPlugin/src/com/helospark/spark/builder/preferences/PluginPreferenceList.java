@@ -140,6 +140,7 @@ public final class PluginPreferenceList {
         generalPreferences.add(INCLUDE_PARAMETERS_FROM_SUPERCLASS_CONSTRUCTOR);
         generalPreferences.add(PREFER_TO_USE_EMPTY_SUPERCLASS_CONSTRUCTOR);
         generalPreferences.add(ALWAYS_GENERATE_BUILDER_TO_FIRST_CLASS);
+        generalPreferences.add(ADD_JACKSON_DESERIALIZE_ANNOTATION);
         return new PluginPreferenceGroup("General settings", generalPreferences);
     }
 
@@ -158,7 +159,6 @@ public final class PluginPreferenceList {
         regularBuilderPreferences.add(REGULAR_BUILDER_SHOW_DIALOG);
         regularBuilderPreferences.add(CREATE_METHOD_TO_INSTANTIATE_BUILDER_BASED_ON_INSTANCE);
         regularBuilderPreferences.add(COPY_INSTANCE_BUILDER_METHOD_PATTERN);
-        regularBuilderPreferences.add(ADD_JACKSON_DESERIALIZE_ANNOTATION);
         return new PluginPreferenceGroup("Regular builder settings", regularBuilderPreferences);
     }
 }
