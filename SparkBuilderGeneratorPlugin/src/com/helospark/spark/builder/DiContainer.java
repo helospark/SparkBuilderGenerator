@@ -32,6 +32,8 @@ import com.helospark.spark.builder.handlers.codegenerator.StagedBuilderCompilati
 import com.helospark.spark.builder.handlers.codegenerator.builderfieldcollector.ClassFieldCollector;
 import com.helospark.spark.builder.handlers.codegenerator.builderfieldcollector.SuperClassSetterFieldCollector;
 import com.helospark.spark.builder.handlers.codegenerator.builderfieldcollector.SuperConstructorParameterCollector;
+import com.helospark.spark.builder.handlers.codegenerator.builderprocessor.GlobalBuilderPostProcessor;
+import com.helospark.spark.builder.handlers.codegenerator.builderprocessor.JsonDeserializeAdder;
 import com.helospark.spark.builder.handlers.codegenerator.component.BuilderAstRemover;
 import com.helospark.spark.builder.handlers.codegenerator.component.ImportPopulator;
 import com.helospark.spark.builder.handlers.codegenerator.component.PrivateInitializingConstructorCreator;
@@ -43,6 +45,7 @@ import com.helospark.spark.builder.handlers.codegenerator.component.StagedBuilde
 import com.helospark.spark.builder.handlers.codegenerator.component.StagedBuilderCreationWithMethodAdder;
 import com.helospark.spark.builder.handlers.codegenerator.component.StagedBuilderStaticBuilderCreatorMethodCreator;
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.builderclass.EmptyBuilderClassGeneratorFragment;
+import com.helospark.spark.builder.handlers.codegenerator.component.fragment.builderclass.builderclass.JsonPOJOBuilderAdderFragment;
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.builderclass.buildmethod.BuildMethodBodyCreatorFragment;
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.builderclass.buildmethod.BuildMethodCreatorFragment;
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.builderclass.buildmethod.BuildMethodDeclarationCreatorFragment;
@@ -99,6 +102,7 @@ import com.helospark.spark.builder.handlers.codegenerator.component.helper.TypeD
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.domain.BodyDeclarationVisibleFromPredicate;
 import com.helospark.spark.builder.handlers.codegenerator.component.remover.BuilderClassRemover;
 import com.helospark.spark.builder.handlers.codegenerator.component.remover.BuilderRemoverChainItem;
+import com.helospark.spark.builder.handlers.codegenerator.component.remover.JsonDeserializeRemover;
 import com.helospark.spark.builder.handlers.codegenerator.component.remover.PrivateConstructorRemover;
 import com.helospark.spark.builder.handlers.codegenerator.component.remover.StagedBuilderInterfaceRemover;
 import com.helospark.spark.builder.handlers.codegenerator.component.remover.StaticBuilderMethodRemover;
@@ -146,6 +150,7 @@ public class DiContainer {
         addDependency(new BuilderClassRemover(getDependency(BodyDeclarationOfTypeExtractor.class),
                 getDependency(GeneratedAnnotationContainingBodyDeclarationFilter.class),
                 getDependency(IsPrivatePredicate.class)));
+        addDependency(new JsonDeserializeRemover(getDependency(PreferencesManager.class)));
         addDependency(new StagedBuilderInterfaceRemover(getDependency(BodyDeclarationOfTypeExtractor.class),
                 getDependency(GeneratedAnnotationContainingBodyDeclarationFilter.class)));
         addDependency(new StaticBuilderMethodRemover(getDependency(IsStaticPredicate.class), getDependency(IsPublicPredicate.class),
@@ -167,9 +172,12 @@ public class DiContainer {
                 getDependency(PreferencesManager.class),
                 getDependency(TemplateResolver.class)));
         addDependency(new PrivateConstructorAdderFragment());
+        addDependency(new JsonPOJOBuilderAdderFragment(getDependency(PreferencesManager.class), getDependency(ImportRepository.class)));
         addDependency(new EmptyBuilderClassGeneratorFragment(getDependency(GeneratedAnnotationPopulator.class),
                 getDependency(PreferencesManager.class),
-                getDependency(JavadocGenerator.class), getDependency(TemplateResolver.class)));
+                getDependency(JavadocGenerator.class),
+                getDependency(TemplateResolver.class),
+                getDependency(JsonPOJOBuilderAdderFragment.class)));
         addDependency(new BuildMethodBodyCreatorFragment());
         addDependency(new BuildMethodDeclarationCreatorFragment(getDependency(PreferencesManager.class),
                 getDependency(MarkerAnnotationAttacher.class),
@@ -193,7 +201,7 @@ public class DiContainer {
         addDependency(new BuilderFieldAccessCreatorFragment());
         addDependency(new TypeDeclarationToVariableNameConverter(getDependency(CamelCaseConverter.class)));
         addDependency(new FieldSetterAdderFragment(getDependency(BuilderFieldAccessCreatorFragment.class)));
-        addDependency(new IsRegularBuilderInstanceCopyEnabledPredicate());
+        addDependency(new IsRegularBuilderInstanceCopyEnabledPredicate(getDependency(PreferencesManager.class)));
         addDependency(
                 new RegularBuilderCopyInstanceConstructorAdderFragment(getDependency(FieldSetterAdderFragment.class), getDependency(TypeDeclarationToVariableNameConverter.class),
                         getDependency(IsRegularBuilderInstanceCopyEnabledPredicate.class)));
@@ -262,14 +270,17 @@ public class DiContainer {
                 getDependency(CopyInstanceBuilderMethodDefinitionCreatorFragment.class),
                 getDependency(TypeDeclarationToVariableNameConverter.class),
                 getDependency(IsRegularBuilderInstanceCopyEnabledPredicate.class)));
+        addDependency(new JsonDeserializeAdder(getDependency(ImportRepository.class)));
+        addDependency(new GlobalBuilderPostProcessor(getDependency(PreferencesManager.class), getDependency(JsonDeserializeAdder.class)));
         addDependency(new RegularBuilderCompilationUnitGenerator(getDependency(RegularBuilderClassCreator.class),
                 getDependency(RegularBuilderCopyInstanceBuilderMethodCreator.class),
                 getDependency(PrivateInitializingConstructorCreator.class),
                 getDependency(RegularBuilderBuilderMethodCreator.class), getDependency(ImportPopulator.class),
-                getDependency(BuilderRemover.class)));
+                getDependency(BuilderRemover.class),
+                getDependency(GlobalBuilderPostProcessor.class)));
         addDependency(new RegularBuilderUserPreferenceDialogOpener(getDependency(CurrentShellProvider.class)));
         addDependency(new RegularBuilderDialogDataConverter());
-        addDependency(new RegularBuilderUserPreferenceConverter());
+        addDependency(new RegularBuilderUserPreferenceConverter(getDependency(PreferencesManager.class)));
         addDependency(new RegularBuilderUserPreferenceProvider(getDependency(RegularBuilderUserPreferenceDialogOpener.class),
                 getDependency(PreferencesManager.class),
                 getDependency(RegularBuilderDialogDataConverter.class),
@@ -322,7 +333,8 @@ public class DiContainer {
                 getDependency(StagedBuilderStaticBuilderCreatorMethodCreator.class),
                 getDependency(ImportPopulator.class),
                 getDependency(StagedBuilderInterfaceCreatorFragment.class),
-                getDependency(BuilderRemover.class)));
+                getDependency(BuilderRemover.class),
+                getDependency(GlobalBuilderPostProcessor.class)));
         addDependency(new StagedBuilderCompilationUnitGeneratorFieldCollectorDecorator(
                 getDependency(StagedBuilderCompilationUnitGenerator.class),
                 getDependency(ApplicableBuilderFieldExtractor.class),

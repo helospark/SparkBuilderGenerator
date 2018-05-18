@@ -12,6 +12,7 @@ import javax.annotation.Generated;
 public class RegularBuilderDialogData {
     private List<RegularBuilderFieldIncludeFieldIncludeDomain> regularBuilderFieldIncludeFieldIncludeDomains;
     private boolean shouldCreateInstanceCopy;
+    private boolean addJacksonDeserializeAnnotation;
 
     public List<RegularBuilderFieldIncludeFieldIncludeDomain> getRegularBuilderFieldIncludeFieldIncludeDomains() {
         return regularBuilderFieldIncludeFieldIncludeDomains;
@@ -21,10 +22,15 @@ public class RegularBuilderDialogData {
         return shouldCreateInstanceCopy;
     }
 
+    public boolean isAddJacksonDeserializeAnnotation() {
+        return addJacksonDeserializeAnnotation;
+    }
+
     @Generated("SparkTools")
     private RegularBuilderDialogData(Builder builder) {
         this.regularBuilderFieldIncludeFieldIncludeDomains = builder.regularBuilderFieldIncludeFieldIncludeDomains;
         this.shouldCreateInstanceCopy = builder.shouldCreateCopyMethod;
+        this.addJacksonDeserializeAnnotation = builder.addJacksonDeserializeAnnotation;
     }
 
     @Generated("SparkTools")
@@ -34,8 +40,10 @@ public class RegularBuilderDialogData {
 
     @Generated("SparkTools")
     public static final class Builder {
-        private List<RegularBuilderFieldIncludeFieldIncludeDomain> regularBuilderFieldIncludeFieldIncludeDomains = Collections.emptyList();
+        private List<RegularBuilderFieldIncludeFieldIncludeDomain> regularBuilderFieldIncludeFieldIncludeDomains = Collections
+                .emptyList();
         private boolean shouldCreateCopyMethod;
+        private boolean addJacksonDeserializeAnnotation;
 
         private Builder() {
         }
@@ -47,6 +55,11 @@ public class RegularBuilderDialogData {
 
         public Builder withShouldCreateCopyMethod(boolean shouldCreateCopyMethod) {
             this.shouldCreateCopyMethod = shouldCreateCopyMethod;
+            return this;
+        }
+
+        public Builder withAddJacksonDeserializeAnnotation(boolean addJacksonDeserializeAnnotation) {
+            this.addJacksonDeserializeAnnotation = addJacksonDeserializeAnnotation;
             return this;
         }
 

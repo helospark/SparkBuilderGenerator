@@ -1,0 +1,40 @@
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
+@JsonDeserialize(builder = EmailMessage.EmailMessageBuilder.class)
+public class EmailMessage {
+    private String from;
+    private String to;
+
+    private EmailMessage(EmailMessageBuilder emailMessageBuilder) {
+        this.from = emailMessageBuilder.from;
+        this.to = emailMessageBuilder.to;
+    }
+
+    public static EmailMessageBuilder builder() {
+        return new EmailMessageBuilder();
+    }
+
+    @JsonPOJOBuilder
+    public static final class EmailMessageBuilder {
+        private String from;
+        private String to;
+
+        private EmailMessageBuilder() {
+        }
+
+        public EmailMessageBuilder withFrom(String from) {
+            this.from = from;
+            return this;
+        }
+
+        public EmailMessageBuilder withTo(String to) {
+            this.to = to;
+            return this;
+        }
+
+        public EmailMessage build() {
+            return new EmailMessage(this);
+        }
+    }
+}

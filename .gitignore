@@ -6,3 +6,4 @@ SparkBuilderGeneratorPlugin/SparkBuilderGeneratorUpdateSite/**/*.jar
 */test-output
 */target
 */test-classes
+.project

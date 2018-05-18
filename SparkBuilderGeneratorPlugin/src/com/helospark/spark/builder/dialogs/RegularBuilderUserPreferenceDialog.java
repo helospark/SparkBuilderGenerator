@@ -13,6 +13,7 @@ import org.eclipse.jface.viewers.ICheckStateListener;
 import org.eclipse.jface.viewers.ICheckStateProvider;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Button;
@@ -38,6 +39,7 @@ public class RegularBuilderUserPreferenceDialog extends Dialog {
     private Table table;
     private CheckboxTableViewer checkboxTableViewer;
     private Button copyBuilderMethodGenerateButton;
+    private Button addJacksonDeserializer;
     private RegularBuilderDialogData dialogData;
 
     /**
@@ -73,7 +75,7 @@ public class RegularBuilderUserPreferenceDialog extends Dialog {
      */
     private void createContents() {
         shell = new Shell(getParent(), SWT.SHELL_TRIM | SWT.BORDER | SWT.PRIMARY_MODAL | SWT.SHEET);
-        shell.setSize(418, 376);
+        shell.setSize(418, 405);
         shell.setText("Select fields for builder");
 
         Label lblNewLabel = new Label(shell, SWT.WRAP);
@@ -101,7 +103,8 @@ public class RegularBuilderUserPreferenceDialog extends Dialog {
 
             @Override
             public void checkStateChanged(CheckStateChangedEvent checkStateChangedEvent) {
-                RegularBuilderFieldIncludeFieldIncludeDomain domain = (RegularBuilderFieldIncludeFieldIncludeDomain) checkStateChangedEvent.getElement();
+                RegularBuilderFieldIncludeFieldIncludeDomain domain = (RegularBuilderFieldIncludeFieldIncludeDomain) checkStateChangedEvent
+                        .getElement();
                 domain.setIncludeField(checkStateChangedEvent.getChecked());
             }
         });
@@ -128,7 +131,7 @@ public class RegularBuilderUserPreferenceDialog extends Dialog {
             }
         });
         Button generateButton = new Button(shell, SWT.NONE);
-        generateButton.setBounds(305, 308, 101, 29);
+        generateButton.setBounds(305, 337, 101, 29);
         generateButton.setText("Generate");
         generateButton.addSelectionListener(new SelectionListener() {
 
@@ -146,7 +149,7 @@ public class RegularBuilderUserPreferenceDialog extends Dialog {
         });
 
         Button cancelButton = new Button(shell, SWT.NONE);
-        cancelButton.setBounds(10, 308, 101, 29);
+        cancelButton.setBounds(10, 337, 101, 29);
         cancelButton.setText("Cancel");
 
         copyBuilderMethodGenerateButton = new Button(shell, SWT.CHECK);
@@ -167,9 +170,17 @@ public class RegularBuilderUserPreferenceDialog extends Dialog {
             }
         });
 
-        initializeContents();
+        addJacksonDeserializer = new Button(shell, SWT.CHECK);
+        addJacksonDeserializer.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+            }
+        });
+        addJacksonDeserializer.setBounds(10, 305, 384, 22);
+        addJacksonDeserializer.setText("Add Jackson deserialize annotation");
 
         shell.setDefaultButton(generateButton);
+        initializeContents();
     }
 
     private void initializeContents() {
@@ -177,12 +188,14 @@ public class RegularBuilderUserPreferenceDialog extends Dialog {
                 .stream()
                 .forEach(checkboxTableViewer::add);
         copyBuilderMethodGenerateButton.setSelection(dialogData.isShouldCreateInstanceCopy());
+        addJacksonDeserializer.setSelection(dialogData.isAddJacksonDeserializeAnnotation());
     }
 
     private RegularBuilderDialogData getResult() {
         return RegularBuilderDialogData.builder()
                 .withRegularBuilderFieldIncludeFieldIncludeDomains(getSelectedFields())
                 .withShouldCreateCopyMethod(copyBuilderMethodGenerateButton.getSelection())
+                .withAddJacksonDeserializeAnnotation(addJacksonDeserializer.getSelection())
                 .build();
     }
 

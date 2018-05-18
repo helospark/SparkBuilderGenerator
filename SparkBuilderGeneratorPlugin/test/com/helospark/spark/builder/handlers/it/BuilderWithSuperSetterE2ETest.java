@@ -129,7 +129,7 @@ public class BuilderWithSuperSetterE2ETest extends BaseBuilderGeneratorIT {
 
     @DataProvider(name = "testClassWithTwoSuperclasses")
     public Object[][] testClassWithTwoSuperclasses() {
-        return new Object[][] {deduplicateName
+        return new Object[][] {
                 { "superclass_with_setter/1_base_child_input.tjava", "superclass_with_setter/3_super_class.tjava",
                         "superclass_with_setter/3_super_super_class.tjava", "superclass_with_setter/3_base_output_with_two_superclass.tjava" },
                 { "superclass_with_setter/1_base_child_input.tjava", "superclass_with_setter/10_super_class_with_overridden_setter.tjava",

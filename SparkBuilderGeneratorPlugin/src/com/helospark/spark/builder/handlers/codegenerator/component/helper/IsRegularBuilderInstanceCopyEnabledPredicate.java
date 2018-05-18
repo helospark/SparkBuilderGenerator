@@ -1,5 +1,7 @@
 package com.helospark.spark.builder.handlers.codegenerator.component.helper;
 
+import static com.helospark.spark.builder.preferences.PluginPreferenceList.CREATE_METHOD_TO_INSTANTIATE_BUILDER_BASED_ON_INSTANCE;
+
 import java.util.List;
 import java.util.function.Predicate;
 
@@ -7,6 +9,7 @@ import com.helospark.spark.builder.PluginLogger;
 import com.helospark.spark.builder.handlers.codegenerator.domain.BuilderField;
 import com.helospark.spark.builder.handlers.codegenerator.domain.ConstructorParameterSetterBuilderField;
 import com.helospark.spark.builder.handlers.codegenerator.domain.RegularBuilderUserPreference;
+import com.helospark.spark.builder.preferences.PreferencesManager;
 
 /**
  * Returns whether instance copying is enabled and possible.
@@ -15,9 +18,15 @@ import com.helospark.spark.builder.handlers.codegenerator.domain.RegularBuilderU
 public class IsRegularBuilderInstanceCopyEnabledPredicate implements Predicate<RegularBuilderUserPreference> {
     private final PluginLogger pluginLogger = new PluginLogger();
 
+    private PreferencesManager preferencesManager;
+
+    public IsRegularBuilderInstanceCopyEnabledPredicate(PreferencesManager preferencesManager) {
+        this.preferencesManager = preferencesManager;
+    }
+
     @Override
     public boolean test(RegularBuilderUserPreference preference) {
-        return preference.isGenerateCopyMethod() &&
+        return preferencesManager.getPreferenceValue(CREATE_METHOD_TO_INSTANTIATE_BUILDER_BASED_ON_INSTANCE) &&
                 !builderFieldsContainConstructorField(preference.getBuilderFields());
     }
 

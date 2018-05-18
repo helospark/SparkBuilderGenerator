@@ -4,6 +4,7 @@ import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.jdt.core.dom.rewrite.ListRewrite;
 
+import com.helospark.spark.builder.handlers.codegenerator.builderprocessor.GlobalBuilderPostProcessor;
 import com.helospark.spark.builder.handlers.codegenerator.component.ImportPopulator;
 import com.helospark.spark.builder.handlers.codegenerator.component.PrivateInitializingConstructorCreator;
 import com.helospark.spark.builder.handlers.codegenerator.component.RegularBuilderBuilderMethodCreator;
@@ -24,19 +25,22 @@ public class RegularBuilderCompilationUnitGenerator {
     private RegularBuilderCopyInstanceBuilderMethodCreator instanceCopyBuilderMethodPopulator;
     private ImportPopulator importPopulator;
     private BuilderRemover builderRemover;
+    private GlobalBuilderPostProcessor globalBuilderPostProcessor;
 
     public RegularBuilderCompilationUnitGenerator(RegularBuilderClassCreator regularBuilderClassCreator,
             RegularBuilderCopyInstanceBuilderMethodCreator copyBuilderMethodPopulator,
             PrivateInitializingConstructorCreator privateInitializingConstructorCreator,
             RegularBuilderBuilderMethodCreator regularBuilderBuilderMethodCreator,
             ImportPopulator importPopulator,
-            BuilderRemover builderRemover) {
+            BuilderRemover builderRemover,
+            GlobalBuilderPostProcessor globalBuilderPostProcessor) {
         this.regularBuilderClassCreator = regularBuilderClassCreator;
         this.instanceCopyBuilderMethodPopulator = copyBuilderMethodPopulator;
         this.privateConstructorPopulator = privateInitializingConstructorCreator;
         this.builderMethodPopulator = regularBuilderBuilderMethodCreator;
         this.importPopulator = importPopulator;
         this.builderRemover = builderRemover;
+        this.globalBuilderPostProcessor = globalBuilderPostProcessor;
     }
 
     public void generateBuilder(CompilationUnitModificationDomain compilationUnitModificationDomain, RegularBuilderUserPreference preference) {
@@ -53,6 +57,9 @@ public class RegularBuilderCompilationUnitGenerator {
         instanceCopyBuilderMethodPopulator.addInstanceCopyBuilderMethodToCompilationUnitIfNeeded(compilationUnitModificationDomain, builderType, preference);
 
         listRewrite.insertLast(builderType, null);
+
+        globalBuilderPostProcessor.postProcessBuilder(compilationUnitModificationDomain, builderType);
+
         importPopulator.populateImports(compilationUnitModificationDomain);
     }
 
