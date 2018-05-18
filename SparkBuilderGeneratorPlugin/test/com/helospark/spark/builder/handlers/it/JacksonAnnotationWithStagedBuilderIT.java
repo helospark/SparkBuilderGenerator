@@ -11,8 +11,6 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import com.helospark.spark.builder.handlers.GenerateStagedBuilderHandler;
-import com.helospark.spark.builder.handlers.codegenerator.domain.BuilderField;
-import com.helospark.spark.builder.handlers.it.dummyService.FieldDeclarationAnswerProvider;
 import com.helospark.spark.builder.handlers.it.dummyService.NoDialogOperationPerformedStagedBuilderDialogAnswerProvider;
 
 public class JacksonAnnotationWithStagedBuilderIT extends BaseBuilderGeneratorIT {
@@ -21,7 +19,6 @@ public class JacksonAnnotationWithStagedBuilderIT extends BaseBuilderGeneratorIT
     @BeforeMethod
     public void beforeMethod() throws JavaModelException {
         super.init();
-        given(fullyQualifiedNameExtractor.getFullyQualifiedBaseTypeName(any(BuilderField.class))).willAnswer(inv -> FieldDeclarationAnswerProvider.provideAnswer(inv));
         given(preferenceStore.getBoolean("org.helospark.builder.addJacksonDeserializeAnnotation")).willReturn(true);
 
         underTest = new GenerateStagedBuilderHandler();

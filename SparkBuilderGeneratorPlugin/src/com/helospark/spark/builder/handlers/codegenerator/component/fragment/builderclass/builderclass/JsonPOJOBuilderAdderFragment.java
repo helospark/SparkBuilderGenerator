@@ -21,7 +21,7 @@ import com.helospark.spark.builder.preferences.PreferencesManager;
 import com.helospark.spark.builder.preferences.StaticPreferences;
 
 /**
- * Adds {@literal @}JsonPOJOBuulder annotation to the given builder type.
+ * Adds {@literal @}JsonPOJOBuilder annotation to the given builder type.
  * @author helospark
  */
 public class JsonPOJOBuilderAdderFragment {

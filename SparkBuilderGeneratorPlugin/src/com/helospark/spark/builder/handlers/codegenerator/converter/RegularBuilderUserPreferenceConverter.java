@@ -14,6 +14,8 @@ import com.helospark.spark.builder.preferences.PreferencesManager;
 
 /**
  * Creates the result of the dialog as user preferences.
+ * <p>
+ * Note that this converter also sets state in the preference manager, to override the default preference values.
  * @author helospark
  */
 public class RegularBuilderUserPreferenceConverter {
@@ -30,6 +32,8 @@ public class RegularBuilderUserPreferenceConverter {
         preferencesManager.addOverride(ADD_JACKSON_DESERIALIZE_ANNOTATION, result.isAddJacksonDeserializeAnnotation());
         return RegularBuilderUserPreference.builder()
                 .withBuilderFields(filterFieldsBasedOnDialogOutput(builderFields, result.getRegularBuilderFieldIncludeFieldIncludeDomains()))
+                .withGenerateCopyMethod(result.isShouldCreateInstanceCopy())
+                .withAddJacksonDeserializer(result.isAddJacksonDeserializeAnnotation())
                 .build();
     }
 

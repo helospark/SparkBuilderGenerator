@@ -10,9 +10,10 @@ public class StaticPreferences {
     public static final String COLLECTIONS_CLASS_NAME = "Collections";
     public static final String COLLECTIONS_CLASS_FULLY_QUALIFIED_NAME = "java.util." + COLLECTIONS_CLASS_NAME;
 
+    public static final String JACKSON_DATABIND_PACKAGE = "com.fasterxml.jackson.databind.annotation";
     public static final String JSON_POJO_BUILDER_CLASS_NAME = "JsonPOJOBuilder";
-    public static final String JSON_POJO_BUILDER_FULLY_QUALIFIED_NAME = "com.fasterxml.jackson.databind.annotation" + JSON_POJO_BUILDER_CLASS_NAME;
+    public static final String JSON_POJO_BUILDER_FULLY_QUALIFIED_NAME = JACKSON_DATABIND_PACKAGE + JSON_POJO_BUILDER_CLASS_NAME;
 
     public static final String JSON_DESERIALIZE_CLASS_NAME = "JsonDeserialize";
-    public static final String JSON_DESERIALIZE_FULLY_QUALIFIED_NAME = "com.fasterxml.jackson.databind.annotation" + JSON_DESERIALIZE_CLASS_NAME;
+    public static final String JSON_DESERIALIZE_FULLY_QUALIFIED_NAME = JACKSON_DATABIND_PACKAGE + JSON_DESERIALIZE_CLASS_NAME;
 }

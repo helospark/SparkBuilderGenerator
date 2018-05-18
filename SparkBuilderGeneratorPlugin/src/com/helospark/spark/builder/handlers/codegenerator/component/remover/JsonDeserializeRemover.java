@@ -40,11 +40,6 @@ public class JsonDeserializeRemover implements BuilderRemoverChainItem {
 
     }
 
-    private void removeAnnotation(NormalAnnotation annotation, ASTRewrite rewriter, TypeDeclaration mainType) {
-        ListRewrite modifierRewrite = rewriter.getListRewrite(mainType, TypeDeclaration.MODIFIERS2_PROPERTY);
-        modifierRewrite.remove(annotation, null);
-    }
-
     private boolean isBuilderDeserializer(NormalAnnotation annotation) {
         List<MemberValuePair> values = annotation.values();
         if (values.size() != 1) {
@@ -56,4 +51,8 @@ public class JsonDeserializeRemover implements BuilderRemoverChainItem {
                 .equals("builder");
     }
 
+    private void removeAnnotation(NormalAnnotation annotation, ASTRewrite rewriter, TypeDeclaration mainType) {
+        ListRewrite modifierRewrite = rewriter.getListRewrite(mainType, TypeDeclaration.MODIFIERS2_PROPERTY);
+        modifierRewrite.remove(annotation, null);
+    }
 }

@@ -7,8 +7,10 @@ import com.helospark.spark.builder.handlers.StatefulBean;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.PreferenceStoreProvider;
 
 /**
- * Default implementation of the {@link PreferencesManager}
- * 
+ * Retrieve user changeable preferences.
+ * <p>
+ * Note: By default Eclipse's preferences menu is used, but a dialog can override the default preference.
+ * This is a stateful class, dialog overrides can change, therefore it is not threadsafe. 
  * @author maudrain
  */
 public class PreferencesManager implements StatefulBean {

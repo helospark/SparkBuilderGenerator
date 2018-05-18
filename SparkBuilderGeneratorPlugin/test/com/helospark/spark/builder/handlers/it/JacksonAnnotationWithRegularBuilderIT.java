@@ -2,7 +2,6 @@ package com.helospark.spark.builder.handlers.it;
 
 import static java.util.Optional.of;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Matchers.any;
 
 import org.eclipse.jdt.core.JavaModelException;
 import org.testng.annotations.BeforeMethod;
@@ -10,8 +9,6 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import com.helospark.spark.builder.handlers.GenerateRegularBuilderHandler;
-import com.helospark.spark.builder.handlers.codegenerator.domain.BuilderField;
-import com.helospark.spark.builder.handlers.it.dummyService.FieldDeclarationAnswerProvider;
 
 public class JacksonAnnotationWithRegularBuilderIT extends BaseBuilderGeneratorIT {
 
@@ -19,7 +16,6 @@ public class JacksonAnnotationWithRegularBuilderIT extends BaseBuilderGeneratorI
     public void beforeMethod() throws JavaModelException {
         super.init();
         underTest = new GenerateRegularBuilderHandler();
-        given(fullyQualifiedNameExtractor.getFullyQualifiedBaseTypeName(any(BuilderField.class))).willAnswer(inv -> FieldDeclarationAnswerProvider.provideAnswer(inv));
 
         given(preferenceStore.getBoolean("org.helospark.builder.addJacksonDeserializeAnnotation")).willReturn(true);
     }
@@ -82,7 +78,7 @@ public class JacksonAnnotationWithRegularBuilderIT extends BaseBuilderGeneratorI
     public Object[][] testCasesWithChangedDefault() {
         return new Object[][] {
                 { "jackson/mail_input.tjava", "jackson/mail_with_changed_with_method_output.tjava", "build", "[fieldName]" },
-                { "jackson/mail_input.tjava", "jackson/mail_with_changed_with_changed_method_output.tjava", "customBuild", "asd[FieldName]" },
+                { "jackson/mail_input.tjava", "jackson/mail_with_changed_build_method_output.tjava", "customBuild", "asd[FieldName]" },
         };
     }
 }
