@@ -23,7 +23,6 @@ public class JacksonAnnotationWithRegularBuilderIT extends BaseBuilderGeneratorI
     @Test(dataProvider = "testCasesForRegularBuilder")
     public void testWithDefaultEnabled(String inputFile, String expectedOutputFile) throws Exception {
         // GIVEN
-        underTest = new GenerateRegularBuilderHandler();
         String input = readClasspathFile(inputFile);
         String expectedResult = readClasspathFile(expectedOutputFile);
         super.setInput(input);

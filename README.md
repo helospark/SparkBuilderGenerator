@@ -56,7 +56,7 @@ Most configuration is on the preferences page: Preferences -> Java -> Spark buil
 | Show dialog to filter which fields are included in the builder | Whether to show a field selection dialog when generating a regular builder | false | - |
 | Add method to create a builder based on an instance | Creates a method like `public static Builder builderFrom(Clazz instance)` to initialize the state of the builder based on an already existing instance | false | - |
 | Pattern of static builder method that copies the given domain object | Name of the above method | builderFrom | `[className]` |
-| Add Jackson deserialize (@JsonDeserialize, @JsonPOJOBuilder) annotation | Add Jackson deserialize (@JsonDeserialize, @JsonPOJOBuilder) annotation | false | - |
+| Add Jackson deserialize (@JsonDeserialize, @JsonPOJOBuilder) annotation | Add Jackson deserialize annotations: @JsonDeserialize, @JsonPOJOBuilder annotation | false | - |
 
 ### @Generated annotatation
 
