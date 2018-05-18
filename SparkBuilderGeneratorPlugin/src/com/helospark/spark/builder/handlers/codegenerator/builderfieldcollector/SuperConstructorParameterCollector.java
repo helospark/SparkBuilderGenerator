@@ -26,7 +26,7 @@ import com.helospark.spark.builder.preferences.PreferencesManager;
  * Collects the parameters in the superclass constructor if applicable, otherwise returns empty list.
  * @author helospark
  */
-public class SuperConstructorParameterCollector {
+public class SuperConstructorParameterCollector implements FieldCollectorChainItem {
     private FieldNameToBuilderFieldNameConverter fieldNameToBuilderFieldNameConverter;
     private PreferencesManager preferencesManager;
     private TypeDeclarationFromSuperclassExtractor typeDeclarationFromSuperclassExtractor;
@@ -40,7 +40,8 @@ public class SuperConstructorParameterCollector {
         this.bodyDeclarationVisibleFromPredicate = bodyDeclarationVisibleFromPredicate;
     }
 
-    public List<? extends BuilderField> findSuperclassConstructorDeclaration(TypeDeclaration typeDeclaration) {
+    @Override
+    public List<? extends BuilderField> collect(TypeDeclaration typeDeclaration) {
         if (preferencesManager.getPreferenceValue(INCLUDE_PARAMETERS_FROM_SUPERCLASS_CONSTRUCTOR)) {
             return typeDeclarationFromSuperclassExtractor.extractTypeDeclarationFromSuperClass(typeDeclaration)
                     .map(parentTypeDeclaration -> findConstructorToUse(typeDeclaration, parentTypeDeclaration))

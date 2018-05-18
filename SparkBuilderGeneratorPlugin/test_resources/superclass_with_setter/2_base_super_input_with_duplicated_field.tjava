@@ -1,0 +1,9 @@
+package com.helospark.testpackage;
+
+public class TestSuperClass {
+	private String childField;
+	
+	public void setChildField(String childField) {
+		this.childField = childField;
+	}
+}

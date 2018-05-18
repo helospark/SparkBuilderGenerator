@@ -2,7 +2,7 @@
 <feature
       id="com.helospark.SparkBuilderGeneratorFeature"
       label="SparkBuilderGeneratorFeature"
-      version="0.0.14.qualifier">
+      version="0.0.15.qualifier">
 
    <description url="ftp://helospark.com/SparkBuilderGeneratorPlugin/">
       Spark builder generator plugin
@@ -48,7 +48,8 @@ Add fields from superclass&apos; constructor to the builder
 - 0.0.14
 Add the ability to create a builder based on an already existing instance
 Dialog UX update
-
+ - 0.0.15
+Add builder fields for private fields in superclass that have setters.
    </description>
 
    <license url="https://opensource.org/licenses/MIT">

@@ -1,0 +1,14 @@
+package com.helospark.testpackage;
+
+public class TestSuperClass {
+    private String data;
+
+    public TestSuperClass(String data) {
+        this.data = data;
+    }
+
+    public String setData(String data) {
+        this.data = data;
+    }
+
+}
