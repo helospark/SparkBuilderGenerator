@@ -1,5 +1,5 @@
-import com.fasterxml.jackson.databind.annotationJsonDeserialize;
-import com.fasterxml.jackson.databind.annotationJsonPOJOBuilder;
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 @JsonDeserialize(builder = EmailMessage.Builder.class)
 public class EmailMessage {
