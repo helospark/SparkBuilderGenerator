@@ -57,15 +57,6 @@ public class DefaultConstructorAppender {
                 && !hasSuperConstructorFields(fields);
     }
 
-    private boolean hasSuperConstructorFields(List<BuilderField> fields) {
-        boolean hasSuperConstructorFields = fields.stream()
-                .filter(field -> field instanceof ConstructorParameterSetterBuilderField)
-                .findFirst()
-                .isPresent();
-        pluginLogger.info("Skipping default constructor generation, because there are super constructor fields");
-        return hasSuperConstructorFields;
-    }
-
     private boolean hasDefaultConstructor(TypeDeclaration originalType) {
         return ((List<BodyDeclaration>) originalType.bodyDeclarations())
                 .stream()
@@ -75,6 +66,17 @@ public class DefaultConstructorAppender {
                 .filter(method -> method.parameters().isEmpty())
                 .findFirst()
                 .isPresent();
+    }
+
+    private boolean hasSuperConstructorFields(List<BuilderField> fields) {
+        boolean hasSuperConstructorFields = fields.stream()
+                .filter(field -> field instanceof ConstructorParameterSetterBuilderField)
+                .findFirst()
+                .isPresent();
+        if (hasSuperConstructorFields) {
+            pluginLogger.info("Skipping default constructor generation, because there are super constructor fields");
+        }
+        return hasSuperConstructorFields;
     }
 
     private MethodDeclaration createConstructor(CompilationUnitModificationDomain domain) {

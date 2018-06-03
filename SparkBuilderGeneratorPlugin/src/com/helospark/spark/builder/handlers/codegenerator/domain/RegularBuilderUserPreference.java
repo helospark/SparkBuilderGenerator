@@ -16,11 +16,11 @@ public class RegularBuilderUserPreference {
     private List<BuilderField> builderFields;
 
     @Generated("SparkTools")
-    private RegularBuilderUserPreference(CustomBuilder customBuilder) {
-        this.generateCopyMethod = customBuilder.generateCopyMethod;
-        this.addJacksonDeserializer = customBuilder.addJacksonDeserializer;
-        this.createDefaultConstructor = customBuilder.createDefaultConstructor;
-        this.builderFields = customBuilder.builderFields;
+    private RegularBuilderUserPreference(Builder builder) {
+        this.generateCopyMethod = builder.generateCopyMethod;
+        this.addJacksonDeserializer = builder.addJacksonDeserializer;
+        this.createDefaultConstructor = builder.createDefaultConstructor;
+        this.builderFields = builder.builderFields;
     }
 
     public boolean isGenerateCopyMethod() {
@@ -40,36 +40,36 @@ public class RegularBuilderUserPreference {
     }
 
     @Generated("SparkTools")
-    public static CustomBuilder builder() {
-        return new CustomBuilder();
+    public static Builder builder() {
+        return new Builder();
     }
 
     @Generated("SparkTools")
-    public static final class CustomBuilder {
+    public static final class Builder {
         private boolean generateCopyMethod;
         private boolean addJacksonDeserializer;
         private boolean createDefaultConstructor;
         private List<BuilderField> builderFields = Collections.emptyList();
 
-        private CustomBuilder() {
+        private Builder() {
         }
 
-        public CustomBuilder withGenerateCopyMethod(boolean generateCopyMethod) {
+        public Builder withGenerateCopyMethod(boolean generateCopyMethod) {
             this.generateCopyMethod = generateCopyMethod;
             return this;
         }
 
-        public CustomBuilder withAddJacksonDeserializer(boolean addJacksonDeserializer) {
+        public Builder withAddJacksonDeserializer(boolean addJacksonDeserializer) {
             this.addJacksonDeserializer = addJacksonDeserializer;
             return this;
         }
 
-        public CustomBuilder withCreateDefaultConstructor(boolean createDefaultConstructor) {
+        public Builder withCreateDefaultConstructor(boolean createDefaultConstructor) {
             this.createDefaultConstructor = createDefaultConstructor;
             return this;
         }
 
-        public CustomBuilder withBuilderFields(List<BuilderField> builderFields) {
+        public Builder withBuilderFields(List<BuilderField> builderFields) {
             this.builderFields = builderFields;
             return this;
         }

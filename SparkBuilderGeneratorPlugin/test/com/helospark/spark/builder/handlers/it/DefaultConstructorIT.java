@@ -81,4 +81,19 @@ public class DefaultConstructorIT extends BaseBuilderGeneratorIT {
         super.assertEqualsJavaContents(outputCaptor.getValue(), expectedResult);
     }
 
+    @Test
+    public void testEnabledGeneratedAnnotation() throws Exception {
+        // GIVEN
+        given(preferenceStore.getBoolean("add_generated_annotation")).willReturn(true);
+        String input = readClasspathFile("default_constructor/mail_input.tjava");
+        String expectedResult = readClasspathFile("default_constructor/mail_output_with_annotated_default_constructor.tjava");
+        super.setInput(input);
+
+        // WHEN
+        underTest.execute(dummyExecutionEvent);
+
+        // THEN
+        super.assertEqualsJavaContents(outputCaptor.getValue(), expectedResult);
+    }
+
 }
