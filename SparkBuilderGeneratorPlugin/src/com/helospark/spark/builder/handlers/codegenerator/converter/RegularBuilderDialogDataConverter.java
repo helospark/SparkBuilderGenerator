@@ -19,6 +19,7 @@ public class RegularBuilderDialogDataConverter {
                 .withShouldCreateCopyMethod(regularBuilderUserPreference.isGenerateCopyMethod())
                 .withAddJacksonDeserializeAnnotation(regularBuilderUserPreference.isAddJacksonDeserializer())
                 .withRegularBuilderFieldIncludeFieldIncludeDomains(convertFields(regularBuilderUserPreference.getBuilderFields()))
+                .withCreateDefaultConstructor(regularBuilderUserPreference.isCreateDefaultConstructor())
                 .build();
     }
 

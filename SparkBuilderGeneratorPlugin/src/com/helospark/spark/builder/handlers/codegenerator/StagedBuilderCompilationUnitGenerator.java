@@ -8,6 +8,7 @@ import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.jdt.core.dom.rewrite.ListRewrite;
 
 import com.helospark.spark.builder.handlers.codegenerator.builderprocessor.GlobalBuilderPostProcessor;
+import com.helospark.spark.builder.handlers.codegenerator.component.DefaultConstructorAppender;
 import com.helospark.spark.builder.handlers.codegenerator.component.ImportPopulator;
 import com.helospark.spark.builder.handlers.codegenerator.component.PrivateInitializingConstructorCreator;
 import com.helospark.spark.builder.handlers.codegenerator.component.StagedBuilderClassCreator;
@@ -25,6 +26,7 @@ import com.helospark.spark.builder.handlers.codegenerator.domain.CompilationUnit
 public class StagedBuilderCompilationUnitGenerator {
     private StagedBuilderClassCreator stagedBuilderClassCreator;
     private PrivateInitializingConstructorCreator privateConstructorPopulator;
+    private DefaultConstructorAppender defaultConstructorAppender;
     private StagedBuilderStaticBuilderCreatorMethodCreator stagedBuilderStaticBuilderCreatorMethodCreator;
     private ImportPopulator importPopulator;
     private StagedBuilderInterfaceCreatorFragment stagedBuilderInterfaceCreatorFragment;
@@ -37,7 +39,8 @@ public class StagedBuilderCompilationUnitGenerator {
             ImportPopulator importPopulator,
             StagedBuilderInterfaceCreatorFragment stagedBuilderInterfaceCreatorFragment,
             BuilderRemover builderRemover,
-            GlobalBuilderPostProcessor globalBuilderPostProcessor) {
+            GlobalBuilderPostProcessor globalBuilderPostProcessor,
+            DefaultConstructorAppender defaultConstructorAppender) {
         this.stagedBuilderClassCreator = stagedBuilderClassCreator;
         this.privateConstructorPopulator = privateInitializingConstructorCreator;
         this.stagedBuilderStaticBuilderCreatorMethodCreator = stagedBuilderStaticBuilderCreatorMethodCreator;
@@ -45,6 +48,7 @@ public class StagedBuilderCompilationUnitGenerator {
         this.stagedBuilderInterfaceCreatorFragment = stagedBuilderInterfaceCreatorFragment;
         this.builderRemover = builderRemover;
         this.globalBuilderPostProcessor = globalBuilderPostProcessor;
+        this.defaultConstructorAppender = defaultConstructorAppender;
     }
 
     public void generateBuilder(CompilationUnitModificationDomain modificationDomain, List<StagedBuilderProperties> stagedBuilderStages) {
@@ -58,6 +62,7 @@ public class StagedBuilderCompilationUnitGenerator {
         List<TypeDeclaration> stageInterfaces = createStageInterfaces(modificationDomain, stagedBuilderStages);
         TypeDeclaration builderType = stagedBuilderClassCreator.createBuilderClass(modificationDomain, stagedBuilderStages, stageInterfaces);
 
+        defaultConstructorAppender.addDefaultConstructorIfNeeded(modificationDomain, collectAllFieldsFromAllStages(stagedBuilderStages));
         privateConstructorPopulator.addPrivateConstructorToCompilationUnit(ast, originalType, builderType, listRewrite, collectAllFieldsFromAllStages(stagedBuilderStages));
         stagedBuilderStaticBuilderCreatorMethodCreator.addBuilderMethodToCompilationUnit(modificationDomain, builderType, stagedBuilderStages);
 

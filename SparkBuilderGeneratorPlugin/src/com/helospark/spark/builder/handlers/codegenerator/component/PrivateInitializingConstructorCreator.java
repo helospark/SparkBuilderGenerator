@@ -9,7 +9,7 @@ import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.jdt.core.dom.rewrite.ListRewrite;
 
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.constructor.PrivateConstructorBodyCreationFragment;
-import com.helospark.spark.builder.handlers.codegenerator.component.fragment.constructor.PrivateConstructorInsertionFragment;
+import com.helospark.spark.builder.handlers.codegenerator.component.fragment.constructor.ConstructorInsertionFragment;
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.constructor.PrivateConstructorMethodDefinitionCreationFragment;
 import com.helospark.spark.builder.handlers.codegenerator.domain.BuilderField;
 
@@ -27,13 +27,13 @@ import com.helospark.spark.builder.handlers.codegenerator.domain.BuilderField;
 public class PrivateInitializingConstructorCreator {
     private PrivateConstructorMethodDefinitionCreationFragment privateConstructorMethodDefinitionCreationFragment;
     private PrivateConstructorBodyCreationFragment privateConstructorBodyCreationFragment;
-    private PrivateConstructorInsertionFragment privateConstructorInsertionFragment;
+    private ConstructorInsertionFragment constructorInsertionFragment;
 
     public PrivateInitializingConstructorCreator(PrivateConstructorMethodDefinitionCreationFragment privateConstructorMethodDefinitionCreationFragment,
-            PrivateConstructorBodyCreationFragment privateConstructorBodyCreationFragment, PrivateConstructorInsertionFragment privateConstructorInsertionFragment) {
+            PrivateConstructorBodyCreationFragment privateConstructorBodyCreationFragment, ConstructorInsertionFragment constructorInsertionFragment) {
         this.privateConstructorMethodDefinitionCreationFragment = privateConstructorMethodDefinitionCreationFragment;
         this.privateConstructorBodyCreationFragment = privateConstructorBodyCreationFragment;
-        this.privateConstructorInsertionFragment = privateConstructorInsertionFragment;
+        this.constructorInsertionFragment = constructorInsertionFragment;
     }
 
     public void addPrivateConstructorToCompilationUnit(AST ast, TypeDeclaration originalType, TypeDeclaration builderType, ListRewrite listRewrite,
@@ -42,7 +42,7 @@ public class PrivateInitializingConstructorCreator {
         MethodDeclaration privateConstructorDefinition = privateConstructorMethodDefinitionCreationFragment.createPrivateConstructorDefinition(ast, originalType, builderType,
                 builderFields);
         privateConstructorDefinition.setBody(body);
-        privateConstructorInsertionFragment.insertMethodToFirstPlace(originalType, listRewrite, privateConstructorDefinition);
+        constructorInsertionFragment.insertMethodToFirstPlace(originalType, listRewrite, privateConstructorDefinition);
     }
 
 }

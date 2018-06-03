@@ -40,6 +40,7 @@ public class RegularBuilderUserPreferenceDialog extends Dialog {
     private CheckboxTableViewer checkboxTableViewer;
     private Button copyBuilderMethodGenerateButton;
     private Button addJacksonDeserializer;
+    private Button createDefaultConstructor;
     private RegularBuilderDialogData dialogData;
 
     /**
@@ -75,7 +76,7 @@ public class RegularBuilderUserPreferenceDialog extends Dialog {
      */
     private void createContents() {
         shell = new Shell(getParent(), SWT.SHELL_TRIM | SWT.BORDER | SWT.PRIMARY_MODAL | SWT.SHEET);
-        shell.setSize(418, 405);
+        shell.setSize(418, 444);
         shell.setText("Select fields for builder");
 
         Label lblNewLabel = new Label(shell, SWT.WRAP);
@@ -131,7 +132,7 @@ public class RegularBuilderUserPreferenceDialog extends Dialog {
             }
         });
         Button generateButton = new Button(shell, SWT.NONE);
-        generateButton.setBounds(305, 337, 101, 29);
+        generateButton.setBounds(305, 376, 101, 29);
         generateButton.setText("Generate");
         generateButton.addSelectionListener(new SelectionListener() {
 
@@ -149,7 +150,7 @@ public class RegularBuilderUserPreferenceDialog extends Dialog {
         });
 
         Button cancelButton = new Button(shell, SWT.NONE);
-        cancelButton.setBounds(10, 337, 101, 29);
+        cancelButton.setBounds(10, 376, 101, 29);
         cancelButton.setText("Cancel");
 
         copyBuilderMethodGenerateButton = new Button(shell, SWT.CHECK);
@@ -180,6 +181,15 @@ public class RegularBuilderUserPreferenceDialog extends Dialog {
         addJacksonDeserializer.setText("Add Jackson deserialize annotation");
 
         shell.setDefaultButton(generateButton);
+
+        createDefaultConstructor = new Button(shell, SWT.CHECK);
+        createDefaultConstructor.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+            }
+        });
+        createDefaultConstructor.setBounds(10, 333, 373, 17);
+        createDefaultConstructor.setText("Create public default constructor");
         initializeContents();
     }
 
@@ -187,8 +197,9 @@ public class RegularBuilderUserPreferenceDialog extends Dialog {
         dialogData.getRegularBuilderFieldIncludeFieldIncludeDomains()
                 .stream()
                 .forEach(checkboxTableViewer::add);
-        copyBuilderMethodGenerateButton.setSelection(dialogData.isShouldCreateInstanceCopy());
+        copyBuilderMethodGenerateButton.setSelection(dialogData.shouldCreateCopyMethod());
         addJacksonDeserializer.setSelection(dialogData.isAddJacksonDeserializeAnnotation());
+        createDefaultConstructor.setSelection(dialogData.isCreateDefaultConstructor());
     }
 
     private RegularBuilderDialogData getResult() {
@@ -196,6 +207,7 @@ public class RegularBuilderUserPreferenceDialog extends Dialog {
                 .withRegularBuilderFieldIncludeFieldIncludeDomains(getSelectedFields())
                 .withShouldCreateCopyMethod(copyBuilderMethodGenerateButton.getSelection())
                 .withAddJacksonDeserializeAnnotation(addJacksonDeserializer.getSelection())
+                .withCreateDefaultConstructor(createDefaultConstructor.getSelection())
                 .build();
     }
 

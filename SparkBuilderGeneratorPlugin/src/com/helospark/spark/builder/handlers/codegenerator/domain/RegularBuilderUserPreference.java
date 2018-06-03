@@ -12,13 +12,15 @@ import javax.annotation.Generated;
 public class RegularBuilderUserPreference {
     private boolean generateCopyMethod;
     private boolean addJacksonDeserializer;
+    private boolean createDefaultConstructor;
     private List<BuilderField> builderFields;
 
     @Generated("SparkTools")
     private RegularBuilderUserPreference(Builder builder) {
         this.generateCopyMethod = builder.generateCopyMethod;
-        this.builderFields = builder.builderFields;
         this.addJacksonDeserializer = builder.addJacksonDeserializer;
+        this.createDefaultConstructor = builder.createDefaultConstructor;
+        this.builderFields = builder.builderFields;
     }
 
     public boolean isGenerateCopyMethod() {
@@ -33,6 +35,10 @@ public class RegularBuilderUserPreference {
         return addJacksonDeserializer;
     }
 
+    public boolean isCreateDefaultConstructor() {
+        return createDefaultConstructor;
+    }
+
     @Generated("SparkTools")
     public static Builder builder() {
         return new Builder();
@@ -42,6 +48,7 @@ public class RegularBuilderUserPreference {
     public static final class Builder {
         private boolean generateCopyMethod;
         private boolean addJacksonDeserializer;
+        private boolean createDefaultConstructor;
         private List<BuilderField> builderFields = Collections.emptyList();
 
         private Builder() {
@@ -54,6 +61,11 @@ public class RegularBuilderUserPreference {
 
         public Builder withAddJacksonDeserializer(boolean addJacksonDeserializer) {
             this.addJacksonDeserializer = addJacksonDeserializer;
+            return this;
+        }
+
+        public Builder withCreateDefaultConstructor(boolean createDefaultConstructor) {
+            this.createDefaultConstructor = createDefaultConstructor;
             return this;
         }
 

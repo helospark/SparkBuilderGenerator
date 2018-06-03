@@ -11,26 +11,32 @@ import javax.annotation.Generated;
  */
 public class RegularBuilderDialogData {
     private List<RegularBuilderFieldIncludeFieldIncludeDomain> regularBuilderFieldIncludeFieldIncludeDomains;
-    private boolean shouldCreateInstanceCopy;
+    private boolean shouldCreateCopyMethod;
     private boolean addJacksonDeserializeAnnotation;
+    private boolean createDefaultConstructor;
+
+    @Generated("SparkTools")
+    private RegularBuilderDialogData(Builder builder) {
+        this.regularBuilderFieldIncludeFieldIncludeDomains = builder.regularBuilderFieldIncludeFieldIncludeDomains;
+        this.shouldCreateCopyMethod = builder.shouldCreateCopyMethod;
+        this.addJacksonDeserializeAnnotation = builder.addJacksonDeserializeAnnotation;
+        this.createDefaultConstructor = builder.createDefaultConstructor;
+    }
 
     public List<RegularBuilderFieldIncludeFieldIncludeDomain> getRegularBuilderFieldIncludeFieldIncludeDomains() {
         return regularBuilderFieldIncludeFieldIncludeDomains;
     }
 
-    public boolean isShouldCreateInstanceCopy() {
-        return shouldCreateInstanceCopy;
+    public boolean shouldCreateCopyMethod() {
+        return shouldCreateCopyMethod;
     }
 
     public boolean isAddJacksonDeserializeAnnotation() {
         return addJacksonDeserializeAnnotation;
     }
 
-    @Generated("SparkTools")
-    private RegularBuilderDialogData(Builder builder) {
-        this.regularBuilderFieldIncludeFieldIncludeDomains = builder.regularBuilderFieldIncludeFieldIncludeDomains;
-        this.shouldCreateInstanceCopy = builder.shouldCreateCopyMethod;
-        this.addJacksonDeserializeAnnotation = builder.addJacksonDeserializeAnnotation;
+    public boolean isCreateDefaultConstructor() {
+        return createDefaultConstructor;
     }
 
     @Generated("SparkTools")
@@ -40,10 +46,10 @@ public class RegularBuilderDialogData {
 
     @Generated("SparkTools")
     public static final class Builder {
-        private List<RegularBuilderFieldIncludeFieldIncludeDomain> regularBuilderFieldIncludeFieldIncludeDomains = Collections
-                .emptyList();
+        private List<RegularBuilderFieldIncludeFieldIncludeDomain> regularBuilderFieldIncludeFieldIncludeDomains = Collections.emptyList();
         private boolean shouldCreateCopyMethod;
         private boolean addJacksonDeserializeAnnotation;
+        private boolean createDefaultConstructor;
 
         private Builder() {
         }
@@ -60,6 +66,11 @@ public class RegularBuilderDialogData {
 
         public Builder withAddJacksonDeserializeAnnotation(boolean addJacksonDeserializeAnnotation) {
             this.addJacksonDeserializeAnnotation = addJacksonDeserializeAnnotation;
+            return this;
+        }
+
+        public Builder withCreateDefaultConstructor(boolean createDefaultConstructor) {
+            this.createDefaultConstructor = createDefaultConstructor;
             return this;
         }
 

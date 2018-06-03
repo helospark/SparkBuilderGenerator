@@ -6,16 +6,16 @@ import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.jdt.core.dom.rewrite.ListRewrite;
 
 /**
- * Insert private constructor after fields, but before methods.
+ * Insert constructor after fields, but before methods.
  * @author helospark
  */
-public class PrivateConstructorInsertionFragment {
-    public void insertMethodToFirstPlace(TypeDeclaration originalType, ListRewrite listRewrite, MethodDeclaration privateConstructor) {
+public class ConstructorInsertionFragment {
+    public void insertMethodToFirstPlace(TypeDeclaration originalType, ListRewrite listRewrite, MethodDeclaration constructor) {
         FieldDeclaration[] fields = originalType.getFields();
         if (fields == null || fields.length == 0) {
-            listRewrite.insertFirst(privateConstructor, null);
+            listRewrite.insertFirst(constructor, null);
         } else {
-            listRewrite.insertAfter(privateConstructor, fields[fields.length - 1], null);
+            listRewrite.insertAfter(constructor, fields[fields.length - 1], null);
         }
     }
 }

@@ -117,6 +117,10 @@ public final class PluginPreferenceList {
             "org.helospark.builder.addJacksonDeserializeAnnotation",
             "Add Jackson deserialize (@JsonDeserialize, @JsonPOJOBuilder) annotation", Boolean.FALSE);
 
+    public static final PluginPreference<Boolean> CREATE_PUBLIC_DEFAULT_CONSTRUCTOR = new BooleanPluginPreference(
+            "org.helospark.builder.createPublicDefaultConstructor",
+            "Create public default constructor (ex. for JPA)", Boolean.FALSE);
+
     public static List<PluginPreferenceGroup> getAllPreferences() {
         return Arrays.asList(createGeneralPreferencesGroup(),
                 createRegularBuilderPreferencesGroup(),
@@ -146,6 +150,7 @@ public final class PluginPreferenceList {
         generalPreferences.add(PREFER_TO_USE_EMPTY_SUPERCLASS_CONSTRUCTOR);
         generalPreferences.add(ALWAYS_GENERATE_BUILDER_TO_FIRST_CLASS);
         generalPreferences.add(ADD_JACKSON_DESERIALIZE_ANNOTATION);
+        generalPreferences.add(CREATE_PUBLIC_DEFAULT_CONSTRUCTOR);
         return new PluginPreferenceGroup("General settings", generalPreferences);
     }
 
