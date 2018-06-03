@@ -27,7 +27,7 @@ public class RegularBuilderDialogData {
         return regularBuilderFieldIncludeFieldIncludeDomains;
     }
 
-    public boolean isShouldCreateCopyMethod() {
+    public boolean shouldCreateCopyMethod() {
         return shouldCreateCopyMethod;
     }
 

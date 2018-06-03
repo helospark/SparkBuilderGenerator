@@ -26,7 +26,7 @@ public class DefaultConstructorStagedBuilderIT extends BaseBuilderGeneratorIT {
     }
 
     @Test(dataProvider = "testCasesForStagedBuilder")
-    public void testWithDefaultEnabled(String inputFile, String expectedOutputFile) throws Exception {
+    public void testStagedBuilder(String inputFile, String expectedOutputFile) throws Exception {
         // GIVEN
         String input = readClasspathFile(inputFile);
         String expectedResult = readClasspathFile(expectedOutputFile);

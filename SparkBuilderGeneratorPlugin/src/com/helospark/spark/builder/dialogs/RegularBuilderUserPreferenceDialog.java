@@ -197,7 +197,7 @@ public class RegularBuilderUserPreferenceDialog extends Dialog {
         dialogData.getRegularBuilderFieldIncludeFieldIncludeDomains()
                 .stream()
                 .forEach(checkboxTableViewer::add);
-        copyBuilderMethodGenerateButton.setSelection(dialogData.isShouldCreateCopyMethod());
+        copyBuilderMethodGenerateButton.setSelection(dialogData.shouldCreateCopyMethod());
         addJacksonDeserializer.setSelection(dialogData.isAddJacksonDeserializeAnnotation());
         createDefaultConstructor.setSelection(dialogData.isCreateDefaultConstructor());
     }

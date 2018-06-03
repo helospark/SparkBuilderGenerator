@@ -33,7 +33,7 @@ public class DefaultConstructorIT extends BaseBuilderGeneratorIT {
     }
 
     @Test(dataProvider = "testCasesForRegularBuilder")
-    public void testWithDefaultEnabled(String inputFile, String expectedOutputFile) throws Exception {
+    public void testWithDefaultConstructorEnabled(String inputFile, String expectedOutputFile) throws Exception {
         // GIVEN
         String input = readClasspathFile(inputFile);
         String expectedResult = readClasspathFile(expectedOutputFile);
@@ -82,7 +82,7 @@ public class DefaultConstructorIT extends BaseBuilderGeneratorIT {
     }
 
     @Test
-    public void testEnabledGeneratedAnnotation() throws Exception {
+    public void testWithEnabledGeneratedAnnotation() throws Exception {
         // GIVEN
         given(preferenceStore.getBoolean("add_generated_annotation")).willReturn(true);
         String input = readClasspathFile("default_constructor/mail_input.tjava");

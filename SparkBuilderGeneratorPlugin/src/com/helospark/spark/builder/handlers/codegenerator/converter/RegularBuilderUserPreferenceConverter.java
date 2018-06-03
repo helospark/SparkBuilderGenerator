@@ -29,12 +29,12 @@ public class RegularBuilderUserPreferenceConverter {
     public RegularBuilderUserPreference convertOutput(List<BuilderField> builderFields, RegularBuilderDialogData result) {
         // TODO: automate the process
         // TODO: Saparate dialog input and output
-        preferencesManager.addOverride(CREATE_METHOD_TO_INSTANTIATE_BUILDER_BASED_ON_INSTANCE, result.isShouldCreateCopyMethod());
+        preferencesManager.addOverride(CREATE_METHOD_TO_INSTANTIATE_BUILDER_BASED_ON_INSTANCE, result.shouldCreateCopyMethod());
         preferencesManager.addOverride(ADD_JACKSON_DESERIALIZE_ANNOTATION, result.isAddJacksonDeserializeAnnotation());
         preferencesManager.addOverride(CREATE_PUBLIC_DEFAULT_CONSTRUCTOR, result.isCreateDefaultConstructor());
         return RegularBuilderUserPreference.builder()
                 .withBuilderFields(filterFieldsBasedOnDialogOutput(builderFields, result.getRegularBuilderFieldIncludeFieldIncludeDomains()))
-                .withGenerateCopyMethod(result.isShouldCreateCopyMethod())
+                .withGenerateCopyMethod(result.shouldCreateCopyMethod())
                 .withAddJacksonDeserializer(result.isAddJacksonDeserializeAnnotation())
                 .withCreateDefaultConstructor(result.isCreateDefaultConstructor())
                 .build();
