@@ -57,6 +57,7 @@ Most configuration is on the preferences page: Preferences -> Java -> Spark buil
 | Add method to create a builder based on an instance | Creates a method like `public static Builder builderFrom(Clazz instance)` to initialize the state of the builder based on an already existing instance | false | - |
 | Pattern of static builder method that copies the given domain object | Name of the above method | builderFrom | `[className]` |
 | Add Jackson deserialize (@JsonDeserialize, @JsonPOJOBuilder) annotation | Add Jackson deserialize annotations: @JsonDeserialize, @JsonPOJOBuilder annotation | false | - |
+| Create public default constructor (ex. for JPA) | If enabled it generates a public empty default constructor. Generation will be ignored if there is already one, or super(...) call is necessary | false | - |
 
 ### @Generated annotatation
 
@@ -97,6 +98,8 @@ Most configuration is on the preferences page: Preferences -> Java -> Spark buil
    Add builder fields for private fields in superclass that have setters.
  - 0.0.16
    Generate Jackson deserialize annotations to the builder
+ - 0.0.17
+   Generate public default constructor
 
 ## The generated code looks like the following:
 

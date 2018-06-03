@@ -2,7 +2,7 @@
 <feature
       id="com.helospark.SparkBuilderGeneratorFeature"
       label="SparkBuilderGeneratorFeature"
-      version="0.0.16.qualifier">
+      version="0.0.17.qualifier">
 
    <description url="ftp://helospark.com/SparkBuilderGeneratorPlugin/">
       Spark builder generator plugin
@@ -51,7 +51,9 @@ Dialog UX update
  - 0.0.15
 Add builder fields for private fields in superclass that have setters.
  - 0.0.16
-   Generate Jackson deserialize annotations to the builder
+Generate Jackson deserialize annotations to the builder
+ - 0.0.17
+Generate public default constructor
    </description>
 
    <license url="https://opensource.org/licenses/MIT">
