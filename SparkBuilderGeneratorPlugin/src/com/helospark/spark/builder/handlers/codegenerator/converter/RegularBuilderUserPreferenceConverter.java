@@ -2,6 +2,7 @@ package com.helospark.spark.builder.handlers.codegenerator.converter;
 
 import static com.helospark.spark.builder.preferences.PluginPreferenceList.ADD_JACKSON_DESERIALIZE_ANNOTATION;
 import static com.helospark.spark.builder.preferences.PluginPreferenceList.CREATE_METHOD_TO_INSTANTIATE_BUILDER_BASED_ON_INSTANCE;
+import static com.helospark.spark.builder.preferences.PluginPreferenceList.CREATE_PUBLIC_DEFAULT_CONSTRUCTOR;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,12 +29,14 @@ public class RegularBuilderUserPreferenceConverter {
     public RegularBuilderUserPreference convertOutput(List<BuilderField> builderFields, RegularBuilderDialogData result) {
         // TODO: automate the process
         // TODO: Saparate dialog input and output
-        preferencesManager.addOverride(CREATE_METHOD_TO_INSTANTIATE_BUILDER_BASED_ON_INSTANCE, result.isShouldCreateInstanceCopy());
+        preferencesManager.addOverride(CREATE_METHOD_TO_INSTANTIATE_BUILDER_BASED_ON_INSTANCE, result.isShouldCreateCopyMethod());
         preferencesManager.addOverride(ADD_JACKSON_DESERIALIZE_ANNOTATION, result.isAddJacksonDeserializeAnnotation());
+        preferencesManager.addOverride(CREATE_PUBLIC_DEFAULT_CONSTRUCTOR, result.isCreateDefaultConstructor());
         return RegularBuilderUserPreference.builder()
                 .withBuilderFields(filterFieldsBasedOnDialogOutput(builderFields, result.getRegularBuilderFieldIncludeFieldIncludeDomains()))
-                .withGenerateCopyMethod(result.isShouldCreateInstanceCopy())
+                .withGenerateCopyMethod(result.isShouldCreateCopyMethod())
                 .withAddJacksonDeserializer(result.isAddJacksonDeserializeAnnotation())
+                .withCreateDefaultConstructor(result.isCreateDefaultConstructor())
                 .build();
     }
 
