@@ -62,7 +62,7 @@ public class StagedBuilderCompilationUnitGenerator {
         List<TypeDeclaration> stageInterfaces = createStageInterfaces(modificationDomain, stagedBuilderStages);
         TypeDeclaration builderType = stagedBuilderClassCreator.createBuilderClass(modificationDomain, stagedBuilderStages, stageInterfaces);
 
-        defaultConstructorAppender.addDefaultConstructorIfNeeded(modificationDomain);
+        defaultConstructorAppender.addDefaultConstructorIfNeeded(modificationDomain, collectAllFieldsFromAllStages(stagedBuilderStages));
         privateConstructorPopulator.addPrivateConstructorToCompilationUnit(ast, originalType, builderType, listRewrite, collectAllFieldsFromAllStages(stagedBuilderStages));
         stagedBuilderStaticBuilderCreatorMethodCreator.addBuilderMethodToCompilationUnit(modificationDomain, builderType, stagedBuilderStages);
 

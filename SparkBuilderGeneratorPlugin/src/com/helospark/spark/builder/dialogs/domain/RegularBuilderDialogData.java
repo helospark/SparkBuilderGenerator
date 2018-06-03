@@ -16,11 +16,11 @@ public class RegularBuilderDialogData {
     private boolean createDefaultConstructor;
 
     @Generated("SparkTools")
-    private RegularBuilderDialogData(CustomBuilder customBuilder) {
-        this.regularBuilderFieldIncludeFieldIncludeDomains = customBuilder.regularBuilderFieldIncludeFieldIncludeDomains;
-        this.shouldCreateCopyMethod = customBuilder.shouldCreateCopyMethod;
-        this.addJacksonDeserializeAnnotation = customBuilder.addJacksonDeserializeAnnotation;
-        this.createDefaultConstructor = customBuilder.createDefaultConstructor;
+    private RegularBuilderDialogData(Builder builder) {
+        this.regularBuilderFieldIncludeFieldIncludeDomains = builder.regularBuilderFieldIncludeFieldIncludeDomains;
+        this.shouldCreateCopyMethod = builder.shouldCreateCopyMethod;
+        this.addJacksonDeserializeAnnotation = builder.addJacksonDeserializeAnnotation;
+        this.createDefaultConstructor = builder.createDefaultConstructor;
     }
 
     public List<RegularBuilderFieldIncludeFieldIncludeDomain> getRegularBuilderFieldIncludeFieldIncludeDomains() {
@@ -40,36 +40,36 @@ public class RegularBuilderDialogData {
     }
 
     @Generated("SparkTools")
-    public static CustomBuilder builder() {
-        return new CustomBuilder();
+    public static Builder builder() {
+        return new Builder();
     }
 
     @Generated("SparkTools")
-    public static final class CustomBuilder {
+    public static final class Builder {
         private List<RegularBuilderFieldIncludeFieldIncludeDomain> regularBuilderFieldIncludeFieldIncludeDomains = Collections.emptyList();
         private boolean shouldCreateCopyMethod;
         private boolean addJacksonDeserializeAnnotation;
         private boolean createDefaultConstructor;
 
-        private CustomBuilder() {
+        private Builder() {
         }
 
-        public CustomBuilder withRegularBuilderFieldIncludeFieldIncludeDomains(List<RegularBuilderFieldIncludeFieldIncludeDomain> regularBuilderFieldIncludeFieldIncludeDomains) {
+        public Builder withRegularBuilderFieldIncludeFieldIncludeDomains(List<RegularBuilderFieldIncludeFieldIncludeDomain> regularBuilderFieldIncludeFieldIncludeDomains) {
             this.regularBuilderFieldIncludeFieldIncludeDomains = regularBuilderFieldIncludeFieldIncludeDomains;
             return this;
         }
 
-        public CustomBuilder withShouldCreateCopyMethod(boolean shouldCreateCopyMethod) {
+        public Builder withShouldCreateCopyMethod(boolean shouldCreateCopyMethod) {
             this.shouldCreateCopyMethod = shouldCreateCopyMethod;
             return this;
         }
 
-        public CustomBuilder withAddJacksonDeserializeAnnotation(boolean addJacksonDeserializeAnnotation) {
+        public Builder withAddJacksonDeserializeAnnotation(boolean addJacksonDeserializeAnnotation) {
             this.addJacksonDeserializeAnnotation = addJacksonDeserializeAnnotation;
             return this;
         }
 
-        public CustomBuilder withCreateDefaultConstructor(boolean createDefaultConstructor) {
+        public Builder withCreateDefaultConstructor(boolean createDefaultConstructor) {
             this.createDefaultConstructor = createDefaultConstructor;
             return this;
         }

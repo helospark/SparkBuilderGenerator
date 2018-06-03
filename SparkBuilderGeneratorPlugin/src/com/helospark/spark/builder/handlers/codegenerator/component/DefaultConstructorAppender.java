@@ -12,9 +12,12 @@ import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.Modifier.ModifierKeyword;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 
+import com.helospark.spark.builder.PluginLogger;
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.constructor.ConstructorInsertionFragment;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.GeneratedAnnotationPopulator;
+import com.helospark.spark.builder.handlers.codegenerator.domain.BuilderField;
 import com.helospark.spark.builder.handlers.codegenerator.domain.CompilationUnitModificationDomain;
+import com.helospark.spark.builder.handlers.codegenerator.domain.ConstructorParameterSetterBuilderField;
 import com.helospark.spark.builder.preferences.PreferencesManager;
 
 /**
@@ -31,23 +34,36 @@ public class DefaultConstructorAppender {
     private ConstructorInsertionFragment constructorInsertionFragment;
     private PreferencesManager preferencesManager;
     private GeneratedAnnotationPopulator generatedAnnotationPopulator;
+    private PluginLogger pluginLogger;
 
     public DefaultConstructorAppender(ConstructorInsertionFragment constructorInsertionFragment, PreferencesManager preferencesManager,
             GeneratedAnnotationPopulator generatedAnnotationPopulator) {
         this.constructorInsertionFragment = constructorInsertionFragment;
         this.preferencesManager = preferencesManager;
         this.generatedAnnotationPopulator = generatedAnnotationPopulator;
+        pluginLogger = new PluginLogger();
     }
 
-    public void addDefaultConstructorIfNeeded(CompilationUnitModificationDomain domain) {
-        if (shouldCreateDefaultConstructor(domain.getOriginalType())) {
+    public void addDefaultConstructorIfNeeded(CompilationUnitModificationDomain domain, List<BuilderField> fields) {
+        if (shouldCreateDefaultConstructor(domain.getOriginalType(), fields)) {
             MethodDeclaration defaultConstructor = createConstructor(domain);
             constructorInsertionFragment.insertMethodToFirstPlace(domain.getOriginalType(), domain.getListRewrite(), defaultConstructor);
         }
     }
 
-    private boolean shouldCreateDefaultConstructor(TypeDeclaration originalType) {
-        return preferencesManager.getPreferenceValue(CREATE_PUBLIC_DEFAULT_CONSTRUCTOR) && !hasDefaultConstructor(originalType);
+    private boolean shouldCreateDefaultConstructor(TypeDeclaration originalType, List<BuilderField> fields) {
+        return preferencesManager.getPreferenceValue(CREATE_PUBLIC_DEFAULT_CONSTRUCTOR)
+                && !hasDefaultConstructor(originalType)
+                && !hasSuperConstructorFields(fields);
+    }
+
+    private boolean hasSuperConstructorFields(List<BuilderField> fields) {
+        boolean hasSuperConstructorFields = fields.stream()
+                .filter(field -> field instanceof ConstructorParameterSetterBuilderField)
+                .findFirst()
+                .isPresent();
+        pluginLogger.info("Skipping default constructor generation, because there are super constructor fields");
+        return hasSuperConstructorFields;
     }
 
     private boolean hasDefaultConstructor(TypeDeclaration originalType) {
