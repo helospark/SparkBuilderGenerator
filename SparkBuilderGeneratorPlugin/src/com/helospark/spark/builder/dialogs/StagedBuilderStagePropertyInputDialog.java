@@ -227,7 +227,6 @@ public class StagedBuilderStagePropertyInputDialog extends Dialog {
 
         Button generateButton = new Button(shell, SWT.NONE);
         generateButton.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-        generateButton.setAlignment(SWT.RIGHT);
         generateButton.setText("Generate");
         generateButton.addSelectionListener(new SelectionListener() {
 
