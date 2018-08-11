@@ -13,7 +13,7 @@ import org.osgi.framework.BundleContext;
 public class Activator extends AbstractUIPlugin {
     public static final String PLUGIN_ID = "com.helospark.SparkBuilderGenerator";
 
-    private static final String ICON = "icons/builder.gif";
+    private static final String ICON = "icons/builder_32.gif";
 
     private static Activator plugin;
     private static PluginLogger pluginLogger = new PluginLogger();
