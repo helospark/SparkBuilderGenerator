@@ -13,9 +13,10 @@ import org.eclipse.jface.viewers.ICheckStateListener;
 import org.eclipse.jface.viewers.ICheckStateProvider;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Dialog;
 import org.eclipse.swt.widgets.Display;
@@ -24,6 +25,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 
+import com.helospark.spark.builder.Activator;
 import com.helospark.spark.builder.dialogs.domain.RegularBuilderDialogData;
 import com.helospark.spark.builder.dialogs.domain.RegularBuilderFieldIncludeFieldIncludeDomain;
 
@@ -76,15 +78,23 @@ public class RegularBuilderUserPreferenceDialog extends Dialog {
      */
     private void createContents() {
         shell = new Shell(getParent(), SWT.SHELL_TRIM | SWT.BORDER | SWT.PRIMARY_MODAL | SWT.SHEET);
-        shell.setSize(418, 444);
+        shell.setSize(400, 431);
+        shell.setMinimumSize(380, 250);
         shell.setText("Select fields for builder");
+        shell.setLayout(new GridLayout(2, false));
+        shell.setImage(Activator.getIcon());
 
         Label lblNewLabel = new Label(shell, SWT.WRAP);
+        lblNewLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
         lblNewLabel.setBounds(10, 10, 396, 54);
         lblNewLabel.setText("Uncheck fields you do not wish to include in the builder");
 
         checkboxTableViewer = CheckboxTableViewer.newCheckList(shell, SWT.BORDER | SWT.FULL_SELECTION);
         table = checkboxTableViewer.getTable();
+        GridData gd_table = new GridData(SWT.FILL, SWT.FILL, true, true, 2, 2);
+        gd_table.heightHint = 250;
+        gd_table.widthHint = 365;
+        table.setLayoutData(gd_table);
         table.setBounds(10, 33, 396, 228);
         table.setHeaderVisible(true);
         table.setLinesVisible(true);
@@ -123,7 +133,7 @@ public class RegularBuilderUserPreferenceDialog extends Dialog {
 
         TableViewerColumn fieldnameTableViewerColumn = new TableViewerColumn(checkboxTableViewer, SWT.NONE);
         TableColumn fieldNameTableColumn = fieldnameTableViewerColumn.getColumn();
-        fieldNameTableColumn.setWidth(200);
+        fieldNameTableColumn.setWidth(291);
         fieldNameTableColumn.setText("Field");
         fieldnameTableViewerColumn.setLabelProvider(new ColumnLabelProvider() {
             @Override
@@ -131,7 +141,41 @@ public class RegularBuilderUserPreferenceDialog extends Dialog {
                 return ((RegularBuilderFieldIncludeFieldIncludeDomain) o).getFieldName();
             }
         });
+
+        copyBuilderMethodGenerateButton = new Button(shell, SWT.CHECK);
+        copyBuilderMethodGenerateButton.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
+        copyBuilderMethodGenerateButton.setBounds(10, 277, 396, 22);
+        copyBuilderMethodGenerateButton.setText("Add method to create a builder based on an instance");
+
+        addJacksonDeserializer = new Button(shell, SWT.CHECK);
+        addJacksonDeserializer.setBounds(10, 305, 384, 22);
+        addJacksonDeserializer.setText("Add Jackson deserialize annotation");
+        new Label(shell, SWT.NONE);
+
+        createDefaultConstructor = new Button(shell, SWT.CHECK);
+        createDefaultConstructor.setBounds(10, 333, 373, 17);
+        createDefaultConstructor.setText("Create public default constructor");
+        new Label(shell, SWT.NONE);
+
+        Button cancelButton = new Button(shell, SWT.NONE);
+        cancelButton.setBounds(10, 376, 101, 29);
+        cancelButton.setText("Cancel");
+
+        cancelButton.addSelectionListener(new SelectionListener() {
+
+            @Override
+            public void widgetSelected(SelectionEvent selectionEvent) {
+                result = null;
+                shell.close();
+            }
+
+            @Override
+            public void widgetDefaultSelected(SelectionEvent selectionEvent) {
+
+            }
+        });
         Button generateButton = new Button(shell, SWT.NONE);
+        generateButton.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
         generateButton.setBounds(305, 376, 101, 29);
         generateButton.setText("Generate");
         generateButton.addSelectionListener(new SelectionListener() {
@@ -149,47 +193,7 @@ public class RegularBuilderUserPreferenceDialog extends Dialog {
             }
         });
 
-        Button cancelButton = new Button(shell, SWT.NONE);
-        cancelButton.setBounds(10, 376, 101, 29);
-        cancelButton.setText("Cancel");
-
-        copyBuilderMethodGenerateButton = new Button(shell, SWT.CHECK);
-        copyBuilderMethodGenerateButton.setBounds(10, 277, 396, 22);
-        copyBuilderMethodGenerateButton.setText("Add method to create a builder based on an instance");
-
-        cancelButton.addSelectionListener(new SelectionListener() {
-
-            @Override
-            public void widgetSelected(SelectionEvent selectionEvent) {
-                result = null;
-                shell.close();
-            }
-
-            @Override
-            public void widgetDefaultSelected(SelectionEvent selectionEvent) {
-
-            }
-        });
-
-        addJacksonDeserializer = new Button(shell, SWT.CHECK);
-        addJacksonDeserializer.addSelectionListener(new SelectionAdapter() {
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-            }
-        });
-        addJacksonDeserializer.setBounds(10, 305, 384, 22);
-        addJacksonDeserializer.setText("Add Jackson deserialize annotation");
-
         shell.setDefaultButton(generateButton);
-
-        createDefaultConstructor = new Button(shell, SWT.CHECK);
-        createDefaultConstructor.addSelectionListener(new SelectionAdapter() {
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-            }
-        });
-        createDefaultConstructor.setBounds(10, 333, 373, 17);
-        createDefaultConstructor.setText("Create public default constructor");
         initializeContents();
     }
 

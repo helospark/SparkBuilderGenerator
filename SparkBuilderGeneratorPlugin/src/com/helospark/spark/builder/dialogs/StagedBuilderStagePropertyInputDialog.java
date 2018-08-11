@@ -15,7 +15,11 @@ import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Dialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
@@ -23,11 +27,11 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 
+import com.helospark.spark.builder.Activator;
 import com.helospark.spark.builder.dialogs.domain.StagedBuilderStagePropertiesDialogResult;
 
 /**
  * Dialog to set order and mandatory parameters for stage builder.
- * Generated with WindowBuilder plugin
  * @author helospark
  */
 @Generated("WindowBuilder")
@@ -68,23 +72,25 @@ public class StagedBuilderStagePropertyInputDialog extends Dialog {
     private void createContents() {
         shell = new Shell(getParent(), SWT.SHELL_TRIM | SWT.BORDER | SWT.PRIMARY_MODAL | SWT.SHEET);
         shell.setSize(474, 338);
+        shell.setMinimumSize(450, 250);
         shell.setText(getText());
-
-        Button moveUpButton = new Button(shell, SWT.NONE);
-        moveUpButton.setBounds(358, 52, 101, 29);
-        moveUpButton.setText("Move up");
-
-        Button moveDownButton = new Button(shell, SWT.NONE);
-        moveDownButton.setBounds(358, 87, 101, 29);
-        moveDownButton.setText("Move down");
+        shell.setLayout(new GridLayout(2, false));
+        shell.setImage(Activator.getIcon());
 
         Label usageLabel = new Label(shell, SWT.NONE);
-        usageLabel.setBounds(10, 10, 449, 17);
+        usageLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
         usageLabel.setText("Check fields that are mandatory, organize field build stage order.");
+
+        Label lblNewLabel = new Label(shell, SWT.NONE);
+        lblNewLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
+        lblNewLabel.setText("Click on 'Remove' button to leave selected field out of the builder.");
 
         checkboxTableViewer = CheckboxTableViewer.newCheckList(shell, SWT.BORDER | SWT.FULL_SELECTION);
         checkboxTable = checkboxTableViewer.getTable();
-        checkboxTable.setBounds(10, 52, 342, 209);
+        GridData gd_checkboxTable = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
+        gd_checkboxTable.minimumWidth = 100;
+        gd_checkboxTable.minimumHeight = 50;
+        checkboxTable.setLayoutData(gd_checkboxTable);
         checkboxTable.setHeaderVisible(true);
         checkboxTable.setLinesVisible(true);
         checkboxTableViewer.setCheckStateProvider(new ICheckStateProvider() {
@@ -130,31 +136,17 @@ public class StagedBuilderStagePropertyInputDialog extends Dialog {
             }
         });
 
-        Button generateButton = new Button(shell, SWT.NONE);
-        generateButton.setBounds(358, 270, 101, 29);
-        generateButton.setText("Generate");
-        generateButton.addSelectionListener(new SelectionListener() {
+        Composite composite = new Composite(shell, SWT.NONE);
+        composite.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false, 1, 1));
+        composite.setLayout(new RowLayout(SWT.VERTICAL));
 
-            @Override
-            public void widgetSelected(SelectionEvent selectionEvent) {
-                dialogResult = Arrays.stream(checkboxTableViewer.getTable().getItems())
-                        .map(item -> (StagedBuilderStagePropertiesDialogResult) item.getData())
-                        .collect(Collectors.toList());
-                shell.close();
-            }
+        Button moveUpButton = new Button(composite, SWT.NONE);
+        moveUpButton.setText("Move up");
 
-            @Override
-            public void widgetDefaultSelected(SelectionEvent selectionEvent) {
+        Button moveDownButton = new Button(composite, SWT.NONE);
+        moveDownButton.setText("Move down");
 
-            }
-        });
-
-        Button cancelButton = new Button(shell, SWT.NONE);
-        cancelButton.setBounds(10, 270, 101, 29);
-        cancelButton.setText("Cancel");
-
-        Button removeButton = new Button(shell, SWT.NONE);
-        removeButton.setBounds(358, 122, 101, 29);
+        Button removeButton = new Button(composite, SWT.NONE);
         removeButton.setText("Remove");
         removeButton.addSelectionListener(new SelectionListener() {
 
@@ -171,24 +163,6 @@ public class StagedBuilderStagePropertyInputDialog extends Dialog {
 
             @Override
             public void widgetDefaultSelected(SelectionEvent paramSelectionEvent) {
-            }
-        });
-
-        Label lblNewLabel = new Label(shell, SWT.NONE);
-        lblNewLabel.setBounds(10, 29, 459, 17);
-        lblNewLabel.setText("Click on 'Remove' button to leave selected field out of the builder.");
-
-        cancelButton.addSelectionListener(new SelectionListener() {
-
-            @Override
-            public void widgetSelected(SelectionEvent selectionEvent) {
-                dialogResult = null;
-                shell.close();
-            }
-
-            @Override
-            public void widgetDefaultSelected(SelectionEvent selectionEvent) {
-
             }
         });
 
@@ -234,9 +208,45 @@ public class StagedBuilderStagePropertyInputDialog extends Dialog {
             }
         });
 
-        initializeContents();
+        Button cancelButton = new Button(shell, SWT.NONE);
+        cancelButton.setText("Cancel");
+
+        cancelButton.addSelectionListener(new SelectionListener() {
+
+            @Override
+            public void widgetSelected(SelectionEvent selectionEvent) {
+                dialogResult = null;
+                shell.close();
+            }
+
+            @Override
+            public void widgetDefaultSelected(SelectionEvent selectionEvent) {
+
+            }
+        });
+
+        Button generateButton = new Button(shell, SWT.NONE);
+        generateButton.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+        generateButton.setText("Generate");
+        generateButton.addSelectionListener(new SelectionListener() {
+
+            @Override
+            public void widgetSelected(SelectionEvent selectionEvent) {
+                dialogResult = Arrays.stream(checkboxTableViewer.getTable().getItems())
+                        .map(item -> (StagedBuilderStagePropertiesDialogResult) item.getData())
+                        .collect(Collectors.toList());
+                shell.close();
+            }
+
+            @Override
+            public void widgetDefaultSelected(SelectionEvent selectionEvent) {
+
+            }
+        });
 
         shell.setDefaultButton(generateButton);
+
+        initializeContents();
     }
 
     private void initializeContents() {
