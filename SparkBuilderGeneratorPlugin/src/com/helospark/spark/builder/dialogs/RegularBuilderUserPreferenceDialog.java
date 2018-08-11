@@ -4,6 +4,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.annotation.Generated;
+
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTableViewer;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
@@ -11,7 +13,6 @@ import org.eclipse.jface.viewers.ICheckStateListener;
 import org.eclipse.jface.viewers.ICheckStateProvider;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
@@ -24,14 +25,15 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 
+import com.helospark.spark.builder.Activator;
 import com.helospark.spark.builder.dialogs.domain.RegularBuilderDialogData;
 import com.helospark.spark.builder.dialogs.domain.RegularBuilderFieldIncludeFieldIncludeDomain;
 
 /**
  * Dialog to select user preferences during builder generation for regular builders.
- * Generated with WindowBuilder.
  * @author helospark
  */
+@Generated("WindowBuilder")
 public class RegularBuilderUserPreferenceDialog extends Dialog {
 
     protected Object result;
@@ -80,6 +82,7 @@ public class RegularBuilderUserPreferenceDialog extends Dialog {
         shell.setMinimumSize(380, 250);
         shell.setText("Select fields for builder");
         shell.setLayout(new GridLayout(2, false));
+        shell.setImage(Activator.getIcon());
 
         Label lblNewLabel = new Label(shell, SWT.WRAP);
         lblNewLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
@@ -145,21 +148,11 @@ public class RegularBuilderUserPreferenceDialog extends Dialog {
         copyBuilderMethodGenerateButton.setText("Add method to create a builder based on an instance");
 
         addJacksonDeserializer = new Button(shell, SWT.CHECK);
-        addJacksonDeserializer.addSelectionListener(new SelectionAdapter() {
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-            }
-        });
         addJacksonDeserializer.setBounds(10, 305, 384, 22);
         addJacksonDeserializer.setText("Add Jackson deserialize annotation");
         new Label(shell, SWT.NONE);
 
         createDefaultConstructor = new Button(shell, SWT.CHECK);
-        createDefaultConstructor.addSelectionListener(new SelectionAdapter() {
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-            }
-        });
         createDefaultConstructor.setBounds(10, 333, 373, 17);
         createDefaultConstructor.setText("Create public default constructor");
         new Label(shell, SWT.NONE);

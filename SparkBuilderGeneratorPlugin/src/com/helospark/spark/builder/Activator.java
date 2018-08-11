@@ -1,6 +1,9 @@
 package com.helospark.spark.builder;
 
+import java.util.Optional;
+
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
@@ -9,6 +12,8 @@ import org.osgi.framework.BundleContext;
  */
 public class Activator extends AbstractUIPlugin {
     public static final String PLUGIN_ID = "com.helospark.SparkBuilderGenerator";
+
+    private static final String ICON = "icons/builder.gif";
 
     private static Activator plugin;
     private static PluginLogger pluginLogger = new PluginLogger();
@@ -38,5 +43,11 @@ public class Activator extends AbstractUIPlugin {
 
     public static ImageDescriptor getImageDescriptor(String path) {
         return imageDescriptorFromPlugin(PLUGIN_ID, path);
+    }
+
+    public static Image getIcon() {
+        return Optional.ofNullable(getImageDescriptor(ICON))
+                .map(descriptor -> descriptor.createImage())
+                .orElse(null);
     }
 }

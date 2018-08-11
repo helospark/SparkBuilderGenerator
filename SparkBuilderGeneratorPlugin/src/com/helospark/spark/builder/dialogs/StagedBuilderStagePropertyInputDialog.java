@@ -4,6 +4,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.annotation.Generated;
+
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTableViewer;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
@@ -25,13 +27,14 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 
+import com.helospark.spark.builder.Activator;
 import com.helospark.spark.builder.dialogs.domain.StagedBuilderStagePropertiesDialogResult;
 
 /**
  * Dialog to set order and mandatory parameters for stage builder.
- * Generated with WindowBuilder plugin
  * @author helospark
  */
+@Generated("WindowBuilder")
 public class StagedBuilderStagePropertyInputDialog extends Dialog {
     protected Object dialogResult;
     protected Shell shell;
@@ -72,6 +75,7 @@ public class StagedBuilderStagePropertyInputDialog extends Dialog {
         shell.setMinimumSize(450, 250);
         shell.setText(getText());
         shell.setLayout(new GridLayout(2, false));
+        shell.setImage(Activator.getIcon());
 
         Label usageLabel = new Label(shell, SWT.NONE);
         usageLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
