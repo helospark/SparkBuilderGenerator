@@ -100,6 +100,8 @@ Most configuration is on the preferences page: Preferences -> Java -> Spark buil
    Generate Jackson deserialize annotations to the builder
  - 0.0.17
    Generate public default constructor
+ - 0.0.18
+   Fixed dialog issue when combined with DevStyle Darkest Dark plugin, also made dialogs more responsive and updated icon
 
 ## The generated code looks like the following:
 
