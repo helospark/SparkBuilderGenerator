@@ -50,7 +50,9 @@ public class HappyFlowE2ETest extends BaseBuilderGeneratorIT {
                 // technically this is incorrect behavour, but without Generated annotation, there is no way to know, which
                 // is the correct private constructor
                 { "class_with_already_generated_builder_and_private_method_without_generated_annotation_input.tjava",
-                        "class_with_already_generated_builder_and_private_method_without_generated_annotation_output.tjava" }
+                        "class_with_already_generated_builder_and_private_method_without_generated_annotation_output.tjava" },
+                // GitHub #44: enum in the builder causes ClassCastException
+                { "enum_class/class_with_enum_input.tjava", "enum_class/class_with_enum_output.tjava" }
         };
     }
 

@@ -50,7 +50,9 @@ public class StagedBuilderTest extends BaseBuilderGeneratorIT {
                 { "multi_field_staged_builder_output.tjava", "multi_field_staged_builder_output.tjava" },
                 { "multi_field_output.tjava", "multi_field_staged_builder_output.tjava" },
                 { "static_field_input.tjava", "static_field_output_with_staged_builder.tjava" },
-                { "multi_field_output_for_staged_builder_with_default_preferences.tjava", "multi_field_staged_builder_output_with_leftover_generated_annotation.tjava" }
+                { "multi_field_output_for_staged_builder_with_default_preferences.tjava", "multi_field_staged_builder_output_with_leftover_generated_annotation.tjava" },
+                // GitHub #44: enum in the builder causes ClassCastException
+                { "enum_class/class_with_enum_input.tjava", "enum_class/class_with_enum_staged_output.tjava" }
         };
     }
 

@@ -1,0 +1,13 @@
+
+public class FirstClass {
+	private String firstField;
+	private String secondField;
+}
+
+enum SomeEnum {
+
+}
+
+class SecondClass {
+	private String sec;
+}

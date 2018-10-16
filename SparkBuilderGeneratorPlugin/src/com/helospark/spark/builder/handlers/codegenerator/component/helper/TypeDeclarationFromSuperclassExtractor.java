@@ -6,8 +6,10 @@ import static java.util.Optional.ofNullable;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.eclipse.jdt.core.IType;
+import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 
@@ -41,11 +43,19 @@ public class TypeDeclarationFromSuperclassExtractor {
 
     private Optional<TypeDeclaration> extractTypeDeclaration(IType superClassType) {
         return getCompilationUnit(superClassType)
-                .map(iCompilationUnit -> ((List<TypeDeclaration>) iCompilationUnit.types()))
+                .map(iCompilationUnit -> getTypes(iCompilationUnit))
                 .orElse(emptyList())
                 .stream()
                 .filter(type -> type.getName().toString().equals(superClassType.getElementName()))
                 .findFirst();
+    }
+
+    private List<TypeDeclaration> getTypes(CompilationUnit iCompilationUnit) {
+        return ((List<AbstractTypeDeclaration>) iCompilationUnit.types())
+                .stream()
+                .filter(abstractTypeDeclaration -> abstractTypeDeclaration instanceof TypeDeclaration)
+                .map(abstractTypeDeclaration -> (TypeDeclaration) abstractTypeDeclaration)
+                .collect(Collectors.toList());
     }
 
     private Optional<CompilationUnit> getCompilationUnit(IType superClassType) {

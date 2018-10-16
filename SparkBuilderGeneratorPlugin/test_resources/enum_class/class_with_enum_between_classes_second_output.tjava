@@ -1,0 +1,35 @@
+public class FirstClass {
+    private String firstField;
+    private String secondField;
+}
+
+enum SomeEnum {
+}
+
+class SecondClass {
+    private String sec;
+
+    private SecondClass(Builder builder) {
+        this.sec = builder.sec;
+    }
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public static final class Builder {
+        private String sec;
+
+        private Builder() {
+        }
+
+        public Builder withSec(String sec) {
+            this.sec = sec;
+            return this;
+        }
+
+        public SecondClass build() {
+            return new SecondClass(this);
+        }
+    }
+}

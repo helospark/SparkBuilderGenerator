@@ -43,6 +43,19 @@ public class WrongInputE2ETest extends BaseBuilderGeneratorIT {
         verify(dialogWrapper).openInformationDialog("Error", "No types are present in the current java file");
     }
 
+    @Test
+    public void testWhenCalledOnCompilationUnitWithoutOnlyASingleEnumShouldThrow() throws Exception {
+        // GIVEN
+        String input = readClasspathFile("enum_class/file_with_only_enum_input.tjava");
+        super.setInput(input);
+
+        // WHEN
+        underTest.execute(dummyExecutionEvent);
+
+        // THEN
+        verify(dialogWrapper).openInformationDialog("Error", "No types are present in the current java file");
+    }
+
     @Test(dataProvider = "templateNameProvider")
     public void testWhenCalledWithInvalidTemplate(String templateName, String validTemplates) throws Exception {
         // GIVEN
