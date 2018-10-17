@@ -10,6 +10,7 @@ import java.util.Optional;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTNode;
+import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.jdt.core.dom.rewrite.ASTRewrite;
@@ -98,8 +99,10 @@ public class BuilderOwnerClassFinder {
     }
 
     private Optional<TypeDeclaration> findClassWithClassName(CompilationUnit compilationUnit, String className) {
-        return ((List<TypeDeclaration>) compilationUnit.types())
+        return ((List<AbstractTypeDeclaration>) compilationUnit.types())
                 .stream()
+                .filter(abstractTypeDeclaration -> abstractTypeDeclaration instanceof TypeDeclaration)
+                .map(abstractTypeDeclaration -> (TypeDeclaration) abstractTypeDeclaration)
                 .map(type -> recursivelyFindClassByName(type, className))
                 .filter(Objects::nonNull)
                 .findFirst();
@@ -121,10 +124,11 @@ public class BuilderOwnerClassFinder {
     }
 
     private TypeDeclaration getFirstType(CompilationUnit compilationUnit) {
-        List<TypeDeclaration> types = compilationUnit.types();
-        if (types == null || types.size() == 0) {
-            throw new PluginException("No types are present in the current java file");
-        }
-        return types.get(0);
+        return ((List<AbstractTypeDeclaration>) compilationUnit.types())
+                .stream()
+                .filter(abstractTypeDeclaration -> abstractTypeDeclaration instanceof TypeDeclaration)
+                .map(abstractTypeDeclaration -> (TypeDeclaration) abstractTypeDeclaration)
+                .findFirst()
+                .orElseThrow(() -> new PluginException("No types are present in the current java file"));
     }
 }

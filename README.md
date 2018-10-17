@@ -102,6 +102,8 @@ Most configuration is on the preferences page: Preferences -> Java -> Spark buil
    Generate public default constructor
  - 0.0.18
    Fixed dialog issue when combined with DevStyle Darkest Dark plugin, also made dialogs more responsive and updated icon
+ - 0.0.19
+   Fixed ClassCastException when Java file includes an enum as the first type.
 
 ## The generated code looks like the following:
 

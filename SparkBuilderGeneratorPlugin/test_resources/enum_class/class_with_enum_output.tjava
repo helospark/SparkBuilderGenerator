@@ -1,0 +1,38 @@
+enum FirstEnum {
+}
+
+public class ClassWithEnum {
+    private String firstField;
+    private String secondField;
+
+    private ClassWithEnum(Builder builder) {
+        this.firstField = builder.firstField;
+        this.secondField = builder.secondField;
+    }
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public static final class Builder {
+        private String firstField;
+        private String secondField;
+
+        private Builder() {
+        }
+
+        public Builder withFirstField(String firstField) {
+            this.firstField = firstField;
+            return this;
+        }
+
+        public Builder withSecondField(String secondField) {
+            this.secondField = secondField;
+            return this;
+        }
+
+        public ClassWithEnum build() {
+            return new ClassWithEnum(this);
+        }
+    }
+}

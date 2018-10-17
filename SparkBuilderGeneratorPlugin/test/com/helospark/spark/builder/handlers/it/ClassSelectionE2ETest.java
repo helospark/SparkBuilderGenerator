@@ -64,7 +64,13 @@ public class ClassSelectionE2ETest extends BaseBuilderGeneratorIT {
                 { "multi_classes_input.tjava", "multi_classes_output_with_main_class_generated_builder.tjava", of("NoSuchClass") },
                 { "multi_classes_input.tjava", "multi_classes_output_with_secondary_class_builder.tjava", of("SecondaryClass") },
                 { "multi_classes_input.tjava", "multi_class_output_with_nested_static_class_builder.tjava", of("NestedStaticClass") },
-                { "nested_class_input.tjava", "nested_class_output_with_second_nested_generated.tjava", of("SecondNestedClass") }
+                { "nested_class_input.tjava", "nested_class_output_with_second_nested_generated.tjava", of("SecondNestedClass") },
+                // GitHub #44, when standing in an enum, shouldn't fail
+                { "enum_class/class_with_enum_input.tjava", "enum_class/class_with_enum_output.tjava", of("FirstEnum") },
+                { "enum_class/class_with_enum_input.tjava", "enum_class/class_with_enum_output.tjava", of("ClassWithEnum") },
+                { "enum_class/class_with_enum_between_classes_input.tjava", "enum_class/class_with_enum_between_classes_first_output.tjava", of("FirstClass") },
+                { "enum_class/class_with_enum_between_classes_input.tjava", "enum_class/class_with_enum_between_classes_first_output.tjava", of("SomeEnum") },
+                { "enum_class/class_with_enum_between_classes_input.tjava", "enum_class/class_with_enum_between_classes_second_output.tjava", of("SecondClass") },
         };
     }
 

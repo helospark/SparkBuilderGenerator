@@ -1,0 +1,9 @@
+
+enum FirstEnum {
+
+}
+
+public class ClassWithEnum {
+	private String firstField;
+	private String secondField;
+}

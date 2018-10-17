@@ -1,0 +1,53 @@
+enum FirstEnum {
+}
+
+public class ClassWithEnum {
+    private String firstField;
+    private String secondField;
+
+    private ClassWithEnum(Builder builder) {
+        this.firstField = builder.firstField;
+        this.secondField = builder.secondField;
+    }
+
+    public static IFirstFieldStage builder() {
+        return new Builder();
+    }
+
+    public interface IFirstFieldStage {
+        public ISecondFieldStage withFirstField(String firstField);
+    }
+
+    public interface ISecondFieldStage {
+        public IBuildStage withSecondField(String secondField);
+    }
+
+    public interface IBuildStage {
+        public ClassWithEnum build();
+    }
+
+    public static final class Builder implements IFirstFieldStage, ISecondFieldStage, IBuildStage {
+        private String firstField;
+        private String secondField;
+
+        private Builder() {
+        }
+
+        @Override
+        public ISecondFieldStage withFirstField(String firstField) {
+            this.firstField = firstField;
+            return this;
+        }
+
+        @Override
+        public IBuildStage withSecondField(String secondField) {
+            this.secondField = secondField;
+            return this;
+        }
+
+        @Override
+        public ClassWithEnum build() {
+            return new ClassWithEnum(this);
+        }
+    }
+}
