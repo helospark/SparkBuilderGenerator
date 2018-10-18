@@ -4,6 +4,7 @@ import static com.helospark.spark.builder.preferences.PluginPreferenceList.BUILD
 import static com.helospark.spark.builder.preferences.PluginPreferenceList.BUILD_METHOD_NAME_PATTERN;
 import static com.helospark.spark.builder.preferences.StaticPreferences.JSON_POJO_BUILDER_CLASS_NAME;
 
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -37,24 +38,24 @@ public class JsonPOJOBuilderAdderFragment {
     }
 
     public void addJsonPOJOBuilder(AST ast, TypeDeclaration builderType) {
-        importRepository.addImport(StaticPreferences.JSON_POJO_BUILDER_FULLY_QUALIFIED_NAME);
-        Annotation annotationToAdd = createJsonPojoBuilderAnnotation(ast);
-        builderType.modifiers().add(0, annotationToAdd);
+        createJsonPojoBuilderAnnotation(ast)
+                .ifPresent(annotationToAdd -> {
+                    builderType.modifiers().add(0, annotationToAdd);
+                    importRepository.addImport(StaticPreferences.JSON_POJO_BUILDER_FULLY_QUALIFIED_NAME);
+                });
     }
 
-    private Annotation createJsonPojoBuilderAnnotation(AST ast) {
+    private Optional<Annotation> createJsonPojoBuilderAnnotation(AST ast) {
         String buildMethodName = getBuilderMethodName();
         String withMethodPrefix = getWithMethodPrefix();
 
-        Annotation result;
-        if (buildMethodName.equals(DEFAULT_BUILDER_METHOD_NAME_ATTRIBUTE_VALUE) && withMethodPrefix.equals(DEFAULT_WITH_METHOD_ATTRIBUTE_VALUE)) {
-            result = createEmptyJsonPojoBuilderAnnotation(ast);
-        } else {
-            result = createJsonPojoBuilderAnnotationWithAttributes(ast, buildMethodName, withMethodPrefix);
+        if (!buildMethodName.equals(DEFAULT_BUILDER_METHOD_NAME_ATTRIBUTE_VALUE) || !withMethodPrefix.equals(DEFAULT_WITH_METHOD_ATTRIBUTE_VALUE)) {
+            Annotation result = createJsonPojoBuilderAnnotationWithAttributes(ast, buildMethodName, withMethodPrefix);
+            result.setTypeName(ast.newSimpleName(JSON_POJO_BUILDER_CLASS_NAME));
+            return Optional.of(result);
         }
-        result.setTypeName(ast.newSimpleName(JSON_POJO_BUILDER_CLASS_NAME));
 
-        return result;
+        return Optional.empty();
     }
 
     private String getBuilderMethodName() {

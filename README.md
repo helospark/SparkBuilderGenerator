@@ -104,6 +104,7 @@ Most configuration is on the preferences page: Preferences -> Java -> Spark buil
    Fixed dialog issue when combined with DevStyle Darkest Dark plugin, also made dialogs more responsive and updated icon
  - 0.0.19
    Fixed ClassCastException when Java file includes an enum as the first type.
+   JsonPOJOBuilder annotation is not generated when the default builder names is not overridden
 
 ## The generated code looks like the following:
 

@@ -1,4 +1,3 @@
-import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 @JsonDeserialize(builder = EmailMessage.EmailMessageBuilder.class)
@@ -15,7 +14,6 @@ public class EmailMessage {
         return new EmailMessageBuilder();
     }
 
-    @JsonPOJOBuilder
     public static final class EmailMessageBuilder {
         private String from;
         private String to;
