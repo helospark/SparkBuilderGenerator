@@ -46,16 +46,22 @@ Logging improvement
 - 0.0.13
 Add fields from superclass&apos; constructor to the builder
 - 0.0.14
-Add the ability to create a builder based on an already existing instance
+Add the ability to create a builder based on an already existing
+instance
 Dialog UX update
- - 0.0.15
-Add builder fields for private fields in superclass that have setters.
- - 0.0.16
+- 0.0.15
+Add builder fields for private fields in superclass that have
+setters.
+- 0.0.16
 Generate Jackson deserialize annotations to the builder
- - 0.0.17
+- 0.0.17
 Generate public default constructor
- - 0.0.18
-Fixed dialog issue when combined with DevStyle Darkest Dark plugin, also made dialogs more responsive and updated icon
+- 0.0.18
+Fixed dialog issue when combined with DevStyle Darkest Dark plugin,
+also made dialogs more responsive and updated icon
+ - 0.0.19
+Fixed ClassCastException when Java file includes an enum as the first type.
+JsonPOJOBuilder annotation is not generated when the default builder names is not overridden
    </description>
 
    <license url="https://opensource.org/licenses/MIT">
