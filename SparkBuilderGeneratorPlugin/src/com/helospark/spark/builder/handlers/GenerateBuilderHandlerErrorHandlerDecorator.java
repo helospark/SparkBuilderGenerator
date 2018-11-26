@@ -25,7 +25,7 @@ public class GenerateBuilderHandlerErrorHandlerDecorator implements GenerateBuil
             generateBuilderHandlerDelegate.execute(event, builderType);
         } catch (PluginException e) {
             errorHandlerHook.onPluginException(e);
-        } catch (Exception e) {
+        } catch (Throwable e) {
             errorHandlerHook.onUnexpectedException(e);
             throw new RuntimeException(e.getMessage(), e);
         }

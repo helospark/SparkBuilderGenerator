@@ -26,7 +26,7 @@ public class ErrorHandlerHook {
         pluginLogger.warn(e.getMessage(), e);
     }
 
-    public void onUnexpectedException(Exception e) {
+    public void onUnexpectedException(Throwable e) {
         dialogWrapper.openErrorDialogWithStacktrace(ERROR_TITLE,
                 UNEXPECTED_ERROR_MESSAGE, e);
         pluginLogger.error(UNEXPECTED_ERROR_MESSAGE, e);

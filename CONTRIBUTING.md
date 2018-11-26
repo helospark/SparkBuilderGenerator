@@ -56,6 +56,7 @@ Before merge all items in the DoD must be done:
  - You can then open it in two ways:
    - The repository contains Eclipse's .project file, therefore you can open it with Eclipse -> File -> Open project from File System -> select the folder
    - Alternatively you can import it via File -> Import -> Plugin Development -> Plugins and Fragments -> choose the correct directory and add the plugins
+ - Set the active platform to be Neon (this can be done by open sparkbuildergenerator.target and click on "Set as active platform" or by setting it in Eclipse preferences "Target platform menu")
 
 ### Running the project
 
