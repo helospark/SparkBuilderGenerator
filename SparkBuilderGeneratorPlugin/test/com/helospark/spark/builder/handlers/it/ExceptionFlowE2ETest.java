@@ -107,4 +107,24 @@ public class ExceptionFlowE2ETest extends BaseBuilderGeneratorIT {
                 "This error should not have happened!\nYou can create an issue on https://github.com/helospark/SparkTools with the below stacktrace",
                 unexpectedException);
     }
+
+    @Test
+    public void testWhenUnexpectedErrorOccurresShouldShowErrorDialog() throws Exception {
+        // GIVEN
+        NoSuchMethodError unexpectedException = new NoSuchMethodError("Cause");
+        willThrow(unexpectedException)
+                .given(regularBuilderCompilationUnitGenerator)
+                .generateBuilder(any(CompilationUnitModificationDomain.class));
+        super.setInput("class TestClass {}");
+
+        // WHEN
+        try {
+            underTest.execute(dummyExecutionEvent);
+        } catch (Exception e) {
+        }
+        // THEN
+        verify(dialogWrapper).openErrorDialogWithStacktrace("Error",
+                "This error should not have happened!\nYou can create an issue on https://github.com/helospark/SparkTools with the below stacktrace",
+                unexpectedException);
+    }
 }

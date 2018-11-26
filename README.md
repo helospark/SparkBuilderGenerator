@@ -105,6 +105,8 @@ Most configuration is on the preferences page: Preferences -> Java -> Spark buil
  - 0.0.19
    Fixed ClassCastException when Java file includes an enum as the first type.
    JsonPOJOBuilder annotation is not generated when the default builder names is not overridden
+ - 0.0.20
+   Fixed regression issue caused by wrong target definition on compiling
 
 ## The generated code looks like the following:
 

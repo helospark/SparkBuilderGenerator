@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><?pde version="3.8"?><target name="sparkbuildergenerator">
+	<locations>
+		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+			<unit id="org.eclipse.jdt.feature.group" version="3.12.3.v20170301-0400"/>
+			<unit id="org.eclipse.jdt.source.feature.group" version="3.12.3.v20170301-0400"/>
+			<unit id="org.eclipse.pde.feature.group" version="3.12.3.v20170301-0400"/>
+			<unit id="org.eclipse.pde.source.feature.group" version="3.12.3.v20170301-0400"/>
+			<unit id="org.eclipse.platform.ide" version="4.6.3.M20170301-0400"/>
+			<unit id="org.eclipse.platform.sdk" version="4.6.3.M20170301-0400"/>
+			<unit id="org.eclipse.sdk.ide" version="4.6.3.M20170301-0400"/>
+			<repository location="http://download.eclipse.org/eclipse/updates/4.6"/>
+		</location>
+	</locations>
+</target>
