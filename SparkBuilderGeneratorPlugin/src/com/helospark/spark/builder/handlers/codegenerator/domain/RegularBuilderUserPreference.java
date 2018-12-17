@@ -13,6 +13,7 @@ public class RegularBuilderUserPreference {
     private boolean generateCopyMethod;
     private boolean addJacksonDeserializer;
     private boolean createDefaultConstructor;
+    private boolean createPublicConstructorWithMandatoryFields;
     private List<BuilderField> builderFields;
 
     @Generated("SparkTools")
@@ -20,6 +21,7 @@ public class RegularBuilderUserPreference {
         this.generateCopyMethod = builder.generateCopyMethod;
         this.addJacksonDeserializer = builder.addJacksonDeserializer;
         this.createDefaultConstructor = builder.createDefaultConstructor;
+        this.createPublicConstructorWithMandatoryFields = builder.createPublicConstructorWithMandatoryFields;
         this.builderFields = builder.builderFields;
     }
 
@@ -39,6 +41,10 @@ public class RegularBuilderUserPreference {
         return createDefaultConstructor;
     }
 
+    public boolean isCreatePublicConstructorWithMandatoryFields() {
+        return createPublicConstructorWithMandatoryFields;
+    }
+
     @Generated("SparkTools")
     public static Builder builder() {
         return new Builder();
@@ -49,6 +55,7 @@ public class RegularBuilderUserPreference {
         private boolean generateCopyMethod;
         private boolean addJacksonDeserializer;
         private boolean createDefaultConstructor;
+        private boolean createPublicConstructorWithMandatoryFields;
         private List<BuilderField> builderFields = Collections.emptyList();
 
         private Builder() {
@@ -66,6 +73,11 @@ public class RegularBuilderUserPreference {
 
         public Builder withCreateDefaultConstructor(boolean createDefaultConstructor) {
             this.createDefaultConstructor = createDefaultConstructor;
+            return this;
+        }
+
+        public Builder withCreatePublicConstructorWithMandatoryFields(boolean createPublicConstructorWithMandatoryFields) {
+            this.createPublicConstructorWithMandatoryFields = createPublicConstructorWithMandatoryFields;
             return this;
         }
 

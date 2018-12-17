@@ -20,6 +20,7 @@ public class RegularBuilderDialogDataConverter {
                 .withAddJacksonDeserializeAnnotation(regularBuilderUserPreference.isAddJacksonDeserializer())
                 .withRegularBuilderFieldIncludeFieldIncludeDomains(convertFields(regularBuilderUserPreference.getBuilderFields()))
                 .withCreateDefaultConstructor(regularBuilderUserPreference.isCreateDefaultConstructor())
+                .withCreatePublicConstructorWithMandatoryFields(regularBuilderUserPreference.isCreatePublicConstructorWithMandatoryFields())
                 .build();
     }
 
@@ -31,7 +32,7 @@ public class RegularBuilderDialogDataConverter {
     }
 
     private RegularBuilderFieldIncludeFieldIncludeDomain convert(BuilderField namedField) {
-        return new RegularBuilderFieldIncludeFieldIncludeDomain(true, namedField.getBuilderFieldName());
+        return new RegularBuilderFieldIncludeFieldIncludeDomain(true, false, namedField.getBuilderFieldName());
     }
 
 }

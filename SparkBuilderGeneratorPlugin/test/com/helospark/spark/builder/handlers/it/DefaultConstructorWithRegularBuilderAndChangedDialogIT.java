@@ -45,7 +45,7 @@ public class DefaultConstructorWithRegularBuilderAndChangedDialogIT extends Base
                 .withShouldCreateCopyMethod(false)
                 .withCreateDefaultConstructor(createDefaultConstructor)
                 .withRegularBuilderFieldIncludeFieldIncludeDomains(
-                        Arrays.asList(new RegularBuilderFieldIncludeFieldIncludeDomain(true, "from"), new RegularBuilderFieldIncludeFieldIncludeDomain(true, "to")))
+                        Arrays.asList(new RegularBuilderFieldIncludeFieldIncludeDomain(true, false, "from"), new RegularBuilderFieldIncludeFieldIncludeDomain(true, false, "to")))
                 .build();
         given(regularBuilderUserPreferenceDialogOpener.open(any())).willReturn(Optional.of(dialogResult));
 

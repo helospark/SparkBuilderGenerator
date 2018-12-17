@@ -121,6 +121,10 @@ public final class PluginPreferenceList {
             "org.helospark.builder.createPublicDefaultConstructor",
             "Create public default constructor (ex. for JPA)", Boolean.FALSE);
 
+    public static final PluginPreference<Boolean> CREATE_PUBLIC_CONSTRUCTOR_WITH_MANDATORY_FIELDS = new BooleanPluginPreference(
+            "org.helospark.builder.createPublicBuilderConstructorWithMandatoryField",
+            "Create public builder constructor with mandatory fields", Boolean.FALSE);
+
     public static List<PluginPreferenceGroup> getAllPreferences() {
         return Arrays.asList(createGeneralPreferencesGroup(),
                 createRegularBuilderPreferencesGroup(),
@@ -169,6 +173,7 @@ public final class PluginPreferenceList {
         regularBuilderPreferences.add(REGULAR_BUILDER_SHOW_DIALOG);
         regularBuilderPreferences.add(CREATE_METHOD_TO_INSTANTIATE_BUILDER_BASED_ON_INSTANCE);
         regularBuilderPreferences.add(COPY_INSTANCE_BUILDER_METHOD_PATTERN);
+        regularBuilderPreferences.add(CREATE_PUBLIC_CONSTRUCTOR_WITH_MANDATORY_FIELDS);
         return new PluginPreferenceGroup("Regular builder settings", regularBuilderPreferences);
     }
 }

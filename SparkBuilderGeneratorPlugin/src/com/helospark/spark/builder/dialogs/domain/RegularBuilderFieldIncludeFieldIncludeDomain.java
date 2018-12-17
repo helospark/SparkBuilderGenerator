@@ -6,10 +6,12 @@ package com.helospark.spark.builder.dialogs.domain;
  */
 public class RegularBuilderFieldIncludeFieldIncludeDomain {
     private boolean includeField;
+    private boolean mandatory;
     private String fieldName;
 
-    public RegularBuilderFieldIncludeFieldIncludeDomain(boolean includeField, String fieldName) {
+    public RegularBuilderFieldIncludeFieldIncludeDomain(boolean includeField, boolean mandatory, String fieldName) {
         this.includeField = includeField;
+        this.mandatory = mandatory;
         this.fieldName = fieldName;
     }
 
@@ -27,6 +29,14 @@ public class RegularBuilderFieldIncludeFieldIncludeDomain {
 
     public void setFieldName(String fieldName) {
         this.fieldName = fieldName;
+    }
+
+    public boolean isMandatory() {
+        return mandatory;
+    }
+
+    public void setMandatory(boolean mandatory) {
+        this.mandatory = mandatory;
     }
 
 }

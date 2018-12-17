@@ -48,7 +48,8 @@ public class RegularBuilderCompilationUnitGenerator {
     }
 
     public void generateBuilder(CompilationUnitModificationDomain compilationUnitModificationDomain, RegularBuilderUserPreference preference) {
-        // TODO: replace parameters, where these go separately with compilation modification domain
+        // TODO: replace parameters, where these go separately with compilation
+        // modification domain
         AST ast = compilationUnitModificationDomain.getAst();
         ListRewrite listRewrite = compilationUnitModificationDomain.getListRewrite();
         TypeDeclaration originalType = compilationUnitModificationDomain.getOriginalType();
@@ -58,7 +59,7 @@ public class RegularBuilderCompilationUnitGenerator {
         TypeDeclaration builderType = regularBuilderClassCreator.createBuilderClass(ast, originalType, preference);
         defaultConstructorAppender.addDefaultConstructorIfNeeded(compilationUnitModificationDomain, preference.getBuilderFields());
         privateConstructorPopulator.addPrivateConstructorToCompilationUnit(ast, originalType, builderType, listRewrite, preference.getBuilderFields());
-        builderMethodPopulator.addBuilderMethodToCompilationUnit(ast, listRewrite, originalType, builderType);
+        builderMethodPopulator.addBuilderMethodToCompilationUnit(ast, listRewrite, originalType, builderType, preference);
         instanceCopyBuilderMethodPopulator.addInstanceCopyBuilderMethodToCompilationUnitIfNeeded(compilationUnitModificationDomain, builderType, preference);
 
         listRewrite.insertLast(builderType, null);

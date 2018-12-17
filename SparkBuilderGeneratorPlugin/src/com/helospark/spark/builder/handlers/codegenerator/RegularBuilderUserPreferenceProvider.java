@@ -2,6 +2,7 @@ package com.helospark.spark.builder.handlers.codegenerator;
 
 import static com.helospark.spark.builder.preferences.PluginPreferenceList.ADD_JACKSON_DESERIALIZE_ANNOTATION;
 import static com.helospark.spark.builder.preferences.PluginPreferenceList.CREATE_METHOD_TO_INSTANTIATE_BUILDER_BASED_ON_INSTANCE;
+import static com.helospark.spark.builder.preferences.PluginPreferenceList.CREATE_PUBLIC_CONSTRUCTOR_WITH_MANDATORY_FIELDS;
 import static com.helospark.spark.builder.preferences.PluginPreferenceList.CREATE_PUBLIC_DEFAULT_CONSTRUCTOR;
 import static com.helospark.spark.builder.preferences.PluginPreferenceList.REGULAR_BUILDER_SHOW_DIALOG;
 
@@ -52,6 +53,7 @@ public class RegularBuilderUserPreferenceProvider {
                 .withGenerateCopyMethod(preferencesManager.getPreferenceValue(CREATE_METHOD_TO_INSTANTIATE_BUILDER_BASED_ON_INSTANCE))
                 .withAddJacksonDeserializer(preferencesManager.getPreferenceValue(ADD_JACKSON_DESERIALIZE_ANNOTATION))
                 .withCreateDefaultConstructor(preferencesManager.getPreferenceValue(CREATE_PUBLIC_DEFAULT_CONSTRUCTOR))
+                .withCreatePublicConstructorWithMandatoryFields(preferencesManager.getPreferenceValue(CREATE_PUBLIC_CONSTRUCTOR_WITH_MANDATORY_FIELDS))
                 .build();
     }
 

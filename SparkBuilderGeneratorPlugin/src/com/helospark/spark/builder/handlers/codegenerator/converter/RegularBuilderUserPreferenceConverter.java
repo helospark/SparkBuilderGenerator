@@ -37,6 +37,7 @@ public class RegularBuilderUserPreferenceConverter {
                 .withGenerateCopyMethod(result.shouldCreateCopyMethod())
                 .withAddJacksonDeserializer(result.isAddJacksonDeserializeAnnotation())
                 .withCreateDefaultConstructor(result.isCreateDefaultConstructor())
+                .withCreatePublicConstructorWithMandatoryFields(result.isCreatePublicConstructorWithMandatoryFields())
                 .build();
     }
 
@@ -47,6 +48,7 @@ public class RegularBuilderUserPreferenceConverter {
         }
         List<BuilderField> result = new ArrayList<>();
         for (int i = 0; i < dialogOutput.size(); ++i) {
+            builderFields.get(i).setMandatory(dialogOutput.get(i).isMandatory());
             if (dialogOutput.get(i).isIncludeField()) {
                 result.add(builderFields.get(i));
             }
