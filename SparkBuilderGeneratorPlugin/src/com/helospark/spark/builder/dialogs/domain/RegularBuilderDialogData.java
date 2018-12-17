@@ -14,6 +14,7 @@ public class RegularBuilderDialogData {
     private boolean shouldCreateCopyMethod;
     private boolean addJacksonDeserializeAnnotation;
     private boolean createDefaultConstructor;
+    private boolean createPublicConstructorWithMandatoryFields;
 
     @Generated("SparkTools")
     private RegularBuilderDialogData(Builder builder) {
@@ -21,6 +22,7 @@ public class RegularBuilderDialogData {
         this.shouldCreateCopyMethod = builder.shouldCreateCopyMethod;
         this.addJacksonDeserializeAnnotation = builder.addJacksonDeserializeAnnotation;
         this.createDefaultConstructor = builder.createDefaultConstructor;
+        this.createPublicConstructorWithMandatoryFields = builder.createPublicConstructorWithMandatoryFields;
     }
 
     public List<RegularBuilderFieldIncludeFieldIncludeDomain> getRegularBuilderFieldIncludeFieldIncludeDomains() {
@@ -39,6 +41,10 @@ public class RegularBuilderDialogData {
         return createDefaultConstructor;
     }
 
+    public boolean isCreatePublicConstructorWithMandatoryFields() {
+        return createPublicConstructorWithMandatoryFields;
+    }
+
     @Generated("SparkTools")
     public static Builder builder() {
         return new Builder();
@@ -50,6 +56,7 @@ public class RegularBuilderDialogData {
         private boolean shouldCreateCopyMethod;
         private boolean addJacksonDeserializeAnnotation;
         private boolean createDefaultConstructor;
+        private boolean createPublicConstructorWithMandatoryFields;
 
         private Builder() {
         }
@@ -71,6 +78,11 @@ public class RegularBuilderDialogData {
 
         public Builder withCreateDefaultConstructor(boolean createDefaultConstructor) {
             this.createDefaultConstructor = createDefaultConstructor;
+            return this;
+        }
+
+        public Builder withCreatePublicConstructorWithMandatoryFields(boolean createPublicConstructorWithMandatoryFields) {
+            this.createPublicConstructorWithMandatoryFields = createPublicConstructorWithMandatoryFields;
             return this;
         }
 

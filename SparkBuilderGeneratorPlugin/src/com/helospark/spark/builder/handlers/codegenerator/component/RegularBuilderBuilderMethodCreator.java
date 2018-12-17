@@ -8,6 +8,7 @@ import org.eclipse.jdt.core.dom.rewrite.ListRewrite;
 
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.buildermethod.empty.BlockWithNewBuilderCreationFragment;
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.buildermethod.empty.BuilderMethodDefinitionCreatorFragment;
+import com.helospark.spark.builder.handlers.codegenerator.domain.RegularBuilderUserPreference;
 
 /**
  * Adds the builder() method for a regular builder.
@@ -29,7 +30,17 @@ public class RegularBuilderBuilderMethodCreator {
         this.builderMethodDefinitionCreatorFragment = builderMethodDefinitionCreatorFragment;
     }
 
-    public void addBuilderMethodToCompilationUnit(AST ast, ListRewrite listRewrite, TypeDeclaration typeDeclaration, TypeDeclaration builderType) {
+    public void addBuilderMethodToCompilationUnit(AST ast, ListRewrite listRewrite, TypeDeclaration typeDeclaration, TypeDeclaration builderType, RegularBuilderUserPreference preference) {
+        if (builderMethodNeeded(preference)) {
+            addBuilderMethod(ast, listRewrite, typeDeclaration, builderType);
+        }
+    }
+
+    private boolean builderMethodNeeded(RegularBuilderUserPreference preference) {
+        return !preference.isCreatePublicConstructorWithMandatoryFields();
+    }
+
+    private void addBuilderMethod(AST ast, ListRewrite listRewrite, TypeDeclaration typeDeclaration, TypeDeclaration builderType) {
         Block builderMethodBlock = blockWithNewBuilderCreationFragment.createReturnBlock(ast, builderType);
         MethodDeclaration builderMethod = builderMethodDefinitionCreatorFragment.createBuilderMethod(ast, typeDeclaration, builderType.getName().toString());
         builderMethod.setBody(builderMethodBlock);

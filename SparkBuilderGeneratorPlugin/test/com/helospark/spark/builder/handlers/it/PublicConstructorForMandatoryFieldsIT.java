@@ -18,16 +18,14 @@ import com.helospark.spark.builder.dialogs.domain.RegularBuilderFieldIncludeFiel
 import com.helospark.spark.builder.handlers.GenerateRegularBuilderHandler;
 import com.helospark.spark.builder.handlers.codegenerator.RegularBuilderUserPreferenceDialogOpener;
 
-public class JacksonAnnotationWithRegularBuilderAndChangedDialogIT extends BaseBuilderGeneratorIT {
+public class PublicConstructorForMandatoryFieldsIT extends BaseBuilderGeneratorIT {
     @Mock
     private RegularBuilderUserPreferenceDialogOpener regularBuilderUserPreferenceDialogOpener;
 
     @BeforeMethod
-    public void beforeMethod() throws JavaModelException {
+    public void setUp() throws JavaModelException {
         super.init();
         underTest = new GenerateRegularBuilderHandler();
-
-        given(preferenceStore.getBoolean("org.helospark.builder.addJacksonDeserializeAnnotation")).willReturn(true);
         given(preferenceStore.getBoolean("org.helospark.builder.showFieldFilterDialogForRegularBuilder")).willReturn(true);
     }
 
@@ -38,17 +36,21 @@ public class JacksonAnnotationWithRegularBuilderAndChangedDialogIT extends BaseB
     }
 
     @Test(dataProvider = "testCasesForRegularBuilder")
-    public void testWithDefaultEnabled(String inputFile, String expectedOutputFile, boolean includeJacksonAnnotations) throws Exception {
+    public void testMandatoryFields(String inputFile, String expectedOutputFile, boolean[] mandatoryStatuses) throws Exception {
         // GIVEN
         RegularBuilderDialogData dialogResult = RegularBuilderDialogData.builder()
-                .withAddJacksonDeserializeAnnotation(includeJacksonAnnotations)
+                .withAddJacksonDeserializeAnnotation(false)
                 .withShouldCreateCopyMethod(false)
+                .withCreateDefaultConstructor(false)
+                .withCreatePublicConstructorWithMandatoryFields(true)
                 .withRegularBuilderFieldIncludeFieldIncludeDomains(
-                        Arrays.asList(new RegularBuilderFieldIncludeFieldIncludeDomain(true, false, "from"), new RegularBuilderFieldIncludeFieldIncludeDomain(true, false, "to")))
+                        Arrays.asList(
+                                new RegularBuilderFieldIncludeFieldIncludeDomain(true, mandatoryStatuses[0], "value1"),
+                                new RegularBuilderFieldIncludeFieldIncludeDomain(true, mandatoryStatuses[1], "value2"),
+                                new RegularBuilderFieldIncludeFieldIncludeDomain(true, mandatoryStatuses[2], "value3")))
                 .build();
         given(regularBuilderUserPreferenceDialogOpener.open(any())).willReturn(Optional.of(dialogResult));
 
-        underTest = new GenerateRegularBuilderHandler();
         String input = readClasspathFile(inputFile);
         String expectedResult = readClasspathFile(expectedOutputFile);
         super.setInput(input);
@@ -63,8 +65,9 @@ public class JacksonAnnotationWithRegularBuilderAndChangedDialogIT extends BaseB
     @DataProvider(name = "testCasesForRegularBuilder")
     public Object[][] regularBuilderExampleFileProvider() {
         return new Object[][] {
-                { "jackson/mail_input.tjava", "jackson/mail_with_default_methodnames_output.tjava", true },
-                { "jackson/mail_input.tjava", "jackson/mail_with_no_jackson_annotations.tjava", false }
+                { "public_constructor_with_mandatory_fields/gh_input.tjava", "public_constructor_with_mandatory_fields/gh_output.tjava", new boolean[] { true, false, false } },
+                { "public_constructor_with_mandatory_fields/gh_input.tjava", "public_constructor_with_mandatory_fields/gh_output_when_none_selected.tjava", new boolean[] { false, false, false } },
+                { "public_constructor_with_mandatory_fields/gh_input.tjava", "public_constructor_with_mandatory_fields/gh_output_when_all_selected.tjava", new boolean[] { true, true, true } },
         };
     }
 

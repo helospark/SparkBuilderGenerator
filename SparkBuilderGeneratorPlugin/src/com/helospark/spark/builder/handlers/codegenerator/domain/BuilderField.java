@@ -10,6 +10,7 @@ public class BuilderField {
     protected Type fieldType;
     protected String originalFieldName;
     protected String builderFieldName;
+    protected boolean mandatory = false;
 
     public Type getFieldType() {
         return fieldType;
@@ -21,6 +22,14 @@ public class BuilderField {
 
     public String getBuilderFieldName() {
         return builderFieldName;
+    }
+
+    public void setMandatory(boolean mandatory) {
+        this.mandatory = mandatory;
+    }
+
+    public boolean isMandatory() {
+        return mandatory;
     }
 
 }

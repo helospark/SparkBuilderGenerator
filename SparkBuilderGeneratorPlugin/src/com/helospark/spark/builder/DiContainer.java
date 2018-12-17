@@ -51,6 +51,7 @@ import com.helospark.spark.builder.handlers.codegenerator.component.fragment.bui
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.builderclass.buildmethod.BuildMethodCreatorFragment;
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.builderclass.buildmethod.BuildMethodDeclarationCreatorFragment;
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.builderclass.constructor.PrivateConstructorAdderFragment;
+import com.helospark.spark.builder.handlers.codegenerator.component.fragment.builderclass.constructor.PublicConstructorWithMandatoryFieldsAdderFragment;
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.builderclass.constructor.RegularBuilderCopyInstanceConstructorAdderFragment;
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.builderclass.field.BuilderFieldAdderFragment;
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.builderclass.field.FieldDeclarationPostProcessor;
@@ -206,13 +207,15 @@ public class DiContainer {
         addDependency(
                 new RegularBuilderCopyInstanceConstructorAdderFragment(getDependency(FieldSetterAdderFragment.class), getDependency(TypeDeclarationToVariableNameConverter.class),
                         getDependency(IsRegularBuilderInstanceCopyEnabledPredicate.class)));
+        addDependency(new PublicConstructorWithMandatoryFieldsAdderFragment());
         addDependency(new RegularBuilderClassCreator(getDependency(PrivateConstructorAdderFragment.class),
                 getDependency(EmptyBuilderClassGeneratorFragment.class),
                 getDependency(BuildMethodCreatorFragment.class),
                 getDependency(BuilderFieldAdderFragment.class),
                 getDependency(RegularBuilderWithMethodAdderFragment.class),
                 getDependency(JavadocAdder.class),
-                getDependency(RegularBuilderCopyInstanceConstructorAdderFragment.class)));
+                getDependency(RegularBuilderCopyInstanceConstructorAdderFragment.class),
+                getDependency(PublicConstructorWithMandatoryFieldsAdderFragment.class)));
         addDependency(new StaticBuilderMethodSignatureGeneratorFragment(getDependency(GeneratedAnnotationPopulator.class), getDependency(PreferencesManager.class)));
         addDependency(new BuilderMethodDefinitionCreatorFragment(getDependency(TemplateResolver.class),
                 getDependency(PreferencesManager.class),

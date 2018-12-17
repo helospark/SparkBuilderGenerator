@@ -58,6 +58,7 @@ Most configuration is on the preferences page: Preferences -> Java -> Spark buil
 | Pattern of static builder method that copies the given domain object | Name of the above method | builderFrom | `[className]` |
 | Add Jackson deserialize (@JsonDeserialize, @JsonPOJOBuilder) annotation | Add Jackson deserialize annotations: @JsonDeserialize, @JsonPOJOBuilder annotation | false | - |
 | Create public default constructor (ex. for JPA) | If enabled it generates a public empty default constructor. Generation will be ignored if there is already one, or super(...) call is necessary | false | - |
+| Create public builder constructor with mandatory fields | If enabled then for regular builder empty `builder()` method will be omitted and a public constructor will be created for the builder, with mandatory parameters (by default none), which can be selected via the dialog | false | - | 
 
 ### @Generated annotatation
 
@@ -107,6 +108,8 @@ Most configuration is on the preferences page: Preferences -> Java -> Spark buil
    JsonPOJOBuilder annotation is not generated when the default builder names is not overridden
  - 0.0.20
    Fixed regression issue caused by wrong target definition on compiling
+ - 0.0.21
+   Option to generate public constructor for regular builder that includes mandatory fields
 
 ## The generated code looks like the following:
 
