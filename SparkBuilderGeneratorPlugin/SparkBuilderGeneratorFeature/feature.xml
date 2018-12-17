@@ -2,7 +2,7 @@
 <feature
       id="com.helospark.SparkBuilderGeneratorFeature"
       label="SparkBuilderGeneratorFeature"
-      version="0.0.20.qualifier">
+      version="0.0.21.qualifier">
 
    <description url="ftp://helospark.com/SparkBuilderGeneratorPlugin/">
       Spark builder generator plugin
@@ -66,6 +66,8 @@ JsonPOJOBuilder annotation is not generated when the default
 builder names is not overridden
 - 0.0.20
 Fixed regression issue caused by wrong target definition on compiling
+- 0.0.21
+Option to generate public constructor for regular builder that includes mandatory fields
    </description>
 
    <license url="https://opensource.org/licenses/MIT">

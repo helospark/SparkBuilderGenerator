@@ -16,6 +16,16 @@ import org.eclipse.jdt.core.dom.TypeDeclaration;
 
 import com.helospark.spark.builder.handlers.codegenerator.domain.BuilderField;
 
+/**
+ * Creates public constructor for builder with mandatory parameters, generates something like:
+ * 
+ * public Builder(String value1, String value2) {
+ *      this.value1 = value1;
+ *      this.value2 = value2;
+ * }
+ * 
+ * @author helospark
+ */
 public class PublicConstructorWithMandatoryFieldsAdderFragment {
 
     public void addPublicConstructor(AST ast, TypeDeclaration builderType, List<BuilderField> fields) {

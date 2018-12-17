@@ -85,8 +85,8 @@ public class RegularBuilderUserPreferenceDialog extends Dialog {
      */
     private void createContents() {
         shell = new Shell(getParent(), SWT.SHELL_TRIM | SWT.BORDER | SWT.PRIMARY_MODAL | SWT.SHEET);
-        shell.setSize(550, 400);
-        shell.setMinimumSize(550, 500);
+        shell.setSize(550, 500);
+        shell.setMinimumSize(550, 250);
         shell.setText("Select fields for builder");
         shell.setLayout(new GridLayout(2, false));
         shell.setImage(Activator.getIcon());
