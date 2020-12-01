@@ -4,6 +4,8 @@ import static com.helospark.spark.builder.preferences.PluginPreferenceList.REMOV
 
 import java.util.List;
 
+import org.eclipse.jdt.internal.compiler.parser.ScannerHelper;
+
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.domain.PrefixSuffixHolder;
 import com.helospark.spark.builder.preferences.PreferencesManager;
 
@@ -43,11 +45,12 @@ public class FieldNameToBuilderFieldNameConverter {
                 .orElse(fieldName);
     }
 
+    // Adapted from org.eclipse.jdt.internal.core.InternalNamingConventions.removeVariablePrefixAndSuffix
     private boolean isCharacterAfterPrefixCapital(String fieldName, String prefix) {
-        if (fieldName.length() > prefix.length()) {
-            return Character.isUpperCase(fieldName.charAt(prefix.length()));
-        }
-        return false;
+        int prefixLength = prefix.length();
+        boolean lastCharIsLetter = Character.isLetter(prefix.charAt(prefixLength - 1));
+        return fieldName.length() > prefixLength
+                && (!lastCharIsLetter || (lastCharIsLetter && Character.isUpperCase(fieldName.charAt(prefixLength))));
     }
 
     private String removePrefix(String result, String prefix) {

@@ -155,6 +155,25 @@ public class HappyFlowE2ETest extends BaseBuilderGeneratorIT {
         };
     }
 
+    // GitHub #53: Field prefix Underscore ignored when generating with method
+    @Test
+    public void testUnderscorePrefixFieldNameGeneration() throws Exception {
+        // GIVEN
+        String input = readClasspathFile("field_with_underscore_input.tjava");
+        String expectedResult = readClasspathFile("field_with_underscore_output.tjava");
+
+        given(preferenceStore.getBoolean("org.helospark.builder.removePrefixAndPostfixFromBuilderNames")).willReturn(true);
+        given(preferenceStore.getString("org.eclipse.jdt.core.codeComplete.fieldPrefixes")).willReturn(of("_"));
+        given(preferenceStore.getString("org.eclipse.jdt.core.codeComplete.fieldSuffixes")).willReturn(of(""));
+        super.setInput(input);
+
+        // WHEN
+        underTest.execute(dummyExecutionEvent);
+
+        // THEN
+        super.assertEqualsJavaContents(outputCaptor.getValue(), expectedResult);
+    }
+
     @Test
     public void testWithFullBooleansTrue() throws Exception {
         // GIVEN

@@ -119,4 +119,28 @@ public class VariableDeclarationToFieldNameConverterIT {
                 { "a" }
         };
     }
+
+    @Test(dataProvider = "underscoreTestDataProvider")
+    public void testShouldHandleUnderscoreProperly(String input, String expectedOutput) {
+        // GIVEN
+        given(preferenceStoreWrapper.getString("org.eclipse.jdt.core.codeComplete.fieldPrefixes")).willReturn(of("_,prefix_"));
+        given(preferenceStoreWrapper.getString("org.eclipse.jdt.core.codeComplete.fieldSuffixes")).willReturn(of(""));
+        given(preferenceStoreWrapper.getBoolean("org.helospark.builder.removePrefixAndPostfixFromBuilderNames")).willReturn(true);
+
+        // WHEN
+        String result = underTest.convertFieldName(input);
+
+        // THEN
+        assertEquals(expectedOutput, result);
+    }
+
+    @DataProvider(name = "underscoreTestDataProvider")
+    private Object[][] underscoreTestDataProvider() {
+        return new Object[][] {
+                { "_prefixField", "prefixField" },
+                { "prefix_field", "field" },
+                { "_Field", "field" },
+                { "_", "_" }
+        };
+    }
 }
