@@ -4,8 +4,6 @@ import static com.helospark.spark.builder.preferences.PluginPreferenceList.REMOV
 
 import java.util.List;
 
-import org.eclipse.jdt.internal.compiler.parser.ScannerHelper;
-
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.domain.PrefixSuffixHolder;
 import com.helospark.spark.builder.preferences.PreferencesManager;
 

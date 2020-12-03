@@ -1,0 +1,37 @@
+public class TestClass {
+    private int _testField;
+
+    private TestClass(Builder builder) {
+        this._testField = builder._testField;
+    }
+
+    public static ITestFieldStage builder() {
+        return new Builder();
+    }
+
+    public interface ITestFieldStage {
+        public IBuildStage withTestField(int testField);
+    }
+
+    public interface IBuildStage {
+        public TestClass build();
+    }
+
+    public static final class Builder implements ITestFieldStage, IBuildStage {
+        private int _testField;
+
+        private Builder() {
+        }
+
+        @Override
+        public IBuildStage withTestField(int testField) {
+            this._testField = testField;
+            return this;
+        }
+
+        @Override
+        public TestClass build() {
+            return new TestClass(this);
+        }
+    }
+}

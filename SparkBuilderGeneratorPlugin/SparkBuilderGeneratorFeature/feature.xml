@@ -2,7 +2,7 @@
 <feature
       id="com.helospark.SparkBuilderGeneratorFeature"
       label="SparkBuilderGeneratorFeature"
-      version="0.0.21.qualifier">
+      version="0.0.22.qualifier">
 
    <description url="ftp://helospark.com/SparkBuilderGeneratorPlugin/">
       Spark builder generator plugin
@@ -67,7 +67,10 @@ builder names is not overridden
 - 0.0.20
 Fixed regression issue caused by wrong target definition on compiling
 - 0.0.21
-Option to generate public constructor for regular builder that includes mandatory fields
+Option to generate public constructor for regular builder that
+includes mandatory fields
+- 0.0.22
+Fixing incorrect field naming with underscore prefix
    </description>
 
    <license url="https://opensource.org/licenses/MIT">
