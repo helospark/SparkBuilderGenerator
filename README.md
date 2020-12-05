@@ -110,6 +110,8 @@ Most configuration is on the preferences page: Preferences -> Java -> Spark buil
    Fixed regression issue caused by wrong target definition on compiling
  - 0.0.21
    Option to generate public constructor for regular builder that includes mandatory fields
+ - 0.0.22
+   Fixing incorrect field naming with underscore prefix
 
 ## The generated code looks like the following:
 

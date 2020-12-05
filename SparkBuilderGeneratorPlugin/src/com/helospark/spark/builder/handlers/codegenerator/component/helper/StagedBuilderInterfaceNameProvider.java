@@ -28,8 +28,8 @@ public class StagedBuilderInterfaceNameProvider {
     public String provideInterfaceNameFrom(BuilderField builderField) {
         String stageBuilderInterfaceNameTemplate = preferencesManager.getPreferenceValue(STAGED_BUILDER_STAGE_INTERFACE_NAME);
         Map<String, String> templates = new HashMap<>();
-        templates.put("fieldName", builderField.getOriginalFieldName());
-        templates.put("FieldName", camelCaseConverter.toUpperCamelCase(builderField.getOriginalFieldName()));
+        templates.put("fieldName", builderField.getBuilderFieldName());
+        templates.put("FieldName", camelCaseConverter.toUpperCamelCase(builderField.getBuilderFieldName()));
         return templateResolver.resolveTemplate(stageBuilderInterfaceNameTemplate, templates);
     }
 
