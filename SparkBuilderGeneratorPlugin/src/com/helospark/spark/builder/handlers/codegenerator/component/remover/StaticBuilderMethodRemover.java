@@ -12,6 +12,7 @@ import com.helospark.spark.builder.PluginLogger;
 import com.helospark.spark.builder.handlers.codegenerator.component.remover.helper.GeneratedAnnotationContainingBodyDeclarationFilter;
 import com.helospark.spark.builder.handlers.codegenerator.component.remover.helper.IsPublicPredicate;
 import com.helospark.spark.builder.handlers.codegenerator.component.remover.helper.IsStaticPredicate;
+import com.helospark.spark.builder.handlers.codegenerator.domain.CompilationUnitModificationDomain;
 
 /**
  * Removes the previously generated static builder creation method and copy instance builder methods.
@@ -31,7 +32,7 @@ public class StaticBuilderMethodRemover implements BuilderRemoverChainItem {
     }
 
     @Override
-    public void remove(ASTRewrite rewriter, TypeDeclaration mainType) {
+    public void remove(ASTRewrite rewriter, TypeDeclaration mainType, CompilationUnitModificationDomain modificationDomain) {
         List<MethodDeclaration> publicStaticMethods = extractPublicStaticMethods(mainType);
         List<MethodDeclaration> annotatedMethods = generatedAnnotationContainingBodyDeclarationFilter.filterAnnotatedClasses(publicStaticMethods);
         if (!annotatedMethods.isEmpty()) {

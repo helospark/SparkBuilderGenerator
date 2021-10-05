@@ -55,7 +55,8 @@ public class RegularBuilderCompilationUnitGenerator {
 
         builderRemover.removeExistingBuilderWhenNeeded(compilationUnitModificationDomain);
 
-        TypeDeclaration builderType = regularBuilderClassCreator.createBuilderClass(ast, originalType, preference);
+        TypeDeclaration builderType = regularBuilderClassCreator.createBuilderClass(ast, originalType, preference,
+                compilationUnitModificationDomain.getSavedCustomMethodDeclarations());
         defaultConstructorAppender.addDefaultConstructorIfNeeded(compilationUnitModificationDomain, preference.getBuilderFields());
         privateConstructorPopulator.addPrivateConstructorToCompilationUnit(ast, originalType, builderType, listRewrite, preference.getBuilderFields());
         builderMethodPopulator.addBuilderMethodToCompilationUnit(ast, listRewrite, originalType, builderType, preference);

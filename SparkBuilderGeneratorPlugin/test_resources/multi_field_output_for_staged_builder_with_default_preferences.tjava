@@ -14,10 +14,6 @@ public class TestClass {
         this.list = builder.list;
     }
 
-    /** 
-    * Creates builder to build {@link TestClass}.
-    * @return created builder
-    */
     @Generated("SparkTools")
     public static ITestFieldStage builder() {
         return new Builder();
@@ -48,9 +44,6 @@ public class TestClass {
         public TestClass build();
     }
 
-    /** 
-    * Builder to build {@link TestClass}.
-    */
     @Generated("SparkTools")
     public static final class Builder implements ITestFieldStage, IDataStage, ISomethingStage, IListStage, IBuildStage {
         private String testField;

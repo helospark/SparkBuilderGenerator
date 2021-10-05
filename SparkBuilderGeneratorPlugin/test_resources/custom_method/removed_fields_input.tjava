@@ -1,0 +1,35 @@
+public class Example {
+	String firstField;
+
+	private Example(ExampleBuilder exampleBuilder) {
+		this.firstField = exampleBuilder.firstField;
+		this.secondField = exampleBuilder.secondField;
+	}
+
+	public static ExampleBuilder builder() {
+		return new ExampleBuilder();
+	}
+
+	public static final class ExampleBuilder {
+		private String firstField;
+		private String secondField;
+
+		private ExampleBuilder() {
+		}
+
+		public ExampleBuilder withFirstField(String firstField) {
+			this.firstField = firstField;
+			return this;
+		}
+
+		public ExampleBuilder withSecondField(String secondField) {
+			this.secondField = secondField;
+			return this;
+		}
+
+		public Example build() {
+			return new Example(this);
+		}
+	}
+
+}

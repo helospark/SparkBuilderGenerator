@@ -9,6 +9,7 @@ import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.jdt.core.dom.rewrite.ASTRewrite;
 
 import com.helospark.spark.builder.handlers.codegenerator.component.remover.BuilderRemoverChainItem;
+import com.helospark.spark.builder.handlers.codegenerator.domain.CompilationUnitModificationDomain;
 
 /**
  * Tries to remove the (earlier generated) builder from the given compilation unit.
@@ -21,7 +22,7 @@ public class BuilderAstRemover {
         this.builderRemovers = builderRemovers;
     }
 
-    public void removeBuilder(ASTRewrite rewriter, CompilationUnit compilationUnit) {
+    public void removeBuilder(ASTRewrite rewriter, CompilationUnit compilationUnit, CompilationUnitModificationDomain modificationDomain) {
         List<TypeDeclaration> types = ((List<AbstractTypeDeclaration>) compilationUnit.types())
                 .stream()
                 .filter(abstractTypeDeclaration -> abstractTypeDeclaration instanceof TypeDeclaration)
@@ -29,7 +30,7 @@ public class BuilderAstRemover {
                 .collect(Collectors.toList());
         if (types.size() == 1) {
             builderRemovers.stream()
-                    .forEach(remover -> remover.remove(rewriter, types.get(0)));
+                    .forEach(remover -> remover.remove(rewriter, types.get(0), modificationDomain));
         }
     }
 }

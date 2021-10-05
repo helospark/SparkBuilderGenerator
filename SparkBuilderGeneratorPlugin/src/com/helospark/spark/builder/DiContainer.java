@@ -151,7 +151,9 @@ public class DiContainer {
         addDependency(new BodyDeclarationOfTypeExtractor());
         addDependency(new BuilderClassRemover(getDependency(BodyDeclarationOfTypeExtractor.class),
                 getDependency(GeneratedAnnotationContainingBodyDeclarationFilter.class),
-                getDependency(IsPrivatePredicate.class)));
+                getDependency(IsPrivatePredicate.class),
+                getDependency(IsStaticPredicate.class),
+                getDependency(PreferencesManager.class)));
         addDependency(new JsonDeserializeRemover(getDependency(PreferencesManager.class)));
         addDependency(new StagedBuilderInterfaceRemover(getDependency(BodyDeclarationOfTypeExtractor.class),
                 getDependency(GeneratedAnnotationContainingBodyDeclarationFilter.class)));

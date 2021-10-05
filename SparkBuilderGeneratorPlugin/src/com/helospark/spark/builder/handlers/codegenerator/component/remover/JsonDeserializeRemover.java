@@ -12,6 +12,7 @@ import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.jdt.core.dom.rewrite.ASTRewrite;
 import org.eclipse.jdt.core.dom.rewrite.ListRewrite;
 
+import com.helospark.spark.builder.handlers.codegenerator.domain.CompilationUnitModificationDomain;
 import com.helospark.spark.builder.preferences.PreferencesManager;
 
 /**
@@ -26,7 +27,7 @@ public class JsonDeserializeRemover implements BuilderRemoverChainItem {
     }
 
     @Override
-    public void remove(ASTRewrite rewriter, TypeDeclaration mainType) {
+    public void remove(ASTRewrite rewriter, TypeDeclaration mainType, CompilationUnitModificationDomain modificationDomain) {
         if (preferencesManager.getPreferenceValue(ADD_JACKSON_DESERIALIZE_ANNOTATION)) {
             ((List<IExtendedModifier>) mainType.modifiers())
                     .stream()

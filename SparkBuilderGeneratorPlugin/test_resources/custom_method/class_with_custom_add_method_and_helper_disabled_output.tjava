@@ -1,0 +1,29 @@
+public class Example
+{
+	List<String> ids;
+
+	private Example(ExampleBuilder exampleBuilder) {
+		this.ids = exampleBuilder.ids;
+	}
+
+	public static ExampleBuilder builder() {
+		return new ExampleBuilder();
+	}
+
+	public static final class ExampleBuilder {
+		private List<String> ids;
+
+		private ExampleBuilder() {
+		}
+
+		public ExampleBuilder withIds(List<String> ids) {
+			this.ids = ids;
+			return this;
+		}
+
+		public Example build() {
+			return new Example(this);
+		}
+	}
+
+}

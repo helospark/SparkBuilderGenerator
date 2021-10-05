@@ -16,8 +16,8 @@ import com.helospark.spark.builder.handlers.codegenerator.component.fragment.bui
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.InterfaceSetter;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.MarkerAnnotationAttacher;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.StagedBuilderProperties;
-import com.helospark.spark.builder.handlers.codegenerator.domain.CompilationUnitModificationDomain;
 import com.helospark.spark.builder.handlers.codegenerator.domain.BuilderField;
+import com.helospark.spark.builder.handlers.codegenerator.domain.CompilationUnitModificationDomain;
 
 /**
  * Generates the builder class.
@@ -62,6 +62,9 @@ public class StagedBuilderClassCreator {
                 stagedBuilderWithMethodAdderFragment.addWithMethodToBuilder(ast, builderType,
                         builderField, nextStage);
             }
+        }
+        for (MethodDeclaration customMethod : modificationDomain.getSavedCustomMethodDeclarations()) {
+            builderType.bodyDeclarations().add(customMethod);
         }
         MethodDeclaration method = buildMethodCreatorFragment.addBuildMethodToBuilder(ast, originalType);
         builderType.bodyDeclarations().add(method);

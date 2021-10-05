@@ -49,7 +49,7 @@ public class RegularBuilderClassCreator {
         this.javadocAdder = javadocAdder;
     }
 
-    public TypeDeclaration createBuilderClass(AST ast, TypeDeclaration originalType, RegularBuilderUserPreference preference) {
+    public TypeDeclaration createBuilderClass(AST ast, TypeDeclaration originalType, RegularBuilderUserPreference preference, List<MethodDeclaration> customMethods) {
         List<BuilderField> builderFields = preference.getBuilderFields();
 
         TypeDeclaration builderType = emptyBuilderClassGeneratorFragment.createBuilderClass(ast, originalType);
@@ -71,6 +71,10 @@ public class RegularBuilderClassCreator {
         for (BuilderField builderField : createWithMethodsFor) {
             regularBuilderWithMethodAdderFragment.addWithMethodToBuilder(ast, builderType, builderField);
         }
+        for (MethodDeclaration customMethod : customMethods) {
+            builderType.bodyDeclarations().add(customMethod);
+        }
+
         MethodDeclaration method = buildMethodCreatorFragment.addBuildMethodToBuilder(ast, originalType);
         javadocAdder.addJavadocForBuildMethod(ast, method);
         builderType.bodyDeclarations().add(method);

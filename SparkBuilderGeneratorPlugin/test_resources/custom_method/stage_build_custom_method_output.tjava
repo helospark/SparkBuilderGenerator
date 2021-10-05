@@ -1,0 +1,43 @@
+public class Example
+{
+	List<String> ids;
+
+	private Example(ExampleBuilder exampleBuilder) {
+		this.ids = exampleBuilder.ids;
+	}
+
+	public static IIdsStage builder() {
+		return new ExampleBuilder();
+	}
+
+	public interface IIdsStage {
+		public IBuildStage withIds(List<String> ids);
+	}
+
+	public interface IBuildStage {
+		public Example build();
+	}
+
+	public static final class ExampleBuilder implements IIdsStage, IBuildStage {
+		private List<String> ids;
+
+		private ExampleBuilder() {
+		}
+
+		@Override
+		public IBuildStage withIds(List<String> ids) {
+			this.ids = ids;
+			return this;
+		}
+
+		public IBuildStage addIds(String id) {
+			this.ids.add(id);
+			return this;
+		}
+
+		@Override
+		public Example build() {
+			return new Example(this);
+		}
+	}
+}

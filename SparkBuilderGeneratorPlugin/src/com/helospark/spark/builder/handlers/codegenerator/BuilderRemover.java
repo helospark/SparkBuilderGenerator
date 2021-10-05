@@ -31,7 +31,7 @@ public class BuilderRemover {
         CompilationUnit compilationUnit = modificationDomain.getCompilationUnit();
         if (preferencesManager.getPreferenceValue(OVERRIDE_PREVIOUS_BUILDER)) {
             try {
-                builderAstRemover.removeBuilder(rewriter, compilationUnit);
+                builderAstRemover.removeBuilder(rewriter, compilationUnit, modificationDomain);
             } catch (RuntimeException e) {
                 errorHandlerHook.onPreviousBuilderRemoveFailure(e);
             }

@@ -1,9 +1,13 @@
 package com.helospark.spark.builder.handlers.codegenerator.domain;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.annotation.Generated;
 
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.CompilationUnit;
+import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.jdt.core.dom.rewrite.ASTRewrite;
 import org.eclipse.jdt.core.dom.rewrite.ListRewrite;
@@ -20,6 +24,7 @@ public class CompilationUnitModificationDomain {
     private AST ast;
     private TypeDeclaration originalType;
     private CompilationUnit compilationUnit;
+    private List<MethodDeclaration> savedCustomMethodDeclarations = new ArrayList<>();
 
     @Generated("SparkTools")
     private CompilationUnitModificationDomain(Builder builder) {
@@ -28,6 +33,14 @@ public class CompilationUnitModificationDomain {
         this.ast = builder.ast;
         this.originalType = builder.originalType;
         this.compilationUnit = builder.compilationUnit;
+    }
+
+    public void addSavedMethodDeclaration(MethodDeclaration methodDeclaration) {
+        this.savedCustomMethodDeclarations.add(methodDeclaration);
+    }
+
+    public List<MethodDeclaration> getSavedCustomMethodDeclarations() {
+        return savedCustomMethodDeclarations;
     }
 
     public ListRewrite getListRewrite() {
