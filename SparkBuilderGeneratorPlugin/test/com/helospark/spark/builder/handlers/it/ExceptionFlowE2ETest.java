@@ -47,7 +47,7 @@ public class ExceptionFlowE2ETest extends BaseBuilderGeneratorIT {
         BuilderRemover builderRemover = DiContainer.getDependency(BuilderRemover.class);
         willThrow(new RuntimeException("Cause"))
                 .given(builderAstRemover)
-                .removeBuilder(any(ASTRewrite.class), any(CompilationUnit.class));
+                .removeBuilder(any(ASTRewrite.class), any(CompilationUnit.class), any(CompilationUnitModificationDomain.class));
         super.setInput("class TestClass {}");
         CompilationUnitModificationDomain dummyCompilationUnitModificationDomain = CompilationUnitModificationDomain.builder().build();
 

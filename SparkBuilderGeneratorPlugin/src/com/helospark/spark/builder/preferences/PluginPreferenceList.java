@@ -32,10 +32,10 @@ public final class PluginPreferenceList {
             "Builder's methods name templated pattern", "with[FieldName]");
 
     public static final PluginPreference<Boolean> GENERATE_JAVADOC_ON_BUILDER_METHOD = new BooleanPluginPreference("generate_javadoc_on_builder_method",
-            "Generate Javadoc on builder method", Boolean.TRUE);
+            "Generate Javadoc on builder method", Boolean.FALSE);
 
     public static final PluginPreference<Boolean> GENERATE_JAVADOC_ON_BUILDER_CLASS = new BooleanPluginPreference("generate_javadoc_on_builder_class",
-            "Generate Javadoc on builder class", Boolean.TRUE);
+            "Generate Javadoc on builder class", Boolean.FALSE);
 
     public static final PluginPreference<Boolean> GENERATE_JAVADOC_ON_EACH_BUILDER_METHOD = new BooleanPluginPreference("generate_javadoc_on_each_builder_method",
             "Generate Javadoc on each builder method", Boolean.FALSE);
@@ -125,6 +125,9 @@ public final class PluginPreferenceList {
             "org.helospark.builder.createPublicBuilderConstructorWithMandatoryField",
             "Create public builder constructor with mandatory fields", Boolean.FALSE);
 
+    public static final PluginPreference<Boolean> KEEP_CUSTOM_METHODS_IN_BUILDER = new BooleanPluginPreference("org.helospark.builder.keepCustomMethodsInBuilder",
+            "Keep custom methods in builder", Boolean.TRUE);
+
     public static List<PluginPreferenceGroup> getAllPreferences() {
         return Arrays.asList(createGeneralPreferencesGroup(),
                 createRegularBuilderPreferencesGroup(),
@@ -155,6 +158,7 @@ public final class PluginPreferenceList {
         generalPreferences.add(ALWAYS_GENERATE_BUILDER_TO_FIRST_CLASS);
         generalPreferences.add(ADD_JACKSON_DESERIALIZE_ANNOTATION);
         generalPreferences.add(CREATE_PUBLIC_DEFAULT_CONSTRUCTOR);
+        generalPreferences.add(KEEP_CUSTOM_METHODS_IN_BUILDER);
         return new PluginPreferenceGroup("General settings", generalPreferences);
     }
 

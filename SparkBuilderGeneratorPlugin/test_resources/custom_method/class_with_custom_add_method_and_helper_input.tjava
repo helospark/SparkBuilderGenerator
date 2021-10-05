@@ -1,0 +1,38 @@
+public class Example
+{
+	List<String> ids;
+
+	private Example(ExampleBuilder exampleBuilder) {
+		this.ids = exampleBuilder.ids;
+	}
+
+	public static ExampleBuilder builder() {
+		return new ExampleBuilder();
+	}
+
+	public static final class ExampleBuilder {
+		private List<String> ids;
+
+		private ExampleBuilder() {
+		}
+
+		public ExampleBuilder addId(String id) {
+			this.ids.add(id);
+			return this;
+		}
+
+		public ExampleBuilder withIds(List<String> ids) {
+			this.ids = ids;
+			return this;
+		}
+		
+		public static void helperMethod() {
+			id = new ArrayList<>();
+		}
+
+		public Example build() {
+			return new Example(this);
+		}
+	}
+
+}

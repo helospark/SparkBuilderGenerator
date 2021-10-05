@@ -10,6 +10,7 @@ import org.eclipse.jdt.core.dom.rewrite.ASTRewrite;
 
 import com.helospark.spark.builder.handlers.codegenerator.component.remover.helper.GeneratedAnnotationContainingBodyDeclarationFilter;
 import com.helospark.spark.builder.handlers.codegenerator.component.remover.helper.IsPrivatePredicate;
+import com.helospark.spark.builder.handlers.codegenerator.domain.CompilationUnitModificationDomain;
 
 /**
  * Removes the previously generated class initializing private constructor.
@@ -26,7 +27,7 @@ public class PrivateConstructorRemover implements BuilderRemoverChainItem {
     }
 
     @Override
-    public void remove(ASTRewrite rewriter, TypeDeclaration mainType) {
+    public void remove(ASTRewrite rewriter, TypeDeclaration mainType, CompilationUnitModificationDomain modificationDomain) {
         List<MethodDeclaration> privateConstructors = extractPrivateConstructors(mainType);
         List<MethodDeclaration> annotatedConstructors = generatedAnnotationContainingBodyDeclarationFilter.filterAnnotatedClasses(privateConstructors);
         if (!annotatedConstructors.isEmpty()) {

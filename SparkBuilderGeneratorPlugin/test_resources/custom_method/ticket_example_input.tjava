@@ -1,0 +1,43 @@
+import java.util.UUID;
+import javax.annotation.processing.Generated;
+
+public class Example
+{
+	UUID id;
+
+	private Example(ExampleBuilder exampleBuilder)
+	{
+		this.id = exampleBuilder.id;
+	}
+
+	public static ExampleBuilder builder()
+	{
+		return new ExampleBuilder();
+	}
+
+	public static final class ExampleBuilder
+	{
+		private UUID id;
+
+		private ExampleBuilder()
+		{
+		}
+
+		public ExampleBuilder withId(UUID id)
+		{
+			this.id = id;
+			return this;
+		}
+
+		public ExampleBuilder withRandomId()
+		{
+			this.id = UUID.randomUUID();
+			return this;
+		}
+
+		public Example build()
+		{
+			return new Example(this);
+		}
+	}
+}
