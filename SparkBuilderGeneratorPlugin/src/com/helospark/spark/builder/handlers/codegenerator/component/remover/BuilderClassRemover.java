@@ -79,7 +79,7 @@ public class BuilderClassRemover implements BuilderRemoverChainItem {
         try {
             for (MethodDeclaration method : clazz.getMethods()) {
                 if (isLikelyACustomMethod(method, modificationDomain.getOriginalType(), modificationDomain.getAst())) {
-                    modificationDomain.addSavedMethodDeclaration((MethodDeclaration) ASTNode.copySubtree(modificationDomain.getAst(), method));
+                    modificationDomain.addSavedCustomMethodDeclaration((MethodDeclaration) ASTNode.copySubtree(modificationDomain.getAst(), method));
                 }
             }
         } catch (Exception e) {

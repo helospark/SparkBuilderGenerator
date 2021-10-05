@@ -32,9 +32,9 @@ Most configuration is on the preferences page: Preferences -> Java -> Spark buil
 | Create Builder class name pattern | Public static class inside the domain object. | Builder | `[className]` |
 | Build method name pattern | Public method inside builder to create domain object. | build | `[className]` |
 | Builder's method name pattern | Public methods inside the domain object to set each field. | with[FieldName] | `[FieldName]`, `[fieldName]` |
-| Generate Javadoc on builder class | Generate Javadoc on builder class. Generated text is not configurable at the moment. | true | - |
-| Generate Javadoc on builder method | Generate Javadoc on `builder()` method. Generated text is not configurable at the moment. | true | - |
-| Generate Javadoc on each builder's method | Generate Javadoc on `with...()` methods. Generated text is not configurable at the moment. | true | - |
+| Generate Javadoc on builder class | Generate Javadoc on builder class. Generated text is not configurable at the moment. | false | - |
+| Generate Javadoc on builder method | Generate Javadoc on `builder()` method. Generated text is not configurable at the moment. | false | - |
+| Generate Javadoc on each builder's method | Generate Javadoc on `with...()` methods. Generated text is not configurable at the moment. | false | - |
 | Add Nonnull to parameters | Add @Nonnull annotation to method parameters. | true | - |
 | Add Nonnull to returns | Add @Nonnull annotation to returns. | false | - |
 | Initialize optional fields to Optional.empty() value | For all Optionals, adds Optional.empty() initial value in builder, see issue #20 | true | - |
@@ -59,6 +59,8 @@ Most configuration is on the preferences page: Preferences -> Java -> Spark buil
 | Add Jackson deserialize (@JsonDeserialize, @JsonPOJOBuilder) annotation | Add Jackson deserialize annotations: @JsonDeserialize, @JsonPOJOBuilder annotation | false | - |
 | Create public default constructor (ex. for JPA) | If enabled it generates a public empty default constructor. Generation will be ignored if there is already one, or super(...) call is necessary | false | - |
 | Create public builder constructor with mandatory fields | If enabled then for regular builder empty `builder()` method will be omitted and a public constructor will be created for the builder, with mandatory parameters (by default none), which can be selected via the dialog | false | - | 
+| Keep custom methods in builder | If enabled then any manually added methods in the builder class will be kept when regenerating the builder. | true | - |
+
 
 ### @Generated annotatation
 
@@ -112,6 +114,8 @@ Most configuration is on the preferences page: Preferences -> Java -> Spark buil
    Option to generate public constructor for regular builder that includes mandatory fields
  - 0.0.22
    Fixing incorrect field naming with underscore prefix
+ - 0.0.23
+   Add option to keep custom methods in the builderclass, when the builder is regenerated
 
 ## The generated code looks like the following:
 

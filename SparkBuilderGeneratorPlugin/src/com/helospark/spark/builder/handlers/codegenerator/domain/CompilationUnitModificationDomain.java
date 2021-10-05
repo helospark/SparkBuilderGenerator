@@ -35,7 +35,7 @@ public class CompilationUnitModificationDomain {
         this.compilationUnit = builder.compilationUnit;
     }
 
-    public void addSavedMethodDeclaration(MethodDeclaration methodDeclaration) {
+    public void addSavedCustomMethodDeclaration(MethodDeclaration methodDeclaration) {
         this.savedCustomMethodDeclarations.add(methodDeclaration);
     }
 
