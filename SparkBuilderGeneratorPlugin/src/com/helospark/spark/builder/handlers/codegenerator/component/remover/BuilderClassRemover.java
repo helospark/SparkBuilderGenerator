@@ -48,7 +48,6 @@ public class BuilderClassRemover implements BuilderRemoverChainItem {
         this.isPrivatePredicate = isPrivatePredicate;
         this.isStaticPredicate = isStaticPredicate;
         this.preferencesManager = preferencesManager;
-        this.pluginLogger = pluginLogger;
     }
 
     @Override
