@@ -2,6 +2,7 @@ package com.helospark.spark.builder.handlers.codegenerator.domain;
 
 import javax.annotation.Generated;
 
+import org.eclipse.jdt.core.dom.Expression;
 import org.eclipse.jdt.core.dom.FieldDeclaration;
 import org.eclipse.jdt.core.dom.Type;
 
@@ -17,6 +18,7 @@ public class ClassFieldSetterBuilderField extends BuilderField {
         this.fieldType = builder.fieldType;
         this.originalFieldName = builder.originalFieldName;
         this.builderFieldName = builder.builderFieldName;
+        this.defaultValue = builder.defaultValue;
         this.fieldDeclaration = builder.fieldDeclaration;
     }
 
@@ -34,6 +36,7 @@ public class ClassFieldSetterBuilderField extends BuilderField {
         private Type fieldType;
         private String originalFieldName;
         private String builderFieldName;
+        private Expression defaultValue;
         private FieldDeclaration fieldDeclaration;
 
         private Builder() {
@@ -51,6 +54,11 @@ public class ClassFieldSetterBuilderField extends BuilderField {
 
         public Builder withBuilderFieldName(String builderFieldName) {
             this.builderFieldName = builderFieldName;
+            return this;
+        }
+
+        public Builder withDefaultValue(Expression defaultValue) {
+            this.defaultValue = defaultValue;
             return this;
         }
 

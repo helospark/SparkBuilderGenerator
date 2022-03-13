@@ -1,0 +1,83 @@
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import javax.annotation.Generated;
+
+public class Example {
+    private int intData = 5;
+    private Collection<String> texts = List.of("default");
+    private String noData;
+
+    @Generated("SparkTools")
+    private Example(Builder builder) {
+        this.intData = builder.intData;
+        this.texts = builder.texts;
+        this.noData = builder.noData;
+    }
+
+    public int getIntData() {
+        return this.intData;
+    }
+
+    public Collection<String> getTexts() {
+        return this.texts;
+    }
+
+    public String getNoData() {
+        return this.noData;
+    }
+
+    @Generated("SparkTools")
+    public static IIntDataStage builder() {
+        return new Builder();
+    }
+
+    public interface IIntDataStage {
+        public ITextsStage withIntData(int intData);
+    }
+
+    public interface ITextsStage {
+        public INoDataStage withTexts(Collection<String> texts);
+    }
+
+    public interface INoDataStage {
+        public IBuildStage withNoData(String noData);
+    }
+
+    public interface IBuildStage {
+        public Example build();
+    }
+
+    @Generated("SparkTools")
+    public static final class Builder implements IIntDataStage, ITextsStage, INoDataStage, IBuildStage {
+        private int intData = 5;
+        private Collection<String> texts = List.of("default");
+        private String noData;
+
+        private Builder() {
+        }
+
+        @Override
+        public ITextsStage withIntData(int intData) {
+            this.intData = intData;
+            return this;
+        }
+
+        @Override
+        public INoDataStage withTexts(Collection<String> texts) {
+            this.texts = texts;
+            return this;
+        }
+
+        @Override
+        public IBuildStage withNoData(String noData) {
+            this.noData = noData;
+            return this;
+        }
+
+        @Override
+        public Example build() {
+            return new Example(this);
+        }
+    }
+}

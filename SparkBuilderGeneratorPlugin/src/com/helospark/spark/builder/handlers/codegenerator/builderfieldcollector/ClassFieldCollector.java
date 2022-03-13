@@ -5,8 +5,12 @@ import static java.util.Collections.emptyList;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.eclipse.jdt.core.dom.AST;
+import org.eclipse.jdt.core.dom.ASTNode;
+import org.eclipse.jdt.core.dom.Expression;
 import org.eclipse.jdt.core.dom.FieldDeclaration;
 import org.eclipse.jdt.core.dom.IExtendedModifier;
 import org.eclipse.jdt.core.dom.Modifier;
@@ -76,11 +80,16 @@ public class ClassFieldCollector implements FieldCollectorChainItem {
     private BuilderField createNamedVariableDeclarations(VariableDeclarationFragment variableDeclarationFragment, FieldDeclaration fieldDeclaration) {
         String originalFieldName = variableDeclarationFragment.getName().toString();
         String builderFieldName = fieldNameToBuilderFieldNameConverter.convertFieldName(originalFieldName);
+        AST ast = variableDeclarationFragment.getAST();
+        Expression defaultValue = Optional.ofNullable(variableDeclarationFragment.getInitializer())
+                .map(initializer -> (Expression) ASTNode.copySubtree(ast, initializer))
+                .orElse(null);
         return ClassFieldSetterBuilderField.builder()
                 .withFieldType(fieldDeclaration.getType())
                 .withFieldDeclaration(fieldDeclaration)
                 .withOriginalFieldName(originalFieldName)
                 .withBuilderFieldName(builderFieldName)
+                .withDefaultValue(defaultValue)
                 .build();
     }
 

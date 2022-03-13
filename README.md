@@ -116,6 +116,8 @@ Most configuration is on the preferences page: Preferences -> Java -> Spark buil
    Fixing incorrect field naming with underscore prefix
  - 0.0.23
    Add option to keep custom methods in the builderclass, when the builder is regenerated
+ - 0.0.24
+   Add option to initialize builder fields with default value from the class' field assignment
 
 ## The generated code looks like the following:
 
