@@ -5,10 +5,7 @@ import static org.mockito.Matchers.any;
 
 import java.util.List;
 
-import org.eclipse.jdt.core.ICompilationUnit;
-import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
-import org.mockito.Mock;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -20,11 +17,6 @@ import com.helospark.spark.builder.handlers.it.dummyService.NoDialogOperationPer
 
 public class FieldAssignmentToDefaultValueIT extends BaseBuilderGeneratorIT {
     private NoDialogOperationPerformedStagedBuilderDialogAnswerProvider dialogAnswerProvider = new NoDialogOperationPerformedStagedBuilderDialogAnswerProvider();
-
-    @Mock
-    private IType firstSuperClassType;
-    @Mock
-    private ICompilationUnit firstSuperClassICompilationUnit;
 
     @BeforeMethod
     public void beforeMethod() throws JavaModelException {
