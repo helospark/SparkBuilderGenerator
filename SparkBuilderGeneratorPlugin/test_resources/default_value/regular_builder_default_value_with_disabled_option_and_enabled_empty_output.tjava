@@ -1,0 +1,65 @@
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+
+import javax.annotation.Generated;
+
+public class Example{
+
+	private int intData = 5;
+	private Collection<String> texts = List.of("default");
+	private String noData;
+
+	@Generated("SparkTools")
+	private Example(Builder builder){
+		this.intData = builder.intData;
+		this.texts = builder.texts;
+		this.noData = builder.noData;
+	}
+
+	public int getIntData(){
+		return this.intData;
+	}
+
+	public Collection<String> getTexts(){
+		return this.texts;
+	}
+
+	public String getNoData(){
+		return this.noData;
+	}
+
+	@Generated("SparkTools")
+	public static Builder builder(){
+		return new Builder();
+	}
+
+	@Generated("SparkTools")
+	public static final class Builder{
+		private int intData;
+		private Collection<String> texts = Collections.emptyList();
+		private String noData;
+
+		private Builder(){
+		}
+
+		public Builder withIntData(int intData){
+			this.intData = intData;
+			return this;
+		}
+
+		public Builder withTexts(Collection<String> texts){
+			this.texts = texts;
+			return this;
+		}
+
+		public Builder withNoData(String noData){
+			this.noData = noData;
+			return this;
+		}
+
+		public Example build(){
+			return new Example(this);
+		}
+	}
+}

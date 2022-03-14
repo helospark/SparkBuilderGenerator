@@ -1,5 +1,6 @@
 package com.helospark.spark.builder.handlers.codegenerator.domain;
 
+import org.eclipse.jdt.core.dom.Expression;
 import org.eclipse.jdt.core.dom.Type;
 
 /**
@@ -11,6 +12,7 @@ public class BuilderField {
     protected String originalFieldName;
     protected String builderFieldName;
     protected boolean mandatory = false;
+    protected Expression defaultValue;
 
     public Type getFieldType() {
         return fieldType;
@@ -30,6 +32,14 @@ public class BuilderField {
 
     public boolean isMandatory() {
         return mandatory;
+    }
+
+    public Expression getDefaultValue() {
+        return defaultValue;
+    }
+
+    public void setDefaultValue(Expression defaultValue) {
+        this.defaultValue = defaultValue;
     }
 
 }

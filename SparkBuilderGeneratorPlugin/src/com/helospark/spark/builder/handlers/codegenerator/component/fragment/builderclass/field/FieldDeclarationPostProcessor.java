@@ -1,5 +1,6 @@
 package com.helospark.spark.builder.handlers.codegenerator.component.fragment.builderclass.field;
 
+import static com.helospark.spark.builder.preferences.PluginPreferenceList.INITIALIZE_BUILDER_FIELD_WITH_DEFAULT_VALUE;
 import static com.helospark.spark.builder.preferences.PluginPreferenceList.INITIALIZE_COLLECTIONS_TO_EMPTY_COLLECTIONS;
 import static com.helospark.spark.builder.preferences.PluginPreferenceList.INITIALIZE_OPTIONAL_FIELDS_TO_EMPTY;
 
@@ -35,7 +36,11 @@ public class FieldDeclarationPostProcessor {
     }
 
     public VariableDeclarationFragment postProcessFragment(AST ast, BuilderField builderField, VariableDeclarationFragment variableDeclarationFragment) {
-        if (isPostProcessingRequired()) {
+        Expression defaultValue = builderField.getDefaultValue();
+
+        if (defaultValue != null && preferencesManager.getPreferenceValue(INITIALIZE_BUILDER_FIELD_WITH_DEFAULT_VALUE)) {
+            variableDeclarationFragment.setInitializer(defaultValue);
+        } else if (isPostProcessingWithEmptyDefaultValueRequired()) {
             Optional<String> result = fullyQualifiedNameExtractor.getFullyQualifiedBaseTypeName(builderField);
             if (result.isPresent()) {
                 postProcessDeclaration(ast, variableDeclarationFragment, result.get());
@@ -44,7 +49,7 @@ public class FieldDeclarationPostProcessor {
         return variableDeclarationFragment;
     }
 
-    private Boolean isPostProcessingRequired() {
+    private Boolean isPostProcessingWithEmptyDefaultValueRequired() {
         return preferencesManager.getPreferenceValue(INITIALIZE_OPTIONAL_FIELDS_TO_EMPTY)
                 || preferencesManager.getPreferenceValue(INITIALIZE_COLLECTIONS_TO_EMPTY_COLLECTIONS);
     }
