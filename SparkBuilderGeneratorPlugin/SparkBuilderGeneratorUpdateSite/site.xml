@@ -3,7 +3,7 @@
    <description name="Spark builder generator plugin" url="ftp://helospark.com/eclipse_plugin/SparkBuilderGeneratorPlugin/">
       Plugin to generate builder
    </description>
-   <feature url="features/com.helospark.SparkBuilderGeneratorFeature_0.0.24.qualifier.jar" id="com.helospark.SparkBuilderGeneratorFeature" version="0.0.24.qualifier">
+   <feature url="features/com.helospark.SparkBuilderGeneratorFeature_0.0.25.202208051448.jar" id="com.helospark.SparkBuilderGeneratorFeature" version="0.0.25.202208051448">
       <category name="SparkTools"/>
    </feature>
    <category-def name="SparkTools" label="SparkTools"/>
