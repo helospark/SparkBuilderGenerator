@@ -1,0 +1,41 @@
+class B extends A {
+    private int y = 10;
+
+    private B(Builder builder) {
+        this.orig = builder.orig;
+        this.x = builder.x;
+        this.y = builder.y;
+    }
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public static final class Builder {
+        private String orig = "asd";
+        private int x = 12;
+        private int y = 10;
+
+        private Builder() {
+        }
+
+        public Builder withOrig(String orig) {
+            this.orig = orig;
+            return this;
+        }
+
+        public Builder withx(int x) {
+            this.x = x;
+            return this;
+        }
+
+        public Builder withy(int y) {
+            this.y = y;
+            return this;
+        }
+
+        public B build() {
+            return new B(this);
+        }
+    }
+}
