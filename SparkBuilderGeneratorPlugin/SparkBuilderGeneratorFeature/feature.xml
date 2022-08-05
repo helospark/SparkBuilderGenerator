@@ -2,7 +2,7 @@
 <feature
       id="com.helospark.SparkBuilderGeneratorFeature"
       label="SparkBuilderGeneratorFeature"
-      version="0.0.24.qualifier">
+      version="0.0.25.qualifier">
 
    <description url="ftp://helospark.com/SparkBuilderGeneratorPlugin/">
       Spark builder generator plugin
@@ -71,6 +71,12 @@ Option to generate public constructor for regular builder that
 includes mandatory fields
 - 0.0.22
 Fixing incorrect field naming with underscore prefix
+- 0.0.23
+Add option to keep custom methods in the builderclass, when the builder is regenerated
+- 0.0.24
+Add option to initialize builder fields with default value from the class' field assignment
+- 0.0.25
+Fix default value initialization based on superclass' field assignment
    </description>
 
    <license url="https://opensource.org/licenses/MIT">

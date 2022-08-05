@@ -1,0 +1,3 @@
+abstract class A extends TestSuperSuperClass {
+	public int x = 12;
+}

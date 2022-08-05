@@ -45,44 +45,43 @@ public class ClassFieldCollector implements FieldCollectorChainItem {
 
     @Override
     public List<? extends BuilderField> collect(TypeDeclaration typeDeclaration) {
-        return findBuilderFieldsRecursively(typeDeclaration);
+        return findBuilderFieldsRecursively(typeDeclaration, typeDeclaration.getAST());
     }
 
-    private List<? extends BuilderField> findBuilderFieldsRecursively(TypeDeclaration currentOwnerClass) {
+    private List<? extends BuilderField> findBuilderFieldsRecursively(TypeDeclaration currentOwnerClass, AST originalAst) {
         List<BuilderField> builderFields = new ArrayList<>();
 
         if (preferencesManager.getPreferenceValue(INCLUDE_VISIBLE_FIELDS_FROM_SUPERCLASS)) {
-            builderFields.addAll(getFieldsFromSuperclass(currentOwnerClass));
+            builderFields.addAll(getFieldsFromSuperclass(currentOwnerClass, originalAst));
         }
 
         FieldDeclaration[] fields = currentOwnerClass.getFields();
         for (FieldDeclaration field : fields) {
             List<VariableDeclarationFragment> fragments = field.fragments();
-            builderFields.addAll(getFilteredDeclarations(field, fragments));
+            builderFields.addAll(getFilteredDeclarations(field, fragments, originalAst));
         }
         return builderFields;
     }
 
-    private List<BuilderField> getFieldsFromSuperclass(TypeDeclaration currentTypeDeclaration) {
+    private List<BuilderField> getFieldsFromSuperclass(TypeDeclaration currentTypeDeclaration, AST originalAst) {
         return typeDeclarationFromSuperclassExtractor.extractTypeDeclarationFromSuperClass(currentTypeDeclaration)
-                .map(parentTypeDeclaration -> findBuilderFieldsRecursively(parentTypeDeclaration))
+                .map(parentTypeDeclaration -> findBuilderFieldsRecursively(parentTypeDeclaration, originalAst))
                 .map(fields -> applicableFieldVisibilityFilter.filterSuperClassFieldsToVisibleFields(fields, currentTypeDeclaration))
                 .orElse(emptyList());
     }
 
-    private List<BuilderField> getFilteredDeclarations(FieldDeclaration field, List<VariableDeclarationFragment> fragments) {
+    private List<BuilderField> getFilteredDeclarations(FieldDeclaration field, List<VariableDeclarationFragment> fragments, AST originalAst) {
         return fragments.stream()
                 .filter(variableFragment -> !isStatic(field))
-                .map(variableFragment -> createNamedVariableDeclarations(variableFragment, field))
+                .map(variableFragment -> createNamedVariableDeclarations(variableFragment, field, originalAst))
                 .collect(Collectors.toList());
     }
 
-    private BuilderField createNamedVariableDeclarations(VariableDeclarationFragment variableDeclarationFragment, FieldDeclaration fieldDeclaration) {
+    private BuilderField createNamedVariableDeclarations(VariableDeclarationFragment variableDeclarationFragment, FieldDeclaration fieldDeclaration, AST originalAst) {
         String originalFieldName = variableDeclarationFragment.getName().toString();
         String builderFieldName = fieldNameToBuilderFieldNameConverter.convertFieldName(originalFieldName);
-        AST ast = variableDeclarationFragment.getAST();
         Expression defaultValue = Optional.ofNullable(variableDeclarationFragment.getInitializer())
-                .map(initializer -> (Expression) ASTNode.copySubtree(ast, initializer))
+                .map(initializer -> (Expression) ASTNode.copySubtree(originalAst, initializer))
                 .orElse(null);
         return ClassFieldSetterBuilderField.builder()
                 .withFieldType(fieldDeclaration.getType())
