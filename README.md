@@ -120,6 +120,8 @@ Most configuration is on the preferences page: Preferences -> Java -> Spark buil
    Add option to initialize builder fields with default value from the class' field assignment
  - 0.0.25
    Fix default value initialization based on superclass' field assignment
+ - 0.0.26
+   Fix copy constructor when superclass field is not accessible from builder
 
 ## The generated code looks like the following:
 
