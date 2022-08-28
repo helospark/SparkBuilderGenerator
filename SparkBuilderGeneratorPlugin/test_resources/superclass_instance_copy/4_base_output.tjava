@@ -1,0 +1,45 @@
+package com.helospark.testpackage;
+
+public class TestClass extends TestSuperClass {
+    private String childField;
+
+    private TestClass(Builder builder) {
+        super(builder.data);
+        this.childField = builder.childField;
+    }
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public static Builder builderFrom(TestClass testClass) {
+        return new Builder(testClass);
+    }
+
+    public static final class Builder {
+        private String data;
+        private String childField;
+
+        private Builder() {
+        }
+
+        private Builder(TestClass testClass) {
+            this.data = testClass.getData();
+            this.childField = testClass.childField;
+        }
+
+        public Builder withData(String data) {
+            this.data = data;
+            return this;
+        }
+
+        public Builder withChildField(String childField) {
+            this.childField = childField;
+            return this;
+        }
+
+        public TestClass build() {
+            return new TestClass(this);
+        }
+    }
+}

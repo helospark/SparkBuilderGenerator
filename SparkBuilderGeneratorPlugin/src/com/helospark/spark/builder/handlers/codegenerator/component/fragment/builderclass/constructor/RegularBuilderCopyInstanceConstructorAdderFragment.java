@@ -5,12 +5,14 @@ import static org.eclipse.jdt.core.dom.Modifier.ModifierKeyword.PRIVATE_KEYWORD;
 import java.util.List;
 
 import org.eclipse.jdt.core.dom.AST;
+import org.eclipse.jdt.core.dom.Assignment;
 import org.eclipse.jdt.core.dom.Block;
+import org.eclipse.jdt.core.dom.Expression;
+import org.eclipse.jdt.core.dom.FieldAccess;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 
-import com.helospark.spark.builder.handlers.codegenerator.component.fragment.constructor.FieldSetterAdderFragment;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.IsRegularBuilderInstanceCopyEnabledPredicate;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.TypeDeclarationToVariableNameConverter;
 import com.helospark.spark.builder.handlers.codegenerator.domain.BuilderField;
@@ -27,14 +29,11 @@ import com.helospark.spark.builder.handlers.codegenerator.domain.RegularBuilderU
  * @author helospark
  */
 public class RegularBuilderCopyInstanceConstructorAdderFragment {
-    private FieldSetterAdderFragment fieldSetterAdderFragment;
     private TypeDeclarationToVariableNameConverter typeDeclarationToVariableNameConverter;
     private IsRegularBuilderInstanceCopyEnabledPredicate isRegularBuilderInstanceCopyEnabledPredicate;
 
-    public RegularBuilderCopyInstanceConstructorAdderFragment(FieldSetterAdderFragment fieldSetterAdderFragment,
-            TypeDeclarationToVariableNameConverter typeDeclarationToVariableNameConverter,
+    public RegularBuilderCopyInstanceConstructorAdderFragment(TypeDeclarationToVariableNameConverter typeDeclarationToVariableNameConverter,
             IsRegularBuilderInstanceCopyEnabledPredicate isRegularBuilderInstanceCopyEnabledPredicate) {
-        this.fieldSetterAdderFragment = fieldSetterAdderFragment;
         this.typeDeclarationToVariableNameConverter = typeDeclarationToVariableNameConverter;
         this.isRegularBuilderInstanceCopyEnabledPredicate = isRegularBuilderInstanceCopyEnabledPredicate;
     }
@@ -55,8 +54,31 @@ public class RegularBuilderCopyInstanceConstructorAdderFragment {
 
     private Block createCopyConstructorBody(AST ast, List<BuilderField> builderFields, String originalTypeParameterName) {
         Block methodBody = ast.newBlock();
-        fieldSetterAdderFragment.populateBodyWithFieldSetCalls(ast, originalTypeParameterName, methodBody, builderFields);
+
+        for (BuilderField field : builderFields) {
+            Assignment assignment = ast.newAssignment();
+
+            FieldAccess fieldAccess = createThisFieldAccess(ast, field);
+            assignment.setLeftHandSide(fieldAccess);
+
+            Expression builderFieldAccess;
+            if (field.getOriginalFieldAccessStrategy().isPresent()) {
+                builderFieldAccess = field.getOriginalFieldAccessStrategy().get().createFieldAccessExpression(ast, originalTypeParameterName);
+            } else {
+                builderFieldAccess = ast.newSimpleName("CANNOT_ACCESS_FIELD");
+            }
+            assignment.setRightHandSide(builderFieldAccess);
+            methodBody.statements().add(ast.newExpressionStatement(assignment));
+        }
+
         return methodBody;
+    }
+
+    private FieldAccess createThisFieldAccess(AST ast, BuilderField field) {
+        FieldAccess fieldAccess = ast.newFieldAccess();
+        fieldAccess.setExpression(ast.newThisExpression());
+        fieldAccess.setName(ast.newSimpleName(field.getOriginalFieldName()));
+        return fieldAccess;
     }
 
     private MethodDeclaration createCopyConstructorWithBody(AST ast, TypeDeclaration builderType, TypeDeclaration originalType, String parameterName,

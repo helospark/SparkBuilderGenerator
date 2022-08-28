@@ -1,0 +1,66 @@
+package com.helospark.testpackage;
+
+public class TestClass extends TestSuperClass {
+    private String childField;
+
+    private TestClass(Builder builder) {
+        super(builder.publicSuperClassField, builder.defaultSuperClassField, builder.protectedSuperClassField, builder.privateSuperClassField);
+        this.childField = builder.childField;
+    }
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public static Builder builderFrom(TestClass testClass) {
+        return new Builder(testClass);
+    }
+
+    public static final class Builder {
+        private String publicSuperClassField;
+        private String defaultSuperClassField;
+        private String protectedSuperClassField;
+        private String privateSuperClassField;
+        private String childField;
+
+        private Builder() {
+        }
+
+        private Builder(TestClass testClass) {
+            this.publicSuperClassField = testClass.publicSuperClassField;
+            this.defaultSuperClassField = testClass.defaultSuperClassField;
+            this.protectedSuperClassField = testClass.protectedSuperClassField;
+            this.privateSuperClassField = CANNOT_ACCESS_FIELD;
+            this.childField = testClass.childField;
+        }
+
+        public Builder withPublicSuperClassField(String publicSuperClassField) {
+            this.publicSuperClassField = publicSuperClassField;
+            return this;
+        }
+
+        public Builder withDefaultSuperClassField(String defaultSuperClassField) {
+            this.defaultSuperClassField = defaultSuperClassField;
+            return this;
+        }
+
+        public Builder withProtectedSuperClassField(String protectedSuperClassField) {
+            this.protectedSuperClassField = protectedSuperClassField;
+            return this;
+        }
+
+        public Builder withPrivateSuperClassField(String privateSuperClassField) {
+            this.privateSuperClassField = privateSuperClassField;
+            return this;
+        }
+
+        public Builder withChildField(String childField) {
+            this.childField = childField;
+            return this;
+        }
+
+        public TestClass build() {
+            return new TestClass(this);
+        }
+    }
+}

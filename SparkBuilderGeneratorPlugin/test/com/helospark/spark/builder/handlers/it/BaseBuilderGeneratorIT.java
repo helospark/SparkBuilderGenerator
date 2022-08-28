@@ -124,6 +124,7 @@ public class BaseBuilderGeneratorIT {
         given(preferenceStore.getBoolean("override_previous_builder")).willReturn(true);
         given(preferenceStore.getString("create_builder_method_pattern")).willReturn(of("builder"));
         given(preferenceStore.getString("builder_class_name_pattern")).willReturn(of("Builder"));
+        given(preferenceStore.getString("org.helospark.builder.copyBuilderInstanceMethodName")).willReturn(of("builderFrom"));
         given(preferenceStore.getString("build_method_name")).willReturn(of("build"));
         given(preferenceStore.getString("builders_method_name_pattern")).willReturn(of("with[FieldName]"));
         given(preferenceStore.getBoolean("generate_javadoc_on_builder_method")).willReturn(false);

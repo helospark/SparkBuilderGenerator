@@ -121,7 +121,7 @@ public class BuilderInstanceCopyIT extends BaseBuilderGeneratorIT {
     }
 
     @Test
-    public void testCopyMethodForRegularBuilderWhenFieldsIncludeSuperConstructorShouldNotGenerateCopyMethod() throws Exception {
+    public void testCopyMethodForRegularBuilderWhenFieldsIncludeSuperConstructorShouldGenerateProperCopyMethod() throws Exception {
         // GIVEN
         given(firstSuperClassType.getCompilationUnit()).willReturn(firstSuperClassICompilationUnit);
         given(firstSuperClassType.getElementName()).willReturn("TestSuperClass");
@@ -138,7 +138,7 @@ public class BuilderInstanceCopyIT extends BaseBuilderGeneratorIT {
         super.setCompilationUnitInput(firstSuperClassICompilationUnit, superClassInput);
 
         String input = readClasspathFile("superclass_with_constructor/base_child_input.tjava");
-        String expectedResult = readClasspathFile("superclass_with_constructor/base_output.tjava");
+        String expectedResult = readClasspathFile("superclass_with_constructor/base_output_with_copy_constructor.tjava");
         super.setInput(input);
 
         // WHEN

@@ -101,6 +101,7 @@ import com.helospark.spark.builder.handlers.codegenerator.component.helper.Stage
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.TemplateResolver;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.TypeDeclarationFromSuperclassExtractor;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.TypeDeclarationToVariableNameConverter;
+import com.helospark.spark.builder.handlers.codegenerator.component.helper.domain.BodyDeclarationFinderUtil;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.domain.BodyDeclarationVisibleFromPredicate;
 import com.helospark.spark.builder.handlers.codegenerator.component.remover.BuilderClassRemover;
 import com.helospark.spark.builder.handlers.codegenerator.component.remover.BuilderRemoverChainItem;
@@ -206,9 +207,8 @@ public class DiContainer {
         addDependency(new TypeDeclarationToVariableNameConverter(getDependency(CamelCaseConverter.class)));
         addDependency(new FieldSetterAdderFragment(getDependency(BuilderFieldAccessCreatorFragment.class)));
         addDependency(new IsRegularBuilderInstanceCopyEnabledPredicate(getDependency(PreferencesManager.class)));
-        addDependency(
-                new RegularBuilderCopyInstanceConstructorAdderFragment(getDependency(FieldSetterAdderFragment.class), getDependency(TypeDeclarationToVariableNameConverter.class),
-                        getDependency(IsRegularBuilderInstanceCopyEnabledPredicate.class)));
+        addDependency(new RegularBuilderCopyInstanceConstructorAdderFragment(getDependency(TypeDeclarationToVariableNameConverter.class),
+                getDependency(IsRegularBuilderInstanceCopyEnabledPredicate.class)));
         addDependency(new PublicConstructorWithMandatoryFieldsAdderFragment());
         addDependency(new RegularBuilderClassCreator(getDependency(PrivateConstructorAdderFragment.class),
                 getDependency(EmptyBuilderClassGeneratorFragment.class),
@@ -250,12 +250,15 @@ public class DiContainer {
         addDependency(new ClassFieldCollector(getDependency(FieldNameToBuilderFieldNameConverter.class),
                 getDependency(PreferencesManager.class), getDependency(TypeDeclarationFromSuperclassExtractor.class),
                 getDependency(ApplicableFieldVisibilityFilter.class)));
+        addDependency(new BodyDeclarationFinderUtil(getDependency(CamelCaseConverter.class)));
         addDependency(new SuperConstructorParameterCollector(getDependency(FieldNameToBuilderFieldNameConverter.class),
                 getDependency(PreferencesManager.class), getDependency(TypeDeclarationFromSuperclassExtractor.class),
-                getDependency(BodyDeclarationVisibleFromPredicate.class)));
+                getDependency(BodyDeclarationVisibleFromPredicate.class),
+                getDependency(BodyDeclarationFinderUtil.class)));
         addDependency(new SuperClassSetterFieldCollector(getDependency(PreferencesManager.class),
                 getDependency(TypeDeclarationFromSuperclassExtractor.class),
-                getDependency(CamelCaseConverter.class)));
+                getDependency(CamelCaseConverter.class),
+                getDependency(BodyDeclarationFinderUtil.class)));
         addDependency(new ApplicableBuilderFieldExtractor(Arrays.asList(
                 getDependency(SuperConstructorParameterCollector.class),
                 getDependency(ClassFieldCollector.class),

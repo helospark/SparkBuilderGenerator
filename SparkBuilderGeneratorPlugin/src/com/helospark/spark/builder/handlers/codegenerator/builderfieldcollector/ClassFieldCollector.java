@@ -23,6 +23,7 @@ import com.helospark.spark.builder.handlers.codegenerator.component.helper.Field
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.TypeDeclarationFromSuperclassExtractor;
 import com.helospark.spark.builder.handlers.codegenerator.domain.BuilderField;
 import com.helospark.spark.builder.handlers.codegenerator.domain.ClassFieldSetterBuilderField;
+import com.helospark.spark.builder.handlers.codegenerator.domain.instancefieldaccess.DirectFieldAccessStrategy;
 import com.helospark.spark.builder.preferences.PreferencesManager;
 
 /**
@@ -89,6 +90,7 @@ public class ClassFieldCollector implements FieldCollectorChainItem {
                 .withOriginalFieldName(originalFieldName)
                 .withBuilderFieldName(builderFieldName)
                 .withDefaultValue(defaultValue)
+                .withOriginalFieldAccessStrategy(Optional.of(new DirectFieldAccessStrategy(originalFieldName))) // Only visible fields are included, therefore they can always be accessed
                 .build();
     }
 

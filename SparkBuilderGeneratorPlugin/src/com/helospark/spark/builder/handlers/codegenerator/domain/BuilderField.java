@@ -1,7 +1,11 @@
 package com.helospark.spark.builder.handlers.codegenerator.domain;
 
+import java.util.Optional;
+
 import org.eclipse.jdt.core.dom.Expression;
 import org.eclipse.jdt.core.dom.Type;
+
+import com.helospark.spark.builder.handlers.codegenerator.domain.instancefieldaccess.InstanceFieldAccessStrategy;
 
 /**
  * Domain object representing a field in the builder.
@@ -13,6 +17,7 @@ public class BuilderField {
     protected String builderFieldName;
     protected boolean mandatory = false;
     protected Expression defaultValue;
+    protected Optional<InstanceFieldAccessStrategy> originalFieldAccessStrategy;
 
     public Type getFieldType() {
         return fieldType;
@@ -40,6 +45,10 @@ public class BuilderField {
 
     public void setDefaultValue(Expression defaultValue) {
         this.defaultValue = defaultValue;
+    }
+
+    public Optional<InstanceFieldAccessStrategy> getOriginalFieldAccessStrategy() {
+        return originalFieldAccessStrategy;
     }
 
 }

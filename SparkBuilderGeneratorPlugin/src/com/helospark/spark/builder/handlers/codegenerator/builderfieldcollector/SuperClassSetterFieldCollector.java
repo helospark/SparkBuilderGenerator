@@ -11,12 +11,16 @@ import java.util.stream.Collectors;
 import org.eclipse.jdt.core.dom.BodyDeclaration;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
+import org.eclipse.jdt.core.dom.Type;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.CamelCaseConverter;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.TypeDeclarationFromSuperclassExtractor;
+import com.helospark.spark.builder.handlers.codegenerator.component.helper.domain.BodyDeclarationFinderUtil;
 import com.helospark.spark.builder.handlers.codegenerator.domain.BuilderField;
 import com.helospark.spark.builder.handlers.codegenerator.domain.SuperSetterBasedBuilderField;
+import com.helospark.spark.builder.handlers.codegenerator.domain.instancefieldaccess.GetterFieldAccessStrategy;
+import com.helospark.spark.builder.handlers.codegenerator.domain.instancefieldaccess.InstanceFieldAccessStrategy;
 import com.helospark.spark.builder.preferences.PreferencesManager;
 
 /**
@@ -29,43 +33,45 @@ public class SuperClassSetterFieldCollector implements FieldCollectorChainItem {
     private PreferencesManager preferencesManager;
     private TypeDeclarationFromSuperclassExtractor typeDeclarationFromSuperclassExtractor;
     private CamelCaseConverter camelCaseConverter;
+    private BodyDeclarationFinderUtil bodyDeclarationFinderUtil;
 
     public SuperClassSetterFieldCollector(PreferencesManager preferencesManager, TypeDeclarationFromSuperclassExtractor typeDeclarationFromSuperclassExtractor,
-            CamelCaseConverter camelCaseConverter) {
+            CamelCaseConverter camelCaseConverter, BodyDeclarationFinderUtil bodyDeclarationFinderUtil) {
         this.preferencesManager = preferencesManager;
         this.typeDeclarationFromSuperclassExtractor = typeDeclarationFromSuperclassExtractor;
         this.camelCaseConverter = camelCaseConverter;
+        this.bodyDeclarationFinderUtil = bodyDeclarationFinderUtil;
     }
 
     @Override
     public List<? extends BuilderField> collect(TypeDeclaration typeDeclaration) {
         if (preferencesManager.getPreferenceValue(INCLUDE_SETTER_FIELDS_FROM_SUPERCLASS)) {
-            List<SuperSetterBasedBuilderField> foundFields = collectFieldsRecursively(typeDeclaration);
+            List<SuperSetterBasedBuilderField> foundFields = collectFieldsRecursively(typeDeclaration, typeDeclaration);
             return deduplicateByName(foundFields);
         } else {
             return emptyList();
         }
     }
 
-    private List<SuperSetterBasedBuilderField> collectFieldsRecursively(TypeDeclaration typeDeclaration) {
+    private List<SuperSetterBasedBuilderField> collectFieldsRecursively(TypeDeclaration currentTypeDeclaration, TypeDeclaration builderOwnerTypeDeclaration) {
         List<SuperSetterBasedBuilderField> result = new ArrayList<>();
-        Optional<TypeDeclaration> superClassType = typeDeclarationFromSuperclassExtractor.extractTypeDeclarationFromSuperClass(typeDeclaration);
+        Optional<TypeDeclaration> superClassType = typeDeclarationFromSuperclassExtractor.extractTypeDeclarationFromSuperClass(currentTypeDeclaration);
 
-        superClassType.ifPresent(type -> {
-            result.addAll(findParametersWithSettersInType(type));
-            result.addAll(collectFieldsRecursively(type));
+        superClassType.ifPresent(superType -> {
+            result.addAll(findParametersWithSettersInType(superType, builderOwnerTypeDeclaration));
+            result.addAll(collectFieldsRecursively(superType, builderOwnerTypeDeclaration));
         });
 
         return result;
     }
 
-    private List<SuperSetterBasedBuilderField> findParametersWithSettersInType(TypeDeclaration parentTypeDeclaration) {
+    private List<SuperSetterBasedBuilderField> findParametersWithSettersInType(TypeDeclaration parentTypeDeclaration, TypeDeclaration builderOwnerTypeDeclaration) {
         return ((List<BodyDeclaration>) parentTypeDeclaration.bodyDeclarations())
                 .stream()
                 .filter(declaration -> isMethod(declaration))
                 .map(declaration -> (MethodDeclaration) declaration)
                 .filter(method -> isSetter(method))
-                .map(method -> createBuilderField(method))
+                .map(method -> createBuilderField(method, parentTypeDeclaration, builderOwnerTypeDeclaration))
                 .collect(Collectors.toList());
     }
 
@@ -78,18 +84,28 @@ public class SuperClassSetterFieldCollector implements FieldCollectorChainItem {
         return method.parameters().size() == 1 && methodName.startsWith(SETTER_METHOD_PREFIX);
     }
 
-    private SuperSetterBasedBuilderField createBuilderField(MethodDeclaration method) {
+    private SuperSetterBasedBuilderField createBuilderField(MethodDeclaration method, TypeDeclaration parentTypeDeclaration, TypeDeclaration builderOwnerTypeDeclaration) {
         String methodName = method.getName().toString();
         String upperCamelCaseFieldName = methodName.replaceFirst(SETTER_METHOD_PREFIX, "");
         String fieldName = camelCaseConverter.toLowerCamelCase(upperCamelCaseFieldName);
 
         SingleVariableDeclaration parameter = (SingleVariableDeclaration) method.parameters().get(0);
+        Type fieldType = parameter.getType();
+
+        Optional<MethodDeclaration> getterMethodDeclaration = bodyDeclarationFinderUtil.findGetterForFieldWithNameAndType(parentTypeDeclaration, fieldName, fieldType);
+
+        Optional<InstanceFieldAccessStrategy> originalFieldAccessStrategy = Optional.empty();
+        if (getterMethodDeclaration.isPresent()) {
+            String getterName = getterMethodDeclaration.get().getName().toString();
+            originalFieldAccessStrategy = Optional.of(new GetterFieldAccessStrategy(getterName));
+        } // it cannot be field access, because than we would include the whole field in the ClassFieldCollector instead
 
         return SuperSetterBasedBuilderField.builder()
                 .withBuilderFieldName(fieldName)
                 .withOriginalFieldName(fieldName)
-                .withFieldType(parameter.getType())
+                .withFieldType(fieldType)
                 .withSetterName(methodName)
+                .withOriginalFieldAccessStrategy(originalFieldAccessStrategy)
                 .build();
     }
 
