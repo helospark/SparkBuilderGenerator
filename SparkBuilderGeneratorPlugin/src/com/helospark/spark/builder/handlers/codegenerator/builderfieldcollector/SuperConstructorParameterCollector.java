@@ -2,7 +2,6 @@ package com.helospark.spark.builder.handlers.codegenerator.builderfieldcollector
 
 import static com.helospark.spark.builder.preferences.PluginPreferenceList.INCLUDE_PARAMETERS_FROM_SUPERCLASS_CONSTRUCTOR;
 import static com.helospark.spark.builder.preferences.PluginPreferenceList.PREFER_TO_USE_EMPTY_SUPERCLASS_CONSTRUCTOR;
-import static java.util.Collections.emptyList;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -11,15 +10,21 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.eclipse.jdt.core.dom.FieldDeclaration;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
+import org.eclipse.jdt.core.dom.Type;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.FieldNameToBuilderFieldNameConverter;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.TypeDeclarationFromSuperclassExtractor;
+import com.helospark.spark.builder.handlers.codegenerator.component.helper.domain.BodyDeclarationFinderUtil;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.domain.BodyDeclarationVisibleFromPredicate;
 import com.helospark.spark.builder.handlers.codegenerator.domain.BuilderField;
 import com.helospark.spark.builder.handlers.codegenerator.domain.ConstructorParameterSetterBuilderField;
+import com.helospark.spark.builder.handlers.codegenerator.domain.instancefieldaccess.DirectFieldAccessStrategy;
+import com.helospark.spark.builder.handlers.codegenerator.domain.instancefieldaccess.GetterFieldAccessStrategy;
+import com.helospark.spark.builder.handlers.codegenerator.domain.instancefieldaccess.InstanceFieldAccessStrategy;
 import com.helospark.spark.builder.preferences.PreferencesManager;
 
 /**
@@ -31,45 +36,73 @@ public class SuperConstructorParameterCollector implements FieldCollectorChainIt
     private PreferencesManager preferencesManager;
     private TypeDeclarationFromSuperclassExtractor typeDeclarationFromSuperclassExtractor;
     private BodyDeclarationVisibleFromPredicate bodyDeclarationVisibleFromPredicate;
+    private BodyDeclarationFinderUtil bodyDeclarationFinderUtil;
 
     public SuperConstructorParameterCollector(FieldNameToBuilderFieldNameConverter fieldNameToBuilderFieldNameConverter, PreferencesManager preferencesManager,
-            TypeDeclarationFromSuperclassExtractor typeDeclarationFromSuperclassExtractor, BodyDeclarationVisibleFromPredicate bodyDeclarationVisibleFromPredicate) {
+            TypeDeclarationFromSuperclassExtractor typeDeclarationFromSuperclassExtractor, BodyDeclarationVisibleFromPredicate bodyDeclarationVisibleFromPredicate,
+            BodyDeclarationFinderUtil bodyDeclarationFinderUtil) {
         this.fieldNameToBuilderFieldNameConverter = fieldNameToBuilderFieldNameConverter;
         this.preferencesManager = preferencesManager;
         this.typeDeclarationFromSuperclassExtractor = typeDeclarationFromSuperclassExtractor;
         this.bodyDeclarationVisibleFromPredicate = bodyDeclarationVisibleFromPredicate;
+        this.bodyDeclarationFinderUtil = bodyDeclarationFinderUtil;
     }
 
     @Override
     public List<? extends BuilderField> collect(TypeDeclaration typeDeclaration) {
         if (preferencesManager.getPreferenceValue(INCLUDE_PARAMETERS_FROM_SUPERCLASS_CONSTRUCTOR)) {
-            return typeDeclarationFromSuperclassExtractor.extractTypeDeclarationFromSuperClass(typeDeclaration)
-                    .map(parentTypeDeclaration -> findConstructorToUse(typeDeclaration, parentTypeDeclaration))
-                    .map(constructor -> extractArguments(constructor))
-                    .orElse(emptyList());
+            Optional<TypeDeclaration> parentTypeDeclaration2 = typeDeclarationFromSuperclassExtractor.extractTypeDeclarationFromSuperClass(typeDeclaration);
+            if (parentTypeDeclaration2.isPresent()) {
+                TypeDeclaration parent = parentTypeDeclaration2.get();
+                return Optional.ofNullable(findConstructorToUse(typeDeclaration, parent))
+                        .map(constructorToUse -> extractArguments(constructorToUse, parent, typeDeclaration))
+                        .orElse(Collections.emptyList());
+            } else {
+                return Collections.emptyList();
+            }
         } else {
             return Collections.emptyList();
         }
     }
 
-    private List<ConstructorParameterSetterBuilderField> extractArguments(MethodDeclaration constructor) {
+    private List<ConstructorParameterSetterBuilderField> extractArguments(MethodDeclaration constructor, TypeDeclaration parent, TypeDeclaration builderOwnerTypeDeclaration) {
         List<ConstructorParameterSetterBuilderField> result = new ArrayList<>();
         List<SingleVariableDeclaration> parameters = constructor.parameters();
         for (int i = 0; i < parameters.size(); ++i) {
-            result.add(createConstructorParameterSetterBuilderField(parameters.get(i), i));
+            result.add(createConstructorParameterSetterBuilderField(parameters.get(i), i, parent, builderOwnerTypeDeclaration));
         }
         return result;
     }
 
-    private ConstructorParameterSetterBuilderField createConstructorParameterSetterBuilderField(SingleVariableDeclaration element, int index) {
+    private ConstructorParameterSetterBuilderField createConstructorParameterSetterBuilderField(SingleVariableDeclaration element, int index, TypeDeclaration parent,
+            TypeDeclaration builderOwnerTypeDeclaration) {
         String originalFieldName = element.getName().toString();
         String builderFieldName = fieldNameToBuilderFieldNameConverter.convertFieldName(originalFieldName);
+        Type fieldType = element.getType();
+
+        Optional<FieldDeclaration> field = bodyDeclarationFinderUtil.findFieldWithNameAndType(parent, originalFieldName, fieldType);
+
+        Optional<InstanceFieldAccessStrategy> originalFieldAccessStrategy = Optional.empty();
+        if (field.isPresent()) {
+            if (bodyDeclarationVisibleFromPredicate.isDeclarationVisibleFrom(field.get(), builderOwnerTypeDeclaration)) {
+                originalFieldAccessStrategy = Optional.of(new DirectFieldAccessStrategy(originalFieldName));
+            }
+        }
+
+        Optional<MethodDeclaration> getterMethodDeclaration = bodyDeclarationFinderUtil.findGetterForFieldWithNameAndType(parent, originalFieldName, fieldType);
+
+        if (getterMethodDeclaration.isPresent() && !originalFieldAccessStrategy.isPresent()) {
+            if (bodyDeclarationVisibleFromPredicate.isDeclarationVisibleFrom(getterMethodDeclaration.get(), builderOwnerTypeDeclaration)) {
+                originalFieldAccessStrategy = Optional.of(new GetterFieldAccessStrategy(getterMethodDeclaration.get().getName().toString()));
+            }
+        }
 
         return ConstructorParameterSetterBuilderField.builder()
-                .withFieldType(element.getType())
+                .withFieldType(fieldType)
                 .withOriginalFieldName(originalFieldName)
                 .withBuilderFieldName(builderFieldName)
                 .withIndex(index)
+                .withOriginalFieldAccessStrategy(originalFieldAccessStrategy)
                 .build();
     }
 
