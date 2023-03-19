@@ -60,7 +60,7 @@ Most configuration is on the preferences page: Preferences -> Java -> Spark buil
 | Create public default constructor (ex. for JPA) | If enabled it generates a public empty default constructor. Generation will be ignored if there is already one, or super(...) call is necessary | false | - |
 | Create public builder constructor with mandatory fields | If enabled then for regular builder empty `builder()` method will be omitted and a public constructor will be created for the builder, with mandatory parameters (by default none), which can be selected via the dialog | false | - | 
 | Keep custom methods in builder | If enabled then any manually added methods in the builder class will be kept when regenerating the builder. | true | - |
-
+| Use new jakarta.annotation package | If enabled jakarta.annotation will be used for Generated and Nonnull annotations (if an import exists already, plugin will use that) | false | - |
 
 ### @Generated annotatation
 
@@ -122,6 +122,8 @@ Most configuration is on the preferences page: Preferences -> Java -> Spark buil
    Fix default value initialization based on superclass' field assignment
  - 0.0.26
    Fix copy constructor when superclass field is not accessible from builder
+ - 0.0.27
+   Add option to use jakarta.annotation package instead of the old javax.annotation
 
 ## The generated code looks like the following:
 

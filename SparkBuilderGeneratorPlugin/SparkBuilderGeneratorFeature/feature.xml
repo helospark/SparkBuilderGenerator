@@ -2,7 +2,7 @@
 <feature
       id="com.helospark.SparkBuilderGeneratorFeature"
       label="SparkBuilderGeneratorFeature"
-      version="0.0.26.qualifier">
+      version="0.0.27.qualifier">
 
    <description url="ftp://helospark.com/SparkBuilderGeneratorPlugin/">
       Spark builder generator plugin
@@ -79,6 +79,8 @@ Add option to initialize builder fields with default value from the class&apos; 
 Fix default value initialization based on superclass&apos; field assignment
 - 0.0.26
 Fix copy constructor when superclass field is not accessible from builder
+- 0.0.27
+Add option to use jakarta.annotation package instead of the old javax.annotation
    </description>
 
    <license url="https://opensource.org/licenses/MIT">

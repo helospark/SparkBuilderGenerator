@@ -31,7 +31,7 @@ public class GeneratedAnnotationPredicate implements Predicate<BodyDeclaration> 
 
     private boolean isGeneratedAnnotation(SingleMemberAnnotation modifier) {
         String fqn = modifier.getTypeName().getFullyQualifiedName();
-        return fqn.equals("javax.annotation.Generated") || fqn.equals("Generated");
+        return fqn.equals("javax.annotation.Generated") || fqn.equals("jakarta.annotation.Generated") || fqn.equals("Generated");
     }
 
 }
