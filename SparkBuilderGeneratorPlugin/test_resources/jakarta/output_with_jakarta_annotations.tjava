@@ -1,0 +1,44 @@
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Generated;
+
+public class TestClass {
+    private String testField;
+    private Integer data;
+
+    @Generated("SparkTools")
+    private TestClass(Builder builder) {
+        this.testField = builder.testField;
+        this.data = builder.data;
+    }
+
+    @Generated("SparkTools")
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    @Generated("SparkTools")
+    public static final class Builder {
+        private String testField;
+        private Integer data;
+
+        private Builder() {
+        }
+
+        @Nonnull
+        public Builder withTestField(String testField) {
+            this.testField = testField;
+            return this;
+        }
+
+        @Nonnull
+        public Builder withData(Integer data) {
+            this.data = data;
+            return this;
+        }
+
+        @Nonnull
+        public TestClass build() {
+            return new TestClass(this);
+        }
+    }
+}

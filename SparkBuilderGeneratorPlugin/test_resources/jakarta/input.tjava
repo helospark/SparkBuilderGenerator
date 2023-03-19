@@ -1,0 +1,4 @@
+public class TestClass {
+	private String testField;
+	private Integer data;
+}

@@ -49,6 +49,9 @@ public final class PluginPreferenceList {
     public static final PluginPreference<Boolean> ADD_GENERATED_ANNOTATION = new BooleanPluginPreference("add_generated_annotation",
             "Add @Generated annotation", Boolean.TRUE);
 
+    public static final PluginPreference<Boolean> USE_JAKARTA_ANNOTATION = new BooleanPluginPreference("org.helospark.builder.use_jakarta_generated_annotation",
+            "Use new jakarta.annotation package", Boolean.FALSE);
+
     public static final PluginPreference<Boolean> OVERRIDE_PREVIOUS_BUILDER = new BooleanPluginPreference("override_previous_builder",
             "Override previous builder", Boolean.TRUE);
 
@@ -154,6 +157,7 @@ public final class PluginPreferenceList {
         generalPreferences.add(INITIALIZE_COLLECTIONS_TO_EMPTY_COLLECTIONS);
         generalPreferences.add(INITIALIZE_BUILDER_FIELD_WITH_DEFAULT_VALUE);
         generalPreferences.add(ADD_GENERATED_ANNOTATION);
+        generalPreferences.add(USE_JAKARTA_ANNOTATION);
         generalPreferences.add(OVERRIDE_PREVIOUS_BUILDER);
         generalPreferences.add(REMOVE_PREFIX_AND_SUFFIX_FROM_BUILDER_NAMES);
         generalPreferences.add(INCLUDE_VISIBLE_FIELDS_FROM_SUPERCLASS);

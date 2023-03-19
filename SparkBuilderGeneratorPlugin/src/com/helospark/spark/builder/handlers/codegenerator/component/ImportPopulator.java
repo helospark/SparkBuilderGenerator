@@ -3,6 +3,7 @@ package com.helospark.spark.builder.handlers.codegenerator.component;
 import static com.helospark.spark.builder.preferences.PluginPreferenceList.ADD_GENERATED_ANNOTATION;
 import static com.helospark.spark.builder.preferences.PluginPreferenceList.ADD_NONNULL_ON_PARAMETERS;
 import static com.helospark.spark.builder.preferences.PluginPreferenceList.ADD_NONNULL_ON_RETURN;
+import static com.helospark.spark.builder.preferences.PluginPreferenceList.USE_JAKARTA_ANNOTATION;
 
 import java.util.List;
 
@@ -23,7 +24,9 @@ import com.helospark.spark.builder.preferences.PreferencesManager;
  */
 public class ImportPopulator {
     private static final String GENERATED_FULLY_QUALIFIED_NAME = "javax.annotation.Generated";
+    private static final String GENERATED_JAKARTA_FULLY_QUALIFIED_NAME = "jakarta.annotation.Generated";
     private static final String NON_NULL_FULLY_QUALIFIED_NAME = "javax.annotation.Nonnull";
+    private static final String NON_NULL_JAKARTA_FULLY_QUALIFIED_NAME = "jakarta.annotation.Nonnull";
     private PreferencesManager preferencesManager;
     private ImportRepository importRepository;
 
@@ -39,21 +42,33 @@ public class ImportPopulator {
         ListRewrite importRewrite = rewriter.getListRewrite(compilationUnit, CompilationUnit.IMPORTS_PROPERTY);
 
         if (shouldAddNonnullAnnotation(compilationUnit)) {
-            addImport(ast, importRewrite, NON_NULL_FULLY_QUALIFIED_NAME);
+            String importToAdd = preferencesManager.getPreferenceValue(USE_JAKARTA_ANNOTATION) ? NON_NULL_JAKARTA_FULLY_QUALIFIED_NAME : NON_NULL_FULLY_QUALIFIED_NAME;
+            addImport(ast, importRewrite, importToAdd);
         }
         if (shouldAddGeneratedAnnotation(compilationUnit)) {
-            addImport(ast, importRewrite, GENERATED_FULLY_QUALIFIED_NAME);
+            String importToAdd = preferencesManager.getPreferenceValue(USE_JAKARTA_ANNOTATION) ? GENERATED_JAKARTA_FULLY_QUALIFIED_NAME : GENERATED_FULLY_QUALIFIED_NAME;
+            addImport(ast, importRewrite, importToAdd);
         }
         addImportsFromRepository(ast, importRewrite, compilationUnit);
     }
 
     private boolean shouldAddNonnullAnnotation(CompilationUnit compilationUnit) {
-        return !isImportExists(compilationUnit, NON_NULL_FULLY_QUALIFIED_NAME) && (preferencesManager.getPreferenceValue(ADD_NONNULL_ON_PARAMETERS)
-                || preferencesManager.getPreferenceValue(ADD_NONNULL_ON_RETURN));
+        return (preferencesManager.getPreferenceValue(ADD_NONNULL_ON_PARAMETERS) || preferencesManager.getPreferenceValue(ADD_NONNULL_ON_RETURN)) &&
+                !isAnyImportPresent(compilationUnit, NON_NULL_FULLY_QUALIFIED_NAME, NON_NULL_JAKARTA_FULLY_QUALIFIED_NAME);
     }
 
     private boolean shouldAddGeneratedAnnotation(CompilationUnit compilationUnit) {
-        return !isImportExists(compilationUnit, GENERATED_FULLY_QUALIFIED_NAME) && preferencesManager.getPreferenceValue(ADD_GENERATED_ANNOTATION);
+        return preferencesManager.getPreferenceValue(ADD_GENERATED_ANNOTATION)
+                && !isAnyImportPresent(compilationUnit, GENERATED_FULLY_QUALIFIED_NAME, GENERATED_JAKARTA_FULLY_QUALIFIED_NAME);
+    }
+
+    private boolean isAnyImportPresent(CompilationUnit compilationUnit, String... imports) {
+        for (String importLine : imports) {
+            if (isImportExists(compilationUnit, importLine)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private void addImportsFromRepository(AST ast, ListRewrite importRewrite, CompilationUnit compilationUnit) {
