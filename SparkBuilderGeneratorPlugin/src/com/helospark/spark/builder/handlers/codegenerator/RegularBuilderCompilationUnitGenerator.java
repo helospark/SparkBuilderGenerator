@@ -2,7 +2,7 @@ package com.helospark.spark.builder.handlers.codegenerator;
 
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
-import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
+import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.jdt.core.dom.rewrite.ListRewrite;
 
 import com.helospark.spark.builder.handlers.codegenerator.builderprocessor.GlobalBuilderPostProcessor;
@@ -56,7 +56,7 @@ public class RegularBuilderCompilationUnitGenerator {
 
         builderRemover.removeExistingBuilderWhenNeeded(compilationUnitModificationDomain);
 
-        AbstractTypeDeclaration builderType = regularBuilderClassCreator.createBuilderClass(ast, originalType, preference,
+        TypeDeclaration builderType = regularBuilderClassCreator.createBuilderClass(ast, originalType, preference,
                 compilationUnitModificationDomain.getSavedCustomMethodDeclarations());
         defaultConstructorAppender.addDefaultConstructorIfNeeded(compilationUnitModificationDomain, preference.getBuilderFields());
         privateConstructorPopulator.addPrivateConstructorToCompilationUnit(ast, originalType, builderType, listRewrite, preference.getBuilderFields());

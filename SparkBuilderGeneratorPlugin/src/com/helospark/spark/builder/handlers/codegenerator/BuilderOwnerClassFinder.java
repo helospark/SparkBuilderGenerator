@@ -136,7 +136,7 @@ public class BuilderOwnerClassFinder {
     private AbstractTypeDeclaration getFirstType(CompilationUnit compilationUnit) {
         return ((List<AbstractTypeDeclaration>) compilationUnit.types())
                 .stream()
-                .filter(AbstractTypeDeclaration -> AbstractTypeDeclaration instanceof TypeDeclaration || isRecordDeclaration(AbstractTypeDeclaration))
+                .filter(abstractTypeDeclaration -> abstractTypeDeclaration instanceof TypeDeclaration || isRecordDeclaration(abstractTypeDeclaration))
                 .findFirst()
                 .orElseThrow(() -> new PluginException("No types are present in the current java file"));
     }

@@ -15,7 +15,7 @@ import org.eclipse.jdt.core.dom.MarkerAnnotation;
 import org.eclipse.jdt.core.dom.MemberValuePair;
 import org.eclipse.jdt.core.dom.NormalAnnotation;
 import org.eclipse.jdt.core.dom.StringLiteral;
-import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
+import org.eclipse.jdt.core.dom.TypeDeclaration;
 
 import com.helospark.spark.builder.handlers.ImportRepository;
 import com.helospark.spark.builder.preferences.PreferencesManager;
@@ -37,7 +37,7 @@ public class JsonPOJOBuilderAdderFragment {
         this.importRepository = importRepository;
     }
 
-    public void addJsonPOJOBuilder(AST ast, AbstractTypeDeclaration builderType) {
+    public void addJsonPOJOBuilder(AST ast, TypeDeclaration builderType) {
         createJsonPojoBuilderAnnotation(ast)
                 .ifPresent(annotationToAdd -> {
                     builderType.modifiers().add(0, annotationToAdd);

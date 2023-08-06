@@ -12,6 +12,7 @@ import org.eclipse.jdt.core.dom.Expression;
 import org.eclipse.jdt.core.dom.FieldAccess;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
+import org.eclipse.jdt.core.dom.TypeDeclaration;
 
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.IsRegularBuilderInstanceCopyEnabledPredicate;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.TypeDeclarationToVariableNameConverter;
@@ -38,13 +39,13 @@ public class RegularBuilderCopyInstanceConstructorAdderFragment {
         this.isRegularBuilderInstanceCopyEnabledPredicate = isRegularBuilderInstanceCopyEnabledPredicate;
     }
 
-    public void addCopyConstructorIfNeeded(AST ast, AbstractTypeDeclaration builderType, AbstractTypeDeclaration originalType, RegularBuilderUserPreference preference) {
+    public void addCopyConstructorIfNeeded(AST ast, TypeDeclaration builderType, AbstractTypeDeclaration originalType, RegularBuilderUserPreference preference) {
         if (isRegularBuilderInstanceCopyEnabledPredicate.test(preference)) {
             createCopyConstructor(ast, builderType, originalType, preference.getBuilderFields());
         }
     }
 
-    private void createCopyConstructor(AST ast, AbstractTypeDeclaration builderType, AbstractTypeDeclaration originalType, List<BuilderField> builderFields) {
+    private void createCopyConstructor(AST ast, TypeDeclaration builderType, AbstractTypeDeclaration originalType, List<BuilderField> builderFields) {
         String originalTypeParameterName = typeDeclarationToVariableNameConverter.convert(originalType);
 
         Block methodBody = createCopyConstructorBody(ast, builderFields, originalTypeParameterName);
@@ -81,7 +82,7 @@ public class RegularBuilderCopyInstanceConstructorAdderFragment {
         return fieldAccess;
     }
 
-    private MethodDeclaration createCopyConstructorWithBody(AST ast, AbstractTypeDeclaration builderType, AbstractTypeDeclaration originalType, String parameterName,
+    private MethodDeclaration createCopyConstructorWithBody(AST ast, TypeDeclaration builderType, AbstractTypeDeclaration originalType, String parameterName,
             Block body) {
         MethodDeclaration copyConstructor = ast.newMethodDeclaration();
         copyConstructor.setBody(body);

@@ -4,11 +4,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.eclipse.jdt.core.dom.AST;
-import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
 import org.eclipse.jdt.core.dom.Block;
 import org.eclipse.jdt.core.dom.ConstructorInvocation;
 import org.eclipse.jdt.core.dom.FieldAccess;
 import org.eclipse.jdt.core.dom.SuperConstructorInvocation;
+import org.eclipse.jdt.core.dom.TypeDeclaration;
 
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.TypeDeclarationToVariableNameConverter;
 import com.helospark.spark.builder.handlers.codegenerator.domain.BuilderField;
@@ -46,7 +46,7 @@ public class PrivateConstructorBodyCreationFragment {
         this.superFieldSetterMethodAdderFragment = superFieldSetterMethodAdderFragment;
     }
 
-    public Block createBody(AST ast, AbstractTypeDeclaration builderType, List<BuilderField> builderFields) {
+    public Block createBody(AST ast, TypeDeclaration builderType, List<BuilderField> builderFields) {
         Block body = ast.newBlock();
         String builderName = typeDeclarationToVariableNameConverter.convert(builderType);
 
@@ -66,7 +66,7 @@ public class PrivateConstructorBodyCreationFragment {
                 .collect(Collectors.toList());
     }
 
-    private void populateBodyWithSuperConstructorCall(AST ast, AbstractTypeDeclaration builderType, Block body, List<ConstructorParameterSetterBuilderField> builderFields) {
+    private void populateBodyWithSuperConstructorCall(AST ast, TypeDeclaration builderType, Block body, List<ConstructorParameterSetterBuilderField> builderFields) {
         SuperConstructorInvocation superInvocation = ast.newSuperConstructorInvocation();
         builderFields.stream()
                 .sorted((first, second) -> first.getIndex().compareTo(second.getIndex()))
@@ -77,7 +77,7 @@ public class PrivateConstructorBodyCreationFragment {
         }
     }
 
-    private void populateBodyWithThisConstructorCall(AST ast, AbstractTypeDeclaration builderType, Block body, List<ThisConstructorParameterSetterBuilderField> builderFields) {
+    private void populateBodyWithThisConstructorCall(AST ast, TypeDeclaration builderType, Block body, List<ThisConstructorParameterSetterBuilderField> builderFields) {
         ConstructorInvocation constructorInvocation = ast.newConstructorInvocation();
         builderFields.stream()
                 .sorted((first, second) -> first.getIndex().compareTo(second.getIndex()))
@@ -88,14 +88,14 @@ public class PrivateConstructorBodyCreationFragment {
         }
     }
 
-    private void addConstructorParameter(AST ast, AbstractTypeDeclaration builderType, SuperConstructorInvocation superInvocation,
+    private void addConstructorParameter(AST ast, TypeDeclaration builderType, SuperConstructorInvocation superInvocation,
             ConstructorParameterSetterBuilderField constructorParameter) {
         FieldAccess fieldAccess = builderFieldAccessCreatorFragment.createBuilderFieldAccess(ast, typeDeclarationToVariableNameConverter.convert(builderType),
                 constructorParameter);
         superInvocation.arguments().add(fieldAccess);
     }
 
-    private void addConstructorParameter(AST ast, AbstractTypeDeclaration builderType, ConstructorInvocation superInvocation,
+    private void addConstructorParameter(AST ast, TypeDeclaration builderType, ConstructorInvocation superInvocation,
             BuilderField constructorParameter) {
         FieldAccess fieldAccess = builderFieldAccessCreatorFragment.createBuilderFieldAccess(ast, typeDeclarationToVariableNameConverter.convert(builderType),
                 constructorParameter);

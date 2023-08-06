@@ -4,7 +4,7 @@ import static com.helospark.spark.builder.preferences.PluginPreferenceList.STAGE
 
 import java.util.List;
 
-import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
+import org.eclipse.jdt.core.dom.TypeDeclaration;
 
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.StagedBuilderProperties;
 import com.helospark.spark.builder.handlers.codegenerator.domain.CompilationUnitModificationDomain;
@@ -33,7 +33,7 @@ public class StagedBuilderStaticBuilderCreatorMethodCreator {
         this.preferencesManager = preferencesManager;
     }
 
-    public void addBuilderMethodToCompilationUnit(CompilationUnitModificationDomain modificationDomain, AbstractTypeDeclaration builderType,
+    public void addBuilderMethodToCompilationUnit(CompilationUnitModificationDomain modificationDomain, TypeDeclaration builderType,
             List<StagedBuilderProperties> stagedBuilderStages) {
         if (preferencesManager.getPreferenceValue(STAGED_BUILDER_SKIP_STATIC_BUILDER_METHOD) &&
                 hasFieldsInFirstStage(stagedBuilderStages)) {

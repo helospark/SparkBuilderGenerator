@@ -1,9 +1,10 @@
 package com.helospark.spark.builder.handlers.codegenerator.component;
 
 import org.eclipse.jdt.core.dom.AST;
+import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
 import org.eclipse.jdt.core.dom.Block;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
-import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
+import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.jdt.core.dom.rewrite.ListRewrite;
 
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.buildermethod.empty.BlockWithNewBuilderCreationFragment;
@@ -30,7 +31,7 @@ public class RegularBuilderBuilderMethodCreator {
         this.builderMethodDefinitionCreatorFragment = builderMethodDefinitionCreatorFragment;
     }
 
-    public void addBuilderMethodToCompilationUnit(AST ast, ListRewrite listRewrite, AbstractTypeDeclaration typeDeclaration, AbstractTypeDeclaration builderType, RegularBuilderUserPreference preference) {
+    public void addBuilderMethodToCompilationUnit(AST ast, ListRewrite listRewrite, AbstractTypeDeclaration typeDeclaration, TypeDeclaration builderType, RegularBuilderUserPreference preference) {
         if (builderMethodNeeded(preference)) {
             addBuilderMethod(ast, listRewrite, typeDeclaration, builderType);
         }
@@ -40,7 +41,7 @@ public class RegularBuilderBuilderMethodCreator {
         return !preference.isCreatePublicConstructorWithMandatoryFields();
     }
 
-    private void addBuilderMethod(AST ast, ListRewrite listRewrite, AbstractTypeDeclaration typeDeclaration, AbstractTypeDeclaration builderType) {
+    private void addBuilderMethod(AST ast, ListRewrite listRewrite, AbstractTypeDeclaration typeDeclaration, TypeDeclaration builderType) {
         Block builderMethodBlock = blockWithNewBuilderCreationFragment.createReturnBlock(ast, builderType);
         MethodDeclaration builderMethod = builderMethodDefinitionCreatorFragment.createBuilderMethod(ast, typeDeclaration, builderType.getName().toString());
         builderMethod.setBody(builderMethodBlock);

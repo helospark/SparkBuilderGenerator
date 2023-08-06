@@ -14,6 +14,7 @@ import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
 import org.eclipse.jdt.core.dom.Javadoc;
 import org.eclipse.jdt.core.dom.Modifier.ModifierKeyword;
+import org.eclipse.jdt.core.dom.TypeDeclaration;
 
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.builderclass.builderclass.JsonPOJOBuilderAdderFragment;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.GeneratedAnnotationPopulator;
@@ -48,8 +49,8 @@ public class EmptyBuilderClassGeneratorFragment {
         this.jsonPOJOBuilderAdderFragment = jsonPOJOBuilderAdderFragment;
     }
 
-    public AbstractTypeDeclaration createBuilderClass(AST ast, AbstractTypeDeclaration originalType) {
-        AbstractTypeDeclaration builderType = ast.newTypeDeclaration();
+    public TypeDeclaration createBuilderClass(AST ast, AbstractTypeDeclaration originalType) {
+        TypeDeclaration builderType = ast.newTypeDeclaration();
         builderType.setName(ast.newSimpleName(getBuilderName(originalType)));
 
         if (preferencesManager.getPreferenceValue(ADD_GENERATED_ANNOTATION)) {

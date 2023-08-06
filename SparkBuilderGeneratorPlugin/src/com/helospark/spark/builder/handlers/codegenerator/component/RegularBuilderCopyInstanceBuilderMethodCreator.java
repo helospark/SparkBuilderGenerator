@@ -4,6 +4,7 @@ import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
 import org.eclipse.jdt.core.dom.Block;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
+import org.eclipse.jdt.core.dom.TypeDeclaration;
 
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.buildermethod.copy.BlockWithNewCopyInstanceConstructorCreationFragment;
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.buildermethod.copy.CopyInstanceBuilderMethodDefinitionCreatorFragment;
@@ -38,14 +39,14 @@ public class RegularBuilderCopyInstanceBuilderMethodCreator {
         this.isRegularBuilderInstanceCopyEnabledPredicate = isRegularBuilderInstanceCopyEnabledPredicate;
     }
 
-    public void addInstanceCopyBuilderMethodToCompilationUnitIfNeeded(CompilationUnitModificationDomain compilationUnitModificationDomain, AbstractTypeDeclaration builderType,
+    public void addInstanceCopyBuilderMethodToCompilationUnitIfNeeded(CompilationUnitModificationDomain compilationUnitModificationDomain, TypeDeclaration builderType,
             RegularBuilderUserPreference preference) {
         if (isRegularBuilderInstanceCopyEnabledPredicate.test(preference)) {
             addInstanceCopyBuilderMethod(compilationUnitModificationDomain, builderType);
         }
     }
 
-    private void addInstanceCopyBuilderMethod(CompilationUnitModificationDomain compilationUnitModificationDomain, AbstractTypeDeclaration builderType) {
+    private void addInstanceCopyBuilderMethod(CompilationUnitModificationDomain compilationUnitModificationDomain, TypeDeclaration builderType) {
         AbstractTypeDeclaration originalType = compilationUnitModificationDomain.getOriginalType();
         AST ast = compilationUnitModificationDomain.getAst();
         String parameterName = typeDeclarationToVariableNameConverter.convert(originalType);

@@ -5,7 +5,7 @@ import org.eclipse.jdt.core.dom.Block;
 import org.eclipse.jdt.core.dom.ClassInstanceCreation;
 import org.eclipse.jdt.core.dom.Expression;
 import org.eclipse.jdt.core.dom.ReturnStatement;
-import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
+import org.eclipse.jdt.core.dom.TypeDeclaration;
 
 /**
  * Creates a block which creates a builder using the copy constructor, generated code is something like:
@@ -18,13 +18,13 @@ import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
  */
 public class BlockWithNewCopyInstanceConstructorCreationFragment {
 
-    public Block createReturnBlock(AST ast, AbstractTypeDeclaration builderType, String parameterName) {
+    public Block createReturnBlock(AST ast, TypeDeclaration builderType, String parameterName) {
         ClassInstanceCreation builderIntantiation = createClassInstantiation(ast, builderType, parameterName);
         ReturnStatement returnStatement = createReturnStatementWithInstantiation(ast, builderIntantiation);
         return createBlockWithReturnStatement(ast, returnStatement);
     }
 
-    private ClassInstanceCreation createClassInstantiation(AST ast, AbstractTypeDeclaration builderType, String parameterName) {
+    private ClassInstanceCreation createClassInstantiation(AST ast, TypeDeclaration builderType, String parameterName) {
         ClassInstanceCreation newClassInstanceCreation = ast.newClassInstanceCreation();
         newClassInstanceCreation.setType(ast.newSimpleType(ast.newName(builderType.getName().toString())));
         newClassInstanceCreation.arguments().add(createArgument(ast, parameterName));

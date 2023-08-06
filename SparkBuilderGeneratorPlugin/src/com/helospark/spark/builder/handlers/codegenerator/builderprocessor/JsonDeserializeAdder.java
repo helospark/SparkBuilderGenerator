@@ -30,7 +30,7 @@ public class JsonDeserializeAdder {
         this.importRepository = importRepository;
     }
 
-    public void addJsonDeserializeAnnotation(CompilationUnitModificationDomain compilationUnitModificationDomain, AbstractTypeDeclaration builderType) {
+    public void addJsonDeserializeAnnotation(CompilationUnitModificationDomain compilationUnitModificationDomain, TypeDeclaration builderType) {
         AST ast = compilationUnitModificationDomain.getAst();
         ASTRewrite rewriter = compilationUnitModificationDomain.getAstRewriter();
         ListRewrite modifierRewrite = createModifierRewriter(compilationUnitModificationDomain, rewriter);
@@ -51,7 +51,7 @@ public class JsonDeserializeAdder {
         }
     }
 
-    private NormalAnnotation createAnnotation(AST ast, CompilationUnitModificationDomain compilationUnitModificationDomain, AbstractTypeDeclaration builderType) {
+    private NormalAnnotation createAnnotation(AST ast, CompilationUnitModificationDomain compilationUnitModificationDomain, TypeDeclaration builderType) {
         TypeLiteral typeLiteral = createBuilderClassReferenceLiteral(ast, compilationUnitModificationDomain, builderType);
 
         NormalAnnotation jsonDeserializeAnnotation = ast.newNormalAnnotation();
@@ -66,7 +66,7 @@ public class JsonDeserializeAdder {
         return jsonDeserializeAnnotation;
     }
 
-    private TypeLiteral createBuilderClassReferenceLiteral(AST ast, CompilationUnitModificationDomain compilationUnitModificationDomain, AbstractTypeDeclaration builderType) {
+    private TypeLiteral createBuilderClassReferenceLiteral(AST ast, CompilationUnitModificationDomain compilationUnitModificationDomain, TypeDeclaration builderType) {
         String originalClassName = compilationUnitModificationDomain.getOriginalType().getName().toString();
         String builderClassName = builderType.getName().toString();
 

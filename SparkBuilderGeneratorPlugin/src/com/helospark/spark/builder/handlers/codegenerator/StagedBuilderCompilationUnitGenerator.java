@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
+import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.jdt.core.dom.rewrite.ListRewrite;
 
 import com.helospark.spark.builder.handlers.codegenerator.builderprocessor.GlobalBuilderPostProcessor;
@@ -60,7 +61,7 @@ public class StagedBuilderCompilationUnitGenerator {
 
         // TODO: eventually have a better design to avoid nulls here
         List<AbstractTypeDeclaration> stageInterfaces = createStageInterfaces(modificationDomain, stagedBuilderStages);
-        AbstractTypeDeclaration builderType = stagedBuilderClassCreator.createBuilderClass(modificationDomain, stagedBuilderStages, stageInterfaces);
+        TypeDeclaration builderType = stagedBuilderClassCreator.createBuilderClass(modificationDomain, stagedBuilderStages, stageInterfaces);
 
         defaultConstructorAppender.addDefaultConstructorIfNeeded(modificationDomain, collectAllFieldsFromAllStages(stagedBuilderStages));
         privateConstructorPopulator.addPrivateConstructorToCompilationUnit(ast, originalType, builderType, listRewrite, collectAllFieldsFromAllStages(stagedBuilderStages));

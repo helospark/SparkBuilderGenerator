@@ -6,7 +6,7 @@ import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.SingleMemberAnnotation;
 import org.eclipse.jdt.core.dom.StringLiteral;
-import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
+import org.eclipse.jdt.core.dom.TypeDeclaration;
 
 import com.helospark.spark.builder.preferences.PreferencesManager;
 import com.helospark.spark.builder.preferences.StaticPreferences;
@@ -23,13 +23,13 @@ public class GeneratedAnnotationPopulator {
         this.preferencesManager = preferencesManager;
     }
 
-    public void addGeneratedAnnotationOnStagedBuilderInterface(AST ast, AbstractTypeDeclaration type) {
+    public void addGeneratedAnnotationOnStagedBuilderInterface(AST ast, TypeDeclaration type) {
         if (preferencesManager.getPreferenceValue(STAGED_BUILDER_ADD_GENERATED_ANNOTATION_ON_STAGE_INTERFACE)) {
             addGeneratedAnnotation(ast, type);
         }
     }
 
-    public void addGeneratedAnnotation(AST ast, AbstractTypeDeclaration builderType) {
+    public void addGeneratedAnnotation(AST ast, TypeDeclaration builderType) {
         SingleMemberAnnotation generatedAnnotation = createGeneratedAnnotation(ast);
         builderType.modifiers().add(0, generatedAnnotation);
     }

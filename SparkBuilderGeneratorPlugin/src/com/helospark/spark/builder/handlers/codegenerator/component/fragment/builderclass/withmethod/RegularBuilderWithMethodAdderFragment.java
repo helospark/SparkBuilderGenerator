@@ -10,7 +10,7 @@ import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.Modifier.ModifierKeyword;
 import org.eclipse.jdt.core.dom.ReturnStatement;
 import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
-import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
+import org.eclipse.jdt.core.dom.TypeDeclaration;
 
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.BuilderMethodNameBuilder;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.JavadocAdder;
@@ -46,7 +46,7 @@ public class RegularBuilderWithMethodAdderFragment {
         this.withMethodParameterCreatorFragment = withMethodParameterCreatorFragment;
     }
 
-    public void addWithMethodToBuilder(AST ast, AbstractTypeDeclaration newType,
+    public void addWithMethodToBuilder(AST ast, TypeDeclaration newType,
             BuilderField builderField) {
         String originalFieldName = builderField.getOriginalFieldName();
         String builderFieldName = builderField.getBuilderFieldName();
@@ -77,7 +77,7 @@ public class RegularBuilderWithMethodAdderFragment {
     }
 
     private MethodDeclaration createNewWithMethod(AST ast, String fieldName, Block newBlock,
-            SingleVariableDeclaration methodParameterDeclaration, AbstractTypeDeclaration builderType,
+            SingleVariableDeclaration methodParameterDeclaration, TypeDeclaration builderType,
             BuilderField builderField) {
         MethodDeclaration builderMethod = ast.newMethodDeclaration();
         builderMethod.setName(ast.newSimpleName(builderClassMethodNameGeneratorService.build(fieldName)));

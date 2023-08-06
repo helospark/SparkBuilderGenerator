@@ -5,8 +5,9 @@ import static com.helospark.spark.builder.handlers.codegenerator.component.helpe
 import java.util.List;
 
 import org.eclipse.jdt.core.dom.AST;
-import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
+import org.eclipse.jdt.core.dom.MethodDeclaration;
+import org.eclipse.jdt.core.dom.TypeDeclaration;
 
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.builderclass.EmptyBuilderClassGeneratorFragment;
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.builderclass.buildmethod.BuildMethodCreatorFragment;
@@ -46,11 +47,11 @@ public class StagedBuilderClassCreator {
         this.markerAnnotationAttacher = markerAnnotationAttacher;
     }
 
-    public AbstractTypeDeclaration createBuilderClass(CompilationUnitModificationDomain modificationDomain,
+    public TypeDeclaration createBuilderClass(CompilationUnitModificationDomain modificationDomain,
             List<StagedBuilderProperties> stagedBuilderProperties, List<AbstractTypeDeclaration> stageInterfaces) {
         AST ast = modificationDomain.getAst();
         AbstractTypeDeclaration originalType = modificationDomain.getOriginalType();
-        AbstractTypeDeclaration builderType = emptyBuilderClassGeneratorFragment.createBuilderClass(ast, originalType);
+        TypeDeclaration builderType = emptyBuilderClassGeneratorFragment.createBuilderClass(ast, originalType);
 
         privateConstructorAdderFragment.addEmptyPrivateConstructor(ast, builderType);
 
@@ -73,7 +74,7 @@ public class StagedBuilderClassCreator {
         return builderType;
     }
 
-    private void setSuperInterfaces(AST ast, AbstractTypeDeclaration builderType, List<AbstractTypeDeclaration> stageInterfaces) {
+    private void setSuperInterfaces(AST ast, TypeDeclaration builderType, List<AbstractTypeDeclaration> stageInterfaces) {
         stageInterfaces.stream()
                 .forEach(stageInterface -> interfaceSetter.setInterface(ast, builderType, stageInterface));
 
