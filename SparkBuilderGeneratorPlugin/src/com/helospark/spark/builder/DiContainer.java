@@ -30,6 +30,7 @@ import com.helospark.spark.builder.handlers.codegenerator.RegularBuilderUserPref
 import com.helospark.spark.builder.handlers.codegenerator.StagedBuilderCompilationUnitGenerator;
 import com.helospark.spark.builder.handlers.codegenerator.StagedBuilderCompilationUnitGeneratorFieldCollectorDecorator;
 import com.helospark.spark.builder.handlers.codegenerator.builderfieldcollector.ClassFieldCollector;
+import com.helospark.spark.builder.handlers.codegenerator.builderfieldcollector.RecordFieldCollector;
 import com.helospark.spark.builder.handlers.codegenerator.builderfieldcollector.SuperClassSetterFieldCollector;
 import com.helospark.spark.builder.handlers.codegenerator.builderfieldcollector.SuperConstructorParameterCollector;
 import com.helospark.spark.builder.handlers.codegenerator.builderprocessor.GlobalBuilderPostProcessor;
@@ -250,6 +251,7 @@ public class DiContainer {
         addDependency(new ClassFieldCollector(getDependency(FieldNameToBuilderFieldNameConverter.class),
                 getDependency(PreferencesManager.class), getDependency(TypeDeclarationFromSuperclassExtractor.class),
                 getDependency(ApplicableFieldVisibilityFilter.class)));
+        addDependency(new RecordFieldCollector(getDependency(FieldNameToBuilderFieldNameConverter.class)));
         addDependency(new BodyDeclarationFinderUtil(getDependency(CamelCaseConverter.class)));
         addDependency(new SuperConstructorParameterCollector(getDependency(FieldNameToBuilderFieldNameConverter.class),
                 getDependency(PreferencesManager.class), getDependency(TypeDeclarationFromSuperclassExtractor.class),
@@ -262,7 +264,8 @@ public class DiContainer {
         addDependency(new ApplicableBuilderFieldExtractor(Arrays.asList(
                 getDependency(SuperConstructorParameterCollector.class),
                 getDependency(ClassFieldCollector.class),
-                getDependency(SuperClassSetterFieldCollector.class))));
+                getDependency(SuperClassSetterFieldCollector.class),
+                getDependency(RecordFieldCollector.class))));
         addDependency(new ActiveJavaEditorOffsetProvider());
         addDependency(new ParentITypeExtractor());
         addDependency(new IsTypeApplicableForBuilderGenerationPredicate(getDependency(ParentITypeExtractor.class)));

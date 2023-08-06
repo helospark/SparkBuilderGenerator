@@ -6,9 +6,9 @@ import java.util.List;
 import javax.annotation.Generated;
 
 import org.eclipse.jdt.core.dom.AST;
+import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
-import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.jdt.core.dom.rewrite.ASTRewrite;
 import org.eclipse.jdt.core.dom.rewrite.ListRewrite;
 
@@ -22,7 +22,7 @@ public class CompilationUnitModificationDomain {
     private ListRewrite listRewrite;
     private ASTRewrite astRewriter;
     private AST ast;
-    private TypeDeclaration originalType;
+    private AbstractTypeDeclaration originalType;
     private CompilationUnit compilationUnit;
     private List<MethodDeclaration> savedCustomMethodDeclarations = new ArrayList<>();
 
@@ -59,7 +59,7 @@ public class CompilationUnitModificationDomain {
         return compilationUnit;
     }
 
-    public TypeDeclaration getOriginalType() {
+    public AbstractTypeDeclaration getOriginalType() {
         return originalType;
     }
 
@@ -73,7 +73,7 @@ public class CompilationUnitModificationDomain {
         private ListRewrite listRewrite;
         private ASTRewrite astRewriter;
         private AST ast;
-        private TypeDeclaration originalType;
+        private AbstractTypeDeclaration originalType;
         private CompilationUnit compilationUnit;
 
         private Builder() {
@@ -94,7 +94,7 @@ public class CompilationUnitModificationDomain {
             return this;
         }
 
-        public Builder withOriginalType(TypeDeclaration originalType) {
+        public Builder withOriginalType(AbstractTypeDeclaration originalType) {
             this.originalType = originalType;
             return this;
         }

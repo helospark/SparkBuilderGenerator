@@ -12,7 +12,7 @@ import org.eclipse.jdt.core.dom.Modifier.ModifierKeyword;
 import org.eclipse.jdt.core.dom.SimpleName;
 import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
 import org.eclipse.jdt.core.dom.Type;
-import org.eclipse.jdt.core.dom.TypeDeclaration;
+import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
 
 import com.helospark.spark.builder.handlers.codegenerator.domain.BuilderField;
 
@@ -28,13 +28,13 @@ import com.helospark.spark.builder.handlers.codegenerator.domain.BuilderField;
  */
 public class PublicConstructorWithMandatoryFieldsAdderFragment {
 
-    public void addPublicConstructor(AST ast, TypeDeclaration builderType, List<BuilderField> fields) {
+    public void addPublicConstructor(AST ast, AbstractTypeDeclaration builderType, List<BuilderField> fields) {
         Block methodBody = createMethodBody(ast, fields);
         MethodDeclaration constructor = createPublicConstructor(ast, methodBody, builderType, fields);
         builderType.bodyDeclarations().add(constructor);
     }
 
-    private MethodDeclaration createPublicConstructor(AST ast, Block body, TypeDeclaration builderType, List<BuilderField> fields) {
+    private MethodDeclaration createPublicConstructor(AST ast, Block body, AbstractTypeDeclaration builderType, List<BuilderField> fields) {
         MethodDeclaration publicConstructorMethod = ast.newMethodDeclaration();
         publicConstructorMethod.setBody(body);
         publicConstructorMethod.setConstructor(true);

@@ -23,7 +23,7 @@ public class BuilderAstRemover {
     }
 
     public void removeBuilder(ASTRewrite rewriter, CompilationUnit compilationUnit, CompilationUnitModificationDomain modificationDomain) {
-        List<TypeDeclaration> types = ((List<AbstractTypeDeclaration>) compilationUnit.types())
+        List<AbstractTypeDeclaration> types = ((List<AbstractTypeDeclaration>) compilationUnit.types())
                 .stream()
                 .filter(abstractTypeDeclaration -> abstractTypeDeclaration instanceof TypeDeclaration)
                 .map(abstractTypeDeclaration -> (TypeDeclaration) abstractTypeDeclaration)

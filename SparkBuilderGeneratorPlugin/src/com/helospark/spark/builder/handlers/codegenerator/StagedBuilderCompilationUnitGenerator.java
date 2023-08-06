@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.eclipse.jdt.core.dom.AST;
-import org.eclipse.jdt.core.dom.TypeDeclaration;
+import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
 import org.eclipse.jdt.core.dom.rewrite.ListRewrite;
 
 import com.helospark.spark.builder.handlers.codegenerator.builderprocessor.GlobalBuilderPostProcessor;
@@ -53,14 +53,14 @@ public class StagedBuilderCompilationUnitGenerator {
 
     public void generateBuilder(CompilationUnitModificationDomain modificationDomain, List<StagedBuilderProperties> stagedBuilderStages) {
         AST ast = modificationDomain.getAst();
-        TypeDeclaration originalType = modificationDomain.getOriginalType();
+        AbstractTypeDeclaration originalType = modificationDomain.getOriginalType();
         ListRewrite listRewrite = modificationDomain.getListRewrite();
 
         builderRemover.removeExistingBuilderWhenNeeded(modificationDomain);
 
         // TODO: eventually have a better design to avoid nulls here
-        List<TypeDeclaration> stageInterfaces = createStageInterfaces(modificationDomain, stagedBuilderStages);
-        TypeDeclaration builderType = stagedBuilderClassCreator.createBuilderClass(modificationDomain, stagedBuilderStages, stageInterfaces);
+        List<AbstractTypeDeclaration> stageInterfaces = createStageInterfaces(modificationDomain, stagedBuilderStages);
+        AbstractTypeDeclaration builderType = stagedBuilderClassCreator.createBuilderClass(modificationDomain, stagedBuilderStages, stageInterfaces);
 
         defaultConstructorAppender.addDefaultConstructorIfNeeded(modificationDomain, collectAllFieldsFromAllStages(stagedBuilderStages));
         privateConstructorPopulator.addPrivateConstructorToCompilationUnit(ast, originalType, builderType, listRewrite, collectAllFieldsFromAllStages(stagedBuilderStages));
@@ -80,7 +80,7 @@ public class StagedBuilderCompilationUnitGenerator {
                 .collect(Collectors.toList());
     }
 
-    private List<TypeDeclaration> createStageInterfaces(CompilationUnitModificationDomain modificationDomain,
+    private List<AbstractTypeDeclaration> createStageInterfaces(CompilationUnitModificationDomain modificationDomain,
             List<StagedBuilderProperties> stagedBuilderProperties) {
         return stagedBuilderProperties.stream()
                 .map(stagedBuilderFieldDomain -> stagedBuilderInterfaceCreatorFragment.createInterfaceFor(modificationDomain, stagedBuilderFieldDomain))

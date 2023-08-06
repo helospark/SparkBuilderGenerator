@@ -9,7 +9,7 @@ import org.eclipse.jdt.core.dom.BodyDeclaration;
 import org.eclipse.jdt.core.dom.FieldDeclaration;
 import org.eclipse.jdt.core.dom.Modifier.ModifierKeyword;
 import org.eclipse.jdt.core.dom.Type;
-import org.eclipse.jdt.core.dom.TypeDeclaration;
+import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
 import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
 
 import com.helospark.spark.builder.handlers.codegenerator.domain.BuilderField;
@@ -29,7 +29,7 @@ public class BuilderFieldAdderFragment {
         this.fieldDeclarationPostProcessor = fieldDeclarationPostProcessor;
     }
 
-    public void addFieldToBuilder(AST ast, TypeDeclaration builderType, BuilderField builderField) {
+    public void addFieldToBuilder(AST ast, AbstractTypeDeclaration builderType, BuilderField builderField) {
         FieldDeclaration fieldDeclaration = ast.newFieldDeclaration(createFieldDeclarationFragment(ast, builderField));
         fieldDeclaration.modifiers().add(ast.newModifier(ModifierKeyword.PRIVATE_KEYWORD));
         fieldDeclaration.setType((Type) ASTNode.copySubtree(ast, builderField.getFieldType()));
@@ -42,7 +42,7 @@ public class BuilderFieldAdderFragment {
         return fieldDeclarationPostProcessor.postProcessFragment(ast, builderField, variableDeclarationFragment);
     }
 
-    private int findLastFieldIndex(TypeDeclaration newType) {
+    private int findLastFieldIndex(AbstractTypeDeclaration newType) {
         return ((List<BodyDeclaration>) newType.bodyDeclarations())
                 .stream()
                 .filter(element -> element instanceof FieldDeclaration)

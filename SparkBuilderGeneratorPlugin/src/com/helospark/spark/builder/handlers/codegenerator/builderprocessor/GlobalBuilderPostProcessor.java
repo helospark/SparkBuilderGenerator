@@ -2,7 +2,7 @@ package com.helospark.spark.builder.handlers.codegenerator.builderprocessor;
 
 import static com.helospark.spark.builder.preferences.PluginPreferenceList.ADD_JACKSON_DESERIALIZE_ANNOTATION;
 
-import org.eclipse.jdt.core.dom.TypeDeclaration;
+import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
 
 import com.helospark.spark.builder.handlers.codegenerator.domain.CompilationUnitModificationDomain;
 import com.helospark.spark.builder.preferences.PreferencesManager;
@@ -20,7 +20,7 @@ public class GlobalBuilderPostProcessor {
         this.jsonDeserializeAdder = jsonDeserializeAdder;
     }
 
-    public void postProcessBuilder(CompilationUnitModificationDomain compilationUnitModificationDomain, TypeDeclaration builderType) {
+    public void postProcessBuilder(CompilationUnitModificationDomain compilationUnitModificationDomain, AbstractTypeDeclaration builderType) {
         if (preferencesManager.getPreferenceValue(ADD_JACKSON_DESERIALIZE_ANNOTATION)) {
             jsonDeserializeAdder.addJsonDeserializeAnnotation(compilationUnitModificationDomain, builderType);
         }

@@ -5,7 +5,7 @@ import org.eclipse.jdt.core.dom.Block;
 import org.eclipse.jdt.core.dom.ClassInstanceCreation;
 import org.eclipse.jdt.core.dom.MethodInvocation;
 import org.eclipse.jdt.core.dom.ReturnStatement;
-import org.eclipse.jdt.core.dom.TypeDeclaration;
+import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
 
 /**
  * Creates method block that combines creating a new builder and calling the first with method on the builder.
@@ -17,7 +17,7 @@ import org.eclipse.jdt.core.dom.TypeDeclaration;
  */
 public class NewBuilderAndWithMethodCallCreationFragment {
 
-    public Block createReturnBlock(AST ast, TypeDeclaration builderType, String withName, String parameterName) {
+    public Block createReturnBlock(AST ast, AbstractTypeDeclaration builderType, String withName, String parameterName) {
         Block builderMethodBlock = ast.newBlock();
         ReturnStatement returnStatement = ast.newReturnStatement();
         ClassInstanceCreation newClassInstanceCreation = ast.newClassInstanceCreation();

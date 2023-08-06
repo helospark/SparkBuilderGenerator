@@ -8,7 +8,7 @@ import java.util.Map;
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
-import org.eclipse.jdt.core.dom.TypeDeclaration;
+import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
 
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.buildermethod.StaticBuilderMethodSignatureGeneratorFragment;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.JavadocAdder;
@@ -40,21 +40,21 @@ public class CopyInstanceBuilderMethodDefinitionCreatorFragment {
         this.staticBuilderMethodSignatureGeneratorFragment = staticBuilderMethodSignatureGeneratorFragment;
     }
 
-    public MethodDeclaration createBuilderMethod(AST ast, TypeDeclaration originalType, String builderName, String methodParameterName) {
+    public MethodDeclaration createBuilderMethod(AST ast, AbstractTypeDeclaration originalType, String builderName, String methodParameterName) {
         MethodDeclaration builderMethod = staticBuilderMethodSignatureGeneratorFragment.create(ast, getBuilderMethodName(originalType), builderName);
         builderMethod.parameters().add(createParameter(ast, originalType, methodParameterName));
         javadocAdder.addJavadocForCopyInstanceBuilderMethod(ast, originalType.getName().toString(), methodParameterName, builderMethod);
         return builderMethod;
     }
 
-    private SingleVariableDeclaration createParameter(AST ast, TypeDeclaration originalType, String methodParameterName) {
+    private SingleVariableDeclaration createParameter(AST ast, AbstractTypeDeclaration originalType, String methodParameterName) {
         SingleVariableDeclaration methodParameterDeclaration = ast.newSingleVariableDeclaration();
         methodParameterDeclaration.setType(ast.newSimpleType(ast.newName(originalType.getName().toString())));
         methodParameterDeclaration.setName(ast.newSimpleName(methodParameterName));
         return methodParameterDeclaration;
     }
 
-    private String getBuilderMethodName(TypeDeclaration originalType) {
+    private String getBuilderMethodName(AbstractTypeDeclaration originalType) {
         Map<String, String> replacements = Collections.singletonMap("className", originalType.getName().toString());
         return templateResolver.resolveTemplate(preferenceManager.getPreferenceValue(COPY_INSTANCE_BUILDER_METHOD_PATTERN), replacements);
     }

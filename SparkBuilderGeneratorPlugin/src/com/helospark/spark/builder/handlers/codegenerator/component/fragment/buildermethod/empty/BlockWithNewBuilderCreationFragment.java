@@ -4,7 +4,7 @@ import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.Block;
 import org.eclipse.jdt.core.dom.ClassInstanceCreation;
 import org.eclipse.jdt.core.dom.ReturnStatement;
-import org.eclipse.jdt.core.dom.TypeDeclaration;
+import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
 
 /**
  * Creates a block which creates a builder, generated code is something like:
@@ -15,7 +15,7 @@ import org.eclipse.jdt.core.dom.TypeDeclaration;
  */
 public class BlockWithNewBuilderCreationFragment {
 
-    public Block createReturnBlock(AST ast, TypeDeclaration builderType) {
+    public Block createReturnBlock(AST ast, AbstractTypeDeclaration builderType) {
         Block builderMethodBlock = ast.newBlock();
         ReturnStatement returnStatement = ast.newReturnStatement();
         ClassInstanceCreation newClassInstanceCreation = ast.newClassInstanceCreation();

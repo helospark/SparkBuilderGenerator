@@ -8,7 +8,7 @@ import org.eclipse.jdt.core.dom.Block;
 import org.eclipse.jdt.core.dom.FieldAccess;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.ReturnStatement;
-import org.eclipse.jdt.core.dom.TypeDeclaration;
+import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
 
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.MarkerAnnotationAttacher;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.StagedBuilderProperties;
@@ -36,7 +36,7 @@ public class StagedBuilderWithMethodAdderFragment {
         this.markerAnnotationAttacher = markerAnnotationAttacher;
     }
 
-    public void addWithMethodToBuilder(AST ast, TypeDeclaration stagedBuilderType,
+    public void addWithMethodToBuilder(AST ast, AbstractTypeDeclaration stagedBuilderType,
             BuilderField builderField,
             StagedBuilderProperties nextStage) {
         Block newBlock = createWithMethodBody(ast, builderField);

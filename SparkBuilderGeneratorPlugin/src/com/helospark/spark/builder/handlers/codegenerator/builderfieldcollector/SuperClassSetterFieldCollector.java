@@ -8,11 +8,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
 import org.eclipse.jdt.core.dom.BodyDeclaration;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
 import org.eclipse.jdt.core.dom.Type;
-import org.eclipse.jdt.core.dom.TypeDeclaration;
 
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.CamelCaseConverter;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.TypeDeclarationFromSuperclassExtractor;
@@ -44,7 +44,7 @@ public class SuperClassSetterFieldCollector implements FieldCollectorChainItem {
     }
 
     @Override
-    public List<? extends BuilderField> collect(TypeDeclaration typeDeclaration) {
+    public List<? extends BuilderField> collect(AbstractTypeDeclaration typeDeclaration) {
         if (preferencesManager.getPreferenceValue(INCLUDE_SETTER_FIELDS_FROM_SUPERCLASS)) {
             List<SuperSetterBasedBuilderField> foundFields = collectFieldsRecursively(typeDeclaration, typeDeclaration);
             return deduplicateByName(foundFields);
@@ -53,25 +53,27 @@ public class SuperClassSetterFieldCollector implements FieldCollectorChainItem {
         }
     }
 
-    private List<SuperSetterBasedBuilderField> collectFieldsRecursively(TypeDeclaration currentTypeDeclaration, TypeDeclaration builderOwnerTypeDeclaration) {
+    private List<SuperSetterBasedBuilderField> collectFieldsRecursively(AbstractTypeDeclaration currentTypeDeclaration,
+            AbstractTypeDeclaration builderOwnerAbstractTypeDeclaration) {
         List<SuperSetterBasedBuilderField> result = new ArrayList<>();
-        Optional<TypeDeclaration> superClassType = typeDeclarationFromSuperclassExtractor.extractTypeDeclarationFromSuperClass(currentTypeDeclaration);
+        Optional<AbstractTypeDeclaration> superClassType = typeDeclarationFromSuperclassExtractor.extractAbstractTypeDeclarationFromSuperClass(currentTypeDeclaration);
 
         superClassType.ifPresent(superType -> {
-            result.addAll(findParametersWithSettersInType(superType, builderOwnerTypeDeclaration));
-            result.addAll(collectFieldsRecursively(superType, builderOwnerTypeDeclaration));
+            result.addAll(findParametersWithSettersInType(superType, builderOwnerAbstractTypeDeclaration));
+            result.addAll(collectFieldsRecursively(superType, builderOwnerAbstractTypeDeclaration));
         });
 
         return result;
     }
 
-    private List<SuperSetterBasedBuilderField> findParametersWithSettersInType(TypeDeclaration parentTypeDeclaration, TypeDeclaration builderOwnerTypeDeclaration) {
-        return ((List<BodyDeclaration>) parentTypeDeclaration.bodyDeclarations())
+    private List<SuperSetterBasedBuilderField> findParametersWithSettersInType(AbstractTypeDeclaration parentAbstractTypeDeclaration,
+            AbstractTypeDeclaration builderOwnerAbstractTypeDeclaration) {
+        return ((List<BodyDeclaration>) parentAbstractTypeDeclaration.bodyDeclarations())
                 .stream()
                 .filter(declaration -> isMethod(declaration))
                 .map(declaration -> (MethodDeclaration) declaration)
                 .filter(method -> isSetter(method))
-                .map(method -> createBuilderField(method, parentTypeDeclaration, builderOwnerTypeDeclaration))
+                .map(method -> createBuilderField(method, parentAbstractTypeDeclaration, builderOwnerAbstractTypeDeclaration))
                 .collect(Collectors.toList());
     }
 
@@ -84,7 +86,8 @@ public class SuperClassSetterFieldCollector implements FieldCollectorChainItem {
         return method.parameters().size() == 1 && methodName.startsWith(SETTER_METHOD_PREFIX);
     }
 
-    private SuperSetterBasedBuilderField createBuilderField(MethodDeclaration method, TypeDeclaration parentTypeDeclaration, TypeDeclaration builderOwnerTypeDeclaration) {
+    private SuperSetterBasedBuilderField createBuilderField(MethodDeclaration method, AbstractTypeDeclaration parentabstractTypeDeclaration,
+            AbstractTypeDeclaration builderOwnerAbstractTypeDeclaration) {
         String methodName = method.getName().toString();
         String upperCamelCaseFieldName = methodName.replaceFirst(SETTER_METHOD_PREFIX, "");
         String fieldName = camelCaseConverter.toLowerCamelCase(upperCamelCaseFieldName);
@@ -92,7 +95,7 @@ public class SuperClassSetterFieldCollector implements FieldCollectorChainItem {
         SingleVariableDeclaration parameter = (SingleVariableDeclaration) method.parameters().get(0);
         Type fieldType = parameter.getType();
 
-        Optional<MethodDeclaration> getterMethodDeclaration = bodyDeclarationFinderUtil.findGetterForFieldWithNameAndType(parentTypeDeclaration, fieldName, fieldType);
+        Optional<MethodDeclaration> getterMethodDeclaration = bodyDeclarationFinderUtil.findGetterForFieldWithNameAndType(parentabstractTypeDeclaration, fieldName, fieldType);
 
         Optional<InstanceFieldAccessStrategy> originalFieldAccessStrategy = Optional.empty();
         if (getterMethodDeclaration.isPresent()) {

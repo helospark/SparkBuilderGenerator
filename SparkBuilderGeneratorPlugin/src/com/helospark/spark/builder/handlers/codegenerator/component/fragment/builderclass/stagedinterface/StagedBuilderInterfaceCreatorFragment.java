@@ -1,6 +1,7 @@
 package com.helospark.spark.builder.handlers.codegenerator.component.fragment.builderclass.stagedinterface;
 
 import org.eclipse.jdt.core.dom.AST;
+import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 
@@ -9,8 +10,8 @@ import com.helospark.spark.builder.handlers.codegenerator.component.fragment.bui
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.GeneratedAnnotationPopulator;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.JavadocAdder;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.StagedBuilderProperties;
-import com.helospark.spark.builder.handlers.codegenerator.domain.CompilationUnitModificationDomain;
 import com.helospark.spark.builder.handlers.codegenerator.domain.BuilderField;
+import com.helospark.spark.builder.handlers.codegenerator.domain.CompilationUnitModificationDomain;
 
 /**
  * Creates an interface for the given stage with javadoc.
@@ -41,7 +42,7 @@ public class StagedBuilderInterfaceCreatorFragment {
         this.generatedAnnotationPopulator = generatedAnnotationPopulator;
     }
 
-    public TypeDeclaration createInterfaceFor(CompilationUnitModificationDomain modificationDomain,
+    public AbstractTypeDeclaration createInterfaceFor(CompilationUnitModificationDomain modificationDomain,
             StagedBuilderProperties stagedBuilderProperties) {
         String interfaceName = stagedBuilderProperties.getInterfaceName();
         AST ast = modificationDomain.getAst();
@@ -56,16 +57,16 @@ public class StagedBuilderInterfaceCreatorFragment {
         return addedInterface;
     }
 
-    private void addBuildMethod(CompilationUnitModificationDomain modificationDomain, TypeDeclaration addedInterface) {
+    private void addBuildMethod(CompilationUnitModificationDomain modificationDomain, AbstractTypeDeclaration addedInterface) {
         AST ast = modificationDomain.getAst();
-        TypeDeclaration originalType = modificationDomain.getOriginalType();
+        AbstractTypeDeclaration originalType = modificationDomain.getOriginalType();
         MethodDeclaration buildMethod = buildMethodDeclarationCreatorFragment.createMethod(ast,
                 originalType);
         javadocAdder.addJavadocForBuildMethod(ast, buildMethod);
         addedInterface.bodyDeclarations().add(buildMethod);
     }
 
-    private void addWithMethods(AST ast, StagedBuilderProperties stagedBuilderProperties, TypeDeclaration addedInterface) {
+    private void addWithMethods(AST ast, StagedBuilderProperties stagedBuilderProperties, AbstractTypeDeclaration addedInterface) {
         StagedBuilderProperties nextStage = getNextStage(stagedBuilderProperties);
         for (BuilderField field : stagedBuilderProperties.getNamedVariableDeclarationField()) {
             MethodDeclaration withMethodDeclaration = stagedBuilderWithMethodDefiniationCreatorFragment.createNewWithMethod(

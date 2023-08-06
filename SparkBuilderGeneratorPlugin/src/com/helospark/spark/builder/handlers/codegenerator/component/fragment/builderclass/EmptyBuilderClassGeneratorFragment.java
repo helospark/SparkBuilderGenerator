@@ -11,9 +11,9 @@ import java.util.Locale;
 import java.util.Map;
 
 import org.eclipse.jdt.core.dom.AST;
+import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
 import org.eclipse.jdt.core.dom.Javadoc;
 import org.eclipse.jdt.core.dom.Modifier.ModifierKeyword;
-import org.eclipse.jdt.core.dom.TypeDeclaration;
 
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.builderclass.builderclass.JsonPOJOBuilderAdderFragment;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.GeneratedAnnotationPopulator;
@@ -48,8 +48,8 @@ public class EmptyBuilderClassGeneratorFragment {
         this.jsonPOJOBuilderAdderFragment = jsonPOJOBuilderAdderFragment;
     }
 
-    public TypeDeclaration createBuilderClass(AST ast, TypeDeclaration originalType) {
-        TypeDeclaration builderType = ast.newTypeDeclaration();
+    public AbstractTypeDeclaration createBuilderClass(AST ast, AbstractTypeDeclaration originalType) {
+        AbstractTypeDeclaration builderType = ast.newTypeDeclaration();
         builderType.setName(ast.newSimpleName(getBuilderName(originalType)));
 
         if (preferencesManager.getPreferenceValue(ADD_GENERATED_ANNOTATION)) {
@@ -72,7 +72,7 @@ public class EmptyBuilderClassGeneratorFragment {
         return builderType;
     }
 
-    private String getBuilderName(TypeDeclaration originalType) {
+    private String getBuilderName(AbstractTypeDeclaration originalType) {
         Map<String, String> replacementMap = new HashMap<>();
         replacementMap.put(CLASS_NAME_REPLACEMENT_PATTERN, originalType.getName().toString());
         return templateResolver.resolveTemplate(preferencesManager.getPreferenceValue(BUILDER_CLASS_NAME_PATTERN), replacementMap);

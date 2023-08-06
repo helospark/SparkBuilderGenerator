@@ -5,6 +5,7 @@ import static com.helospark.spark.builder.preferences.StaticPreferences.JSON_DES
 
 import java.util.List;
 
+import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
 import org.eclipse.jdt.core.dom.IExtendedModifier;
 import org.eclipse.jdt.core.dom.MemberValuePair;
 import org.eclipse.jdt.core.dom.NormalAnnotation;
@@ -27,7 +28,7 @@ public class JsonDeserializeRemover implements BuilderRemoverChainItem {
     }
 
     @Override
-    public void remove(ASTRewrite rewriter, TypeDeclaration mainType, CompilationUnitModificationDomain modificationDomain) {
+    public void remove(ASTRewrite rewriter, AbstractTypeDeclaration mainType, CompilationUnitModificationDomain modificationDomain) {
         if (preferencesManager.getPreferenceValue(ADD_JACKSON_DESERIALIZE_ANNOTATION)) {
             ((List<IExtendedModifier>) mainType.modifiers())
                     .stream()
@@ -52,7 +53,7 @@ public class JsonDeserializeRemover implements BuilderRemoverChainItem {
                 .equals("builder");
     }
 
-    private void removeAnnotation(NormalAnnotation annotation, ASTRewrite rewriter, TypeDeclaration mainType) {
+    private void removeAnnotation(NormalAnnotation annotation, ASTRewrite rewriter, AbstractTypeDeclaration mainType) {
         ListRewrite modifierRewrite = rewriter.getListRewrite(mainType, TypeDeclaration.MODIFIERS2_PROPERTY);
         modifierRewrite.remove(annotation, null);
     }

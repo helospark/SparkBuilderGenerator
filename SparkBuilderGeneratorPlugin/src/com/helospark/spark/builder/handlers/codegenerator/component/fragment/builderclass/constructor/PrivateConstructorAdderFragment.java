@@ -3,7 +3,7 @@ package com.helospark.spark.builder.handlers.codegenerator.component.fragment.bu
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.Modifier.ModifierKeyword;
-import org.eclipse.jdt.core.dom.TypeDeclaration;
+import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
 
 /**
  * Fragment to add empty private constructor to the builder.
@@ -16,7 +16,7 @@ import org.eclipse.jdt.core.dom.TypeDeclaration;
  */
 public class PrivateConstructorAdderFragment {
 
-    public void addEmptyPrivateConstructor(AST ast, TypeDeclaration builderType) {
+    public void addEmptyPrivateConstructor(AST ast, AbstractTypeDeclaration builderType) {
         MethodDeclaration privateConstructorMethod = ast.newMethodDeclaration();
         privateConstructorMethod.setBody(ast.newBlock());
         privateConstructorMethod.setConstructor(true);

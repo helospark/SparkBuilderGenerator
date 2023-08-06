@@ -3,14 +3,15 @@ package com.helospark.spark.builder.handlers.codegenerator.component.helper.doma
 import java.util.List;
 import java.util.Optional;
 
+import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
 import org.eclipse.jdt.core.dom.BodyDeclaration;
 import org.eclipse.jdt.core.dom.FieldDeclaration;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.Type;
-import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
 
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.CamelCaseConverter;
+import com.helospark.spark.builder.handlers.codegenerator.component.helper.FieldExtractor;
 
 public class BodyDeclarationFinderUtil {
     private CamelCaseConverter camelCaseConverter;
@@ -19,13 +20,13 @@ public class BodyDeclarationFinderUtil {
         this.camelCaseConverter = camelCaseConverter;
     }
 
-    public Optional<MethodDeclaration> findGetterForFieldWithNameAndType(TypeDeclaration parentTypeDeclaration, String fieldName, Type fieldType) {
+    public Optional<MethodDeclaration> findGetterForFieldWithNameAndType(AbstractTypeDeclaration parentabstractTypeDeclaration, String fieldName, Type fieldType) {
         String getterName = "get" + camelCaseConverter.toUpperCamelCase(fieldName);
-        return findGetterWithNameAndReturnType(parentTypeDeclaration, getterName, fieldType);
+        return findGetterWithNameAndReturnType(parentabstractTypeDeclaration, getterName, fieldType);
     }
 
-    public Optional<MethodDeclaration> findGetterWithNameAndReturnType(TypeDeclaration parentTypeDeclaration, String getterName, Type fieldType) {
-        return ((List<BodyDeclaration>) parentTypeDeclaration.bodyDeclarations())
+    public Optional<MethodDeclaration> findGetterWithNameAndReturnType(AbstractTypeDeclaration parentAbstractTypeDeclaration, String getterName, Type fieldType) {
+        return ((List<BodyDeclaration>) parentAbstractTypeDeclaration.bodyDeclarations())
                 .stream()
                 .filter(declaration -> isMethod(declaration))
                 .map(declaration -> (MethodDeclaration) declaration)
@@ -44,8 +45,8 @@ public class BodyDeclarationFinderUtil {
         return declaration instanceof MethodDeclaration;
     }
 
-    public Optional<FieldDeclaration> findFieldWithNameAndType(TypeDeclaration parent, String originalFieldName, Type fieldType) {
-        FieldDeclaration[] fields = parent.getFields();
+    public Optional<FieldDeclaration> findFieldWithNameAndType(AbstractTypeDeclaration parent, String originalFieldName, Type fieldType) {
+        FieldDeclaration[] fields = FieldExtractor.getFields(parent);
         for (FieldDeclaration field : fields) {
             List<VariableDeclarationFragment> fragments = field.fragments();
 

@@ -5,7 +5,7 @@ import java.util.Map;
 
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
-import org.eclipse.jdt.core.dom.TypeDeclaration;
+import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
 
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.buildermethod.StaticBuilderMethodSignatureGeneratorFragment;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.JavadocAdder;
@@ -38,13 +38,13 @@ public class BuilderMethodDefinitionCreatorFragment {
         this.staticBuilderMethodSignatureGeneratorFragment = staticBuilderMethodSignatureGeneratorFragment;
     }
 
-    public MethodDeclaration createBuilderMethod(AST ast, TypeDeclaration originalType, String builderName) {
+    public MethodDeclaration createBuilderMethod(AST ast, AbstractTypeDeclaration originalType, String builderName) {
         MethodDeclaration builderMethod = staticBuilderMethodSignatureGeneratorFragment.create(ast, getBuilderMethodName(originalType), builderName);
         javadocAdder.addJavadocForBuilderMethod(ast, originalType.getName().toString(), builderMethod);
         return builderMethod;
     }
 
-    private String getBuilderMethodName(TypeDeclaration originalType) {
+    private String getBuilderMethodName(AbstractTypeDeclaration originalType) {
         Map<String, String> replacements = new HashMap<>();
         replacements.put("className", originalType.getName().toString());
         return templateResolver.resolveTemplate(preferenceManager.getPreferenceValue(PluginPreferenceList.CREATE_BUILDER_METHOD_PATTERN), replacements);

@@ -6,7 +6,7 @@ import java.util.List;
 
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
-import org.eclipse.jdt.core.dom.TypeDeclaration;
+import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
 
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.builderclass.EmptyBuilderClassGeneratorFragment;
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.builderclass.buildmethod.BuildMethodCreatorFragment;
@@ -46,11 +46,11 @@ public class StagedBuilderClassCreator {
         this.markerAnnotationAttacher = markerAnnotationAttacher;
     }
 
-    public TypeDeclaration createBuilderClass(CompilationUnitModificationDomain modificationDomain,
-            List<StagedBuilderProperties> stagedBuilderProperties, List<TypeDeclaration> stageInterfaces) {
+    public AbstractTypeDeclaration createBuilderClass(CompilationUnitModificationDomain modificationDomain,
+            List<StagedBuilderProperties> stagedBuilderProperties, List<AbstractTypeDeclaration> stageInterfaces) {
         AST ast = modificationDomain.getAst();
-        TypeDeclaration originalType = modificationDomain.getOriginalType();
-        TypeDeclaration builderType = emptyBuilderClassGeneratorFragment.createBuilderClass(ast, originalType);
+        AbstractTypeDeclaration originalType = modificationDomain.getOriginalType();
+        AbstractTypeDeclaration builderType = emptyBuilderClassGeneratorFragment.createBuilderClass(ast, originalType);
 
         privateConstructorAdderFragment.addEmptyPrivateConstructor(ast, builderType);
 
@@ -73,7 +73,7 @@ public class StagedBuilderClassCreator {
         return builderType;
     }
 
-    private void setSuperInterfaces(AST ast, TypeDeclaration builderType, List<TypeDeclaration> stageInterfaces) {
+    private void setSuperInterfaces(AST ast, AbstractTypeDeclaration builderType, List<AbstractTypeDeclaration> stageInterfaces) {
         stageInterfaces.stream()
                 .forEach(stageInterface -> interfaceSetter.setInterface(ast, builderType, stageInterface));
 

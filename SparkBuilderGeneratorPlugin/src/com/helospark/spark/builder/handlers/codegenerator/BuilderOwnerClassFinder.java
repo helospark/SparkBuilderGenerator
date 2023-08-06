@@ -1,5 +1,6 @@
 package com.helospark.spark.builder.handlers.codegenerator;
 
+import static com.helospark.spark.builder.handlers.codegenerator.component.helper.IsRecordTypePredicate.isRecordDeclaration;
 import static com.helospark.spark.builder.preferences.PluginPreferenceList.ALWAYS_GENERATE_BUILDER_TO_FIRST_CLASS;
 import static java.util.Optional.ofNullable;
 
@@ -18,6 +19,8 @@ import org.eclipse.jdt.core.dom.rewrite.ListRewrite;
 
 import com.helospark.spark.builder.PluginLogger;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.CurrentlySelectedApplicableClassesClassNameProvider;
+import com.helospark.spark.builder.handlers.codegenerator.component.helper.RecordDeclarationWrapper;
+import com.helospark.spark.builder.handlers.codegenerator.component.helper.TypeExtractor;
 import com.helospark.spark.builder.handlers.codegenerator.component.remover.helper.GeneratedAnnotationPredicate;
 import com.helospark.spark.builder.handlers.codegenerator.domain.CompilationUnitModificationDomain;
 import com.helospark.spark.builder.handlers.exception.PluginException;
@@ -42,9 +45,9 @@ public class BuilderOwnerClassFinder {
     }
 
     public CompilationUnitModificationDomain provideBuilderOwnerClass(CompilationUnit compilationUnit, AST ast, ASTRewrite rewriter, ICompilationUnit iCompilationUnit) {
-        TypeDeclaration builderType = getBuilderOwnerType(compilationUnit, iCompilationUnit);
+        AbstractTypeDeclaration builderType = getBuilderOwnerType(compilationUnit, iCompilationUnit);
 
-        ListRewrite listRewrite = rewriter.getListRewrite(builderType, TypeDeclaration.BODY_DECLARATIONS_PROPERTY);
+        ListRewrite listRewrite = getListRewrite(rewriter, builderType);
 
         return CompilationUnitModificationDomain.builder()
                 .withAst(ast)
@@ -55,7 +58,15 @@ public class BuilderOwnerClassFinder {
                 .build();
     }
 
-    private TypeDeclaration getBuilderOwnerType(CompilationUnit compilationUnit, ICompilationUnit iCompilationUnit) {
+    private ListRewrite getListRewrite(ASTRewrite rewriter, AbstractTypeDeclaration builderType) {
+        if (builderType.getClass() == TypeDeclaration.class) {
+            return rewriter.getListRewrite((TypeDeclaration) builderType, TypeDeclaration.BODY_DECLARATIONS_PROPERTY);
+        } else {
+            return rewriter.getListRewrite(builderType, RecordDeclarationWrapper.of(builderType).getBodyDeclarationProperty());
+        }
+    }
+
+    private AbstractTypeDeclaration getBuilderOwnerType(CompilationUnit compilationUnit, ICompilationUnit iCompilationUnit) {
         if (preferencesManager.getPreferenceValue(ALWAYS_GENERATE_BUILDER_TO_FIRST_CLASS)) {
             return getFirstType(compilationUnit);
         } else {
@@ -64,10 +75,10 @@ public class BuilderOwnerClassFinder {
         }
     }
 
-    private Optional<TypeDeclaration> getTypeAtCurrentSelection(ICompilationUnit iCompilationUnit, CompilationUnit compilationUnit) {
+    private Optional<AbstractTypeDeclaration> getTypeAtCurrentSelection(ICompilationUnit iCompilationUnit, CompilationUnit compilationUnit) {
         try {
             Optional<String> className = currentlySelectedApplicableClassesClassNameProvider.provideCurrentlySelectedClassName(iCompilationUnit);
-            Optional<TypeDeclaration> foundType = className.flatMap(internalClassName -> findClassWithClassName(compilationUnit, internalClassName));
+            Optional<AbstractTypeDeclaration> foundType = className.flatMap(internalClassName -> findClassWithClassName(compilationUnit, internalClassName));
             if (foundType.isPresent()) {
                 foundType = ofNullable(postProcessFoundType(foundType.get()));
             }
@@ -78,7 +89,7 @@ public class BuilderOwnerClassFinder {
         }
     }
 
-    private TypeDeclaration postProcessFoundType(TypeDeclaration currentTypeDeclaration) {
+    private AbstractTypeDeclaration postProcessFoundType(AbstractTypeDeclaration currentTypeDeclaration) {
         if (doesTypeHasGeneratedAnnotation(currentTypeDeclaration)) {
             return extractParentTypeDeclarationOrNull(currentTypeDeclaration);
         } else {
@@ -86,35 +97,34 @@ public class BuilderOwnerClassFinder {
         }
     }
 
-    private TypeDeclaration extractParentTypeDeclarationOrNull(TypeDeclaration typeDeclaration) {
+    private AbstractTypeDeclaration extractParentTypeDeclarationOrNull(AbstractTypeDeclaration typeDeclaration) {
         ASTNode result = typeDeclaration.getParent();
         while (result != null && !(result instanceof TypeDeclaration)) {
             result = result.getParent();
         }
-        return (TypeDeclaration) result;
+        return (AbstractTypeDeclaration) result;
     }
 
-    private boolean doesTypeHasGeneratedAnnotation(TypeDeclaration typeDeclaration) {
+    private boolean doesTypeHasGeneratedAnnotation(AbstractTypeDeclaration typeDeclaration) {
         return generatedAnnotationPredicate.test(typeDeclaration);
     }
 
-    private Optional<TypeDeclaration> findClassWithClassName(CompilationUnit compilationUnit, String className) {
+    private Optional<AbstractTypeDeclaration> findClassWithClassName(CompilationUnit compilationUnit, String className) {
         return ((List<AbstractTypeDeclaration>) compilationUnit.types())
                 .stream()
-                .filter(abstractTypeDeclaration -> abstractTypeDeclaration instanceof TypeDeclaration)
-                .map(abstractTypeDeclaration -> (TypeDeclaration) abstractTypeDeclaration)
+                .filter(abstractTypeDeclaration -> abstractTypeDeclaration instanceof TypeDeclaration || isRecordDeclaration(abstractTypeDeclaration))
                 .map(type -> recursivelyFindClassByName(type, className))
                 .filter(Objects::nonNull)
                 .findFirst();
     }
 
     // Nullable
-    private TypeDeclaration recursivelyFindClassByName(TypeDeclaration currentTypeDeclaration, String className) {
+    private AbstractTypeDeclaration recursivelyFindClassByName(AbstractTypeDeclaration currentTypeDeclaration, String className) {
         if (currentTypeDeclaration.getName().toString().equals(className)) {
             return currentTypeDeclaration;
         } else {
-            for (TypeDeclaration type : currentTypeDeclaration.getTypes()) {
-                TypeDeclaration result = recursivelyFindClassByName(type, className);
+            for (AbstractTypeDeclaration type : TypeExtractor.getTypes(currentTypeDeclaration)) {
+                AbstractTypeDeclaration result = recursivelyFindClassByName(type, className);
                 if (result != null) {
                     return result;
                 }
@@ -123,11 +133,10 @@ public class BuilderOwnerClassFinder {
         }
     }
 
-    private TypeDeclaration getFirstType(CompilationUnit compilationUnit) {
+    private AbstractTypeDeclaration getFirstType(CompilationUnit compilationUnit) {
         return ((List<AbstractTypeDeclaration>) compilationUnit.types())
                 .stream()
-                .filter(abstractTypeDeclaration -> abstractTypeDeclaration instanceof TypeDeclaration)
-                .map(abstractTypeDeclaration -> (TypeDeclaration) abstractTypeDeclaration)
+                .filter(AbstractTypeDeclaration -> AbstractTypeDeclaration instanceof TypeDeclaration || isRecordDeclaration(AbstractTypeDeclaration))
                 .findFirst()
                 .orElseThrow(() -> new PluginException("No types are present in the current java file"));
     }

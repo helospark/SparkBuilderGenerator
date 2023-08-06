@@ -1,6 +1,6 @@
 package com.helospark.spark.builder.handlers.codegenerator.component.remover;
 
-import org.eclipse.jdt.core.dom.TypeDeclaration;
+import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
 import org.eclipse.jdt.core.dom.rewrite.ASTRewrite;
 
 import com.helospark.spark.builder.handlers.codegenerator.domain.CompilationUnitModificationDomain;
@@ -11,6 +11,6 @@ import com.helospark.spark.builder.handlers.codegenerator.domain.CompilationUnit
  */
 public interface BuilderRemoverChainItem {
 
-    void remove(ASTRewrite rewriter, TypeDeclaration mainType, CompilationUnitModificationDomain modificationDomain);
+    void remove(ASTRewrite rewriter, AbstractTypeDeclaration mainType, CompilationUnitModificationDomain modificationDomain);
 
 }

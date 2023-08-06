@@ -5,13 +5,13 @@ import static org.eclipse.jdt.core.dom.Modifier.ModifierKeyword.PRIVATE_KEYWORD;
 import java.util.List;
 
 import org.eclipse.jdt.core.dom.AST;
+import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
 import org.eclipse.jdt.core.dom.Assignment;
 import org.eclipse.jdt.core.dom.Block;
 import org.eclipse.jdt.core.dom.Expression;
 import org.eclipse.jdt.core.dom.FieldAccess;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
-import org.eclipse.jdt.core.dom.TypeDeclaration;
 
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.IsRegularBuilderInstanceCopyEnabledPredicate;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.TypeDeclarationToVariableNameConverter;
@@ -32,19 +32,19 @@ public class RegularBuilderCopyInstanceConstructorAdderFragment {
     private TypeDeclarationToVariableNameConverter typeDeclarationToVariableNameConverter;
     private IsRegularBuilderInstanceCopyEnabledPredicate isRegularBuilderInstanceCopyEnabledPredicate;
 
-    public RegularBuilderCopyInstanceConstructorAdderFragment(TypeDeclarationToVariableNameConverter typeDeclarationToVariableNameConverter,
+    public RegularBuilderCopyInstanceConstructorAdderFragment(TypeDeclarationToVariableNameConverter AbstractTypeDeclarationToVariableNameConverter,
             IsRegularBuilderInstanceCopyEnabledPredicate isRegularBuilderInstanceCopyEnabledPredicate) {
-        this.typeDeclarationToVariableNameConverter = typeDeclarationToVariableNameConverter;
+        this.typeDeclarationToVariableNameConverter = AbstractTypeDeclarationToVariableNameConverter;
         this.isRegularBuilderInstanceCopyEnabledPredicate = isRegularBuilderInstanceCopyEnabledPredicate;
     }
 
-    public void addCopyConstructorIfNeeded(AST ast, TypeDeclaration builderType, TypeDeclaration originalType, RegularBuilderUserPreference preference) {
+    public void addCopyConstructorIfNeeded(AST ast, AbstractTypeDeclaration builderType, AbstractTypeDeclaration originalType, RegularBuilderUserPreference preference) {
         if (isRegularBuilderInstanceCopyEnabledPredicate.test(preference)) {
             createCopyConstructor(ast, builderType, originalType, preference.getBuilderFields());
         }
     }
 
-    private void createCopyConstructor(AST ast, TypeDeclaration builderType, TypeDeclaration originalType, List<BuilderField> builderFields) {
+    private void createCopyConstructor(AST ast, AbstractTypeDeclaration builderType, AbstractTypeDeclaration originalType, List<BuilderField> builderFields) {
         String originalTypeParameterName = typeDeclarationToVariableNameConverter.convert(originalType);
 
         Block methodBody = createCopyConstructorBody(ast, builderFields, originalTypeParameterName);
@@ -81,7 +81,7 @@ public class RegularBuilderCopyInstanceConstructorAdderFragment {
         return fieldAccess;
     }
 
-    private MethodDeclaration createCopyConstructorWithBody(AST ast, TypeDeclaration builderType, TypeDeclaration originalType, String parameterName,
+    private MethodDeclaration createCopyConstructorWithBody(AST ast, AbstractTypeDeclaration builderType, AbstractTypeDeclaration originalType, String parameterName,
             Block body) {
         MethodDeclaration copyConstructor = ast.newMethodDeclaration();
         copyConstructor.setBody(body);
@@ -92,7 +92,7 @@ public class RegularBuilderCopyInstanceConstructorAdderFragment {
         return copyConstructor;
     }
 
-    private SingleVariableDeclaration createParameter(AST ast, TypeDeclaration originalType, String parameterName) {
+    private SingleVariableDeclaration createParameter(AST ast, AbstractTypeDeclaration originalType, String parameterName) {
         SingleVariableDeclaration methodParameterDeclaration = ast.newSingleVariableDeclaration();
         methodParameterDeclaration.setType(ast.newSimpleType(ast.newName(originalType.getName().toString())));
         methodParameterDeclaration.setName(ast.newSimpleName(parameterName));

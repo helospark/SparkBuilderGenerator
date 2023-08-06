@@ -9,7 +9,7 @@ import java.util.Map;
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.Modifier.ModifierKeyword;
-import org.eclipse.jdt.core.dom.TypeDeclaration;
+import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
 
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.MarkerAnnotationAttacher;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.TemplateResolver;
@@ -37,7 +37,7 @@ public class BuildMethodDeclarationCreatorFragment {
         this.templateResolver = templateResolver;
     }
 
-    public MethodDeclaration createMethod(AST ast, TypeDeclaration originalType) {
+    public MethodDeclaration createMethod(AST ast, AbstractTypeDeclaration originalType) {
         MethodDeclaration method = ast.newMethodDeclaration();
         method.setName(ast.newSimpleName(getBuildMethodName(originalType)));
         method.setReturnType2(ast.newSimpleType(ast.newName(originalType.getName().toString())));
@@ -50,7 +50,7 @@ public class BuildMethodDeclarationCreatorFragment {
         return method;
     }
 
-    private String getBuildMethodName(TypeDeclaration originalType) {
+    private String getBuildMethodName(AbstractTypeDeclaration originalType) {
         Map<String, String> replacementMap = new HashMap<>();
         replacementMap.put(CLASS_NAME_REPLACEMENT_PATTERN, originalType.getName().toString());
         return templateResolver.resolveTemplate(preferencesManager.getPreferenceValue(BUILD_METHOD_NAME_PATTERN),

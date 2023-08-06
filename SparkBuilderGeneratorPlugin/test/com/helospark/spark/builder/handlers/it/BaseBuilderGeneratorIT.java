@@ -22,7 +22,6 @@ import org.eclipse.jdt.core.IBuffer;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
-import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTParser;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
@@ -37,6 +36,7 @@ import com.helospark.spark.builder.handlers.WorkingCopyManagerWrapper;
 import com.helospark.spark.builder.handlers.codegenerator.CompilationUnitParser;
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.builderclass.field.FullyQualifiedNameExtractor;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.ITypeExtractor;
+import com.helospark.spark.builder.handlers.codegenerator.component.helper.JlsVersionProvider;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.PreferenceStoreProvider;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.PreferenceStoreWrapper;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.StagedBuilderStagePropertyInputDialogOpener;
@@ -156,10 +156,11 @@ public class BaseBuilderGeneratorIT {
     }
 
     protected CompilationUnit parseAst(char[] source) {
-        ASTParser parser = ASTParser.newParser(AST.JLS8);
+        ASTParser parser = ASTParser.newParser(JlsVersionProvider.getLatestJlsVersion());
         parser.setSource(source);
         Map options = JavaCore.getOptions();
-        JavaCore.setComplianceOptions(JavaCore.VERSION_1_5, options);
+        JavaCore.setComplianceOptions(JavaCore.VERSION_15, options);
+        options.put(JavaCore.COMPILER_PB_ENABLE_PREVIEW_FEATURES, JavaCore.ENABLED);
         parser.setCompilerOptions(options);
         CompilationUnit result = (CompilationUnit) parser.createAST(null);
         return result;

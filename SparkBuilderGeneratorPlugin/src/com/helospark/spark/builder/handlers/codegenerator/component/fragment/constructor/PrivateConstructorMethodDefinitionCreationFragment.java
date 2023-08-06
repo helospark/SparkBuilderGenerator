@@ -8,7 +8,7 @@ import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.Modifier.ModifierKeyword;
 import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
-import org.eclipse.jdt.core.dom.TypeDeclaration;
+import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
 
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.CamelCaseConverter;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.GeneratedAnnotationPopulator;
@@ -36,7 +36,7 @@ public class PrivateConstructorMethodDefinitionCreationFragment {
     }
 
     @SuppressWarnings("unchecked")
-    public MethodDeclaration createPrivateConstructorDefinition(AST ast, TypeDeclaration originalType, TypeDeclaration builderType,
+    public MethodDeclaration createPrivateConstructorDefinition(AST ast, AbstractTypeDeclaration originalType, AbstractTypeDeclaration builderType,
             List<BuilderField> builderFields) {
 
         MethodDeclaration method = ast.newMethodDeclaration();

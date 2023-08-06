@@ -4,7 +4,7 @@ import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.Block;
 import org.eclipse.jdt.core.dom.ClassInstanceCreation;
 import org.eclipse.jdt.core.dom.ReturnStatement;
-import org.eclipse.jdt.core.dom.TypeDeclaration;
+import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
 
 /**
  * Fragment to add create the build() method' body.
@@ -18,7 +18,7 @@ import org.eclipse.jdt.core.dom.TypeDeclaration;
  */
 public class BuildMethodBodyCreatorFragment {
 
-    public Block createBody(AST ast, TypeDeclaration originalType) {
+    public Block createBody(AST ast, AbstractTypeDeclaration originalType) {
         ClassInstanceCreation newClassInstanceCreation = ast.newClassInstanceCreation();
         newClassInstanceCreation.setType(ast.newSimpleType(ast.newName(originalType.getName().toString())));
         newClassInstanceCreation.arguments().add(ast.newThisExpression());

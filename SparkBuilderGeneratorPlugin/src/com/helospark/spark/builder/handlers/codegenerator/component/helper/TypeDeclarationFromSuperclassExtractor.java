@@ -17,7 +17,7 @@ import com.helospark.spark.builder.PluginLogger;
 import com.helospark.spark.builder.handlers.codegenerator.CompilationUnitParser;
 
 /**
- * Creates TypeDeclaration from the superclass of the given type declaration.
+ * Creates AbstractTypeDeclaration from the superclass of the given type declaration.
  * @author helospark
  */
 public class TypeDeclarationFromSuperclassExtractor {
@@ -31,17 +31,17 @@ public class TypeDeclarationFromSuperclassExtractor {
         this.pluginLogger = new PluginLogger();
     }
 
-    public Optional<TypeDeclaration> extractTypeDeclarationFromSuperClass(TypeDeclaration typeDeclaration) {
+    public Optional<AbstractTypeDeclaration> extractAbstractTypeDeclarationFromSuperClass(AbstractTypeDeclaration typeDeclaration) {
         try {
             return iTypeExtractor.extract(typeDeclaration)
-                    .flatMap(type -> extractTypeDeclaration(type));
+                    .flatMap(type -> extractAbstractTypeDeclaration(type));
         } catch (Exception e) {
             pluginLogger.warn("Unable to extracting parent type", e);
             return Optional.empty();
         }
     }
 
-    private Optional<TypeDeclaration> extractTypeDeclaration(IType superClassType) {
+    private Optional<AbstractTypeDeclaration> extractAbstractTypeDeclaration(IType superClassType) {
         return getCompilationUnit(superClassType)
                 .map(iCompilationUnit -> getTypes(iCompilationUnit))
                 .orElse(emptyList())
@@ -50,11 +50,11 @@ public class TypeDeclarationFromSuperclassExtractor {
                 .findFirst();
     }
 
-    private List<TypeDeclaration> getTypes(CompilationUnit iCompilationUnit) {
+    private List<AbstractTypeDeclaration> getTypes(CompilationUnit iCompilationUnit) {
         return ((List<AbstractTypeDeclaration>) iCompilationUnit.types())
                 .stream()
                 .filter(abstractTypeDeclaration -> abstractTypeDeclaration instanceof TypeDeclaration)
-                .map(abstractTypeDeclaration -> (TypeDeclaration) abstractTypeDeclaration)
+                .map(abstractTypeDeclaration -> (AbstractTypeDeclaration) abstractTypeDeclaration)
                 .collect(Collectors.toList());
     }
 

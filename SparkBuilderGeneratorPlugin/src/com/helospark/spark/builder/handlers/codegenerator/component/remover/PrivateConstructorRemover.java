@@ -4,10 +4,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
-import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.jdt.core.dom.rewrite.ASTRewrite;
 
+import com.helospark.spark.builder.handlers.codegenerator.component.helper.MethodExtractor;
 import com.helospark.spark.builder.handlers.codegenerator.component.remover.helper.GeneratedAnnotationContainingBodyDeclarationFilter;
 import com.helospark.spark.builder.handlers.codegenerator.component.remover.helper.IsPrivatePredicate;
 import com.helospark.spark.builder.handlers.codegenerator.domain.CompilationUnitModificationDomain;
@@ -27,7 +28,7 @@ public class PrivateConstructorRemover implements BuilderRemoverChainItem {
     }
 
     @Override
-    public void remove(ASTRewrite rewriter, TypeDeclaration mainType, CompilationUnitModificationDomain modificationDomain) {
+    public void remove(ASTRewrite rewriter, AbstractTypeDeclaration mainType, CompilationUnitModificationDomain modificationDomain) {
         List<MethodDeclaration> privateConstructors = extractPrivateConstructors(mainType);
         List<MethodDeclaration> annotatedConstructors = generatedAnnotationContainingBodyDeclarationFilter.filterAnnotatedClasses(privateConstructors);
         if (!annotatedConstructors.isEmpty()) {
@@ -40,8 +41,8 @@ public class PrivateConstructorRemover implements BuilderRemoverChainItem {
         }
     }
 
-    private List<MethodDeclaration> extractPrivateConstructors(TypeDeclaration mainType) {
-        return Arrays.stream(mainType.getMethods())
+    private List<MethodDeclaration> extractPrivateConstructors(AbstractTypeDeclaration mainType) {
+        return Arrays.stream(MethodExtractor.getMethods(mainType))
                 .filter(method -> method.isConstructor())
                 .filter(method -> method.parameters().size() == 1)
                 .filter(isPrivatePredicate)

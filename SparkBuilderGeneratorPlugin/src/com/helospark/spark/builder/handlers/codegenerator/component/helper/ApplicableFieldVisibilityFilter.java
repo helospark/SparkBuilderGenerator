@@ -3,7 +3,7 @@ package com.helospark.spark.builder.handlers.codegenerator.component.helper;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.eclipse.jdt.core.dom.TypeDeclaration;
+import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
 
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.domain.BodyDeclarationVisibleFromPredicate;
 import com.helospark.spark.builder.handlers.codegenerator.domain.BuilderField;
@@ -21,7 +21,7 @@ public class ApplicableFieldVisibilityFilter {
         this.bodyDeclarationVisibleFromPredicate = bodyDeclarationVisibleFromPredicate;
     }
 
-    public List<BuilderField> filterSuperClassFieldsToVisibleFields(List<? extends BuilderField> toFilter, TypeDeclaration fromType) {
+    public List<BuilderField> filterSuperClassFieldsToVisibleFields(List<? extends BuilderField> toFilter, AbstractTypeDeclaration fromType) {
         return toFilter.stream()
                 .filter(field -> field instanceof ClassFieldSetterBuilderField)
                 .map(field -> (ClassFieldSetterBuilderField) field)
@@ -29,7 +29,7 @@ public class ApplicableFieldVisibilityFilter {
                 .collect(Collectors.toList());
     }
 
-    private boolean isFieldVisibleFrom(ClassFieldSetterBuilderField field, TypeDeclaration fromType) {
+    private boolean isFieldVisibleFrom(ClassFieldSetterBuilderField field, AbstractTypeDeclaration fromType) {
         return bodyDeclarationVisibleFromPredicate.isDeclarationVisibleFrom(field.getFieldDeclaration(), fromType);
     }
 

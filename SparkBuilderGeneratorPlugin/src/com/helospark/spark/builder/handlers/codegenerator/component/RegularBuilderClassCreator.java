@@ -5,8 +5,9 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import org.eclipse.jdt.core.dom.AST;
+import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
-import org.eclipse.jdt.core.dom.TypeDeclaration;
+import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
 
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.builderclass.EmptyBuilderClassGeneratorFragment;
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.builderclass.buildmethod.BuildMethodCreatorFragment;
@@ -49,10 +50,10 @@ public class RegularBuilderClassCreator {
         this.javadocAdder = javadocAdder;
     }
 
-    public TypeDeclaration createBuilderClass(AST ast, TypeDeclaration originalType, RegularBuilderUserPreference preference, List<MethodDeclaration> customMethods) {
+    public AbstractTypeDeclaration createBuilderClass(AST ast, AbstractTypeDeclaration originalType, RegularBuilderUserPreference preference, List<MethodDeclaration> customMethods) {
         List<BuilderField> builderFields = preference.getBuilderFields();
 
-        TypeDeclaration builderType = emptyBuilderClassGeneratorFragment.createBuilderClass(ast, originalType);
+        AbstractTypeDeclaration builderType = emptyBuilderClassGeneratorFragment.createBuilderClass(ast, originalType);
 
         List<BuilderField> createWithMethodsFor;
         if (preference.isCreatePublicConstructorWithMandatoryFields()) {

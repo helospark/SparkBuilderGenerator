@@ -3,7 +3,7 @@ package com.helospark.spark.builder.handlers.codegenerator;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.jdt.core.dom.TypeDeclaration;
+import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
 
 import com.helospark.spark.builder.handlers.codegenerator.builderfieldcollector.FieldCollectorChainItem;
 import com.helospark.spark.builder.handlers.codegenerator.domain.BuilderField;
@@ -20,7 +20,7 @@ public class ApplicableBuilderFieldExtractor {
         this.fieldCollectorChain = fieldCollectorChain;
     }
 
-    public List<BuilderField> findBuilderFields(TypeDeclaration typeDeclaration) {
+    public List<BuilderField> findBuilderFields(AbstractTypeDeclaration typeDeclaration) {
         List<BuilderField> applicableFieldDeclarations = new ArrayList<>();
 
         fieldCollectorChain.stream()
