@@ -3,6 +3,7 @@ package com.helospark.spark.builder.handlers.codegenerator.builderprocessor;
 import static com.helospark.spark.builder.preferences.StaticPreferences.JSON_DESERIALIZE_CLASS_NAME;
 
 import org.eclipse.jdt.core.dom.AST;
+import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
 import org.eclipse.jdt.core.dom.MemberValuePair;
 import org.eclipse.jdt.core.dom.NormalAnnotation;
 import org.eclipse.jdt.core.dom.QualifiedType;
@@ -12,6 +13,7 @@ import org.eclipse.jdt.core.dom.rewrite.ASTRewrite;
 import org.eclipse.jdt.core.dom.rewrite.ListRewrite;
 
 import com.helospark.spark.builder.handlers.ImportRepository;
+import com.helospark.spark.builder.handlers.codegenerator.component.helper.RecordDeclarationWrapper;
 import com.helospark.spark.builder.handlers.codegenerator.domain.CompilationUnitModificationDomain;
 import com.helospark.spark.builder.preferences.StaticPreferences;
 
@@ -31,13 +33,22 @@ public class JsonDeserializeAdder {
     public void addJsonDeserializeAnnotation(CompilationUnitModificationDomain compilationUnitModificationDomain, TypeDeclaration builderType) {
         AST ast = compilationUnitModificationDomain.getAst();
         ASTRewrite rewriter = compilationUnitModificationDomain.getAstRewriter();
-        ListRewrite modifierRewrite = rewriter.getListRewrite(compilationUnitModificationDomain.getOriginalType(), TypeDeclaration.MODIFIERS2_PROPERTY);
+        ListRewrite modifierRewrite = createModifierRewriter(compilationUnitModificationDomain, rewriter);
 
         NormalAnnotation annotation = createAnnotation(ast, compilationUnitModificationDomain, builderType);
 
         modifierRewrite.insertFirst(annotation, null);
 
         importRepository.addImport(StaticPreferences.JSON_DESERIALIZE_FULLY_QUALIFIED_NAME);
+    }
+
+    private ListRewrite createModifierRewriter(CompilationUnitModificationDomain compilationUnitModificationDomain, ASTRewrite rewriter) {
+        AbstractTypeDeclaration type = compilationUnitModificationDomain.getOriginalType();
+        if (type.getClass().equals(TypeDeclaration.class)) {
+            return rewriter.getListRewrite(type, TypeDeclaration.MODIFIERS2_PROPERTY);
+        } else {
+            return rewriter.getListRewrite(type, RecordDeclarationWrapper.of(type).getModifiers2Property());
+        }
     }
 
     private NormalAnnotation createAnnotation(AST ast, CompilationUnitModificationDomain compilationUnitModificationDomain, TypeDeclaration builderType) {

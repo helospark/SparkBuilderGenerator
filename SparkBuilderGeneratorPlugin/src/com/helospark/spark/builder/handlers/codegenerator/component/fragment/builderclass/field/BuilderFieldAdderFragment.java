@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTNode;
+import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
 import org.eclipse.jdt.core.dom.BodyDeclaration;
 import org.eclipse.jdt.core.dom.FieldDeclaration;
 import org.eclipse.jdt.core.dom.Modifier.ModifierKeyword;
@@ -42,7 +43,7 @@ public class BuilderFieldAdderFragment {
         return fieldDeclarationPostProcessor.postProcessFragment(ast, builderField, variableDeclarationFragment);
     }
 
-    private int findLastFieldIndex(TypeDeclaration newType) {
+    private int findLastFieldIndex(AbstractTypeDeclaration newType) {
         return ((List<BodyDeclaration>) newType.bodyDeclarations())
                 .stream()
                 .filter(element -> element instanceof FieldDeclaration)

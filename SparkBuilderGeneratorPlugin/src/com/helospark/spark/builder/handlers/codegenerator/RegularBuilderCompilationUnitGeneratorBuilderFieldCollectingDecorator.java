@@ -5,7 +5,7 @@ import static com.helospark.spark.builder.handlers.BuilderType.REGULAR;
 import java.util.List;
 import java.util.Optional;
 
-import org.eclipse.jdt.core.dom.TypeDeclaration;
+import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
 
 import com.helospark.spark.builder.handlers.BuilderType;
 import com.helospark.spark.builder.handlers.codegenerator.domain.BuilderField;
@@ -31,7 +31,7 @@ public class RegularBuilderCompilationUnitGeneratorBuilderFieldCollectingDecorat
 
     @Override
     public void generateBuilder(CompilationUnitModificationDomain compilationUnitModificationDomain) {
-        TypeDeclaration originalType = compilationUnitModificationDomain.getOriginalType();
+        AbstractTypeDeclaration originalType = compilationUnitModificationDomain.getOriginalType();
         List<BuilderField> builderFields = applicableBuilderFieldExtractor.findBuilderFields(originalType);
         Optional<RegularBuilderUserPreference> userPreference = preferenceProvider.getPreference(builderFields);
         userPreference.ifPresent(preference -> decoratedBuilderGenerator.generateBuilder(compilationUnitModificationDomain, preference));

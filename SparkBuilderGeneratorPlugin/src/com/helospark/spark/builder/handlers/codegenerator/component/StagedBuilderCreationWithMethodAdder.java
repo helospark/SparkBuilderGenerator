@@ -11,8 +11,8 @@ import com.helospark.spark.builder.handlers.codegenerator.component.fragment.bui
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.buildermethod.empty.NewBuilderAndWithMethodCallCreationFragment;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.JavadocAdder;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.StagedBuilderProperties;
-import com.helospark.spark.builder.handlers.codegenerator.domain.CompilationUnitModificationDomain;
 import com.helospark.spark.builder.handlers.codegenerator.domain.BuilderField;
+import com.helospark.spark.builder.handlers.codegenerator.domain.CompilationUnitModificationDomain;
 
 /**
  * Creates a method to instantiate staged builder, without using the builder() method, like:

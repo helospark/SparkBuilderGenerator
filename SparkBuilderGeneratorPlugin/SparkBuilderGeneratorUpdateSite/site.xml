@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <description name="Spark builder generator plugin" url="ftp://helospark.com/eclipse_plugin/SparkBuilderGeneratorPlugin/">
+   <description name="Spark builder generator plugin" url="https://helospark.com/eclipse_plugin/SparkBuilderGeneratorPlugin">
       Plugin to generate builder
    </description>
-   <feature url="features/com.helospark.SparkBuilderGeneratorFeature_0.0.27.202303190900.jar" id="com.helospark.SparkBuilderGeneratorFeature" version="0.0.27.202303190900">
+   <feature url="features/com.helospark.SparkBuilderGeneratorFeature_0.0.28.202308062115.jar" id="com.helospark.SparkBuilderGeneratorFeature" version="0.0.28.202308062115">
       <category name="SparkTools"/>
    </feature>
    <category-def name="SparkTools" label="SparkTools"/>

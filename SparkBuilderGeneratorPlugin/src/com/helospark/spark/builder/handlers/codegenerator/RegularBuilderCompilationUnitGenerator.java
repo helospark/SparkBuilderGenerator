@@ -1,6 +1,7 @@
 package com.helospark.spark.builder.handlers.codegenerator;
 
 import org.eclipse.jdt.core.dom.AST;
+import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.jdt.core.dom.rewrite.ListRewrite;
 
@@ -51,7 +52,7 @@ public class RegularBuilderCompilationUnitGenerator {
         // TODO: replace parameters, where these go separately with compilation modification domain
         AST ast = compilationUnitModificationDomain.getAst();
         ListRewrite listRewrite = compilationUnitModificationDomain.getListRewrite();
-        TypeDeclaration originalType = compilationUnitModificationDomain.getOriginalType();
+        AbstractTypeDeclaration originalType = compilationUnitModificationDomain.getOriginalType();
 
         builderRemover.removeExistingBuilderWhenNeeded(compilationUnitModificationDomain);
 

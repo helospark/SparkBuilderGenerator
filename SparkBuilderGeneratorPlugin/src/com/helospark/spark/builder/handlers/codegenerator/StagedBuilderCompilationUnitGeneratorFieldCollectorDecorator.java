@@ -5,7 +5,7 @@ import static com.helospark.spark.builder.handlers.BuilderType.STAGED;
 import java.util.List;
 import java.util.Optional;
 
-import org.eclipse.jdt.core.dom.TypeDeclaration;
+import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
 
 import com.helospark.spark.builder.handlers.BuilderType;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.StagedBuilderProperties;
@@ -32,7 +32,7 @@ public class StagedBuilderCompilationUnitGeneratorFieldCollectorDecorator implem
 
     @Override
     public void generateBuilder(CompilationUnitModificationDomain compilationUnitModificationDomain) {
-        TypeDeclaration originalType = compilationUnitModificationDomain.getOriginalType();
+        AbstractTypeDeclaration originalType = compilationUnitModificationDomain.getOriginalType();
         List<BuilderField> fieldToIncludeInBuilder = applicableBuilderFieldExtractor.findBuilderFields(originalType);
         Optional<List<StagedBuilderProperties>> stagedBuilderStages = stagedBuilderStagePropertiesProvider.build(fieldToIncludeInBuilder);
 

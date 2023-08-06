@@ -1,9 +1,9 @@
 package com.helospark.spark.builder.handlers.codegenerator.component.helper;
 
-import org.eclipse.jdt.core.dom.TypeDeclaration;
+import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
 
 /**
- * Converts the given TypeDeclaration to a variable name using common Java camelCase convention.
+ * Converts the given AbstractTypeDeclaration to a variable name using common Java camelCase convention.
  * @author helospark
  */
 public class TypeDeclarationToVariableNameConverter {
@@ -13,7 +13,7 @@ public class TypeDeclarationToVariableNameConverter {
         this.camelCaseConverter = camelCaseConverter;
     }
 
-    public String convert(TypeDeclaration builderType) {
+    public String convert(AbstractTypeDeclaration builderType) {
         return camelCaseConverter.toLowerCamelCase(builderType.getName().toString());
     }
 

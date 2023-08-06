@@ -6,7 +6,7 @@ import java.util.Optional;
 import org.eclipse.jdt.core.dom.BodyDeclaration;
 import org.eclipse.jdt.core.dom.IExtendedModifier;
 import org.eclipse.jdt.core.dom.Modifier;
-import org.eclipse.jdt.core.dom.TypeDeclaration;
+import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
 
 /**
  * Predicate to check whether the given body declaration is visible from the given class.
@@ -14,7 +14,7 @@ import org.eclipse.jdt.core.dom.TypeDeclaration;
  */
 public class BodyDeclarationVisibleFromPredicate {
 
-    public boolean isDeclarationVisibleFrom(BodyDeclaration declaration, TypeDeclaration fromType) {
+    public boolean isDeclarationVisibleFrom(BodyDeclaration declaration, AbstractTypeDeclaration fromType) {
         JavaVisibilityScopeModifier fieldModifier = getFieldModifier(declaration);
         return fieldModifier.testIfVisibleFromSubclass(fromType, declaration);
     }

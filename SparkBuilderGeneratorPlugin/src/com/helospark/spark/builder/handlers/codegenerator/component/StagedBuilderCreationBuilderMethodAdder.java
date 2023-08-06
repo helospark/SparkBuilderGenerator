@@ -1,6 +1,7 @@
 package com.helospark.spark.builder.handlers.codegenerator.component;
 
 import org.eclipse.jdt.core.dom.AST;
+import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
 import org.eclipse.jdt.core.dom.Block;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
@@ -34,7 +35,7 @@ public class StagedBuilderCreationBuilderMethodAdder {
     public void addBuilderMethodToCompilationUnit(CompilationUnitModificationDomain modificationDomain, TypeDeclaration builderType,
             StagedBuilderProperties stagedBuilderStages) {
         AST ast = modificationDomain.getAst();
-        TypeDeclaration typeDeclaration = modificationDomain.getOriginalType();
+        AbstractTypeDeclaration typeDeclaration = modificationDomain.getOriginalType();
         ListRewrite listRewrite = modificationDomain.getListRewrite();
         Block builderMethodBlock = blockWithNewBuilderCreationFragment.createReturnBlock(ast, builderType);
         MethodDeclaration builderMethod = builderMethodDefinitionCreatorFragment.createBuilderMethod(ast, typeDeclaration, stagedBuilderStages.getInterfaceName());

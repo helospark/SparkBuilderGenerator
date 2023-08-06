@@ -10,15 +10,16 @@ import java.util.stream.Collectors;
 
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTNode;
+import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
 import org.eclipse.jdt.core.dom.Expression;
 import org.eclipse.jdt.core.dom.FieldDeclaration;
 import org.eclipse.jdt.core.dom.IExtendedModifier;
 import org.eclipse.jdt.core.dom.Modifier;
 import org.eclipse.jdt.core.dom.Modifier.ModifierKeyword;
-import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
 
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.ApplicableFieldVisibilityFilter;
+import com.helospark.spark.builder.handlers.codegenerator.component.helper.FieldExtractor;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.FieldNameToBuilderFieldNameConverter;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.TypeDeclarationFromSuperclassExtractor;
 import com.helospark.spark.builder.handlers.codegenerator.domain.BuilderField;
@@ -45,18 +46,18 @@ public class ClassFieldCollector implements FieldCollectorChainItem {
     }
 
     @Override
-    public List<? extends BuilderField> collect(TypeDeclaration typeDeclaration) {
+    public List<? extends BuilderField> collect(AbstractTypeDeclaration typeDeclaration) {
         return findBuilderFieldsRecursively(typeDeclaration, typeDeclaration.getAST());
     }
 
-    private List<? extends BuilderField> findBuilderFieldsRecursively(TypeDeclaration currentOwnerClass, AST originalAst) {
+    private List<? extends BuilderField> findBuilderFieldsRecursively(AbstractTypeDeclaration currentOwnerClass, AST originalAst) {
         List<BuilderField> builderFields = new ArrayList<>();
 
         if (preferencesManager.getPreferenceValue(INCLUDE_VISIBLE_FIELDS_FROM_SUPERCLASS)) {
             builderFields.addAll(getFieldsFromSuperclass(currentOwnerClass, originalAst));
         }
 
-        FieldDeclaration[] fields = currentOwnerClass.getFields();
+        FieldDeclaration[] fields = FieldExtractor.getFields(currentOwnerClass);
         for (FieldDeclaration field : fields) {
             List<VariableDeclarationFragment> fragments = field.fragments();
             builderFields.addAll(getFilteredDeclarations(field, fragments, originalAst));
@@ -64,7 +65,7 @@ public class ClassFieldCollector implements FieldCollectorChainItem {
         return builderFields;
     }
 
-    private List<BuilderField> getFieldsFromSuperclass(TypeDeclaration currentTypeDeclaration, AST originalAst) {
+    private List<BuilderField> getFieldsFromSuperclass(AbstractTypeDeclaration currentTypeDeclaration, AST originalAst) {
         return typeDeclarationFromSuperclassExtractor.extractTypeDeclarationFromSuperClass(currentTypeDeclaration)
                 .map(parentTypeDeclaration -> findBuilderFieldsRecursively(parentTypeDeclaration, originalAst))
                 .map(fields -> applicableFieldVisibilityFilter.filterSuperClassFieldsToVisibleFields(fields, currentTypeDeclaration))

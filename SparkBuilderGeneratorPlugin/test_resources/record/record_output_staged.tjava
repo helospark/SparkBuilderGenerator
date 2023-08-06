@@ -1,0 +1,46 @@
+record Person(String name, String address) {
+    private Person(Builder builder) {
+        this(builder.name, builder.address);
+    }
+
+    public static INameStage builder() {
+        return new Builder();
+    }
+
+    public interface INameStage {
+        public IAddressStage withName(String name);
+    }
+
+    public interface IAddressStage {
+        public IBuildStage withAddress(String address);
+    }
+
+    public interface IBuildStage {
+        public Person build();
+    }
+
+    public static final class Builder implements INameStage, IAddressStage, IBuildStage {
+        private String name;
+        private String address;
+
+        private Builder() {
+        }
+
+        @Override
+        public IAddressStage withName(String name) {
+            this.name = name;
+            return this;
+        }
+
+        @Override
+        public IBuildStage withAddress(String address) {
+            this.address = address;
+            return this;
+        }
+
+        @Override
+        public Person build() {
+            return new Person(this);
+        }
+    }
+}

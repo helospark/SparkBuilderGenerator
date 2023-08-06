@@ -1,6 +1,7 @@
 package com.helospark.spark.builder.handlers.codegenerator.component.helper;
 
 import org.eclipse.jdt.core.dom.AST;
+import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
 import org.eclipse.jdt.core.dom.SimpleType;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 
@@ -10,8 +11,13 @@ import org.eclipse.jdt.core.dom.TypeDeclaration;
  */
 public class InterfaceSetter {
 
-    public void setInterface(AST ast, TypeDeclaration type, TypeDeclaration interfaceToAdd) {
+    public void setInterface(AST ast, AbstractTypeDeclaration type, TypeDeclaration interfaceToAdd) {
         SimpleType interfaceType = ast.newSimpleType(ast.newSimpleName(interfaceToAdd.getName().getFullyQualifiedName()));
-        type.superInterfaceTypes().add(interfaceType);
+
+        if (type.getClass() == TypeDeclaration.class) {
+            ((TypeDeclaration) type).superInterfaceTypes().add(interfaceType);
+        } else if (IsRecordTypePredicate.isRecordDeclaration(type)) {
+            RecordDeclarationWrapper.of(type).superInterfaceTypes().add(interfaceType);
+        }
     }
 }

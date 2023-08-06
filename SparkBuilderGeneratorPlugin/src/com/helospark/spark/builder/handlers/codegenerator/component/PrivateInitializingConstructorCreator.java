@@ -3,13 +3,14 @@ package com.helospark.spark.builder.handlers.codegenerator.component;
 import java.util.List;
 
 import org.eclipse.jdt.core.dom.AST;
+import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
 import org.eclipse.jdt.core.dom.Block;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.jdt.core.dom.rewrite.ListRewrite;
 
-import com.helospark.spark.builder.handlers.codegenerator.component.fragment.constructor.PrivateConstructorBodyCreationFragment;
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.constructor.ConstructorInsertionFragment;
+import com.helospark.spark.builder.handlers.codegenerator.component.fragment.constructor.PrivateConstructorBodyCreationFragment;
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.constructor.PrivateConstructorMethodDefinitionCreationFragment;
 import com.helospark.spark.builder.handlers.codegenerator.domain.BuilderField;
 
@@ -36,7 +37,7 @@ public class PrivateInitializingConstructorCreator {
         this.constructorInsertionFragment = constructorInsertionFragment;
     }
 
-    public void addPrivateConstructorToCompilationUnit(AST ast, TypeDeclaration originalType, TypeDeclaration builderType, ListRewrite listRewrite,
+    public void addPrivateConstructorToCompilationUnit(AST ast, AbstractTypeDeclaration originalType, TypeDeclaration builderType, ListRewrite listRewrite,
             List<BuilderField> builderFields) {
         Block body = privateConstructorBodyCreationFragment.createBody(ast, builderType, builderFields);
         MethodDeclaration privateConstructorDefinition = privateConstructorMethodDefinitionCreationFragment.createPrivateConstructorDefinition(ast, originalType, builderType,

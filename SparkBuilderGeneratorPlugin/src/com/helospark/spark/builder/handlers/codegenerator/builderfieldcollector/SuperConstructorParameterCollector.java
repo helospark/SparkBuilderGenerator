@@ -10,13 +10,14 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
 import org.eclipse.jdt.core.dom.FieldDeclaration;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
 import org.eclipse.jdt.core.dom.Type;
-import org.eclipse.jdt.core.dom.TypeDeclaration;
 
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.FieldNameToBuilderFieldNameConverter;
+import com.helospark.spark.builder.handlers.codegenerator.component.helper.MethodExtractor;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.TypeDeclarationFromSuperclassExtractor;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.domain.BodyDeclarationFinderUtil;
 import com.helospark.spark.builder.handlers.codegenerator.component.helper.domain.BodyDeclarationVisibleFromPredicate;
@@ -49,11 +50,12 @@ public class SuperConstructorParameterCollector implements FieldCollectorChainIt
     }
 
     @Override
-    public List<? extends BuilderField> collect(TypeDeclaration typeDeclaration) {
+    public List<? extends BuilderField> collect(AbstractTypeDeclaration typeDeclaration) {
         if (preferencesManager.getPreferenceValue(INCLUDE_PARAMETERS_FROM_SUPERCLASS_CONSTRUCTOR)) {
-            Optional<TypeDeclaration> parentTypeDeclaration2 = typeDeclarationFromSuperclassExtractor.extractTypeDeclarationFromSuperClass(typeDeclaration);
+            Optional<AbstractTypeDeclaration> parentTypeDeclaration2 = typeDeclarationFromSuperclassExtractor
+                    .extractTypeDeclarationFromSuperClass(typeDeclaration);
             if (parentTypeDeclaration2.isPresent()) {
-                TypeDeclaration parent = parentTypeDeclaration2.get();
+                AbstractTypeDeclaration parent = parentTypeDeclaration2.get();
                 return Optional.ofNullable(findConstructorToUse(typeDeclaration, parent))
                         .map(constructorToUse -> extractArguments(constructorToUse, parent, typeDeclaration))
                         .orElse(Collections.emptyList());
@@ -65,7 +67,8 @@ public class SuperConstructorParameterCollector implements FieldCollectorChainIt
         }
     }
 
-    private List<ConstructorParameterSetterBuilderField> extractArguments(MethodDeclaration constructor, TypeDeclaration parent, TypeDeclaration builderOwnerTypeDeclaration) {
+    private List<ConstructorParameterSetterBuilderField> extractArguments(MethodDeclaration constructor, AbstractTypeDeclaration parent,
+            AbstractTypeDeclaration builderOwnerTypeDeclaration) {
         List<ConstructorParameterSetterBuilderField> result = new ArrayList<>();
         List<SingleVariableDeclaration> parameters = constructor.parameters();
         for (int i = 0; i < parameters.size(); ++i) {
@@ -74,8 +77,8 @@ public class SuperConstructorParameterCollector implements FieldCollectorChainIt
         return result;
     }
 
-    private ConstructorParameterSetterBuilderField createConstructorParameterSetterBuilderField(SingleVariableDeclaration element, int index, TypeDeclaration parent,
-            TypeDeclaration builderOwnerTypeDeclaration) {
+    private ConstructorParameterSetterBuilderField createConstructorParameterSetterBuilderField(SingleVariableDeclaration element, int index, AbstractTypeDeclaration parent,
+            AbstractTypeDeclaration builderOwnerTypeDeclaration) {
         String originalFieldName = element.getName().toString();
         String builderFieldName = fieldNameToBuilderFieldNameConverter.convertFieldName(originalFieldName);
         Type fieldType = element.getType();
@@ -106,8 +109,8 @@ public class SuperConstructorParameterCollector implements FieldCollectorChainIt
                 .build();
     }
 
-    private MethodDeclaration findConstructorToUse(TypeDeclaration currentType, TypeDeclaration parentTypeDeclaration) {
-        List<MethodDeclaration> applicableConstructors = Arrays.stream(parentTypeDeclaration.getMethods())
+    private MethodDeclaration findConstructorToUse(AbstractTypeDeclaration currentType, AbstractTypeDeclaration parentTypeDeclaration) {
+        List<MethodDeclaration> applicableConstructors = Arrays.stream(MethodExtractor.getMethods(parentTypeDeclaration))
                 .filter(method -> method.isConstructor())
                 .filter(constructor -> bodyDeclarationVisibleFromPredicate.isDeclarationVisibleFrom(constructor, currentType))
                 .collect(Collectors.toList());

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.eclipse.jdt.core.dom.AST;
+import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.jdt.core.dom.rewrite.ListRewrite;
 
@@ -53,7 +54,7 @@ public class StagedBuilderCompilationUnitGenerator {
 
     public void generateBuilder(CompilationUnitModificationDomain modificationDomain, List<StagedBuilderProperties> stagedBuilderStages) {
         AST ast = modificationDomain.getAst();
-        TypeDeclaration originalType = modificationDomain.getOriginalType();
+        AbstractTypeDeclaration originalType = modificationDomain.getOriginalType();
         ListRewrite listRewrite = modificationDomain.getListRewrite();
 
         builderRemover.removeExistingBuilderWhenNeeded(modificationDomain);

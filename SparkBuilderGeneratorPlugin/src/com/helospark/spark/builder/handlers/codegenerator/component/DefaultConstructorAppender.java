@@ -10,7 +10,7 @@ import org.eclipse.jdt.core.dom.Block;
 import org.eclipse.jdt.core.dom.BodyDeclaration;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.Modifier.ModifierKeyword;
-import org.eclipse.jdt.core.dom.TypeDeclaration;
+import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
 
 import com.helospark.spark.builder.PluginLogger;
 import com.helospark.spark.builder.handlers.codegenerator.component.fragment.constructor.ConstructorInsertionFragment;
@@ -51,13 +51,13 @@ public class DefaultConstructorAppender {
         }
     }
 
-    private boolean shouldCreateDefaultConstructor(TypeDeclaration originalType, List<BuilderField> fields) {
+    private boolean shouldCreateDefaultConstructor(AbstractTypeDeclaration originalType, List<BuilderField> fields) {
         return preferencesManager.getPreferenceValue(CREATE_PUBLIC_DEFAULT_CONSTRUCTOR)
                 && !hasDefaultConstructor(originalType)
                 && !hasSuperConstructorFields(fields);
     }
 
-    private boolean hasDefaultConstructor(TypeDeclaration originalType) {
+    private boolean hasDefaultConstructor(AbstractTypeDeclaration originalType) {
         return ((List<BodyDeclaration>) originalType.bodyDeclarations())
                 .stream()
                 .filter(bodyDeclaration -> bodyDeclaration instanceof MethodDeclaration)

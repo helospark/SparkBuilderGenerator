@@ -5,6 +5,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import org.eclipse.jdt.core.dom.AST;
+import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 
@@ -49,7 +50,7 @@ public class RegularBuilderClassCreator {
         this.javadocAdder = javadocAdder;
     }
 
-    public TypeDeclaration createBuilderClass(AST ast, TypeDeclaration originalType, RegularBuilderUserPreference preference, List<MethodDeclaration> customMethods) {
+    public TypeDeclaration createBuilderClass(AST ast, AbstractTypeDeclaration originalType, RegularBuilderUserPreference preference, List<MethodDeclaration> customMethods) {
         List<BuilderField> builderFields = preference.getBuilderFields();
 
         TypeDeclaration builderType = emptyBuilderClassGeneratorFragment.createBuilderClass(ast, originalType);

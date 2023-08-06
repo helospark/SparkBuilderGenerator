@@ -1,6 +1,7 @@
 package com.helospark.spark.builder.handlers.codegenerator.component;
 
 import org.eclipse.jdt.core.dom.AST;
+import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
 import org.eclipse.jdt.core.dom.Block;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
@@ -46,7 +47,7 @@ public class RegularBuilderCopyInstanceBuilderMethodCreator {
     }
 
     private void addInstanceCopyBuilderMethod(CompilationUnitModificationDomain compilationUnitModificationDomain, TypeDeclaration builderType) {
-        TypeDeclaration originalType = compilationUnitModificationDomain.getOriginalType();
+        AbstractTypeDeclaration originalType = compilationUnitModificationDomain.getOriginalType();
         AST ast = compilationUnitModificationDomain.getAst();
         String parameterName = typeDeclarationToVariableNameConverter.convert(originalType);
 

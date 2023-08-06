@@ -4,8 +4,8 @@ import java.util.Arrays;
 import java.util.Optional;
 import java.util.function.BiPredicate;
 
+import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
 import org.eclipse.jdt.core.dom.BodyDeclaration;
-import org.eclipse.jdt.core.dom.TypeDeclaration;
 
 import com.helospark.spark.builder.handlers.codegenerator.component.remover.helper.IsPackageEqualsPredicate;
 
@@ -20,9 +20,9 @@ public enum JavaVisibilityScopeModifier {
     DEFAULT_MODIFIER(null, (type, field) -> new IsPackageEqualsPredicate().test(type, field));
 
     String keyword;
-    BiPredicate<TypeDeclaration, BodyDeclaration> isVisibleFromPredicate;
+    BiPredicate<AbstractTypeDeclaration, BodyDeclaration> isVisibleFromPredicate;
 
-    private JavaVisibilityScopeModifier(String keywordName, BiPredicate<TypeDeclaration, BodyDeclaration> isVisibleFromPredicate) {
+    private JavaVisibilityScopeModifier(String keywordName, BiPredicate<AbstractTypeDeclaration, BodyDeclaration> isVisibleFromPredicate) {
         this.keyword = keywordName;
         this.isVisibleFromPredicate = isVisibleFromPredicate;
     }
@@ -43,7 +43,7 @@ public enum JavaVisibilityScopeModifier {
                 .findFirst();
     }
 
-    public boolean testIfVisibleFromSubclass(TypeDeclaration subclass, BodyDeclaration field) {
+    public boolean testIfVisibleFromSubclass(AbstractTypeDeclaration subclass, BodyDeclaration field) {
         return isVisibleFromPredicate.test(subclass, field);
     }
 };

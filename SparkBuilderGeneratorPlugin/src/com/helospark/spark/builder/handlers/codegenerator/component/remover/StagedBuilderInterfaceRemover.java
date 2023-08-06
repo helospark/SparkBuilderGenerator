@@ -4,13 +4,15 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.jdt.core.dom.rewrite.ASTRewrite;
 
+import com.helospark.spark.builder.handlers.codegenerator.component.helper.MethodExtractor;
+import com.helospark.spark.builder.handlers.codegenerator.component.remover.helper.BodyDeclarationOfTypeExtractor;
 import com.helospark.spark.builder.handlers.codegenerator.component.remover.helper.GeneratedAnnotationContainingBodyDeclarationFilter;
 import com.helospark.spark.builder.handlers.codegenerator.domain.CompilationUnitModificationDomain;
-import com.helospark.spark.builder.handlers.codegenerator.component.remover.helper.BodyDeclarationOfTypeExtractor;
 
 /**
  * Removes the previously generates stage interfaces.
@@ -20,15 +22,16 @@ public class StagedBuilderInterfaceRemover implements BuilderRemoverChainItem {
     private BodyDeclarationOfTypeExtractor bodyDeclarationOfTypeExtractor;
     private GeneratedAnnotationContainingBodyDeclarationFilter generatedAnnotationContainingBodyDeclarationFilter;
 
-    public StagedBuilderInterfaceRemover(BodyDeclarationOfTypeExtractor bodyDeclarationOfTypeExtractor, GeneratedAnnotationContainingBodyDeclarationFilter generatedAnnotationContainingBodyDeclarationFilter) {
+    public StagedBuilderInterfaceRemover(BodyDeclarationOfTypeExtractor bodyDeclarationOfTypeExtractor,
+            GeneratedAnnotationContainingBodyDeclarationFilter generatedAnnotationContainingBodyDeclarationFilter) {
         this.bodyDeclarationOfTypeExtractor = bodyDeclarationOfTypeExtractor;
         this.generatedAnnotationContainingBodyDeclarationFilter = generatedAnnotationContainingBodyDeclarationFilter;
     }
 
     @Override
-    public void remove(ASTRewrite rewriter, TypeDeclaration mainType, CompilationUnitModificationDomain modificationDomain) {
-        List<TypeDeclaration> nestedInterfaces = getNestedInterfaces(mainType);
-        List<TypeDeclaration> interfacesWithGeneratedAnnotation = generatedAnnotationContainingBodyDeclarationFilter.filterAnnotatedClasses(nestedInterfaces);
+    public void remove(ASTRewrite rewriter, AbstractTypeDeclaration mainType, CompilationUnitModificationDomain modificationDomain) {
+        List<AbstractTypeDeclaration> nestedInterfaces = getNestedInterfaces(mainType);
+        List<AbstractTypeDeclaration> interfacesWithGeneratedAnnotation = generatedAnnotationContainingBodyDeclarationFilter.filterAnnotatedClasses(nestedInterfaces);
 
         if (!interfacesWithGeneratedAnnotation.isEmpty()) {
             interfacesWithGeneratedAnnotation.stream()
@@ -40,18 +43,18 @@ public class StagedBuilderInterfaceRemover implements BuilderRemoverChainItem {
 
     }
 
-    private List<TypeDeclaration> fallbackFilterMatchingInterfaces(List<TypeDeclaration> nestedInterfaces, TypeDeclaration mainType) {
+    private List<AbstractTypeDeclaration> fallbackFilterMatchingInterfaces(List<AbstractTypeDeclaration> nestedInterfaces, AbstractTypeDeclaration mainType) {
         return nestedInterfaces.stream()
                 .filter(interfaceToCheck -> isPossibleStagedBuilderInterface(interfaceToCheck, nestedInterfaces, mainType))
                 .collect(Collectors.toList());
     }
 
-    private boolean isPossibleStagedBuilderInterface(TypeDeclaration interfaceToCheck, List<TypeDeclaration> nestedInterfaces, TypeDeclaration mainType) {
-        return Arrays.stream(interfaceToCheck.getMethods())
+    private boolean isPossibleStagedBuilderInterface(AbstractTypeDeclaration interfaceToCheck, List<AbstractTypeDeclaration> nestedInterfaces, AbstractTypeDeclaration mainType) {
+        return Arrays.stream(MethodExtractor.getMethods(interfaceToCheck))
                 .allMatch(method -> isMethodPossibleInStagedBuilder(method, nestedInterfaces, mainType));
     }
 
-    private boolean isMethodPossibleInStagedBuilder(MethodDeclaration method, List<TypeDeclaration> nestedInterfaces, TypeDeclaration mainType) {
+    private boolean isMethodPossibleInStagedBuilder(MethodDeclaration method, List<AbstractTypeDeclaration> nestedInterfaces, AbstractTypeDeclaration mainType) {
         if (method.parameters().size() == 1) {
             return isReturningReferenceToAnotherInterface(method, nestedInterfaces);
         } else if (method.parameters().size() == 0) {
@@ -61,26 +64,28 @@ public class StagedBuilderInterfaceRemover implements BuilderRemoverChainItem {
         }
     }
 
-    private boolean isReturningReferenceToAnotherInterface(MethodDeclaration method, List<TypeDeclaration> nestedInterfaces) {
+    private boolean isReturningReferenceToAnotherInterface(MethodDeclaration method, List<AbstractTypeDeclaration> nestedInterfaces) {
         return nestedInterfaces.stream()
                 .filter(interfaceToCheck -> isReturningType(method, interfaceToCheck))
                 .findFirst()
                 .isPresent();
     }
 
-    private boolean isReturningType(MethodDeclaration method, TypeDeclaration mainType) {
+    private boolean isReturningType(MethodDeclaration method, AbstractTypeDeclaration mainType) {
         return method.getReturnType2()
                 .toString()
                 .equals(getTypeName(mainType));
     }
 
-    private String getTypeName(TypeDeclaration builderTypeDeclaration) {
-        return builderTypeDeclaration.getName().toString();
+    private String getTypeName(AbstractTypeDeclaration builderAbstractTypeDeclaration) {
+        return builderAbstractTypeDeclaration.getName().toString();
     }
 
-    private List<TypeDeclaration> getNestedInterfaces(TypeDeclaration mainType) {
+    private List<AbstractTypeDeclaration> getNestedInterfaces(AbstractTypeDeclaration mainType) {
         return bodyDeclarationOfTypeExtractor.extractBodyDeclaration(mainType, TypeDeclaration.class)
                 .stream()
+                .filter(type -> type instanceof TypeDeclaration)
+                .map(type -> (TypeDeclaration) type)
                 .filter(type -> type.isInterface())
                 .collect(Collectors.toList());
     }

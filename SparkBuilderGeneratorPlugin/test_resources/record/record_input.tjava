@@ -1,0 +1,4 @@
+
+record Person(String name, String address) {
+
+}

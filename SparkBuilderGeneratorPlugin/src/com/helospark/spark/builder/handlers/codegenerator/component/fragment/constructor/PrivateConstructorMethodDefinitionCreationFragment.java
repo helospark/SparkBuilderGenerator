@@ -5,6 +5,7 @@ import static com.helospark.spark.builder.preferences.PluginPreferenceList.ADD_G
 import java.util.List;
 
 import org.eclipse.jdt.core.dom.AST;
+import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.Modifier.ModifierKeyword;
 import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
@@ -36,7 +37,7 @@ public class PrivateConstructorMethodDefinitionCreationFragment {
     }
 
     @SuppressWarnings("unchecked")
-    public MethodDeclaration createPrivateConstructorDefinition(AST ast, TypeDeclaration originalType, TypeDeclaration builderType,
+    public MethodDeclaration createPrivateConstructorDefinition(AST ast, AbstractTypeDeclaration originalType, TypeDeclaration builderType,
             List<BuilderField> builderFields) {
 
         MethodDeclaration method = ast.newMethodDeclaration();
