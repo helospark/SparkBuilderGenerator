@@ -34,14 +34,14 @@ public class TypeDeclarationFromSuperclassExtractor {
     public Optional<AbstractTypeDeclaration> extractTypeDeclarationFromSuperClass(AbstractTypeDeclaration typeDeclaration) {
         try {
             return iTypeExtractor.extract(typeDeclaration)
-                    .flatMap(type -> extractAbstractTypeDeclaration(type));
+                    .flatMap(type -> extractTypeDeclaration(type));
         } catch (Exception e) {
             pluginLogger.warn("Unable to extracting parent type", e);
             return Optional.empty();
         }
     }
 
-    private Optional<AbstractTypeDeclaration> extractAbstractTypeDeclaration(IType superClassType) {
+    private Optional<AbstractTypeDeclaration> extractTypeDeclaration(IType superClassType) {
         return getCompilationUnit(superClassType)
                 .map(iCompilationUnit -> getTypes(iCompilationUnit))
                 .orElse(emptyList())

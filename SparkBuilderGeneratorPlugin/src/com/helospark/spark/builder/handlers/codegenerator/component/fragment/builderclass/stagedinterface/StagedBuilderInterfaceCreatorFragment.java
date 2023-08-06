@@ -57,7 +57,7 @@ public class StagedBuilderInterfaceCreatorFragment {
         return addedInterface;
     }
 
-    private void addBuildMethod(CompilationUnitModificationDomain modificationDomain, AbstractTypeDeclaration addedInterface) {
+    private void addBuildMethod(CompilationUnitModificationDomain modificationDomain, TypeDeclaration addedInterface) {
         AST ast = modificationDomain.getAst();
         AbstractTypeDeclaration originalType = modificationDomain.getOriginalType();
         MethodDeclaration buildMethod = buildMethodDeclarationCreatorFragment.createMethod(ast,
@@ -66,7 +66,7 @@ public class StagedBuilderInterfaceCreatorFragment {
         addedInterface.bodyDeclarations().add(buildMethod);
     }
 
-    private void addWithMethods(AST ast, StagedBuilderProperties stagedBuilderProperties, AbstractTypeDeclaration addedInterface) {
+    private void addWithMethods(AST ast, StagedBuilderProperties stagedBuilderProperties, TypeDeclaration addedInterface) {
         StagedBuilderProperties nextStage = getNextStage(stagedBuilderProperties);
         for (BuilderField field : stagedBuilderProperties.getNamedVariableDeclarationField()) {
             MethodDeclaration withMethodDeclaration = stagedBuilderWithMethodDefiniationCreatorFragment.createNewWithMethod(

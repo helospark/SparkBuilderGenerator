@@ -54,26 +54,26 @@ public class SuperClassSetterFieldCollector implements FieldCollectorChainItem {
     }
 
     private List<SuperSetterBasedBuilderField> collectFieldsRecursively(AbstractTypeDeclaration currentTypeDeclaration,
-            AbstractTypeDeclaration builderOwnerAbstractTypeDeclaration) {
+            AbstractTypeDeclaration builderOwnerTypeDeclaration) {
         List<SuperSetterBasedBuilderField> result = new ArrayList<>();
         Optional<AbstractTypeDeclaration> superClassType = typeDeclarationFromSuperclassExtractor.extractTypeDeclarationFromSuperClass(currentTypeDeclaration);
 
         superClassType.ifPresent(superType -> {
-            result.addAll(findParametersWithSettersInType(superType, builderOwnerAbstractTypeDeclaration));
-            result.addAll(collectFieldsRecursively(superType, builderOwnerAbstractTypeDeclaration));
+            result.addAll(findParametersWithSettersInType(superType, builderOwnerTypeDeclaration));
+            result.addAll(collectFieldsRecursively(superType, builderOwnerTypeDeclaration));
         });
 
         return result;
     }
 
     private List<SuperSetterBasedBuilderField> findParametersWithSettersInType(AbstractTypeDeclaration parentTypeDeclaration,
-            AbstractTypeDeclaration builderOwnerAbstractTypeDeclaration) {
+            AbstractTypeDeclaration builderOwnerTypeDeclaration) {
         return ((List<BodyDeclaration>) parentTypeDeclaration.bodyDeclarations())
                 .stream()
                 .filter(declaration -> isMethod(declaration))
                 .map(declaration -> (MethodDeclaration) declaration)
                 .filter(method -> isSetter(method))
-                .map(method -> createBuilderField(method, parentTypeDeclaration, builderOwnerAbstractTypeDeclaration))
+                .map(method -> createBuilderField(method, parentTypeDeclaration, builderOwnerTypeDeclaration))
                 .collect(Collectors.toList());
     }
 
@@ -87,7 +87,7 @@ public class SuperClassSetterFieldCollector implements FieldCollectorChainItem {
     }
 
     private SuperSetterBasedBuilderField createBuilderField(MethodDeclaration method, AbstractTypeDeclaration parentTypeDeclaration,
-            AbstractTypeDeclaration builderOwnerAbstractTypeDeclaration) {
+            AbstractTypeDeclaration builderOwnerTypeDeclaration) {
         String methodName = method.getName().toString();
         String upperCamelCaseFieldName = methodName.replaceFirst(SETTER_METHOD_PREFIX, "");
         String fieldName = camelCaseConverter.toLowerCamelCase(upperCamelCaseFieldName);

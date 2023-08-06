@@ -68,17 +68,17 @@ public class SuperConstructorParameterCollector implements FieldCollectorChainIt
     }
 
     private List<ConstructorParameterSetterBuilderField> extractArguments(MethodDeclaration constructor, AbstractTypeDeclaration parent,
-            AbstractTypeDeclaration builderOwnerAbstractTypeDeclaration) {
+            AbstractTypeDeclaration builderOwnerTypeDeclaration) {
         List<ConstructorParameterSetterBuilderField> result = new ArrayList<>();
         List<SingleVariableDeclaration> parameters = constructor.parameters();
         for (int i = 0; i < parameters.size(); ++i) {
-            result.add(createConstructorParameterSetterBuilderField(parameters.get(i), i, parent, builderOwnerAbstractTypeDeclaration));
+            result.add(createConstructorParameterSetterBuilderField(parameters.get(i), i, parent, builderOwnerTypeDeclaration));
         }
         return result;
     }
 
     private ConstructorParameterSetterBuilderField createConstructorParameterSetterBuilderField(SingleVariableDeclaration element, int index, AbstractTypeDeclaration parent,
-            AbstractTypeDeclaration builderOwnerAbstractTypeDeclaration) {
+            AbstractTypeDeclaration builderOwnerTypeDeclaration) {
         String originalFieldName = element.getName().toString();
         String builderFieldName = fieldNameToBuilderFieldNameConverter.convertFieldName(originalFieldName);
         Type fieldType = element.getType();
@@ -87,7 +87,7 @@ public class SuperConstructorParameterCollector implements FieldCollectorChainIt
 
         Optional<InstanceFieldAccessStrategy> originalFieldAccessStrategy = Optional.empty();
         if (field.isPresent()) {
-            if (bodyDeclarationVisibleFromPredicate.isDeclarationVisibleFrom(field.get(), builderOwnerAbstractTypeDeclaration)) {
+            if (bodyDeclarationVisibleFromPredicate.isDeclarationVisibleFrom(field.get(), builderOwnerTypeDeclaration)) {
                 originalFieldAccessStrategy = Optional.of(new DirectFieldAccessStrategy(originalFieldName));
             }
         }
@@ -95,7 +95,7 @@ public class SuperConstructorParameterCollector implements FieldCollectorChainIt
         Optional<MethodDeclaration> getterMethodDeclaration = bodyDeclarationFinderUtil.findGetterForFieldWithNameAndType(parent, originalFieldName, fieldType);
 
         if (getterMethodDeclaration.isPresent() && !originalFieldAccessStrategy.isPresent()) {
-            if (bodyDeclarationVisibleFromPredicate.isDeclarationVisibleFrom(getterMethodDeclaration.get(), builderOwnerAbstractTypeDeclaration)) {
+            if (bodyDeclarationVisibleFromPredicate.isDeclarationVisibleFrom(getterMethodDeclaration.get(), builderOwnerTypeDeclaration)) {
                 originalFieldAccessStrategy = Optional.of(new GetterFieldAccessStrategy(getterMethodDeclaration.get().getName().toString()));
             }
         }

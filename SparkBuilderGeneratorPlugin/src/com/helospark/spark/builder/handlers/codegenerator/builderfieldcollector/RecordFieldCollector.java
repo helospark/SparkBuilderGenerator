@@ -38,7 +38,7 @@ public class RecordFieldCollector implements FieldCollectorChainItem {
                         .withBuilderFieldName(builderFieldName)
                         .withFieldType(declaration.getType())
                         .withIndex(i)
-                        .withOriginalFieldName(builderFieldName)
+                        .withOriginalFieldName(originalFieldName)
                         .withOriginalFieldAccessStrategy(Optional.of(new DirectFieldAccessStrategy(originalFieldName)))
                         .build();
 

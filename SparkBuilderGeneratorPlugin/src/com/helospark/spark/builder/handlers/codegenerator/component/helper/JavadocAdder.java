@@ -13,7 +13,7 @@ import java.util.Map;
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.Javadoc;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
-import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
+import org.eclipse.jdt.core.dom.TypeDeclaration;
 
 import com.helospark.spark.builder.preferences.PluginPreferenceList;
 import com.helospark.spark.builder.preferences.PreferencesManager;
@@ -51,7 +51,7 @@ public class JavadocAdder {
         }
     }
 
-    public void addJavadocForStagedInterface(AST ast, String interfaceName, AbstractTypeDeclaration addedInterface) {
+    public void addJavadocForStagedInterface(AST ast, String interfaceName, TypeDeclaration addedInterface) {
         if (preferencesManager.getPreferenceValue(STAGED_BUILDER_GENERATE_JAVADOC_ON_STAGE_INTERFACE)) {
             Javadoc javadoc = javadocGenerator.generateJavadoc(ast,
                     String.format(Locale.ENGLISH, "Definition of a stage for staged builder."), Collections.emptyMap());
