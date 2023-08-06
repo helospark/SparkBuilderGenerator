@@ -11,7 +11,7 @@ import org.eclipse.jdt.core.dom.TypeDeclaration;
  */
 public class InterfaceSetter {
 
-    public void setInterface(AST ast, AbstractTypeDeclaration type, AbstractTypeDeclaration interfaceToAdd) {
+    public void setInterface(AST ast, AbstractTypeDeclaration type, TypeDeclaration interfaceToAdd) {
         SimpleType interfaceType = ast.newSimpleType(ast.newSimpleName(interfaceToAdd.getName().getFullyQualifiedName()));
 
         if (type.getClass() == TypeDeclaration.class) {

@@ -52,10 +52,10 @@ public class SuperConstructorParameterCollector implements FieldCollectorChainIt
     @Override
     public List<? extends BuilderField> collect(AbstractTypeDeclaration typeDeclaration) {
         if (preferencesManager.getPreferenceValue(INCLUDE_PARAMETERS_FROM_SUPERCLASS_CONSTRUCTOR)) {
-            Optional<AbstractTypeDeclaration> parentAbstractTypeDeclaration2 = typeDeclarationFromSuperclassExtractor
-                    .extractAbstractTypeDeclarationFromSuperClass(typeDeclaration);
-            if (parentAbstractTypeDeclaration2.isPresent()) {
-                AbstractTypeDeclaration parent = parentAbstractTypeDeclaration2.get();
+            Optional<AbstractTypeDeclaration> parentTypeDeclaration2 = typeDeclarationFromSuperclassExtractor
+                    .extractTypeDeclarationFromSuperClass(typeDeclaration);
+            if (parentTypeDeclaration2.isPresent()) {
+                AbstractTypeDeclaration parent = parentTypeDeclaration2.get();
                 return Optional.ofNullable(findConstructorToUse(typeDeclaration, parent))
                         .map(constructorToUse -> extractArguments(constructorToUse, parent, typeDeclaration))
                         .orElse(Collections.emptyList());
@@ -109,8 +109,8 @@ public class SuperConstructorParameterCollector implements FieldCollectorChainIt
                 .build();
     }
 
-    private MethodDeclaration findConstructorToUse(AbstractTypeDeclaration currentType, AbstractTypeDeclaration parentAbstractTypeDeclaration) {
-        List<MethodDeclaration> applicableConstructors = Arrays.stream(MethodExtractor.getMethods(parentAbstractTypeDeclaration))
+    private MethodDeclaration findConstructorToUse(AbstractTypeDeclaration currentType, AbstractTypeDeclaration parentTypeDeclaration) {
+        List<MethodDeclaration> applicableConstructors = Arrays.stream(MethodExtractor.getMethods(parentTypeDeclaration))
                 .filter(method -> method.isConstructor())
                 .filter(constructor -> bodyDeclarationVisibleFromPredicate.isDeclarationVisibleFrom(constructor, currentType))
                 .collect(Collectors.toList());

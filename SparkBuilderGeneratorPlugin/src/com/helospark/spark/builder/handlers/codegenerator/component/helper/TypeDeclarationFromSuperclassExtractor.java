@@ -31,7 +31,7 @@ public class TypeDeclarationFromSuperclassExtractor {
         this.pluginLogger = new PluginLogger();
     }
 
-    public Optional<AbstractTypeDeclaration> extractAbstractTypeDeclarationFromSuperClass(AbstractTypeDeclaration typeDeclaration) {
+    public Optional<AbstractTypeDeclaration> extractTypeDeclarationFromSuperClass(AbstractTypeDeclaration typeDeclaration) {
         try {
             return iTypeExtractor.extract(typeDeclaration)
                     .flatMap(type -> extractAbstractTypeDeclaration(type));

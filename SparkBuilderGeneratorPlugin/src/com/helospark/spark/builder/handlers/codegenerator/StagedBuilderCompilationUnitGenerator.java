@@ -60,7 +60,7 @@ public class StagedBuilderCompilationUnitGenerator {
         builderRemover.removeExistingBuilderWhenNeeded(modificationDomain);
 
         // TODO: eventually have a better design to avoid nulls here
-        List<AbstractTypeDeclaration> stageInterfaces = createStageInterfaces(modificationDomain, stagedBuilderStages);
+        List<TypeDeclaration> stageInterfaces = createStageInterfaces(modificationDomain, stagedBuilderStages);
         TypeDeclaration builderType = stagedBuilderClassCreator.createBuilderClass(modificationDomain, stagedBuilderStages, stageInterfaces);
 
         defaultConstructorAppender.addDefaultConstructorIfNeeded(modificationDomain, collectAllFieldsFromAllStages(stagedBuilderStages));
@@ -81,7 +81,7 @@ public class StagedBuilderCompilationUnitGenerator {
                 .collect(Collectors.toList());
     }
 
-    private List<AbstractTypeDeclaration> createStageInterfaces(CompilationUnitModificationDomain modificationDomain,
+    private List<TypeDeclaration> createStageInterfaces(CompilationUnitModificationDomain modificationDomain,
             List<StagedBuilderProperties> stagedBuilderProperties) {
         return stagedBuilderProperties.stream()
                 .map(stagedBuilderFieldDomain -> stagedBuilderInterfaceCreatorFragment.createInterfaceFor(modificationDomain, stagedBuilderFieldDomain))

@@ -37,10 +37,10 @@ public class PrivateConstructorBodyCreationFragment {
     private BuilderFieldAccessCreatorFragment builderFieldAccessCreatorFragment;
     private SuperFieldSetterMethodAdderFragment superFieldSetterMethodAdderFragment;
 
-    public PrivateConstructorBodyCreationFragment(TypeDeclarationToVariableNameConverter AbstractTypeDeclarationToVariableNameConverter,
+    public PrivateConstructorBodyCreationFragment(TypeDeclarationToVariableNameConverter typeDeclarationToVariableNameConverter,
             FieldSetterAdderFragment fieldSetterAdderFragment,
             BuilderFieldAccessCreatorFragment builderFieldAccessCreatorFragment, SuperFieldSetterMethodAdderFragment superFieldSetterMethodAdderFragment) {
-        this.typeDeclarationToVariableNameConverter = AbstractTypeDeclarationToVariableNameConverter;
+        this.typeDeclarationToVariableNameConverter = typeDeclarationToVariableNameConverter;
         this.fieldSetterAdderFragment = fieldSetterAdderFragment;
         this.builderFieldAccessCreatorFragment = builderFieldAccessCreatorFragment;
         this.superFieldSetterMethodAdderFragment = superFieldSetterMethodAdderFragment;

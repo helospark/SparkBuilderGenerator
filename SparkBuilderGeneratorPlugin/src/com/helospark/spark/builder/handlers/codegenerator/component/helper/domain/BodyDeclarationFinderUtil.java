@@ -20,13 +20,13 @@ public class BodyDeclarationFinderUtil {
         this.camelCaseConverter = camelCaseConverter;
     }
 
-    public Optional<MethodDeclaration> findGetterForFieldWithNameAndType(AbstractTypeDeclaration parentabstractTypeDeclaration, String fieldName, Type fieldType) {
+    public Optional<MethodDeclaration> findGetterForFieldWithNameAndType(AbstractTypeDeclaration parentTypeDeclaration, String fieldName, Type fieldType) {
         String getterName = "get" + camelCaseConverter.toUpperCamelCase(fieldName);
-        return findGetterWithNameAndReturnType(parentabstractTypeDeclaration, getterName, fieldType);
+        return findGetterWithNameAndReturnType(parentTypeDeclaration, getterName, fieldType);
     }
 
-    public Optional<MethodDeclaration> findGetterWithNameAndReturnType(AbstractTypeDeclaration parentAbstractTypeDeclaration, String getterName, Type fieldType) {
-        return ((List<BodyDeclaration>) parentAbstractTypeDeclaration.bodyDeclarations())
+    public Optional<MethodDeclaration> findGetterWithNameAndReturnType(AbstractTypeDeclaration parentTypeDeclaration, String getterName, Type fieldType) {
+        return ((List<BodyDeclaration>) parentTypeDeclaration.bodyDeclarations())
                 .stream()
                 .filter(declaration -> isMethod(declaration))
                 .map(declaration -> (MethodDeclaration) declaration)

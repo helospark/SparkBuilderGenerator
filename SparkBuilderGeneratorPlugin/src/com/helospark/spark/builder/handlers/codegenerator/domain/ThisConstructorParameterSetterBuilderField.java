@@ -9,7 +9,7 @@ import org.eclipse.jdt.core.dom.Type;
 import com.helospark.spark.builder.handlers.codegenerator.domain.instancefieldaccess.InstanceFieldAccessStrategy;
 
 /**
- * Domain object representing a field in the builder that is a parameter in the this() call.
+ * Domain object representing a field in the builder that is a parameter in the this() constructor call.
  * @author helospark
  */
 public class ThisConstructorParameterSetterBuilderField extends BuilderField {

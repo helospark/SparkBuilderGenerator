@@ -18,7 +18,7 @@ public class RecordDeclarationWrapper {
 
     public RecordDeclarationWrapper(AbstractTypeDeclaration abstractTypeDeclaration) {
         if (!IsRecordTypePredicate.isRecordDeclaration(abstractTypeDeclaration)) {
-            throw new IllegalArgumentException("Wrong type");
+            throw new IllegalArgumentException("Wrong type " + abstractTypeDeclaration.getClass());
         }
         this.abstractTypeDeclaration = abstractTypeDeclaration;
     }

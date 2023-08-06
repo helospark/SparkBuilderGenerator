@@ -4,6 +4,10 @@ import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
 import org.eclipse.jdt.core.dom.FieldDeclaration;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 
+/**
+ * Get fields declared by this AbstractTypeDeclaration.
+ * @author helospark
+ */
 public class FieldExtractor {
 
     public static FieldDeclaration[] getFields(AbstractTypeDeclaration mainType) {

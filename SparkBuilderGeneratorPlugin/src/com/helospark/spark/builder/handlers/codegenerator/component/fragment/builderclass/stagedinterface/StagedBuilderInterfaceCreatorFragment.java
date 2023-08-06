@@ -42,7 +42,7 @@ public class StagedBuilderInterfaceCreatorFragment {
         this.generatedAnnotationPopulator = generatedAnnotationPopulator;
     }
 
-    public AbstractTypeDeclaration createInterfaceFor(CompilationUnitModificationDomain modificationDomain,
+    public TypeDeclaration createInterfaceFor(CompilationUnitModificationDomain modificationDomain,
             StagedBuilderProperties stagedBuilderProperties) {
         String interfaceName = stagedBuilderProperties.getInterfaceName();
         AST ast = modificationDomain.getAst();

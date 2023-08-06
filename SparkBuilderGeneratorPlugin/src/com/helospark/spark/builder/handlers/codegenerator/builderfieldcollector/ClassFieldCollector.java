@@ -66,8 +66,8 @@ public class ClassFieldCollector implements FieldCollectorChainItem {
     }
 
     private List<BuilderField> getFieldsFromSuperclass(AbstractTypeDeclaration currentTypeDeclaration, AST originalAst) {
-        return typeDeclarationFromSuperclassExtractor.extractAbstractTypeDeclarationFromSuperClass(currentTypeDeclaration)
-                .map(parentAbstractTypeDeclaration -> findBuilderFieldsRecursively(parentAbstractTypeDeclaration, originalAst))
+        return typeDeclarationFromSuperclassExtractor.extractTypeDeclarationFromSuperClass(currentTypeDeclaration)
+                .map(parentTypeDeclaration -> findBuilderFieldsRecursively(parentTypeDeclaration, originalAst))
                 .map(fields -> applicableFieldVisibilityFilter.filterSuperClassFieldsToVisibleFields(fields, currentTypeDeclaration))
                 .orElse(emptyList());
     }

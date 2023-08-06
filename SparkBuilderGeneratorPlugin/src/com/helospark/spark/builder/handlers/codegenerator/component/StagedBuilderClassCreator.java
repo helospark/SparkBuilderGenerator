@@ -48,7 +48,7 @@ public class StagedBuilderClassCreator {
     }
 
     public TypeDeclaration createBuilderClass(CompilationUnitModificationDomain modificationDomain,
-            List<StagedBuilderProperties> stagedBuilderProperties, List<AbstractTypeDeclaration> stageInterfaces) {
+            List<StagedBuilderProperties> stagedBuilderProperties, List<TypeDeclaration> stageInterfaces) {
         AST ast = modificationDomain.getAst();
         AbstractTypeDeclaration originalType = modificationDomain.getOriginalType();
         TypeDeclaration builderType = emptyBuilderClassGeneratorFragment.createBuilderClass(ast, originalType);
@@ -74,7 +74,7 @@ public class StagedBuilderClassCreator {
         return builderType;
     }
 
-    private void setSuperInterfaces(AST ast, TypeDeclaration builderType, List<AbstractTypeDeclaration> stageInterfaces) {
+    private void setSuperInterfaces(AST ast, TypeDeclaration builderType, List<TypeDeclaration> stageInterfaces) {
         stageInterfaces.stream()
                 .forEach(stageInterface -> interfaceSetter.setInterface(ast, builderType, stageInterface));
 

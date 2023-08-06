@@ -33,9 +33,9 @@ public class RegularBuilderCopyInstanceConstructorAdderFragment {
     private TypeDeclarationToVariableNameConverter typeDeclarationToVariableNameConverter;
     private IsRegularBuilderInstanceCopyEnabledPredicate isRegularBuilderInstanceCopyEnabledPredicate;
 
-    public RegularBuilderCopyInstanceConstructorAdderFragment(TypeDeclarationToVariableNameConverter AbstractTypeDeclarationToVariableNameConverter,
+    public RegularBuilderCopyInstanceConstructorAdderFragment(TypeDeclarationToVariableNameConverter typeDeclarationToVariableNameConverter,
             IsRegularBuilderInstanceCopyEnabledPredicate isRegularBuilderInstanceCopyEnabledPredicate) {
-        this.typeDeclarationToVariableNameConverter = AbstractTypeDeclarationToVariableNameConverter;
+        this.typeDeclarationToVariableNameConverter = typeDeclarationToVariableNameConverter;
         this.isRegularBuilderInstanceCopyEnabledPredicate = isRegularBuilderInstanceCopyEnabledPredicate;
     }
 
