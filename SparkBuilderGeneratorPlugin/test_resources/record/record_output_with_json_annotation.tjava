@@ -2,6 +2,15 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 @JsonDeserialize(builder = Person.Builder.class)
 record Person(String name, String address) {
+
+    private Person(Builder builder) {
+        this(builder.name, builder.address);
+    }
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
     public static final class Builder {
         private String name;
         private String address;
@@ -22,13 +31,5 @@ record Person(String name, String address) {
         public Person build() {
             return new Person(this);
         }
-    }
-
-    private Person(Builder builder) {
-        this(builder.name, builder.address);
-    }
-
-    public static Builder builder() {
-        return new Builder();
     }
 }

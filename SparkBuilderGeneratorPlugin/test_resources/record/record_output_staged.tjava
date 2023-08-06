@@ -1,14 +1,14 @@
 record Person(String name, String address) {
-    public interface INameStage {
-        public IAddressStage withName(String name);
-    }
-
     private Person(Builder builder) {
         this(builder.name, builder.address);
     }
 
     public static INameStage builder() {
         return new Builder();
+    }
+
+    public interface INameStage {
+        public IAddressStage withName(String name);
     }
 
     public interface IAddressStage {

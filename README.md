@@ -124,6 +124,8 @@ Most configuration is on the preferences page: Preferences -> Java -> Spark buil
    Fix copy constructor when superclass field is not accessible from builder
  - 0.0.27
    Add option to use jakarta.annotation package instead of the old javax.annotation
+ - 0.0.28
+   Add support for record types
 
 ## The generated code looks like the following:
 

@@ -36,6 +36,20 @@ public class RecordBuilderIT extends BaseBuilderGeneratorIT {
     }
 
     @Test
+    public void testCreateRecordBuilderOverrideShouldGenerateSameBuilder() throws Exception {
+        // GIVEN
+        String input = readClasspathFile("record/record_output.tjava");
+        String expectedResult = readClasspathFile("record/record_output.tjava");
+        super.setInput(input);
+
+        // WHEN
+        underTest.execute(dummyExecutionEvent);
+
+        // THEN
+        super.assertEqualsJavaContents(outputCaptor.getValue(), expectedResult);
+    }
+
+    @Test
     public void testCreateRecordBuilderWithJsonAnnotation() throws Exception {
         // GIVEN
         given(preferenceStore.getBoolean("org.helospark.builder.addJacksonDeserializeAnnotation")).willReturn(true);
@@ -59,6 +73,24 @@ public class RecordBuilderIT extends BaseBuilderGeneratorIT {
         given(stagedBuilderStagePropertyInputDialogOpener.open(any(List.class))).willAnswer(invocation -> dialogAnswerProvider.provideAnswer(invocation));
 
         String input = readClasspathFile("record/record_input.tjava");
+        String expectedResult = readClasspathFile("record/record_output_staged.tjava");
+        super.setInput(input);
+
+        // WHEN
+        underTest.execute(dummyExecutionEvent);
+
+        // THEN
+        super.assertEqualsJavaContents(outputCaptor.getValue(), expectedResult);
+    }
+
+    @Test
+    public void testCreateStagedRecordBuilderOverrideShouldGenerateSameBuilder() throws Exception {
+        // GIVEN
+        NoDialogOperationPerformedStagedBuilderDialogAnswerProvider dialogAnswerProvider = new NoDialogOperationPerformedStagedBuilderDialogAnswerProvider();
+        underTest = new GenerateStagedBuilderHandler();
+        given(stagedBuilderStagePropertyInputDialogOpener.open(any(List.class))).willAnswer(invocation -> dialogAnswerProvider.provideAnswer(invocation));
+
+        String input = readClasspathFile("record/record_output_staged.tjava");
         String expectedResult = readClasspathFile("record/record_output_staged.tjava");
         super.setInput(input);
 

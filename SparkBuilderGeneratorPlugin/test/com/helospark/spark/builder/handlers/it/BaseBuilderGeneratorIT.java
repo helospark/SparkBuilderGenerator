@@ -159,8 +159,7 @@ public class BaseBuilderGeneratorIT {
         ASTParser parser = ASTParser.newParser(JlsVersionProvider.getLatestJlsVersion());
         parser.setSource(source);
         Map options = JavaCore.getOptions();
-        JavaCore.setComplianceOptions(JavaCore.VERSION_15, options);
-        options.put(JavaCore.COMPILER_PB_ENABLE_PREVIEW_FEATURES, JavaCore.ENABLED);
+        JavaCore.setComplianceOptions(JavaCore.VERSION_17, options);
         parser.setCompilerOptions(options);
         CompilationUnit result = (CompilationUnit) parser.createAST(null);
         return result;
