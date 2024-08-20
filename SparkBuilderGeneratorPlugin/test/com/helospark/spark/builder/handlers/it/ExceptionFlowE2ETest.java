@@ -1,9 +1,11 @@
 package com.helospark.spark.builder.handlers.it;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.nullable;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willThrow;
-import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
+import static org.mockito.MockitoAnnotations.openMocks;
 
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.dom.CompilationUnit;
@@ -29,6 +31,7 @@ public class ExceptionFlowE2ETest extends BaseBuilderGeneratorIT {
 
     @BeforeMethod
     public void beforeMethod() throws JavaModelException {
+        openMocks(this);
         super.init();
         underTest = new GenerateRegularBuilderHandler();
     }
@@ -47,7 +50,7 @@ public class ExceptionFlowE2ETest extends BaseBuilderGeneratorIT {
         BuilderRemover builderRemover = DiContainer.getDependency(BuilderRemover.class);
         willThrow(new RuntimeException("Cause"))
                 .given(builderAstRemover)
-                .removeBuilder(any(ASTRewrite.class), any(CompilationUnit.class), any(CompilationUnitModificationDomain.class));
+                .removeBuilder(nullable(ASTRewrite.class), nullable(CompilationUnit.class), any(CompilationUnitModificationDomain.class));
         super.setInput("class TestClass {}");
         CompilationUnitModificationDomain dummyCompilationUnitModificationDomain = CompilationUnitModificationDomain.builder().build();
 

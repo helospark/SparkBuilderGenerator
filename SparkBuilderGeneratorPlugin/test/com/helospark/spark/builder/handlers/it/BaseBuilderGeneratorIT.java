@@ -2,10 +2,10 @@ package com.helospark.spark.builder.handlers.it;
 
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doNothing;
-import static org.mockito.MockitoAnnotations.initMocks;
+import static org.mockito.MockitoAnnotations.openMocks;
 import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
@@ -73,7 +73,7 @@ public class BaseBuilderGeneratorIT {
     protected StagedBuilderStagePropertyInputDialogOpener stagedBuilderStagePropertyInputDialogOpener;
 
     protected void init() throws JavaModelException {
-        initMocks(this);
+        openMocks(this);
         DiContainer.clearDiContainer();
 
         // Override mock dependencies

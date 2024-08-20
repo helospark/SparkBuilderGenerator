@@ -76,7 +76,7 @@ public class RegularBuilderClassCreator {
             builderType.bodyDeclarations().add(customMethod);
         }
 
-        MethodDeclaration method = buildMethodCreatorFragment.addBuildMethodToBuilder(ast, originalType);
+        MethodDeclaration method = buildMethodCreatorFragment.addBuildMethodToBuilder(ast, originalType, builderFields);
         javadocAdder.addJavadocForBuildMethod(ast, method);
         builderType.bodyDeclarations().add(method);
         return builderType;

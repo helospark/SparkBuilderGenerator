@@ -2,7 +2,7 @@
 <feature
       id="com.helospark.SparkBuilderGeneratorFeature"
       label="SparkBuilderGeneratorFeature"
-      version="0.0.28.qualifier">
+      version="0.0.29.qualifier">
 
    <description url="ftp://helospark.com/SparkBuilderGeneratorPlugin/">
       Spark builder generator plugin
@@ -72,17 +72,23 @@ includes mandatory fields
 - 0.0.22
 Fixing incorrect field naming with underscore prefix
 - 0.0.23
-Add option to keep custom methods in the builderclass, when the builder is regenerated
+Add option to keep custom methods in the builderclass, when the
+builder is regenerated
 - 0.0.24
-Add option to initialize builder fields with default value from the class&apos; field assignment
+Add option to initialize builder fields with default value from
+the class&apos; field assignment
 - 0.0.25
 Fix default value initialization based on superclass&apos; field assignment
 - 0.0.26
-Fix copy constructor when superclass field is not accessible from builder
+Fix copy constructor when superclass field is not accessible
+from builder
 - 0.0.27
-Add option to use jakarta.annotation package instead of the old javax.annotation
+Add option to use jakarta.annotation package instead of the old
+javax.annotation
 - 0.0.28
 Add support for Java records
+- 0.0.29
+Don&apos;t generate constructor for record class
    </description>
 
    <license url="https://opensource.org/licenses/MIT">
@@ -122,9 +128,6 @@ SOFTWARE.
 
    <plugin
          id="com.helospark.SparkBuilderGenerator"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
+         version="0.0.0"/>
 
 </feature>

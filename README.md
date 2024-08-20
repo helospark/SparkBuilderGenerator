@@ -126,6 +126,8 @@ Most configuration is on the preferences page: Preferences -> Java -> Spark buil
    Add option to use jakarta.annotation package instead of the old javax.annotation
  - 0.0.28
    Add support for record types
+ - 0.0.29
+   Don't generate constructor for record class
 
 ## The generated code looks like the following:
 

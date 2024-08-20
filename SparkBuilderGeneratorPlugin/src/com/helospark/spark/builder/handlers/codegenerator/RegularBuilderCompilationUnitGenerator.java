@@ -1,5 +1,7 @@
 package com.helospark.spark.builder.handlers.codegenerator;
 
+import static com.helospark.spark.builder.handlers.codegenerator.component.helper.IsRecordTypePredicate.isRecordDeclaration;
+
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
@@ -58,8 +60,10 @@ public class RegularBuilderCompilationUnitGenerator {
 
         TypeDeclaration builderType = regularBuilderClassCreator.createBuilderClass(ast, originalType, preference,
                 compilationUnitModificationDomain.getSavedCustomMethodDeclarations());
-        defaultConstructorAppender.addDefaultConstructorIfNeeded(compilationUnitModificationDomain, preference.getBuilderFields());
-        privateConstructorPopulator.addPrivateConstructorToCompilationUnit(ast, originalType, builderType, listRewrite, preference.getBuilderFields());
+        if (!isRecordDeclaration(originalType)) {
+            defaultConstructorAppender.addDefaultConstructorIfNeeded(compilationUnitModificationDomain, preference.getBuilderFields());
+            privateConstructorPopulator.addPrivateConstructorToCompilationUnit(ast, originalType, builderType, listRewrite, preference.getBuilderFields());
+        }
         builderMethodPopulator.addBuilderMethodToCompilationUnit(ast, listRewrite, originalType, builderType, preference);
         instanceCopyBuilderMethodPopulator.addInstanceCopyBuilderMethodToCompilationUnitIfNeeded(compilationUnitModificationDomain, builderType, preference);
 
