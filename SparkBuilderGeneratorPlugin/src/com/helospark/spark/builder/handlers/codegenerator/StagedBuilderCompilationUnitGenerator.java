@@ -1,5 +1,7 @@
 package com.helospark.spark.builder.handlers.codegenerator;
 
+import static com.helospark.spark.builder.handlers.codegenerator.component.helper.IsRecordTypePredicate.isRecordDeclaration;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -61,10 +63,13 @@ public class StagedBuilderCompilationUnitGenerator {
 
         // TODO: eventually have a better design to avoid nulls here
         List<TypeDeclaration> stageInterfaces = createStageInterfaces(modificationDomain, stagedBuilderStages);
-        TypeDeclaration builderType = stagedBuilderClassCreator.createBuilderClass(modificationDomain, stagedBuilderStages, stageInterfaces);
+        List<BuilderField> fields = collectAllFieldsFromAllStages(stagedBuilderStages);
+        TypeDeclaration builderType = stagedBuilderClassCreator.createBuilderClass(modificationDomain, stagedBuilderStages, stageInterfaces, fields);
 
-        defaultConstructorAppender.addDefaultConstructorIfNeeded(modificationDomain, collectAllFieldsFromAllStages(stagedBuilderStages));
-        privateConstructorPopulator.addPrivateConstructorToCompilationUnit(ast, originalType, builderType, listRewrite, collectAllFieldsFromAllStages(stagedBuilderStages));
+        if (!isRecordDeclaration(originalType)) {
+            defaultConstructorAppender.addDefaultConstructorIfNeeded(modificationDomain, fields);
+            privateConstructorPopulator.addPrivateConstructorToCompilationUnit(ast, originalType, builderType, listRewrite, fields);
+        }
         stagedBuilderStaticBuilderCreatorMethodCreator.addBuilderMethodToCompilationUnit(modificationDomain, builderType, stagedBuilderStages);
 
         stageInterfaces.stream().forEach(stageInterface -> listRewrite.insertLast(stageInterface, null));

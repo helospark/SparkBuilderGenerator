@@ -9,7 +9,9 @@
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="lib" path="dependency/jcommander-1.60.jar"/>
-	<classpathentry kind="lib" path="dependency/mockito-all-1.10.19.jar"/>
 	<classpathentry kind="lib" path="dependency/testng-6.11.jar"/>
+	<classpathentry kind="lib" path="dependency/byte-buddy-1.14.19.jar"/>
+	<classpathentry kind="lib" path="dependency/mockito-core-5.12.0.jar"/>
+	<classpathentry kind="lib" path="dependency/byte-buddy-agent-1.14.19.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

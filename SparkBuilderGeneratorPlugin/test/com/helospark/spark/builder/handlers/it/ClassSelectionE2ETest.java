@@ -3,7 +3,7 @@ package com.helospark.spark.builder.handlers.it;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Matchers.any;
+import static org.mockito.ArgumentMatchers.any;
 
 import java.util.List;
 import java.util.Optional;

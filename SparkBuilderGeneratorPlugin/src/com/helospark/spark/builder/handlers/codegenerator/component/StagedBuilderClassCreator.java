@@ -48,7 +48,7 @@ public class StagedBuilderClassCreator {
     }
 
     public TypeDeclaration createBuilderClass(CompilationUnitModificationDomain modificationDomain,
-            List<StagedBuilderProperties> stagedBuilderProperties, List<TypeDeclaration> stageInterfaces) {
+            List<StagedBuilderProperties> stagedBuilderProperties, List<TypeDeclaration> stageInterfaces, List<BuilderField> fields) {
         AST ast = modificationDomain.getAst();
         AbstractTypeDeclaration originalType = modificationDomain.getOriginalType();
         TypeDeclaration builderType = emptyBuilderClassGeneratorFragment.createBuilderClass(ast, originalType);
@@ -67,7 +67,7 @@ public class StagedBuilderClassCreator {
         for (MethodDeclaration customMethod : modificationDomain.getSavedCustomMethodDeclarations()) {
             builderType.bodyDeclarations().add(customMethod);
         }
-        MethodDeclaration method = buildMethodCreatorFragment.addBuildMethodToBuilder(ast, originalType);
+        MethodDeclaration method = buildMethodCreatorFragment.addBuildMethodToBuilder(ast, originalType, fields);
         builderType.bodyDeclarations().add(method);
         markerAnnotationAttacher.attachAnnotation(ast, method, OVERRIDE_ANNOTATION);
         setSuperInterfaces(ast, builderType, stageInterfaces);
