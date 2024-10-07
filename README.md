@@ -128,6 +128,8 @@ Most configuration is on the preferences page: Preferences -> Java -> Spark buil
    Add support for record types
  - 0.0.29
    Don't generate constructor for record class
+ - 0.0.29
+   Change update site to github
 
 ## The generated code looks like the following:
 

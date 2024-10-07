@@ -2,9 +2,9 @@
 <feature
       id="com.helospark.SparkBuilderGeneratorFeature"
       label="SparkBuilderGeneratorFeature"
-      version="0.0.29.qualifier">
+      version="0.0.30.qualifier">
 
-   <description url="ftp://helospark.com/SparkBuilderGeneratorPlugin/">
+   <description url="https://raw.githubusercontent.com/helospark/eclipse-update-site/refs/heads/main/SparkBuilderGeneratorPlugin">
       Spark builder generator plugin
 Features:
 - Generates a builder
@@ -114,7 +114,7 @@ SOFTWARE.
    </license>
 
    <url>
-      <update label="Spark plugin update site" url="https://helospark.com/eclipse_plugin/SparkBuilderGeneratorPlugin"/>
+      <update label="Spark plugin update site" url="https://raw.githubusercontent.com/helospark/eclipse-update-site/refs/heads/main/SparkBuilderGeneratorPlugin"/>
    </url>
 
    <requires>
@@ -128,6 +128,8 @@ SOFTWARE.
 
    <plugin
          id="com.helospark.SparkBuilderGenerator"
+         download-size="0"
+         install-size="0"
          version="0.0.0"/>
 
 </feature>
